@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Theme from '../components/adminSide/myadmin/theme/Theme';
 import MyProfile from '../components/adminSide/myadmin/myprofile/MyProfile';
 import Links from '../components/adminSide/myadmin/links/Links';
@@ -11,7 +11,14 @@ const Admin = () => {
       <MyProfile />
       <Links />
       <Blocks />
-      <button>저장하기</button>
+      <button
+        style={{
+          padding: '20px',
+          margin: '10px',
+        }}
+      >
+        저장하기
+      </button>
     </>
   );
 };

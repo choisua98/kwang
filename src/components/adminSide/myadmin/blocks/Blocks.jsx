@@ -39,7 +39,7 @@ const Blocks = () => {
       <Modal
         title="메뉴 추가하기"
         centered
-        visible={modal2Visible}
+        open={modal2Visible}
         onCancel={() => setModal2Visible(false)}
         footer={null}
         width={300}

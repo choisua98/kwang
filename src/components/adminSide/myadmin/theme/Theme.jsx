@@ -18,7 +18,7 @@ const Theme = () => {
       <Modal
         title="테마 수정"
         centered
-        visible={modal2Visible}
+        open={modal2Visible}
         onCancel={() => setModal2Visible(false)}
         footer={null}
         width={300}
