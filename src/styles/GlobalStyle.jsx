@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
 
@@ -26,6 +26,11 @@ const GlobalStyle = createGlobalStyle`
     /* background-color: var(--color-bg);
     color: var(--color-text); 
     font-family: 'Pretendard-Regular'; */
+  }
+
+  button {
+    border: none;
+    cursor: pointer;
   }
 `;
 
