@@ -10,12 +10,13 @@ import { nanoid } from 'nanoid';
 const MyProfile = () => {
   const navigate = useNavigate();
 
-  const [input, setInput] = useState('');
-
   const [modalVisible, setModalVisible] = useState(false);
 
   // 업로드된 프로필 이미지를 담은 state
   const [uploadImage, setUploadImage] = useState(null);
+
+  // 미리보기 URL을 저장할 state
+  const [imagePreview, setImagePreview] = useState(null);
 
   // storage에 저장되어 있는 이미지들을 담을 state
   const [imageList, setImageList] = useState([]);
@@ -94,11 +95,14 @@ const MyProfile = () => {
       >
         {/* 모달 내용 */}
         <ProfileContainer>
+          {/* 프로필 이미지 미리보기 */}
+          {imagePreview && <PreviewImage src={imagePreview} alt="미리보기" />}
           <input
             type="file"
             onChange={(e) => {
               const selectedFile = e.target.files[0]; // 첫 번째 파일 선택
               setUploadImage(selectedFile); // 선택한 파일 설정
+              setImagePreview(URL.createObjectURL(selectedFile)); // 미리보기 URL 생성
             }}
           />
 
@@ -134,6 +138,14 @@ const ProfileContainer = styled.div`
 `;
 
 const ProfileImage = styled.img`
+  width: 140px;
+  height: 140px;
+  object-fit: cover; // 이미지가 잘리지 않도록 설정
+  background-color: #d6d6d6;
+  border-radius: 100%;
+`;
+
+const PreviewImage = styled.img`
   width: 140px;
   height: 140px;
   object-fit: cover; // 이미지가 잘리지 않도록 설정
