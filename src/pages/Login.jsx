@@ -6,13 +6,20 @@ import {
   GoogleAuthProvider,
   getAuth,
 } from 'firebase/auth';
+import GoogleIcon from '../assets/images/google.png';
+import { useAtom } from 'jotai';
+import { userAtom } from '../atoms/Atom';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+  const [user, setUser] = useAtom(userAtom);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const provider1 = new GoogleAuthProvider();
   const auth = getAuth();
+  const navigate = useNavigate();
 
   // --이메일 로그인--
   const onLoginButtonClickHandler = async (e) => {
@@ -44,54 +51,88 @@ const Login = () => {
         // ...
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+        // // Handle Errors here.
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
+        // // The email of the user's account used.
+        // const email = error.customData.email;
+        // // The AuthCredential type that was used.
+        // const credential = GoogleAuthProvider.credentialFromError(error);
+        // // ...
       });
   };
-  // ---네이버 로그인---
+  // // ---네이버 로그인---
+  // const { naver } = window;
+
+  // const naverLogin = new naver.LoginWithNaverId({
+  //   clientId: 'hsnzexHuuJiVHO_hh5EP',
+  //   // process.env.REACT_APP_NAVER_CLIENT_ID,
+  //   callbackUrl: 'http://www.localhost:3000/login', //핍업창
+  //   isPopup: true,
+  //   loginButton: {
+  //     color: 'green',
+  //     type: 1,
+  //     height: 50,
+  //   },
+  // });
+
+  // useEffect(() => {
+  //   naverLogin.init(); //초기화
+  //   naverLogin.logout();
+  //   console.log('init!');
+  //   getUser();
+  // }, []);
+
+  // const getUser = () => {
+  //   naverLogin.getLoginStatus((status) => {
+  //     console.log(`로그인?: ${status}`);
+  //     if (status) {
+  //       console.log(naverLogin);
+  //       // setUser({ ...naverLogin.user });
+  //       // if (window.opener && window.opener.location) {
+  //       //   window.opener.location.href = 'http://localhost:3000/';
+  //       //   window.close();
+  //       // }
+
+  //       // window.opener.location.href = 'http://localhost:3000/';
+  //       // window.close();
+  //     }
+  //   });
+  // };
+
+  // 네이버 로그인
+
   const { naver } = window;
+  const NAVER_CLIENT_ID = 'hsnzexHuuJiVHO_hh5EP';
+  const NAVER_CALLBACK_URL = 'http://www.localhost:3000/login';
 
-  const naverLogin = new naver.LoginWithNaverId({
-    clientId: 'hsnzexHuuJiVHO_hh5EP',
-    // process.env.REACT_APP_NAVER_CLIENT_ID,
-    callbackUrl: 'http://www.localhost:3000/login',
-    isPopup: true,
-    loginButton: {
-      color: 'green',
-      type: 1,
-      height: 50,
-    },
-  });
+  const initializeNaverLogin = () => {
+    const naverLogin = new naver.LoginWithNaverId({
+      clientId: NAVER_CLIENT_ID,
+      callbackUrl: NAVER_CALLBACK_URL,
+      isPopup: false,
+      loginButton: { color: 'green', type: 1, height: 50 },
+      callbackHandle: true,
+    });
+    naverLogin.init();
 
-  useEffect(() => {
-    naverLogin.init(); //초기화
-    console.log('init!');
-    getUser();
-  }, []);
-
-  const getUser = async () => {
-    await naverLogin.getLoginStatus((status) => {
-      console.log(`로그인?: ${status}`);
+    naverLogin.getLoginStatus(async function (status) {
       if (status) {
-        setUser({ ...naverLogin.user });
-        if (window.opener && window.opener.location) {
-          window.opener.location.href = 'http://localhost:3000/login';
-          window.close();
-        }
+        console.log(`로그인?: ${status}`);
+        setUser(naverLogin.user);
       }
+      console.log(user);
     });
   };
 
+  useEffect(() => {
+    initializeNaverLogin();
+  }, []);
+
   const naverLogout = () => {
-    localStorage.removeItem('com.naver.nid.access_token');
-    window.location.reload();
+    window.location.href = 'http://localhost:3000/login';
   };
+
   return (
     <div>
       <div>login page</div>
@@ -124,27 +165,30 @@ const Login = () => {
           로그인
         </button>
         <br />
-        <button onClick={onGoogleLoginButtonClickHandler}>google</button>
-        <div className="grid-naver" id="naverIdLogin"></div>
+
+        <img
+          src={GoogleIcon}
+          alt="google"
+          onClick={onGoogleLoginButtonClickHandler}
+          style={{
+            height: '50px',
+          }}
+        />
+        <span id="naverIdLogin"></span>
       </form>
       <div>
+        {' '}
         {user ? (
           <div>
-            <h2>네이버 로그인 성공!</h2>
-            <h3>사용자 이름</h3>
-            <div>{user.name}</div>
-            <h3>사용자 이메일</h3>
-            <div>{user.email}</div>
-            <h3>사용자 프로필사진</h3>
+            <h2>**로그인 성공!**</h2>
+            <h3>이름:{user.name}</h3>
+            <h3>이메일:{user.email}</h3>
+            <h3>프로필사진</h3>
             <img src={user.profile_image} alt="프로필 사진" />
+            <br />
             <button onClick={naverLogout}>로그아웃</button>
           </div>
-        ) : (
-          // 네이버 로그인 버튼
-          <div>
-            <div id="naverIdLogin"></div>
-          </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
