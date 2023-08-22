@@ -9,8 +9,6 @@ import {
 import GoogleIcon from '../assets/images/google.png';
 import { useAtom } from 'jotai';
 import { userAtom } from '../atoms/Atom';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   // const [user, setUser] = useState(null);
@@ -19,7 +17,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const provider1 = new GoogleAuthProvider();
   const auth = getAuth();
-  const navigate = useNavigate();
 
   // --이메일 로그인--
   const onLoginButtonClickHandler = async (e) => {
@@ -42,7 +39,8 @@ const Login = () => {
     signInWithPopup(auth, provider1)
       .then((result) => {
         // setUserData(result.user); // user data 설정
-        console.log(result); // console로 들어온 데이터 표시
+        console.log(result.user);
+        setUser(result.user); // console로 들어온 데이터 표시
         // const credential = GoogleAuthProvider.credentialFromResult(result);
         // const token = credential.accessToken;
         // The signed-in user info.
@@ -61,44 +59,6 @@ const Login = () => {
         // // ...
       });
   };
-  // // ---네이버 로그인---
-  // const { naver } = window;
-
-  // const naverLogin = new naver.LoginWithNaverId({
-  //   clientId: 'hsnzexHuuJiVHO_hh5EP',
-  //   // process.env.REACT_APP_NAVER_CLIENT_ID,
-  //   callbackUrl: 'http://www.localhost:3000/login', //핍업창
-  //   isPopup: true,
-  //   loginButton: {
-  //     color: 'green',
-  //     type: 1,
-  //     height: 50,
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   naverLogin.init(); //초기화
-  //   naverLogin.logout();
-  //   console.log('init!');
-  //   getUser();
-  // }, []);
-
-  // const getUser = () => {
-  //   naverLogin.getLoginStatus((status) => {
-  //     console.log(`로그인?: ${status}`);
-  //     if (status) {
-  //       console.log(naverLogin);
-  //       // setUser({ ...naverLogin.user });
-  //       // if (window.opener && window.opener.location) {
-  //       //   window.opener.location.href = 'http://localhost:3000/';
-  //       //   window.close();
-  //       // }
-
-  //       // window.opener.location.href = 'http://localhost:3000/';
-  //       // window.close();
-  //     }
-  //   });
-  // };
 
   // 네이버 로그인
 
@@ -181,10 +141,10 @@ const Login = () => {
         {user ? (
           <div>
             <h2>**로그인 성공!**</h2>
-            <h3>이름:{user.name}</h3>
+            {/* <h3>이름:{user.name}</h3> */}
             <h3>이메일:{user.email}</h3>
-            <h3>프로필사진</h3>
-            <img src={user.profile_image} alt="프로필 사진" />
+            {/* <h3>프로필사진</h3> */}
+            {/* <img src={user.profile_image} alt="프로필 사진" /> */}
             <br />
             <button onClick={naverLogout}>로그아웃</button>
           </div>
