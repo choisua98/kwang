@@ -15,7 +15,7 @@ export const M = {
       height: 20px;
     }
   `,
-  Contents: styled.div`
+  ContentForm: styled.form`
     display: grid;
     padding: 20px 10px;
     background-color: #d9d9d9;

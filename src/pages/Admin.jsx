@@ -11,7 +11,6 @@ const Admin = () => {
       <MyProfile />
       <Links />
       <Blocks />
-      <button>저장하기</button>
     </>
   );
 };
