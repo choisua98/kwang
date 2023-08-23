@@ -72,7 +72,6 @@ const FanLetter = () => {
           />
         </F.Contents>
       )}
-      <p>firebase test</p>
       {fanLetters.map((letter) => {
         console.log(letter.id);
         return (
@@ -88,5 +87,3 @@ const FanLetter = () => {
 };
 
 export default FanLetter;
-
-// 팬레터, 배너 이미지 추가, 예약서비스
