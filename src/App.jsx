@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider as JotaiProvider, useAtom } from 'jotai';
 import Router from './shared/Router';
-import { themeAtom, backgroundImageAtom } from './atoms/themaAtom';
+import { themeAtom, backgroundImageAtom } from './atoms/ThemaAtom';
 
 const queryClient = new QueryClient();
 
