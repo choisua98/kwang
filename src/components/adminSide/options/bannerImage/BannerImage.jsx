@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { B } from './BannerImage.styles';
+import { useNavigate } from 'react-router-dom';
 
 const BannerImage = () => {
+  const navigate = useNavigate();
   const [toggle, setToggle] = useState(true);
 
   const swtichToggle = () => {
@@ -21,6 +23,7 @@ const BannerImage = () => {
           <button>이미지 추가 +</button>
         </B.Contents>
       )}
+      <button onClick={() => navigate('/admin')}>저장하기</button>
     </B.Container>
   );
 };

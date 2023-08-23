@@ -15,7 +15,7 @@ const Reservation = () => {
         <input
           placeholder="예약 서비스"
           value={title}
-          onChange={(e) => {
+          ongitChange={(e) => {
             setTitle(e.target.value);
           }}
         />
