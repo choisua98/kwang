@@ -11,14 +11,6 @@ const Admin = () => {
       <MyProfile />
       <Links />
       <Blocks />
-      <button
-        style={{
-          padding: '20px',
-          margin: '10px',
-        }}
-      >
-        저장하기
-      </button>
     </>
   );
 };
