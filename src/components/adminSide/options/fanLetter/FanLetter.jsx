@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { F } from './FanLetter.styles';
-import { addDoc, collection, getDocs, query } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 

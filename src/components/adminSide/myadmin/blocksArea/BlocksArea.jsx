@@ -39,8 +39,11 @@ const BlocksArea = () => {
   const moveToEditButton = (blockKind) => navigate(`/admin/${blockKind}`);
 
   const deleteButton = async (id) => {
-    window.confirm('정말 삭제하시겠습니까?');
-    await deleteDoc(doc(db, 'template', `${id}`));
+    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+    if (shouldDelete) {
+      await deleteDoc(doc(db, 'template', `${id}`));
+      fetchData(); // 데이터 삭제 후 새로고침
+    }
   };
 
   return (
