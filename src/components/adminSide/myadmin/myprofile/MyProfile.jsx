@@ -7,6 +7,7 @@ import {
   getDownloadURL,
   deleteObject,
   getStorage,
+  listAll,
 } from 'firebase/storage';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
@@ -30,11 +31,16 @@ const MyProfile = () => {
   // 프로필 정보를 업데이트 하는 버튼 함수
   const handleProfileUpdate = async () => {
     try {
-      // 이전 프로필 이미지 삭제
-      if (updateImage) {
-        const previousImageRef = ref(storage, updateImage);
-        await deleteObject(previousImageRef);
-      }
+      // 기존 user.uid 폴더의 이미지들 삭제
+      const userImagesRef = ref(storage, `profileImages/${user.uid}`);
+      const userImagesList = await listAll(userImagesRef);
+
+      // userImagesList.items 배열에 있는 모든 이미지 삭제
+      await Promise.all(
+        userImagesList.items.map(async (item) => {
+          await deleteObject(item);
+        }),
+      );
 
       // Firebase에 프로필 이미지 업로드
       if (selectedImage) {
@@ -44,27 +50,11 @@ const MyProfile = () => {
         setUpdateImage(imageURL);
       }
 
-      // Firebase에 사용자 데이터 업데이트
-      // const updatedUserData = {
-      //   nickname,
-      //   introduction,
-      //   profileImage: updateImage, // 업로드된 이미지 URL 사용
-      // };
-
-      // TODO: Firestore 업데이트 로직 추가
-      // const userDocRef = doc(db, 'users/${uid}'); // users 컬렉션의 해당 사용자 문서 참조
-      // console.log(userDocRef);
-      // await updateDoc(userDocRef, updatedUserData); // 문서 업데이트
-
       setModalVisible(false); // 모달 닫기
     } catch (error) {
       console.error('프로필 업데이트 실패', error);
     }
   };
-
-  useEffect(() => {
-    getStorage();
-  }, []);
 
   return (
     <div>
