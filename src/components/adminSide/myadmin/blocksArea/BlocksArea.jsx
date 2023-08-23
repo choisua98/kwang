@@ -6,27 +6,30 @@ const BlocksArea = () => {
   const [blocks, setBlocks] = useState([]);
 
   // firebase 불러오기
-  useEffect(() => {
-    const fetchData = async () => {
-      const q = query(collection(db, 'template'), where('userId', '==', 111));
-      const querySnapshot = await getDocs(q);
-      const initialDocuments = [];
-      querySnapshot.forEach((doc) => {
-        initialDocuments.push(doc.data());
-        // console.log('data', doc.data());
-      });
-      setBlocks(initialDocuments);
-      //   return documents;
-    };
+  const fetchData = async () => {
+    const q = query(collection(db, 'template'), where('userId', '==', '111'));
+    const querySnapshot = await getDocs(q);
 
+    const initialDocuments = [];
+    querySnapshot.forEach((doc) => {
+      const data = {
+        id: doc.id,
+        ...doc.data(),
+      };
+      initialDocuments.push(data);
+    });
+    setBlocks(initialDocuments);
+    return;
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
-
   return (
     <div>
       {blocks.map((block) => {
         return (
-          <div key={block.userId}>
+          <div key={block.id}>
             <button>{block.title}</button>
             <button>삭제</button>
           </div>
@@ -35,5 +38,4 @@ const BlocksArea = () => {
     </div>
   );
 };
-
 export default BlocksArea;
