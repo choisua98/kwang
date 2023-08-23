@@ -3,53 +3,48 @@ import { F } from './Faq.styles';
 import { useNavigate } from 'react-router-dom';
 import useInput from '../../../../hooks/useInput';
 import { auth, db } from '../../../../firebase/firebaseConfig';
-import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 const Faq = () => {
   const navigate = useNavigate();
-  const [question, handleQuestionChange] = useInput();
-  const [answer, handleAnswerChange] = useInput();
+  const [question, handleQuestionChange, resetQuestion] = useInput();
+  const [answer, handleAnswerChange, resetAuswer] = useInput();
 
   const [faqList, setFaqList] = useState([]);
 
-  const handleAddFaqButtonClick = () => {};
+  const handleAddFaqButtonClick = () => {
+    const newFaq = { question, answer };
+    setFaqList((prev) => [...prev, newFaq]);
+
+    resetQuestion();
+    resetAuswer();
+  };
 
   const handleAddButtonClick = async (e) => {
     e.preventDefault();
+
     // 사용자 UID 가져오기
     const userUid = auth.currentUser?.uid;
 
     if (!userUid) {
-      alert('사용자가 로그인하지 않았습니다.');
+      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
       navigate('/login');
       return;
     }
 
-    // 사용자 UID를 이용하여 문서 경로 만들기
-    const userDocPath = `users/${userUid}`;
-
-    // 사용자 문서 조회
-    const userDocRef = doc(db, userDocPath);
-    const userDocSnapshot = await getDoc(userDocRef);
-
-    if (userDocSnapshot.exists()) {
-      const userData = userDocSnapshot.data();
-      console.log('사용자 데이터:', userData);
-
-      // Firestore에 데이터 추가
+    // faqList에 있는 모든 데이터를 Firestore에 추가
+    for (const faq of faqList) {
       await addDoc(collection(db, 'template'), {
-        question,
-        answer,
+        question: faq.question,
+        answer: faq.answer,
         blockKind: 'faq',
-        // createdAt: serverTimestamp(),
-        userId: userDocSnapshot.id,
+        createdAt: serverTimestamp(),
+        userId: userUid,
       });
-
-      alert('저장 완료!');
-      navigate('/admin');
-    } else {
-      console.log('사용자 데이터가 없습니다');
     }
+
+    alert('저장 완료!');
+    navigate('/admin');
   };
 
   return (
@@ -73,7 +68,6 @@ const Faq = () => {
           value={question}
           onChange={handleQuestionChange}
           autoFocus
-          required
         />
 
         <label>답변 입력</label>
@@ -83,9 +77,10 @@ const Faq = () => {
           placeholder="답변을 작성해 주세요"
           value={answer}
           onChange={handleAnswerChange}
-          required
         />
-        <button onClick={handleAddFaqButtonClick}>질문 추가하기</button>
+        <button type="button" onClick={handleAddFaqButtonClick}>
+          질문 추가하기
+        </button>
         <button type="submit">저장하기</button>
       </F.Container>
     </>

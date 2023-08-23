@@ -2,7 +2,7 @@ import React from 'react';
 import { M } from './Mailing.styles';
 import { useNavigate } from 'react-router-dom';
 import useInput from '../../../../hooks/useInput';
-import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../../../../firebase/firebaseConfig';
 
 const Mailing = () => {
@@ -16,35 +16,21 @@ const Mailing = () => {
     const userUid = auth.currentUser?.uid;
 
     if (!userUid) {
-      alert('사용자가 로그인하지 않았습니다.');
+      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
       navigate('/login');
       return;
     }
 
-    // 사용자 UID를 이용하여 문서 경로 만들기
-    const userDocPath = `users/${userUid}`;
-
-    // 사용자 문서 조회
-    const userDocRef = doc(db, userDocPath);
-    const userDocSnapshot = await getDoc(userDocRef);
-
-    if (userDocSnapshot.exists()) {
-      const userData = userDocSnapshot.data();
-      console.log('사용자 데이터:', userData);
-
-      // Firestore에 데이터 추가
-      await addDoc(collection(db, 'template'), {
-        title,
-        description,
-        blockKind: 'mailing',
-        // createdAt: serverTimestamp(),
-        userId: userDocSnapshot.id,
-      });
-      alert('저장 완료!');
-      navigate('/admin');
-    } else {
-      console.log('사용자 데이터가 없습니다');
-    }
+    // Firestore에 데이터 추가
+    await addDoc(collection(db, 'template'), {
+      title,
+      description,
+      blockKind: 'mailing',
+      createdAt: serverTimestamp(),
+      userId: userUid,
+    });
+    alert('저장 완료!');
+    navigate('/admin');
   };
 
   return (
