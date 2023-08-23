@@ -4,15 +4,20 @@ import { ReactComponent as Profile } from '../../../../assets/images/admin/profi
 import { styled } from 'styled-components';
 import { storage } from '../../../../firebase/firebaseConfig';
 import { ref, uploadBytes, listAll, getDownloadURL } from 'firebase/storage';
-import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 
 const MyProfile = () => {
-  const navigate = useNavigate();
+  const [nickname, setNickname] = useState(''); // 닉네임
+  const [updateNickname, setUpdateNickname] = useState(nickname); // 닉네임 업데이트
+  const [input, setInput] = useState(''); // 소개
+  const [updateInput, setUpdateInput] = useState(input); // 소개 업데이트
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  // 업로드된 프로필 이미지를 담은 state
+  // default Image를 담을 state
+  const [defaultImage, setDefaultImage] = useState(null);
+
+  // 업로드된 프로필 이미지를 담을 state
   const [uploadImage, setUploadImage] = useState(null);
 
   // 미리보기 URL을 저장할 state
@@ -24,8 +29,29 @@ const MyProfile = () => {
   // storage에 저장되어 있는 profileImage 폴더를 지정
   const imageListRef = ref(storage, 'pofileImage/');
 
+  // default Image 가져와서 보여주는 역할
+  useEffect(() => {
+    const defaultImageRef = ref(
+      storage,
+      'profileDefaultImage/profile-default-image.png',
+    );
+    getDownloadURL(defaultImageRef).then((url) => {
+      setDefaultImage(url);
+    });
+  }, []);
+
+  const onChangeHandleImage = (e) => {
+    const selectedFile = e.target.files[0]; // 첫 번째 파일 선택
+    setUploadImage(selectedFile); // 선택한 파일 설정
+    setImagePreview(URL.createObjectURL(selectedFile)); // 미리보기 URL 생성
+  };
+
   // 이미지를 업로드하는 함수
   const handleUploadImage = () => {
+    // 닉네임, 소개 업데이트
+    setNickname(updateNickname);
+    setInput(updateInput);
+
     // 선택한 이미지가 없는 경우 return.
     if (uploadImage === null) return;
     // 이미지들을 담을 파이어베이스 저장소 생성
@@ -36,15 +62,15 @@ const MyProfile = () => {
     );
     // uploadBytes( 첫 번째 인자: 저장소 / 두 번째 인자: 이미지 파일 )
     uploadBytes(imageRef, uploadImage).then(() => {
-      alert('Image Uploaded');
-
-      // 이미지 업로드 후 useState로 변경된 이미지 업데이트. --> UI를 바로바로 업데이트 해주기 위해서
-      getDownloadURL(imageRef).then((url) => {
-        setImageList((prev) => [url, ...prev]);
-      });
+      // 이미지 업로드 후 useState로 변경된 이미지 업데이트
+      getDownloadURL(imageRef)
+        .then((url) => {
+          setImageList((prev) => [url, ...prev]);
+        })
+        .then(() => {
+          setModalVisible(false);
+        });
     });
-
-    // navigate('/admin');
   };
 
   // 이미지들을 가져와서 보여주기 위한 역할
@@ -60,17 +86,23 @@ const MyProfile = () => {
     });
   }, []);
 
-  // console.log(imageList[0]);
-
   return (
     <>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
         <Col span={24} style={{ textAlign: 'center' }}>
           {/* <Profile /> */}
-          {imageList.length > 0 && (
-            <ProfileImage src={imageList[0]} alt="미리보기" />
+          {uploadImage === null ? (
+            <ProfileImage src={defaultImage} alt="프로필 기본 이미지" />
+          ) : (
+            <>
+              {imageList.length > 0 && (
+                <ProfileImage src={imageList[0]} alt="프로필 이미지" />
+              )}
+            </>
           )}
-          <div style={{ margin: '20px 0 10px' }}>크왕이다.</div>
+
+          <div style={{ margin: '20px 0 10px' }}>{nickname}</div>
+          <div style={{ margin: '20px 0' }}>{input}</div>
           <Button
             onClick={() => {
               setModalVisible(true);
@@ -87,9 +119,15 @@ const MyProfile = () => {
         onCancel={() => {
           setModalVisible(false);
         }}
+        width={300}
         footer={
-          <Button key="upload" type="primary" onClick={handleUploadImage}>
-            업로드
+          <Button
+            key="upload"
+            type="primary"
+            onClick={handleUploadImage}
+            style={{ width: '100%' }}
+          >
+            저장하기
           </Button>
         }
       >
@@ -97,25 +135,25 @@ const MyProfile = () => {
         <ProfileContainer>
           {/* 프로필 이미지 미리보기 */}
           {imagePreview && <PreviewImage src={imagePreview} alt="미리보기" />}
-          <input
-            type="file"
+          <input type="file" onChange={onChangeHandleImage} />
+          <div style={{ marginTop: '20px' }}>닉네임</div>
+          <ProfileInput
+            placeholder="변경하실 닉네임을 작성해주세요."
+            value={updateNickname}
             onChange={(e) => {
-              const selectedFile = e.target.files[0]; // 첫 번째 파일 선택
-              setUploadImage(selectedFile); // 선택한 파일 설정
-              setImagePreview(URL.createObjectURL(selectedFile)); // 미리보기 URL 생성
+              setUpdateNickname(e.target.value);
             }}
           />
+          <div style={{ marginTop: '5px' }}>소개</div>
 
-          {/* <Upload
-            name="profileImage"
-            type="file"
-            beforeUpload={() => false}
-            onChange={() => {}}
-            showUploadList={true}
-          >
-            <Button>프로필 이미지 업로드</Button>
-          </Upload> */}
-          <ProfileInput placeholder="한 줄 소개를 작성해 주세요." />
+          <ProfileInput
+            placeholder="소개를 작성해 주세요."
+            value={updateInput}
+            onChange={(e) => {
+              setUpdateInput(e.target.value);
+            }}
+            style={{ marginBottom: '20px' }}
+          />
         </ProfileContainer>
       </Modal>
     </>
@@ -125,16 +163,14 @@ const MyProfile = () => {
 export default MyProfile;
 
 const ProfileInput = styled.input`
-  width: 300px;
-  height: 30px;
+  width: 96%;
+  height: 25px;
 `;
 
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+  gap: 10px;
 `;
 
 const ProfileImage = styled.img`
@@ -152,3 +188,13 @@ const PreviewImage = styled.img`
   background-color: #d6d6d6;
   border-radius: 100%;
 `;
+
+// {/* <Upload
+//   name="profileImage"
+//   type="file"
+//   beforeUpload={() => false}
+//   onChange={() => {}}
+//   showUploadList={true}
+// >
+//   <Button>프로필 이미지 업로드</Button>
+// </Upload>; */}
