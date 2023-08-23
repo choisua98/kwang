@@ -138,7 +138,7 @@ const Theme = () => {
       <Modal
         title="테마 수정"
         centered
-        visible={modalVisible}
+        open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
         width={300}
