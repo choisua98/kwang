@@ -14,9 +14,9 @@ const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useState([]);
 
-  //   firebase 불러오기
+  // firebase 불러오기
   const fetchData = async () => {
-    const q = query(collection(db, 'template'), where('userId', '==', '1'));
+    const q = query(collection(db, 'template'), where('userId', '==', '111'));
     const querySnapshot = await getDocs(q);
 
     const initialDocuments = [];
@@ -26,7 +26,6 @@ const BlocksArea = () => {
         ...doc.data(),
       };
       initialDocuments.push(data);
-      // console.log('data', doc.data());
     });
     setBlocks(initialDocuments);
     return;
@@ -58,5 +57,4 @@ const BlocksArea = () => {
     </div>
   );
 };
-
 export default BlocksArea;
