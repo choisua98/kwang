@@ -1,108 +1,68 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Modal, Upload } from 'antd';
-import { ReactComponent as Profile } from '../../../../assets/images/admin/profile.svg';
 import { styled } from 'styled-components';
-import { storage } from '../../../../firebase/firebaseConfig';
 import { ref, uploadBytes, listAll, getDownloadURL } from 'firebase/storage';
+import { storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
+import { doc, updateDoc } from 'firebase/firestore';
 
 const MyProfile = () => {
-  const [nickname, setNickname] = useState(''); // 닉네임
-  const [updateNickname, setUpdateNickname] = useState(nickname); // 닉네임 업데이트
-  const [input, setInput] = useState(''); // 소개
-  const [updateInput, setUpdateInput] = useState(input); // 소개 업데이트
+  // 임시 User 데이터
+  const initialUserData = {
+    nickname: 'Hoppang',
+    introduction: 'Hello!',
+    profileImage:
+      'https://blog.kakaocdn.net/dn/BkkCC/btqAM4Aqw0K/05gsHFKwF1T7DvhGK1Z5R0/img.jpg',
+  };
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [nickname, setNickname] = useState(initialUserData.nickname);
+  const [introduction, setIntroduction] = useState(
+    initialUserData.introduction,
+  );
+  const [previewImage, setPreviewImage] = useState(
+    initialUserData.profileImage,
+  );
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [updateImage, setUpdateImage] = useState(null);
 
-  // default Image를 담을 state
-  const [defaultImage, setDefaultImage] = useState(null);
-
-  // 업로드된 프로필 이미지를 담을 state
-  const [uploadImage, setUploadImage] = useState(null);
-
-  // 미리보기 URL을 저장할 state
-  const [imagePreview, setImagePreview] = useState(null);
-
-  // storage에 저장되어 있는 이미지들을 담을 state
-  const [imageList, setImageList] = useState([]);
-
-  // storage에 저장되어 있는 profileImage 폴더를 지정
-  const imageListRef = ref(storage, 'pofileImage/');
-
-  // default Image 가져와서 보여주는 역할
-  useEffect(() => {
-    const defaultImageRef = ref(
-      storage,
-      'profileDefaultImage/profile-default-image.png',
-    );
-    getDownloadURL(defaultImageRef).then((url) => {
-      setDefaultImage(url);
-    });
-  }, []);
-
-  const onChangeHandleImage = (e) => {
-    const selectedFile = e.target.files[0]; // 첫 번째 파일 선택
-    setUploadImage(selectedFile); // 선택한 파일 설정
-    setImagePreview(URL.createObjectURL(selectedFile)); // 미리보기 URL 생성
-  };
-
-  // 이미지를 업로드하는 함수
-  const handleUploadImage = () => {
-    // 닉네임, 소개 업데이트
-    setNickname(updateNickname);
-    setInput(updateInput);
-
-    // 선택한 이미지가 없는 경우 return.
-    if (uploadImage === null) return;
-    // 이미지들을 담을 파이어베이스 저장소 생성
-    const imageRef = ref(
-      storage,
-      // storage에 저장하는 파일명이 겹칠 수 있기 때문에 nanoid로 고유 아이디 추가
-      `pofileImage/ ${uploadImage.name + nanoid()}`,
-    );
-    // uploadBytes( 첫 번째 인자: 저장소 / 두 번째 인자: 이미지 파일 )
-    uploadBytes(imageRef, uploadImage).then(() => {
-      // 이미지 업로드 후 useState로 변경된 이미지 업데이트
-      getDownloadURL(imageRef)
-        .then((url) => {
-          setImageList((prev) => [url, ...prev]);
-        })
-        .then(() => {
-          setModalVisible(false);
-        });
-    });
-  };
-
-  // 이미지들을 가져와서 보여주기 위한 역할
-  useEffect(() => {
-    listAll(imageListRef).then((response) => {
-      if (response.items.length > 0) {
-        // 최근에 업데이트된 이미지 가져오기
-        const latestImage = response.items[0];
-        getDownloadURL(latestImage).then((url) => {
-          setImageList([url]); // 가장 최근에 업데이트된 이미지만 배열에 저장
-        });
+  const handleProfileUpdate = async () => {
+    try {
+      // Firebase에 프로필 이미지 업로드
+      if (selectedImage) {
+        const imageRef = ref(storage, `profileImages/${nanoid()}`); // 나중에 ref에 추가할 것 : /${user.uid}
+        await uploadBytes(imageRef, selectedImage);
+        const imageURL = await getDownloadURL(imageRef);
+        setUpdateImage(imageURL);
       }
-    });
-  }, []);
+
+      // Firebase에 사용자 데이터 업데이트
+      const updatedUserData = {
+        nickname,
+        introduction,
+        profileImage: updateImage, // 업로드된 이미지 URL 사용
+      };
+
+      // TODO: Firestore 업데이트 로직 추가
+      // const userDocRef = doc(db, 'users', user.uid); // users 컬렉션의 해당 사용자 문서 참조
+      // await updateDoc(userDocRef, updatedUserData); // 문서 업데이트
+
+      setModalVisible(false); // 모달 닫기
+    } catch (error) {
+      console.error('프로필 업데이트 실패', error);
+    }
+  };
 
   return (
-    <>
+    <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
         <Col span={24} style={{ textAlign: 'center' }}>
           {/* <Profile /> */}
-          {uploadImage === null ? (
-            <ProfileImage src={defaultImage} alt="프로필 기본 이미지" />
-          ) : (
-            <>
-              {imageList.length > 0 && (
-                <ProfileImage src={imageList[0]} alt="프로필 이미지" />
-              )}
-            </>
-          )}
+          <div>프로필이미지</div>
+          <PreviewImage src={previewImage} alt="이미지 미리보기" />
 
-          <div style={{ margin: '20px 0 10px' }}>{nickname}</div>
-          <div style={{ margin: '20px 0' }}>{input}</div>
+          <div style={{ margin: '20px 0 10px' }}>닉네임</div>
+          <div style={{ margin: '20px 0' }}>소개</div>
           <Button
             onClick={() => {
               setModalVisible(true);
@@ -124,7 +84,7 @@ const MyProfile = () => {
           <Button
             key="upload"
             type="primary"
-            onClick={handleUploadImage}
+            onClick={handleProfileUpdate}
             style={{ width: '100%' }}
           >
             저장하기
@@ -134,29 +94,34 @@ const MyProfile = () => {
         {/* 모달 내용 */}
         <ProfileContainer>
           {/* 프로필 이미지 미리보기 */}
-          {imagePreview && <PreviewImage src={imagePreview} alt="미리보기" />}
-          <input type="file" onChange={onChangeHandleImage} />
+          <PreviewImage src={previewImage} alt="이미지 미리보기" />
+          <input
+            type="file"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                setSelectedImage(file);
+                setPreviewImage(URL.createObjectURL(file));
+              }
+            }}
+          />
           <div style={{ marginTop: '20px' }}>닉네임</div>
           <ProfileInput
             placeholder="변경하실 닉네임을 작성해주세요."
-            value={updateNickname}
-            onChange={(e) => {
-              setUpdateNickname(e.target.value);
-            }}
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
           />
           <div style={{ marginTop: '5px' }}>소개</div>
 
           <ProfileInput
             placeholder="소개를 작성해 주세요."
-            value={updateInput}
-            onChange={(e) => {
-              setUpdateInput(e.target.value);
-            }}
+            value={introduction}
+            onChange={(e) => setIntroduction(e.target.value)}
             style={{ marginBottom: '20px' }}
           />
         </ProfileContainer>
       </Modal>
-    </>
+    </div>
   );
 };
 
