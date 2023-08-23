@@ -32,7 +32,7 @@ const Links = () => {
       <Modal
         title="링크 수정"
         centered
-        visible={modal2Visible}
+        open={modal2Visible}
         onCancel={() => setModal2Visible(false)}
         footer={null}
         width={300}
