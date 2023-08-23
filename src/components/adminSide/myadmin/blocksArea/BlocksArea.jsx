@@ -1,41 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
 
 const BlocksArea = () => {
-  const [fanLetters, setFanLetters] = useState([]);
+  const [blocks, setBlocks] = useState([]);
 
-  // firebase 데이터 불러오기
+  // firebase 불러오기
   useEffect(() => {
     const fetchData = async () => {
-      const q = query(collection(db, 'tamplate'));
+      const q = query(collection(db, 'template'), where('userId', '==', 111));
       const querySnapshot = await getDocs(q);
-
-      const initialFanLetter = [];
-
+      const initialDocuments = [];
       querySnapshot.forEach((doc) => {
-        const data = {
-          id: doc.id,
-          ...doc.data(),
-        };
-
-        console.log('data', data);
-        initialFanLetter.push(data);
-        // console.log(initialFanLetter);
+        initialDocuments.push(doc.data());
+        // console.log('data', doc.data());
       });
-
-      setFanLetters(initialFanLetter);
+      setBlocks(initialDocuments);
+      //   return documents;
     };
+
     fetchData();
   }, []);
 
   return (
     <div>
-      {fanLetters.map((letter) => {
-        console.log(letter.id);
+      {blocks.map((block) => {
         return (
-          <div key={letter.id}>
-            <p>{letter.title}</p>
+          <div key={block.userId}>
+            <button>{block.title}</button>
+            <button>삭제</button>
           </div>
         );
       })}
