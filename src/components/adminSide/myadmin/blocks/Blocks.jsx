@@ -4,14 +4,14 @@ import { useNavigate } from 'react-router-dom';
 
 const Blocks = () => {
   const navigate = useNavigate();
-  const [modal2Visible, setModal2Visible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <>
       <Row justify="center">
         <Button
           type="primary"
-          onClick={() => setModal2Visible(true)}
+          onClick={() => setModalVisible(true)}
           style={{ width: '100%' }}
         >
           메뉴추가하기
@@ -20,8 +20,8 @@ const Blocks = () => {
       <Modal
         title="메뉴 추가하기"
         centered
-        open={modal2Visible}
-        onCancel={() => setModal2Visible(false)}
+        open={modalVisible}
+        onCancel={() => setModalVisible(false)}
         footer={null}
         width={300}
       >
