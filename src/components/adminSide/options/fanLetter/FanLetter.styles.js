@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 
 export const F = {
-  Container: styled.div`
+  Container: styled.form`
     padding: 20px;
   `,
   Title: styled.div`

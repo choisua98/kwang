@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { B } from './BannerImage.styles';
 import { useNavigate } from 'react-router-dom';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../../firebase/firebaseConfig';
 
 const BannerImage = () => {
   const navigate = useNavigate();
@@ -8,6 +10,18 @@ const BannerImage = () => {
 
   const swtichToggle = () => {
     setToggle(!toggle);
+  };
+
+  const addButtonClick = async (e) => {
+    e.preventDefault();
+
+    // Firestore에 데이터 추가
+    await addDoc(collection(db, 'fanletter'), {
+      blockKind: 'bannerimage',
+      // createdAt: serverTimestamp(),
+      // userId: userDocSnapshot.id,
+    });
+    alert('데이터가 추가되었습니다.');
   };
 
   return (
@@ -23,7 +37,14 @@ const BannerImage = () => {
           <button>이미지 추가 +</button>
         </B.Contents>
       )}
-      <button onClick={() => navigate('/admin')}>저장하기</button>
+      <button
+        onClick={() => {
+          addButtonClick();
+          navigate('/admin');
+        }}
+      >
+        저장하기
+      </button>
     </B.Container>
   );
 };
