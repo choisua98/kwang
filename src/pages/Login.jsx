@@ -7,10 +7,21 @@ import { userAtom } from '../atoms/Atom';
 import NaverLogin from '../components/adminSide/auth/login/NaverLogin';
 
 const Login = () => {
+  const { naver } = window;
+  const NAVER_CLIENT_ID = 'hsnzexHuuJiVHO_hh5EP';
+  const NAVER_CALLBACK_URL = 'http://www.localhost:3000/login';
   const user = useAtomValue(userAtom);
   const Logout = () => {
     window.location.href = 'http://localhost:3000/login';
+    naverLogin.logout();
   };
+  const naverLogin = new naver.LoginWithNaverId({
+    clientId: NAVER_CLIENT_ID,
+    callbackUrl: NAVER_CALLBACK_URL,
+    isPopup: false,
+    loginButton: { color: 'green', type: 1, height: 50 },
+    callbackHandle: true,
+  });
   return (
     <div>
       <EmailLogin />

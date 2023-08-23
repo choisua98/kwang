@@ -26,6 +26,7 @@ const NaverLogin = () => {
       callbackHandle: true,
     });
     naverLogin.init();
+    naverLogin.logout();
 
     naverLogin.getLoginStatus(async (status) => {
       if (status) {
