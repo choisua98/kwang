@@ -10,7 +10,7 @@ import sampleImg from '../../../../assets/images/admin/sample.jpg';
 
 const Theme = () => {
   const [theme, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
-  const [modal2Visible, setModal2Visible] = useAtom(modalVisibleAtom);
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
   const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
   const [tempTheme, setTempTheme] = useState(null);
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null);
@@ -121,7 +121,7 @@ const Theme = () => {
       setBackgroundImage(tempBackgroundImage);
     }
     applyThemeStyles();
-    setModal2Visible(false);
+    setModalVisible(false);
   };
 
   return (
@@ -129,7 +129,7 @@ const Theme = () => {
       <Row justify="center">
         <Button
           type="primary"
-          onClick={() => setModal2Visible(true)}
+          onClick={() => setModalVisible(true)}
           style={{ width: '100%' }}
         >
           테마 바꾸기
@@ -138,8 +138,8 @@ const Theme = () => {
       <Modal
         title="테마 수정"
         centered
-        visible={modal2Visible}
-        onCancel={() => setModal2Visible(false)}
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
         footer={null}
         width={300}
       >
