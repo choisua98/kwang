@@ -3,7 +3,7 @@ import { Col, Input, Modal, Row } from 'antd';
 import { ReactComponent as Link } from '../../../../assets/images/admin/link.svg';
 
 const Links = () => {
-  const [modal2Visible, setModal2Visible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [urlText, setUrlText] = useState('');
 
@@ -17,13 +17,13 @@ const Links = () => {
         <Col span={24} style={{ textAlign: 'center' }}>
           <p>링크와 원하는 메뉴를 추가해주세요</p>
           <div style={{ marginTop: '20px' }}>
-            <button onClick={() => setModal2Visible(true)}>
+            <button onClick={() => setModalVisible(true)}>
               <Link />
             </button>
-            <button onClick={() => setModal2Visible(true)}>
+            <button onClick={() => setModalVisible(true)}>
               <Link />
             </button>
-            <button onClick={() => setModal2Visible(true)}>
+            <button onClick={() => setModalVisible(true)}>
               <Link />
             </button>
           </div>
@@ -32,8 +32,8 @@ const Links = () => {
       <Modal
         title="링크 수정"
         centered
-        visible={modal2Visible}
-        onCancel={() => setModal2Visible(false)}
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
         footer={null}
         width={300}
       >
