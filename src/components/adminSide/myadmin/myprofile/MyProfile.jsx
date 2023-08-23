@@ -1,50 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Modal, Upload } from 'antd';
 import { styled } from 'styled-components';
-import { ref, uploadBytes, listAll, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../../../firebase/firebaseConfig';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+  getStorage,
+} from 'firebase/storage';
+import { db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
 import { doc, updateDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const MyProfile = () => {
-  // 임시 User 데이터
-  const initialUserData = {
-    nickname: 'Hoppang',
-    introduction: 'Hello!',
-    profileImage:
-      'https://blog.kakaocdn.net/dn/BkkCC/btqAM4Aqw0K/05gsHFKwF1T7DvhGK1Z5R0/img.jpg',
-  };
+  // 로그인된 유저 정보 가져오기
+  const auth = getAuth();
+  const user = auth.currentUser;
+  console.log(user);
+  console.log(user?.email);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [nickname, setNickname] = useState(initialUserData.nickname);
-  const [introduction, setIntroduction] = useState(
-    initialUserData.introduction,
-  );
-  const [previewImage, setPreviewImage] = useState(
-    initialUserData.profileImage,
-  );
+  const [nickname, setNickname] = useState(user?.email);
+  const [introduction, setIntroduction] = useState('');
+  const [previewImage, setPreviewImage] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
-  const [updateImage, setUpdateImage] = useState(null);
+  const [updateImage, setUpdateImage] = useState('');
 
+  // 프로필 정보를 업데이트 하는 버튼 함수
   const handleProfileUpdate = async () => {
     try {
+      // 이전 프로필 이미지 삭제
+      if (updateImage) {
+        const previousImageRef = ref(storage, updateImage);
+        await deleteObject(previousImageRef);
+      }
+
       // Firebase에 프로필 이미지 업로드
       if (selectedImage) {
-        const imageRef = ref(storage, `profileImages/${nanoid()}`); // 나중에 ref에 추가할 것 : /${user.uid}
-        await uploadBytes(imageRef, selectedImage);
+        const imageRef = ref(storage, `profileImages/${user.uid}/${nanoid()}`);
+        await uploadBytes(imageRef, selectedImage); // storage에 이미지 업로드
         const imageURL = await getDownloadURL(imageRef);
         setUpdateImage(imageURL);
       }
 
       // Firebase에 사용자 데이터 업데이트
-      const updatedUserData = {
-        nickname,
-        introduction,
-        profileImage: updateImage, // 업로드된 이미지 URL 사용
-      };
+      // const updatedUserData = {
+      //   nickname,
+      //   introduction,
+      //   profileImage: updateImage, // 업로드된 이미지 URL 사용
+      // };
 
       // TODO: Firestore 업데이트 로직 추가
-      // const userDocRef = doc(db, 'users', user.uid); // users 컬렉션의 해당 사용자 문서 참조
+      // const userDocRef = doc(db, 'users/${uid}'); // users 컬렉션의 해당 사용자 문서 참조
+      // console.log(userDocRef);
       // await updateDoc(userDocRef, updatedUserData); // 문서 업데이트
 
       setModalVisible(false); // 모달 닫기
@@ -53,16 +62,18 @@ const MyProfile = () => {
     }
   };
 
+  useEffect(() => {
+    getStorage();
+  }, []);
+
   return (
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
         <Col span={24} style={{ textAlign: 'center' }}>
           {/* <Profile /> */}
-          <div>프로필이미지</div>
-          <PreviewImage src={previewImage} alt="이미지 미리보기" />
-
-          <div style={{ margin: '20px 0 10px' }}>닉네임</div>
-          <div style={{ margin: '20px 0' }}>소개</div>
+          <ProfileImage src={updateImage} />
+          <div style={{ margin: '20px 0 10px' }}>{user?.email}</div>
+          <div style={{ margin: '20px 0' }}></div>
           <Button
             onClick={() => {
               setModalVisible(true);
