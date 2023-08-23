@@ -1,24 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { F } from './FanLetter.styles';
-import { MenuOutlined } from '@ant-design/icons';
+import { addDoc, collection, getDocs, query } from 'firebase/firestore';
+import { db } from '../../../../firebase/firebaseConfig';
+import { useNavigate } from 'react-router-dom';
 
 const FanLetter = () => {
-  const [blockToggle, setBlockToggle] = useState(false);
+  const navigate = useNavigate();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  const addButtonClick = async (e) => {
+    e.preventDefault();
+
+    // Firestore에 데이터 추가
+    await addDoc(collection(db, 'template'), {
+      title,
+      description,
+      blockKind: 'fanletter',
+      userId: '1',
+    });
+    navigate('/admin');
+  };
 
   return (
-    <F.Container>
+    <F.Container onSubmit={addButtonClick}>
       <F.Title>
-        <h2>팬레터</h2>
-        <button>⌄</button>
+        <input
+          name="title"
+          type="text"
+          placeholder="팬레터"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+        />
       </F.Title>
       <F.Contents>
         <p>팬레터 설명을 작성해 주세요</p>
-        <F.Input placeholder="설명을 작성해 주세요"></F.Input>
+        <input
+          name="description"
+          type="text"
+          placeholder="설명을 작성해 주세요"
+          value={description}
+          onChange={(e) => {
+            setDescription(e.target.value);
+          }}
+        />
+        <button type="submit">저장하기</button>
       </F.Contents>
     </F.Container>
   );
 };
 
 export default FanLetter;
-
-// 팬레터, 배너 이미지 추가, 예약서비스
