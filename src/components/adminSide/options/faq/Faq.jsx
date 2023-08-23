@@ -7,19 +7,28 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 const Faq = () => {
   const navigate = useNavigate();
+
+  // 질문과 답변에 대한 상태 및 상태 변경 함수 설정
   const [question, handleQuestionChange, resetQuestion] = useInput();
   const [answer, handleAnswerChange, resetAuswer] = useInput();
 
+  // FAQ 리스트를 관리하는 상태 설정
   const [faqList, setFaqList] = useState([]);
 
+  // "질문 추가하기" 버튼 클릭 시 실행되는 함수
   const handleAddFaqButtonClick = () => {
+    // 새로운 FAQ 객체 생성
     const newFaq = { question, answer };
+
+    // faqList 상태 업데이트
     setFaqList((prev) => [...prev, newFaq]);
 
+    // 입력 필드 초기화
     resetQuestion();
     resetAuswer();
   };
 
+  // "저장하기" 버튼 클릭 시 실행되는 함수
   const handleAddButtonClick = async (e) => {
     e.preventDefault();
 
@@ -32,17 +41,21 @@ const Faq = () => {
       return;
     }
 
-    // faqList에 있는 모든 데이터를 Firestore에 추가
-    for (const faq of faqList) {
-      await addDoc(collection(db, 'template'), {
-        question: faq.question,
-        answer: faq.answer,
-        blockKind: 'faq',
-        createdAt: serverTimestamp(),
-        userId: userUid,
-      });
-    }
+    // faqList에 있는 데이터를 faqData에 매핑하여 저장
+    const faqData = faqList.map((faq) => ({
+      question: faq.question,
+      answer: faq.answer,
+    }));
 
+    // Firestore에 데이터 추가
+    await addDoc(collection(db, 'template'), {
+      faqs: faqData,
+      blockKind: 'faq',
+      createdAt: serverTimestamp(),
+      userId: userUid,
+    });
+
+    // 저장 완료 알림 후 어드민 페이지로 이동
     alert('저장 완료!');
     navigate('/admin');
   };
@@ -50,14 +63,12 @@ const Faq = () => {
   return (
     <>
       <F.FaqList>
-        {faqList.map((faq) => {
-          return (
-            <div key={faq.id}>
-              <p>질문: {faq.question}</p>
-              <p>답변: {faq.answer}</p>
-            </div>
-          );
-        })}
+        {faqList.map((faq) => (
+          <div key={faq.id}>
+            <p>질문: {faq.question}</p>
+            <p>답변: {faq.answer}</p>
+          </div>
+        ))}
       </F.FaqList>
       <F.Container onSubmit={handleAddButtonClick}>
         <label>질문 입력</label>
