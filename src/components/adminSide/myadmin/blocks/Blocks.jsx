@@ -1,35 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Col, Modal, Row } from 'antd';
-import Challenge from '../../options/challenge/Challenge';
-import Mailing from '../../options/mailing/Mailing';
-import Reservation from '../../options/reservation/Reservation';
-import Faq from '../../options/faq/Faq';
-import BannerImage from '../../options/bannerImage/BannerImage';
-import FanLetter from '../../options/fanLetter/FanLetter';
 import { useNavigate } from 'react-router-dom';
 
 const Blocks = () => {
   const navigate = useNavigate();
   const [modal2Visible, setModal2Visible] = useState(false);
-  const [options, setOptions] = useState([]);
-
-  const handleOptionButtonClick = (option) => {
-    setOptions((prev) => [...prev, option]);
-    setModal2Visible(false);
-  };
 
   return (
     <>
-      {options.map((option) => {
-        if (option === 1) return <Challenge key={option} />;
-        if (option === 2) return <Mailing key={option} />;
-        if (option === 3) return <Reservation key={option} />;
-        if (option === 4) return <Faq key={option} />;
-        if (option === 5) return <BannerImage key={option} />;
-        if (option === 6) return <FanLetter key={option} />;
-        return false;
-      })}
-
       <Row justify="center">
         <Button
           type="primary"
@@ -55,10 +33,7 @@ const Blocks = () => {
                 border: '1px solid #000',
                 borderRadius: '5px',
               }}
-              onClick={() => {
-                handleOptionButtonClick(1);
-                navigate('/admin/challenge');
-              }}
+              onClick={() => navigate('/admin/challenge')}
             >
               함께해요 챌린지
             </button>
@@ -70,10 +45,7 @@ const Blocks = () => {
                 border: '1px solid #000',
                 borderRadius: '5px',
               }}
-              onClick={() => {
-                handleOptionButtonClick(2);
-                navigate('/admin/mailing');
-              }}
+              onClick={() => navigate('/admin/mailing')}
             >
               메일링 서비스
             </button>
@@ -85,10 +57,7 @@ const Blocks = () => {
                 border: '1px solid #000',
                 borderRadius: '5px',
               }}
-              onClick={() => {
-                handleOptionButtonClick(3);
-                navigate('/admin/reservation');
-              }}
+              onClick={() => navigate('/admin/reservation')}
             >
               예약 서비스
             </button>
@@ -100,10 +69,7 @@ const Blocks = () => {
                 border: '1px solid #000',
                 borderRadius: '5px',
               }}
-              onClick={() => {
-                handleOptionButtonClick(4);
-                navigate('/admin/faq');
-              }}
+              onClick={() => navigate('/admin/faq')}
             >
               자주 묻는 질문
             </button>
@@ -115,10 +81,7 @@ const Blocks = () => {
                 border: '1px solid #000',
                 borderRadius: '5px',
               }}
-              onClick={() => {
-                handleOptionButtonClick(5);
-                navigate('/admin/bannerimage');
-              }}
+              onClick={() => navigate('/admin/bannerimage')}
             >
               배너 이미지 추가
             </button>
@@ -130,10 +93,7 @@ const Blocks = () => {
                 border: '1px solid #000',
                 borderRadius: '5px',
               }}
-              onClick={() => {
-                handleOptionButtonClick(6);
-                navigate('/admin/fanletter');
-              }}
+              onClick={() => navigate('/admin/fanletter')}
             >
               팬레터 보내기
             </button>
