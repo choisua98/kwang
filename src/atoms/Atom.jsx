@@ -8,7 +8,7 @@ export const modalVisibleAtom = atom(false);
 export const backgroundImageAtom = atom(null);
 
 // firebase blockId
-// export const blockId = atom(null);
+export const blockId = atom(null);
 
 // firebase blocks 정보
-// export const blocks = atom([]);
+export const blocksAtom = atom([]);

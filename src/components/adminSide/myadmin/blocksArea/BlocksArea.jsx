@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   collection,
   deleteDoc,
@@ -9,19 +9,18 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { blocksAtom } from '../../../../atoms/Atom';
 
 const BlocksArea = () => {
   const navigate = useNavigate();
-  const [blocks, setBlocks] = useState([]);
+  // const [blocks, setBlocks] = useState([]);
+  const [blocks, setBlocks] = useAtom(blocksAtom);
 
   // firebase 불러오기
   const fetchData = async () => {
-    //사용자 UID 가져오기
-    // const userIUid = auth.currentUser?.uid;
-
     const q = query(collection(db, 'template'), where('userId', '==', '1'));
     const querySnapshot = await getDocs(q);
-
     const initialDocuments = [];
     querySnapshot.forEach((doc) => {
       const data = {
