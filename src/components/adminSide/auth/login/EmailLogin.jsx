@@ -44,7 +44,7 @@ const EmailLogin = () => {
             value={password}
             name="password"
             placeholder="비밀번호"
-            require
+            required
             onChange={(e) => {
               setPassword(e.target.value);
             }}
