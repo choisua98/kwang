@@ -4,7 +4,7 @@ import { useAtom } from 'jotai';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
 import { modalVisibleAtom, themeAtom } from '../../../../atoms/Atom';
 import { auth, db } from '../../../../firebase/firebaseConfig';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 
 const Theme = () => {
   // 사용자 UID 가져오기
@@ -106,7 +106,7 @@ const Theme = () => {
     // Firestore에 사용자의 테마 정보 저장
     if (userUid) {
       const userDocRef = doc(db, 'users', userUid);
-      await setDoc(userDocRef, {
+      await updateDoc(userDocRef, {
         theme: tempTheme,
         backgroundImage: tempBackgroundImage,
       });
