@@ -2,9 +2,7 @@ import { atom } from 'jotai';
 
 // atom 넣으세요
 export const userAtom = atom(null); // 사용자 정보를 담을 Atom
-
-// mailingStateAtom 정의
-export const mailingStateAtom = atom({
-  title: '',
-  content: '',
-});
+// 테마, 모달, 배경 이미지 atoms 생성
+export const themeAtom = atom('light');
+export const modalVisibleAtom = atom(false);
+export const backgroundImageAtom = atom(null);

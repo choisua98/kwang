@@ -1,14 +1,29 @@
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { Provider as JotaiProvider, useAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import Router from './shared/Router';
-import { themeAtom, backgroundImageAtom } from './atoms/ThemaAtom';
+
+import { backgroundImageAtom, themeAtom, userAtom } from './atoms/Atom';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase/firebaseConfig';
 
 const queryClient = new QueryClient();
 
 function App() {
   const [theme, setTheme] = useAtom(themeAtom);
   const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
+  const [, setUser] = useAtom(userAtom); // userAtom 사용
+
+  // onAuthStateChanged 사용
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log({ onAuthStateChanged: user });
+      user ? setUser(user) : setUser(null);
+    });
+
+    // cleanup 함수 등록
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     // 로컬 스토리지에서 저장된 테마 정보 불러오기
@@ -41,9 +56,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <JotaiProvider>
-        <Router />
-      </JotaiProvider>
+      <Router />
     </QueryClientProvider>
   );
 }

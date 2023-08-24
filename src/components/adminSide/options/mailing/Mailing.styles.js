@@ -1,28 +1,24 @@
 import { styled } from 'styled-components';
 
 export const M = {
-  Container: styled.div`
-    padding: 20px;
-  `,
-  Title: styled.div`
+  Container: styled.form`
     display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #afafaf;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
 
-    input {
-      width: 88%;
-      height: 20px;
+    ::placeholder {
+      color: #999;
+      padding: 5px 7px;
     }
-  `,
-  ContentForm: styled.form`
-    display: grid;
-    padding: 20px 10px;
-    background-color: #d9d9d9;
 
-    input {
-      height: 50px;
-      margin: 10px 0px;
+    input,
+    button {
+      height: 30px;
+    }
+
+    textarea {
+      height: 60px;
     }
   `,
 };
