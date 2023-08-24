@@ -3,7 +3,7 @@ import { F } from './FanLetter.styles';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { blocksAtom } from '../../../../atoms/Atom';
 
 const FanLetter = () => {
@@ -15,7 +15,7 @@ const FanLetter = () => {
 
   const blockId = location.state ? location.state.blocksId : null;
   const [blocks] = useAtom(blocksAtom);
-  const selectedBlock = blocks.find((block) => block.id === blockId) || null;
+  const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
   const addButtonClick = async (e) => {
     e.preventDefault();
