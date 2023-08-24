@@ -14,8 +14,11 @@ const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useState([]);
 
-  //   firebase 불러오기
+  // firebase 불러오기
   const fetchData = async () => {
+    //사용자 UID 가져오기
+    // const userIUid = auth.currentUser?.uid;
+
     const q = query(collection(db, 'template'), where('userId', '==', '1'));
     const querySnapshot = await getDocs(q);
 
@@ -26,7 +29,6 @@ const BlocksArea = () => {
         ...doc.data(),
       };
       initialDocuments.push(data);
-      // console.log('data', doc.data());
     });
     setBlocks(initialDocuments);
     return;
@@ -36,7 +38,10 @@ const BlocksArea = () => {
     fetchData();
   }, []);
 
-  const moveToEditButton = (blockKind) => navigate(`/admin/${blockKind}`);
+  const moveToEditButton = (block) =>
+    navigate(`/admin/${block.blockKind}`, {
+      state: { blocksId: `${block.id}` },
+    });
 
   const deleteButton = async (id) => {
     const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
@@ -51,7 +56,7 @@ const BlocksArea = () => {
       {blocks.map((block) => {
         return (
           <div key={block.id}>
-            <button onClick={() => moveToEditButton(block.blockKind)}>
+            <button onClick={() => moveToEditButton(block)}>
               {block.title}
             </button>
             <button onClick={() => deleteButton(block.id)}>삭제</button>
@@ -61,5 +66,4 @@ const BlocksArea = () => {
     </div>
   );
 };
-
 export default BlocksArea;

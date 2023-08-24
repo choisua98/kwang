@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { F } from './FanLetter.styles';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const FanLetter = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [blockData, setBlockData] = useState(null);
+
+  const blockId = location.state ? location.state.blocksId : null;
 
   const addButtonClick = async (e) => {
     e.preventDefault();
@@ -22,13 +26,15 @@ const FanLetter = () => {
     navigate('/admin');
   };
 
+  // console.log('>>', blocksId);
+
   return (
     <F.Container onSubmit={addButtonClick}>
       <F.Title>
         <input
           name="title"
           type="text"
-          placeholder="팬레터"
+          placeholder={blockId ? blockId : '팬레터'}
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
@@ -46,7 +52,7 @@ const FanLetter = () => {
             setDescription(e.target.value);
           }}
         />
-        <button type="submit">저장하기</button>
+        <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
       </F.Contents>
     </F.Container>
   );

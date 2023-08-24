@@ -5,7 +5,7 @@ import {
   backgroundImageAtom,
   modalVisibleAtom,
   themeAtom,
-} from '../../../../atoms/ThemaAtom';
+} from '../../../../atoms/Atom';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
 
 const Theme = () => {
@@ -138,7 +138,7 @@ const Theme = () => {
       <Modal
         title="테마 수정"
         centered
-        visible={modalVisible}
+        open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
         width={300}

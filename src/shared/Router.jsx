@@ -6,6 +6,7 @@ import Main from '../pages/Main';
 import Admin from '../pages/Admin';
 import AdminData from '../pages/AdminData';
 import Layout from '../components/layout/Layout';
+import AdminProfile from '../pages/AdminProfile';
 import AdminChallenge from '../pages/AdminChallenge';
 import AdminMailing from '../pages/AdminMailing';
 import AdminReservation from '../pages/AdminReservation';
@@ -23,6 +24,7 @@ const Router = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/:id" element={<Main />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/profile" element={<AdminProfile />} />
           <Route path="/admindata" element={<AdminData />} />
           <Route path="/admin/challenge" element={<AdminChallenge />} />
           <Route path="/admin/mailing" element={<AdminMailing />} />
