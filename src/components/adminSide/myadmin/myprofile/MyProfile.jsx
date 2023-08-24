@@ -33,26 +33,43 @@ const MyProfile = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [nickname, setNickname] = useState(extractNickname(userEmail));
-  const [updateNick, setUpdateNick] = useState(nickname);
   const [introduction, setIntroduction] = useState('');
-  const [updateIntro, setUpdateIntro] = useState(introduction);
 
   const [previewImage, setPreviewImage] = useState(defaultProfileImage);
   const [selectedImage, setSelectedImage] = useState(null);
   const [updatedImage, setUpdatedImage] = useState(defaultProfileImage);
 
+  // 프로필 이미지 업데이트 함수
+  const handleImageUpdate = async () => {
+    // 기존 userUID 폴더의 이미지 전체 삭제
+    const userImagesRef = ref(storage, `profileImages/${userUID}`);
+    const userImagesList = await listAll(userImagesRef);
+
+    // userImagesList.items 배열에 있는 모든 이미지 삭제
+    await Promise.all(
+      userImagesList.items.map(async (item) => {
+        await deleteObject(item);
+      }),
+    );
+
+    // Firebase에 프로필 이미지 업로드
+    if (selectedImage) {
+      const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`);
+      await uploadBytes(imageRef, selectedImage); // storage에 이미지 업로드
+      const imageURL = await getDownloadURL(imageRef);
+      setUpdatedImage(imageURL);
+    }
+  };
+
   // 프로필 정보를 업데이트 하는 버튼 함수
   const handleProfileUpdate = async () => {
     try {
-      setUpdateNick(nickname);
-      setUpdateIntro(introduction);
-
       const usersCollection = collection(db, 'users');
       const userDocRef = doc(usersCollection, userUID);
 
       // 사용자 정보 업데이트
       const userInfo = {
-        email: userUID,
+        email: userEmail,
         nickname: nickname,
         introduction: introduction,
         profileImageURL: updatedImage,
@@ -69,28 +86,19 @@ const MyProfile = () => {
         await setDoc(userDocRef, userInfo);
       }
 
-      // 기존 user.uid 폴더의 이미지들 삭제
-      const userImagesRef = ref(storage, `profileImages/${userUID}`);
-      const userImagesList = await listAll(userImagesRef);
-
-      // userImagesList.items 배열에 있는 모든 이미지 삭제
-      await Promise.all(
-        userImagesList.items.map(async (item) => {
-          await deleteObject(item);
-        }),
-      );
-
-      // Firebase에 프로필 이미지 업로드
-      if (selectedImage) {
-        const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`);
-        await uploadBytes(imageRef, selectedImage); // storage에 이미지 업로드
-        const imageURL = await getDownloadURL(imageRef);
-        setUpdatedImage(imageURL);
-      }
+      await handleImageUpdate();
 
       setModalVisible(false); // 모달 닫기
     } catch (error) {
       console.error('프로필 업데이트 실패', error);
+    }
+  };
+
+  const onChangeImgaeFile = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setPreviewImage(URL.createObjectURL(file));
     }
   };
 
@@ -100,8 +108,8 @@ const MyProfile = () => {
         <Col span={24} style={{ textAlign: 'center' }}>
           {/* <Profile /> */}
           <ProfileImage src={updatedImage} />
-          <div style={{ margin: '20px 0 10px' }}>{updateNick}</div>
-          <div style={{ margin: '20px 0' }}>{updateIntro}</div>
+          <div style={{ margin: '20px 0 10px' }}>닉네임</div>
+          <div style={{ margin: '20px 0' }}>소개</div>
           <Button
             onClick={() => {
               setModalVisible(true);
@@ -134,16 +142,7 @@ const MyProfile = () => {
         <ProfileContainer>
           {/* 프로필 이미지 미리보기 */}
           <PreviewImage src={previewImage} alt="이미지 미리보기" />
-          <input
-            type="file"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              if (file) {
-                setSelectedImage(file);
-                setPreviewImage(URL.createObjectURL(file));
-              }
-            }}
-          />
+          <input type="file" onChange={onChangeImgaeFile} />
           <div style={{ marginTop: '20px' }}>닉네임</div>
           <ProfileInput
             placeholder="변경하실 닉네임을 작성해주세요."
