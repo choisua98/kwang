@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useAtom } from 'jotai';
 import Router from './shared/Router';
-import { themeAtom, backgroundImageAtom } from './atoms/Atom';
-import { userAtom } from './atoms/Atom';
+
+import { backgroundImageAtom, themeAtom, userAtom } from './atoms/Atom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase/firebaseConfig';
 
@@ -17,6 +17,7 @@ function App() {
   // onAuthStateChanged 사용
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log({ onAuthStateChanged: user });
       user ? setUser(user) : setUser(null);
     });
 
