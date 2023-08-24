@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Modal, Upload } from 'antd';
 import { styled } from 'styled-components';
+import { db, storage } from '../../../../firebase/firebaseConfig';
+import { nanoid } from 'nanoid';
+import { doc, updateDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import {
   ref,
   uploadBytes,
   getDownloadURL,
   deleteObject,
-  getStorage,
   listAll,
 } from 'firebase/storage';
-import { db, storage } from '../../../../firebase/firebaseConfig';
-import { nanoid } from 'nanoid';
-import { doc, updateDoc } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
 
 const MyProfile = () => {
   // 로그인된 유저 정보 가져오기
@@ -22,11 +22,18 @@ const MyProfile = () => {
   console.log(user?.email);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [nickname, setNickname] = useState(user?.email);
+  const [nickname, setNickname] = useState(user?.email); // 닉네임이 어떻게 들어오는지에 따라 변경할 예정
   const [introduction, setIntroduction] = useState('');
-  const [previewImage, setPreviewImage] = useState('');
+  const [previewImage, setPreviewImage] = useState(defaultProfileImage);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [updateImage, setUpdateImage] = useState('');
+  const [updatedImage, setUpdatedImage] = useState(defaultProfileImage);
+
+  useEffect(() => {
+    // 유저가 사용 가능한 상태일 때, 닉네임과 소개의 초기값 설정
+    if (user) {
+      setNickname(user.email || ''); // 기본값으로 빈 문자열 사용 // 닉네임으로 교체 예정
+    }
+  }, [user]);
 
   // 프로필 정보를 업데이트 하는 버튼 함수
   const handleProfileUpdate = async () => {
@@ -44,10 +51,10 @@ const MyProfile = () => {
 
       // Firebase에 프로필 이미지 업로드
       if (selectedImage) {
-        const imageRef = ref(storage, `profileImages/${user.uid}/${nanoid()}`);
+        const imageRef = ref(storage, `profileImages/${user.uid}/${nanoid()}`); // nanoid를 실행시켜서 업데이트 속도가 조금 느린건가?
         await uploadBytes(imageRef, selectedImage); // storage에 이미지 업로드
         const imageURL = await getDownloadURL(imageRef);
-        setUpdateImage(imageURL);
+        setUpdatedImage(imageURL);
       }
 
       setModalVisible(false); // 모달 닫기
@@ -61,9 +68,9 @@ const MyProfile = () => {
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
         <Col span={24} style={{ textAlign: 'center' }}>
           {/* <Profile /> */}
-          <ProfileImage src={updateImage} />
+          <ProfileImage src={updatedImage} />
           <div style={{ margin: '20px 0 10px' }}>{user?.email}</div>
-          <div style={{ margin: '20px 0' }}></div>
+          <div style={{ margin: '20px 0' }}>소개</div>
           <Button
             onClick={() => {
               setModalVisible(true);
@@ -154,13 +161,3 @@ const PreviewImage = styled.img`
   background-color: #d6d6d6;
   border-radius: 100%;
 `;
-
-// {/* <Upload
-//   name="profileImage"
-//   type="file"
-//   beforeUpload={() => false}
-//   onChange={() => {}}
-//   showUploadList={true}
-// >
-//   <Button>프로필 이미지 업로드</Button>
-// </Upload>; */}

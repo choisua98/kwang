@@ -5,6 +5,7 @@ import { Reset } from 'styled-reset';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { GlobalStyle } from './styles/GlobalStyle';
+import { Provider as JotaiProvider } from 'jotai';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -12,7 +13,9 @@ root.render(
   <>
     <Reset />
     <GlobalStyle />
-    <App />
+    <JotaiProvider>
+      <App />
+    </JotaiProvider>
   </>,
   // </React.StrictMode>
 );
