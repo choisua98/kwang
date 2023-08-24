@@ -3,7 +3,7 @@ import { Row, Col, Button, Modal, Upload } from 'antd';
 import { styled } from 'styled-components';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
-import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import {
   ref,
@@ -58,7 +58,16 @@ const MyProfile = () => {
         profileImageURL: updatedImage,
       };
 
-      await setDoc(userDocRef, userInfo); // Firestore에 사용자 정보 업데이트
+      // 문서가 존재하는지 확인
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        // 문서가 있는 경우 업데이트
+        await updateDoc(userDocRef, userInfo);
+      } else {
+        // 문서가 없는 경우 문서 생성 후 업데이트
+        await setDoc(userDocRef, userInfo);
+      }
 
       // 기존 user.uid 폴더의 이미지들 삭제
       const userImagesRef = ref(storage, `profileImages/${userUID}`);
@@ -73,7 +82,7 @@ const MyProfile = () => {
 
       // Firebase에 프로필 이미지 업로드
       if (selectedImage) {
-        const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`); // nanoid를 실행시켜서 업데이트 속도가 조금 느린건가?
+        const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`);
         await uploadBytes(imageRef, selectedImage); // storage에 이미지 업로드
         const imageURL = await getDownloadURL(imageRef);
         setUpdatedImage(imageURL);

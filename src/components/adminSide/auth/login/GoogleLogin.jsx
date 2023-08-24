@@ -5,9 +5,12 @@ import { useAtom } from 'jotai';
 import { userAtom } from '../../../../atoms/Atom';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 const GoogleLogin = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useAtom(userAtom);
+  console.log({ 로그인한유저: user });
   const auth = getAuth();
   const provider1 = new GoogleAuthProvider();
   // --구글 로그인--
@@ -18,26 +21,9 @@ const GoogleLogin = () => {
         // setUserData(result.user); // user data 설정
         console.log(result.user);
         setUser(result.user); // console로 들어온 데이터 표시
-        // const credential = GoogleAuthProvider.credentialFromResult(result);
-        // const token = credential.accessToken;
-        // The signed-in user info.
-        // const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
       })
-      .catch((error) => {
-        // // Handle Errors here.
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
-        // // The email of the user's account used.
-        // const email = error.customData.email;
-        // // The AuthCredential type that was used.
-        // const credential = GoogleAuthProvider.credentialFromError(error);
-        // // ...
-      });
-  };
-  const googleLogout = () => {
-    window.location.href = 'http://localhost:3000/login';
+      .catch((error) => {});
+    navigate('/admin');
   };
 
   return (

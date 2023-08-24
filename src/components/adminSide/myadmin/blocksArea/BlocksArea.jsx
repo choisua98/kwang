@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { B } from './BlocksArea.styles';
 import { useNavigate } from 'react-router-dom';
 import { useAtom, useAtomValue } from 'jotai';
-import { userAtom, blocksAtom } from '../../../../atoms/Atom';
+import { userAtom, blocksAtom, bannerImageAtom } from '../../../../atoms/Atom';
 import {
   collection,
   deleteDoc,
@@ -10,13 +11,14 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { db } from '../../../../firebase/firebaseConfig';
+import { db, storage } from '../../../../firebase/firebaseConfig';
+import { deleteObject, getDownloadURL, ref } from 'firebase/storage';
 
 const BlocksArea = () => {
   const navigate = useNavigate();
-
-  // Jotai를 통해 전역 상태 사용
   const [blocks, setBlocks] = useAtom(blocksAtom);
+  const [imageUrl, setImageUrl] = useState('');
+  const image = useAtom(bannerImageAtom);
 
   // Jotai에서 유저 정보 가져오기
   const user = useAtomValue(userAtom);
@@ -27,7 +29,6 @@ const BlocksArea = () => {
   // firebase에서 데이터 불러오기
   const fetchData = async () => {
     // Firestore에서 유저에 해당하는 데이터를 가져오기 위한 쿼리 생성
-
     try {
       // 쿼리 실행하여 데이터 가져오기
       const q = query(
@@ -60,6 +61,12 @@ const BlocksArea = () => {
     }
   }, [user]);
 
+  // const getImageUrl = async () => {
+  //   const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
+  //   const imageUrl = await getDownloadURL(imageRef);
+  //   return imageUrl;
+  // };
+
   // 수정 버튼 클릭 시 페이지 이동 함수
   const moveToEditButton = (block) =>
     navigate(`/admin/${block.blockKind}`, {
@@ -75,19 +82,42 @@ const BlocksArea = () => {
     }
   };
 
+  // const deleteImageButton = async () => {
+  //   const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+  //   if (shouldDelete) {
+  //     const previousImageRef = ref(
+  //       storage,
+  //       `bannerImages/${user.uid}/bannerimage`,
+  //     );
+  //     await deleteObject(previousImageRef);
+  //     // 이미지 삭제 후 페이지 새로고침
+  //     window.location.reload();
+  //   }
+  // };
+
   return (
-    <div>
-      {blocks.map((block) => {
-        return (
-          <div key={block.id}>
-            <button onClick={() => moveToEditButton(block)}>
-              {block.title}
-            </button>
-            <button onClick={() => deleteButton(block.id)}>삭제</button>
-          </div>
-        );
-      })}
-    </div>
+    <B.Container>
+      <>
+        {blocks.map((block) => {
+          return (
+            <div key={block.id}>
+              <button onClick={() => moveToEditButton(block)}>
+                {block.title}
+              </button>
+              <button onClick={() => deleteButton(block.id)}>삭제</button>
+            </div>
+          );
+        })}
+      </>
+      {/* {image[0] ? (
+        <>
+          <img src={image[0]} onClick={() => navigate('/admin/bannerimage')} />
+          <button onClick={deleteImageButton}>삭제</button>
+        </>
+      ) : (
+        ''
+      )} */}
+    </B.Container>
   );
 };
 export default BlocksArea;

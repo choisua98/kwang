@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const EmailLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const auth = getAuth();
+  const navigate = useNavigate();
 
   // --이메일 로그인--
   const onLoginButtonClickHandler = async (e) => {
@@ -17,6 +19,7 @@ const EmailLogin = () => {
         password,
       );
       console.log(userCredential);
+      navigate('/admin');
     } catch (error) {
       console.error(error);
     }

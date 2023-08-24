@@ -5,9 +5,11 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const NaverLogin = () => {
   const auth = getAuth();
+  const navigate = useNavigate();
 
   // --네이버 로그인--
   const { naver } = window;
@@ -69,10 +71,10 @@ const NaverLogin = () => {
           }
         };
         checkEmailExists();
+        navigate('/admin');
       }
     });
   };
-  // console.log(user);
 
   useEffect(() => {
     initializeNaverLogin();

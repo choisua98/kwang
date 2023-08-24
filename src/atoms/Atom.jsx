@@ -12,3 +12,6 @@ export const blockId = atom(null);
 
 // firebase blocks 정보
 export const blocksAtom = atom([]);
+
+// bannerImage
+export const bannerImageAtom = atom(null);
