@@ -1,60 +1,83 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Modal, Upload } from 'antd';
 import { styled } from 'styled-components';
+import { db, storage } from '../../../../firebase/firebaseConfig';
+import { nanoid } from 'nanoid';
+import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
+import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import {
   ref,
   uploadBytes,
   getDownloadURL,
   deleteObject,
-  getStorage,
+  listAll,
 } from 'firebase/storage';
-import { db, storage } from '../../../../firebase/firebaseConfig';
-import { nanoid } from 'nanoid';
-import { doc, updateDoc } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { useAtom } from 'jotai';
+import { userAtom } from '../../../../atoms/Atom';
 
 const MyProfile = () => {
-  // 로그인된 유저 정보 가져오기
-  const auth = getAuth();
-  const user = auth.currentUser;
-  console.log(user);
-  console.log(user?.email);
+  const user = useAtom(userAtom);
+  const userEmail = user[0]?.email;
+  const userUID = user[0]?.uid;
+  console.log(userEmail);
+  console.log(userUID);
+
+  // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
+  const extractNickname = (email) => {
+    const parts = email?.split('@');
+    if (parts?.length > 0) {
+      return parts[0];
+    }
+    return '';
+  };
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [nickname, setNickname] = useState(user?.email);
+  const [nickname, setNickname] = useState(extractNickname(userEmail));
+  const [updateNick, setUpdateNick] = useState(nickname);
   const [introduction, setIntroduction] = useState('');
-  const [previewImage, setPreviewImage] = useState('');
+  const [updateIntro, setUpdateIntro] = useState(introduction);
+
+  const [previewImage, setPreviewImage] = useState(defaultProfileImage);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [updateImage, setUpdateImage] = useState('');
+  const [updatedImage, setUpdatedImage] = useState(defaultProfileImage);
 
   // 프로필 정보를 업데이트 하는 버튼 함수
   const handleProfileUpdate = async () => {
     try {
-      // 이전 프로필 이미지 삭제
-      if (updateImage) {
-        const previousImageRef = ref(storage, updateImage);
-        await deleteObject(previousImageRef);
-      }
+      setUpdateNick(nickname);
+      setUpdateIntro(introduction);
+
+      const usersCollection = collection(db, 'users');
+      const userDocRef = doc(usersCollection, userUID);
+
+      // 사용자 정보 업데이트
+      const userInfo = {
+        email: userUID,
+        nickname: nickname,
+        introduction: introduction,
+        profileImageURL: updatedImage,
+      };
+
+      await setDoc(userDocRef, userInfo); // Firestore에 사용자 정보 업데이트
+
+      // 기존 user.uid 폴더의 이미지들 삭제
+      const userImagesRef = ref(storage, `profileImages/${userUID}`);
+      const userImagesList = await listAll(userImagesRef);
+
+      // userImagesList.items 배열에 있는 모든 이미지 삭제
+      await Promise.all(
+        userImagesList.items.map(async (item) => {
+          await deleteObject(item);
+        }),
+      );
 
       // Firebase에 프로필 이미지 업로드
       if (selectedImage) {
-        const imageRef = ref(storage, `profileImages/${user.uid}/${nanoid()}`);
+        const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`); // nanoid를 실행시켜서 업데이트 속도가 조금 느린건가?
         await uploadBytes(imageRef, selectedImage); // storage에 이미지 업로드
         const imageURL = await getDownloadURL(imageRef);
-        setUpdateImage(imageURL);
+        setUpdatedImage(imageURL);
       }
-
-      // Firebase에 사용자 데이터 업데이트
-      // const updatedUserData = {
-      //   nickname,
-      //   introduction,
-      //   profileImage: updateImage, // 업로드된 이미지 URL 사용
-      // };
-
-      // TODO: Firestore 업데이트 로직 추가
-      // const userDocRef = doc(db, 'users/${uid}'); // users 컬렉션의 해당 사용자 문서 참조
-      // console.log(userDocRef);
-      // await updateDoc(userDocRef, updatedUserData); // 문서 업데이트
 
       setModalVisible(false); // 모달 닫기
     } catch (error) {
@@ -62,18 +85,14 @@ const MyProfile = () => {
     }
   };
 
-  useEffect(() => {
-    getStorage();
-  }, []);
-
   return (
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
         <Col span={24} style={{ textAlign: 'center' }}>
           {/* <Profile /> */}
-          <ProfileImage src={updateImage} />
-          <div style={{ margin: '20px 0 10px' }}>{user?.email}</div>
-          <div style={{ margin: '20px 0' }}></div>
+          <ProfileImage src={updatedImage} />
+          <div style={{ margin: '20px 0 10px' }}>{updateNick}</div>
+          <div style={{ margin: '20px 0' }}>{updateIntro}</div>
           <Button
             onClick={() => {
               setModalVisible(true);
@@ -164,13 +183,3 @@ const PreviewImage = styled.img`
   background-color: #d6d6d6;
   border-radius: 100%;
 `;
-
-// {/* <Upload
-//   name="profileImage"
-//   type="file"
-//   beforeUpload={() => false}
-//   onChange={() => {}}
-//   showUploadList={true}
-// >
-//   <Button>프로필 이미지 업로드</Button>
-// </Upload>; */}
