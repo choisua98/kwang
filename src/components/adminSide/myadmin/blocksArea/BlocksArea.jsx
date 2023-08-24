@@ -7,16 +7,20 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { db } from '../../../../firebase/firebaseConfig';
+import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 
 const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useState([]);
 
+  // 사용자 UID 가져오기
+  const userUid = auth.currentUser?.uid;
+  console.log(userUid);
+
   // firebase 불러오기
   const fetchData = async () => {
-    const q = query(collection(db, 'template'), where('userId', '==', '111'));
+    const q = query(collection(db, 'template'), where('userId', '==', userUid));
     const querySnapshot = await getDocs(q);
 
     const initialDocuments = [];

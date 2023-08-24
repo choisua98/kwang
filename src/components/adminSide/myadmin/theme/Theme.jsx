@@ -5,7 +5,7 @@ import {
   backgroundImageAtom,
   modalVisibleAtom,
   themeAtom,
-} from '../../../../atoms/ThemaAtom';
+} from '../../../../atoms/Atom';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
 
 const Theme = () => {
