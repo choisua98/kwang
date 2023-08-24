@@ -14,16 +14,15 @@ import { db } from '../../../../firebase/firebaseConfig';
 
 const BlocksArea = () => {
   const navigate = useNavigate();
-  // const [blocks, setBlocks] = useState([]);
+
+  // Jotai를 통해 전역 상태 사용
   const [blocks, setBlocks] = useAtom(blocksAtom);
 
   // Jotai에서 유저 정보 가져오기
   const user = useAtomValue(userAtom);
-  console.log('1', user);
 
   // 유저의 UID 가져오기
   const userUid = user?.uid;
-  console.log('2', userUid);
 
   // firebase에서 데이터 불러오기
   const fetchData = async () => {
@@ -56,14 +55,18 @@ const BlocksArea = () => {
 
   // 컴포넌트 마운트 시 데이터 가져오기 함수 호출
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
 
+  // 수정 버튼 클릭 시 페이지 이동 함수
   const moveToEditButton = (block) =>
     navigate(`/admin/${block.blockKind}`, {
       state: { blocksId: `${block.id}` },
     });
 
+  // 삭제 버튼 클릭 시 데이터 삭제 함수
   const deleteButton = async (id) => {
     const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
     if (shouldDelete) {

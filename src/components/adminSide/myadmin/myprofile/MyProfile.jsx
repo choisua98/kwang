@@ -19,8 +19,8 @@ const MyProfile = () => {
   const user = useAtom(userAtom);
   const userEmail = user[0]?.email;
   const userUID = user[0]?.uid;
-  console.log(userEmail);
-  console.log(userUID);
+  // console.log(userEmail);
+  // console.log(userUID);
 
   // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
   const extractNickname = (email) => {
