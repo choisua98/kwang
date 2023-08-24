@@ -21,8 +21,15 @@ export const B = {
     background-color: #d9d9d9;
 
     button {
-      height: 50px;
+      height: 30px;
       margin: 10px 0px;
+    }
+    label {
+      cursor: pointer;
+      height: 30px;
+      margin: 10px 0px;
+      background-color: white;
+      text-align: center;
     }
   `,
 };
