@@ -6,6 +6,8 @@ import { useAtomValue } from 'jotai';
 import { userAtom } from '../atoms/Atom';
 import NaverLogin from '../components/adminSide/auth/login/NaverLogin';
 import { signOut } from 'firebase/auth';
+import KakaoLogin from '../components/adminSide/auth/login/KakaoLogin';
+const { Kakao } = window;
 
 const Login = () => {
   const { naver } = window;
@@ -13,13 +15,37 @@ const Login = () => {
   const NAVER_CALLBACK_URL = 'http://www.localhost:3000/login';
   const user = useAtomValue(userAtom);
 
-  const Logout = async () => {
-    await signOut(auth); //파이어베이스 로그아웃
-    naverLogin.logout(); //네이버 로그아웃
-    window.location.href = 'http://localhost:3000/login';
-  };
-  const EmailLogout = async () => {
-    await signOut(auth); //파이어베이스 로그아웃
+  const 통합로그아웃 = async () => {
+    if (user) {
+      console.log('유저가있습니다.');
+    }
+    try {
+      Kakao.Auth.logout(() => {
+        //카카오로그아웃
+        signOut(auth); //파이어베이스 로그아웃
+        localStorage.clear();
+        console.log('!로그아웃 요청!');
+        console.log(
+          '카카오 로그아웃 되었습니다.',
+          '토큰?',
+          Kakao.Auth.getAccessToken(),
+        );
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    // try {
+    //   signOut(auth);
+    // } catch (error) {
+    //   //파이어베이스 로그아웃
+    //   console.error(error);
+    // }
+    try {
+      naverLogin.logout(); //네이버 로그아웃
+      window.location.href = 'http://localhost:3000/login';
+    } catch (error) {
+      console.error(error);
+    }
   };
   const naverLogin = new naver.LoginWithNaverId({
     clientId: NAVER_CLIENT_ID,
@@ -32,12 +58,12 @@ const Login = () => {
     <div>
       <EmailLogin />
 
-      <button onClick={EmailLogout}>이메일로그아웃</button>
+      {/* <button onClick={EmailLogout}>이메일로그아웃</button> */}
       <br />
       <br />
       <NaverLogin />
       <GoogleLogin />
-
+      <KakaoLogin />
       <div>
         {user ? (
           <div>
@@ -47,7 +73,8 @@ const Login = () => {
             <h3>프로필사진</h3>
             <img src={user.profile_image} alt="프로필 사진" />
             <br />
-            <button onClick={Logout}>소셜로그아웃</button>
+            {/* <button onClick={SocialLogout}>소셜로그아웃</button> */}
+            <button onClick={통합로그아웃}>통합로그아웃</button>
           </div>
         ) : null}
       </div>
