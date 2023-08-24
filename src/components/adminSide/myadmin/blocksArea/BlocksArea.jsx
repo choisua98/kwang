@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   collection,
   deleteDoc,
@@ -9,16 +9,18 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { blocksAtom } from '../../../../atoms/Atom';
 
 const BlocksArea = () => {
   const navigate = useNavigate();
-  const [blocks, setBlocks] = useState([]);
+  // const [blocks, setBlocks] = useState([]);
+  const [blocks, setBlocks] = useAtom(blocksAtom);
 
   // firebase 불러오기
   const fetchData = async () => {
-    const q = query(collection(db, 'template'), where('userId', '==', '111'));
+    const q = query(collection(db, 'template'), where('userId', '==', '1'));
     const querySnapshot = await getDocs(q);
-
     const initialDocuments = [];
     querySnapshot.forEach((doc) => {
       const data = {
@@ -35,11 +37,17 @@ const BlocksArea = () => {
     fetchData();
   }, []);
 
-  const moveToEditButton = (blockKind) => navigate(`/admin/${blockKind}`);
+  const moveToEditButton = (block) =>
+    navigate(`/admin/${block.blockKind}`, {
+      state: { blocksId: `${block.id}` },
+    });
 
   const deleteButton = async (id) => {
-    window.confirm('정말 삭제하시겠습니까?');
-    await deleteDoc(doc(db, 'template', `${id}`));
+    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+    if (shouldDelete) {
+      await deleteDoc(doc(db, 'template', `${id}`));
+      fetchData(); // 데이터 삭제 후 새로고침
+    }
   };
 
   return (
@@ -47,7 +55,7 @@ const BlocksArea = () => {
       {blocks.map((block) => {
         return (
           <div key={block.id}>
-            <button onClick={() => moveToEditButton(block.blockKind)}>
+            <button onClick={() => moveToEditButton(block)}>
               {block.title}
             </button>
             <button onClick={() => deleteButton(block.id)}>삭제</button>
