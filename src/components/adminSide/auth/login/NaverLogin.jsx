@@ -5,11 +5,8 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useAtom } from 'jotai';
-import { userAtom } from '../../../../atoms/Atom';
 
 const NaverLogin = () => {
-  const [user, setUser] = useAtom(userAtom);
   const auth = getAuth();
 
   // --네이버 로그인--
@@ -26,12 +23,11 @@ const NaverLogin = () => {
       callbackHandle: true,
     });
     naverLogin.init();
+    naverLogin.logout();
 
     naverLogin.getLoginStatus(async (status) => {
       if (status) {
         console.log(`로그인?: ${status}`);
-        console.log(naverLogin.user);
-        setUser(naverLogin.user);
         //네이버로그인 유저정보를 이용해서 firebase 이메일+패스워드로 가입시켜주기.
         //firebase에 등록된 기존회원이면 로그인 -> 안되면 비회원이니까 회원가입시켜주기.
         const checkEmailExists = async () => {
@@ -76,7 +72,7 @@ const NaverLogin = () => {
       }
     });
   };
-  console.log(user);
+  // console.log(user);
 
   useEffect(() => {
     initializeNaverLogin();

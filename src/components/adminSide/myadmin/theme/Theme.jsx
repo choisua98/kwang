@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Col, Modal, Row } from 'antd';
 import { useAtom } from 'jotai';
+import sampleImg from '../../../../assets/images/admin/sample.jpg';
 import {
   backgroundImageAtom,
   modalVisibleAtom,
   themeAtom,
-} from '../../../../atoms/ThemaAtom';
-import sampleImg from '../../../../assets/images/admin/sample.jpg';
+} from '../../../../atoms/Atom';
 
 const Theme = () => {
   const [theme, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
