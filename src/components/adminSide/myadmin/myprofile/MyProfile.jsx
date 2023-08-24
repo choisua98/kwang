@@ -4,7 +4,6 @@ import { styled } from 'styled-components';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
 import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import {
   ref,
@@ -17,12 +16,6 @@ import { useAtom } from 'jotai';
 import { userAtom } from '../../../../atoms/Atom';
 
 const MyProfile = () => {
-  // 로그인된 유저 정보 가져오기
-  // const auth = getAuth();
-  // const user = auth.currentUser;
-  // console.log(user?.uid);
-  // console.log(user?.email);
-
   const user = useAtom(userAtom);
   const userEmail = user[0]?.email;
   const userUID = user[0]?.uid;
@@ -68,7 +61,7 @@ const MyProfile = () => {
       await setDoc(userDocRef, userInfo); // Firestore에 사용자 정보 업데이트
 
       // 기존 user.uid 폴더의 이미지들 삭제
-      const userImagesRef = ref(storage, `profileImages/${user.uid}`);
+      const userImagesRef = ref(storage, `profileImages/${userUID}`);
       const userImagesList = await listAll(userImagesRef);
 
       // userImagesList.items 배열에 있는 모든 이미지 삭제
