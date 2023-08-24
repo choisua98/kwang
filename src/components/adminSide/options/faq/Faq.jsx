@@ -49,6 +49,7 @@ const Faq = () => {
 
     // Firestore에 데이터 추가
     await addDoc(collection(db, 'template'), {
+      title: '자주 묻는 질문',
       faqs: faqData,
       blockKind: 'faq',
       createdAt: serverTimestamp(),
