@@ -1,45 +1,63 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Button, Modal, Upload } from 'antd';
+import { Row, Col, Button, Modal } from 'antd';
 import { styled } from 'styled-components';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
-import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, updateDoc, getDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-  listAll,
-} from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useAtom } from 'jotai';
-import { userAtom } from '../../../../atoms/Atom';
+import { userAtom, themeAtom } from '../../../../atoms/Atom';
 
 const MyProfile = () => {
   const user = useAtom(userAtom);
-  const userEmail = user[0]?.email;
   const userUID = user[0]?.uid;
-  console.log(userEmail);
-  console.log(userUID);
-
-  // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
-  const extractNickname = (email) => {
-    const parts = email?.split('@');
-    if (parts?.length > 0) {
-      return parts[0];
-    }
-    return '';
-  };
+  const [theme] = useAtom(themeAtom);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [nickname, setNickname] = useState(extractNickname(userEmail));
-  const [updateNick, setUpdateNick] = useState(nickname);
+  const [nickname, setNickname] = useState('');
+  const [updateNick, setUpdateNick] = useState('');
   const [introduction, setIntroduction] = useState('');
-  const [updateIntro, setUpdateIntro] = useState(introduction);
+  const [updateIntro, setUpdateIntro] = useState('');
 
   const [previewImage, setPreviewImage] = useState(defaultProfileImage);
   const [selectedImage, setSelectedImage] = useState(null);
   const [updatedImage, setUpdatedImage] = useState(defaultProfileImage);
+
+  // 프로필 정보 초기화 로직
+  useEffect(() => {
+    if (userUID) {
+      const userDocRef = doc(db, 'users', userUID);
+      const fetchProfileInfo = async () => {
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setNickname(userData.nickname || '');
+          setUpdateNick(userData.nickname || '');
+          setIntroduction(userData.introduction || '');
+          setUpdateIntro(userData.introduction || '');
+          setUpdatedImage(userData.profileImageURL || defaultProfileImage);
+        }
+      };
+      fetchProfileInfo();
+    }
+  }, [userUID]);
+
+  // 이미지 업데이트 함수
+  const updateProfileImage = async () => {
+    try {
+      if (selectedImage) {
+        const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`);
+        await uploadBytes(imageRef, selectedImage);
+        const imageURL = await getDownloadURL(imageRef);
+        return imageURL;
+      }
+      return null;
+    } catch (error) {
+      console.error('프로필 이미지 업데이트 실패', error);
+      return null;
+    }
+  };
 
   // 프로필 정보를 업데이트 하는 버튼 함수
   const handleProfileUpdate = async () => {
@@ -55,36 +73,22 @@ const MyProfile = () => {
         email: userUID,
         nickname: nickname,
         introduction: introduction,
-        profileImageURL: updatedImage,
+        theme: theme,
       };
 
-      await setDoc(userDocRef, userInfo); // Firestore에 사용자 정보 업데이트
-
-      // 기존 user.uid 폴더의 이미지들 삭제
-      const userImagesRef = ref(storage, `profileImages/${userUID}`);
-      const userImagesList = await listAll(userImagesRef);
-
-      // userImagesList.items 배열에 있는 모든 이미지 삭제
-      await Promise.all(
-        userImagesList.items.map(async (item) => {
-          await deleteObject(item);
-        }),
-      );
-
-      // Firebase에 프로필 이미지 업로드
-      if (selectedImage) {
-        const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`); // nanoid를 실행시켜서 업데이트 속도가 조금 느린건가?
-        await uploadBytes(imageRef, selectedImage); // storage에 이미지 업로드
-        const imageURL = await getDownloadURL(imageRef);
-        setUpdatedImage(imageURL);
+      // 프로필 이미지 업데이트 및 이미지 URL 업데이트
+      const imageURL = await updateProfileImage();
+      if (imageURL) {
+        userInfo.profileImageURL = imageURL;
       }
+
+      await updateDoc(userDocRef, userInfo);
 
       setModalVisible(false); // 모달 닫기
     } catch (error) {
       console.error('프로필 업데이트 실패', error);
     }
   };
-
   return (
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
