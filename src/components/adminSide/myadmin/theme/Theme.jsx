@@ -2,36 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { Button, Col, Modal, Row } from 'antd';
 import { useAtom } from 'jotai';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
-import {
-  backgroundImageAtom,
-  modalVisibleAtom,
-  themeAtom,
-} from '../../../../atoms/Atom';
+import { modalVisibleAtom, themeAtom } from '../../../../atoms/Atom';
+import { auth, db } from '../../../../firebase/firebaseConfig';
+import { doc, updateDoc } from 'firebase/firestore';
 
 const Theme = () => {
+  // 사용자 UID 가져오기
+  const userUid = auth.currentUser?.uid;
+
   const [theme, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
-  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
+  const [backgroundImage, setBackgroundImage] = useState('');
   const [tempTheme, setTempTheme] = useState(null);
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null);
 
   useEffect(() => {
     // 페이지 로드시나 테마 변경시 스타일
     applyThemeStyles();
-  }, [theme, backgroundImage]);
-
-  useEffect(() => {
-    // 페이지가 로드될 때 로컬 스토리지에서 테마 정보 불러오기
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      // 로컬 상태에 테마 설정
-      setTheme(savedTheme);
-    }
-    // 로컬 스토리지에서 저장된 배경 이미지 불러오기
-    const savedBackgroundImage = localStorage.getItem('backgroundImage');
-    if (savedBackgroundImage) {
-      setBackgroundImage(savedBackgroundImage);
-    }
   }, []);
 
   const applyThemeStyles = () => {
@@ -40,12 +27,9 @@ const Theme = () => {
     // 배경 이미지 설정
     if (tempTheme === 'dark' && tempBackgroundImage === null) {
       setBackgroundImage(null);
-      localStorage.removeItem('backgroundImage');
     } else {
       if (tempBackgroundImage !== null) {
         setBackgroundImage(tempBackgroundImage);
-        // 로컬 스토리지에 배경 이미지 저장
-        localStorage.setItem('backgroundImage', tempBackgroundImage);
       }
     }
 
@@ -103,25 +87,30 @@ const Theme = () => {
     setTempBackgroundImage(sampleImg);
   };
 
-  // 적용하기 버튼 클릭 시 전역 테마 상태 변경
-  const handleApplyClick = () => {
+  const handleApplyClick = async () => {
     if (tempTheme) {
       setTheme(tempTheme);
-      // 로컬 스토리지에 테마 저장
       localStorage.setItem('theme', tempTheme);
     }
     if (tempBackgroundImage !== null) {
       if (tempBackgroundImage === '') {
-        // 배경 이미지를 제거한 경우 로컬 스토리지에서도 제거
         localStorage.removeItem('backgroundImage');
       } else {
-        // 배경 이미지 저장
         localStorage.setItem('backgroundImage', tempBackgroundImage);
       }
       setBackgroundImage(tempBackgroundImage);
     }
     applyThemeStyles();
     setModalVisible(false);
+
+    // Firestore에 사용자의 테마 정보 저장
+    if (userUid) {
+      const userDocRef = doc(db, 'users', userUid);
+      await updateDoc(userDocRef, {
+        theme: tempTheme,
+        backgroundImage: tempBackgroundImage,
+      });
+    }
   };
 
   return (
