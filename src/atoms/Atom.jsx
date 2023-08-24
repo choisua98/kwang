@@ -6,3 +6,9 @@ export const userAtom = atom(null); // 사용자 정보를 담을 Atom
 export const themeAtom = atom('light');
 export const modalVisibleAtom = atom(false);
 export const backgroundImageAtom = atom(null);
+
+// firebase blockId
+export const blockId = atom(null);
+
+// firebase blocks 정보
+export const blocksAtom = atom([]);
