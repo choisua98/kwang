@@ -19,7 +19,7 @@ const Theme = () => {
   useEffect(() => {
     // 페이지 로드시나 테마 변경시 스타일
     applyThemeStyles();
-  }, []);
+  }, [theme, backgroundImage]);
 
   const applyThemeStyles = () => {
     document.body.style.height = '100vh';
@@ -88,22 +88,7 @@ const Theme = () => {
   };
 
   const handleApplyClick = async () => {
-    if (tempTheme) {
-      setTheme(tempTheme);
-      localStorage.setItem('theme', tempTheme);
-    }
-    if (tempBackgroundImage !== null) {
-      if (tempBackgroundImage === '') {
-        localStorage.removeItem('backgroundImage');
-      } else {
-        localStorage.setItem('backgroundImage', tempBackgroundImage);
-      }
-      setBackgroundImage(tempBackgroundImage);
-    }
-    applyThemeStyles();
-    setModalVisible(false);
-
-    // Firestore에 사용자의 테마 정보 저장
+    // Firestore에 사용자의 테마 및 배경 이미지 정보 저장
     if (userUid) {
       const userDocRef = doc(db, 'users', userUid);
       const userDoc = await getDoc(userDocRef);
@@ -121,6 +106,15 @@ const Theme = () => {
         });
       }
     }
+
+    if (tempTheme) {
+      setTheme(tempTheme);
+    }
+    if (tempBackgroundImage !== null) {
+      setBackgroundImage(tempBackgroundImage);
+    }
+
+    setModalVisible(false);
   };
 
   return (
