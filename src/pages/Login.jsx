@@ -2,7 +2,7 @@ import React from 'react';
 import { auth } from '../firebase/firebaseConfig';
 import EmailLogin from '../components/adminSide/auth/login/EmailLogin';
 import GoogleLogin from '../components/adminSide/auth/login/GoogleLogin';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { userAtom } from '../atoms/Atom';
 import NaverLogin from '../components/adminSide/auth/login/NaverLogin';
 import { signOut } from 'firebase/auth';
@@ -14,13 +14,15 @@ const Login = () => {
   // const { naver } = window;
   // const NAVER_CLIENT_ID = 'hsnzexHuuJiVHO_hh5EP';
   // const NAVER_CALLBACK_URL = 'http://www.localhost:3000/login';
-  const user = useAtomValue(userAtom);
+  const [user, setUser] = useAtom(userAtom);
 
   const 통합로그아웃 = async () => {
     if (user) {
       console.log('유저가있습니다.');
     }
     await signOut(auth); //파이어베이스 로그아웃
+    setUser();
+    // console.log(user);
     // try {
     //   Kakao.Auth.logout(() => {
     //     //카카오로그아웃
@@ -49,6 +51,7 @@ const Login = () => {
     //   console.error(error);
     // }
   };
+  console.log(user);
   // const naverLogin = new naver.LoginWithNaverId({
   //   clientId: NAVER_CLIENT_ID,
   //   callbackUrl: NAVER_CALLBACK_URL,
