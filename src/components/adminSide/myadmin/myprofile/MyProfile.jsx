@@ -3,28 +3,54 @@ import { Row, Col, Button, Modal } from 'antd';
 import { styled } from 'styled-components';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
-import { collection, doc, updateDoc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { themeAtom, userAtom } from '../../../../atoms/Atom';
 import { useAtom } from 'jotai';
-import { userAtom, themeAtom } from '../../../../atoms/Atom';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+  listAll,
+} from 'firebase/storage';
 
 const MyProfile = () => {
   const user = useAtom(userAtom);
+  const userEmail = user[0]?.email;
   const userUID = user[0]?.uid;
   const [theme] = useAtom(themeAtom);
 
+  const splitNickname = () => {
+    if (userEmail) {
+      const parts = userEmail?.split('@');
+      const nicknameSet = parts[0];
+      console.log('split', nicknameSet);
+    } else {
+      console.log('User email is undefined');
+    }
+  };
+
+  // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
+  // const extractNickname = (email) => {
+  //   const parts = email?.split('@');
+  //   if (parts?.length > 0) {
+  //     return parts[0];
+  //   }
+  //   return '';
+  // };
+
   const [modalVisible, setModalVisible] = useState(false);
-  const [nickname, setNickname] = useState('');
-  const [updateNick, setUpdateNick] = useState('');
+  const [nickname, setNickname] = useState(splitNickname(userEmail));
+  const [updateNick, setUpdateNick] = useState(nickname);
   const [introduction, setIntroduction] = useState('');
-  const [updateIntro, setUpdateIntro] = useState('');
+  const [updateIntro, setUpdateIntro] = useState(introduction);
 
   const [previewImage, setPreviewImage] = useState(defaultProfileImage);
   const [selectedImage, setSelectedImage] = useState(null);
   const [updatedImage, setUpdatedImage] = useState(defaultProfileImage);
 
-  // 프로필 정보 초기화 로직
+  // userUID로 저장된 문서가 있을 경우 프로필 정보 가져오기
   useEffect(() => {
     if (userUID) {
       const userDocRef = doc(db, 'users', userUID);
@@ -36,20 +62,33 @@ const MyProfile = () => {
           setUpdateNick(userData.nickname || '');
           setIntroduction(userData.introduction || '');
           setUpdateIntro(userData.introduction || '');
-          setUpdatedImage(userData.profileImageURL || defaultProfileImage);
+          setUpdatedImage(userData?.profileImageURL || defaultProfileImage);
         }
       };
       fetchProfileInfo();
     }
   }, [userUID]);
 
-  // 이미지 업데이트 함수
-  const updateProfileImage = async () => {
+  // 프로필 이미지 업데이트 함수
+  const handleImageUpdate = async () => {
+    // 기존 userUID 폴더의 이미지 전체 삭제
+    const userImagesRef = ref(storage, `profileImages/${userUID}`);
+    const userImagesList = await listAll(userImagesRef);
+
+    // userImagesList.items 배열에 있는 모든 이미지 삭제
+    await Promise.all(
+      userImagesList.items.map(async (item) => {
+        await deleteObject(item);
+      }),
+    );
+
+    // Firebase에 프로필 이미지 업로드
     try {
       if (selectedImage) {
         const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`);
-        await uploadBytes(imageRef, selectedImage);
+        await uploadBytes(imageRef, selectedImage); // storage에 이미지 업로드
         const imageURL = await getDownloadURL(imageRef);
+        setUpdatedImage(imageURL);
         return imageURL;
       }
       return null;
@@ -70,25 +109,48 @@ const MyProfile = () => {
 
       // 사용자 정보 업데이트
       const userInfo = {
-        email: userUID,
+        email: userEmail,
         nickname: nickname,
         introduction: introduction,
         theme: theme,
       };
 
       // 프로필 이미지 업데이트 및 이미지 URL 업데이트
-      const imageURL = await updateProfileImage();
+      const imageURL = await handleImageUpdate();
       if (imageURL) {
         userInfo.profileImageURL = imageURL;
       }
 
       await updateDoc(userDocRef, userInfo);
 
+      // 문서가 존재하는지 확인
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        // 문서가 있는 경우 업데이트
+        await updateDoc(userDocRef, userInfo);
+      } else {
+        // 문서가 없는 경우 문서 생성 후 업데이트
+        await setDoc(userDocRef, userInfo);
+      }
+
+      // await handleImageUpdate();
+
       setModalVisible(false); // 모달 닫기
     } catch (error) {
       console.error('프로필 업데이트 실패', error);
     }
   };
+
+  const onChangeImgaeFile = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setPreviewImage(URL.createObjectURL(file));
+      // setUpdatedImage(defaultProfileImage); // 이미지 변경 시 갱신
+    }
+  };
+
   return (
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
@@ -129,16 +191,7 @@ const MyProfile = () => {
         <ProfileContainer>
           {/* 프로필 이미지 미리보기 */}
           <PreviewImage src={previewImage} alt="이미지 미리보기" />
-          <input
-            type="file"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              if (file) {
-                setSelectedImage(file);
-                setPreviewImage(URL.createObjectURL(file));
-              }
-            }}
-          />
+          <input type="file" onChange={onChangeImgaeFile} />
           <div style={{ marginTop: '20px' }}>닉네임</div>
           <ProfileInput
             placeholder="변경하실 닉네임을 작성해주세요."
