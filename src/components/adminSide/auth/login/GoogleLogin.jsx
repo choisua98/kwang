@@ -9,18 +9,17 @@ import { useNavigate } from 'react-router-dom';
 
 const GoogleLogin = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useAtom(userAtom);
-  console.log({ 로그인한유저: user });
+  // const [user, setUser] = useAtom(userAtom);
+  // console.log({ 로그인한유저: user });
   const auth = getAuth();
   const provider1 = new GoogleAuthProvider();
   // --구글 로그인--
-  const onGoogleLoginButtonClickHandler = (e) => {
+  const onGoogleLoginButtonClickHandler = async (e) => {
     e.preventDefault();
-    signInWithPopup(auth, provider1)
+    await signInWithPopup(auth, provider1)
       .then((result) => {
-        // setUserData(result.user); // user data 설정
         console.log(result.user);
-        setUser(result.user); // console로 들어온 데이터 표시
+        // setUser(result.user); // console로 들어온 데이터 표시
       })
       .catch((error) => {});
     navigate('/admin');

@@ -19,10 +19,11 @@ const EmailLogin = () => {
         password,
       );
       console.log(userCredential);
-      navigate('/admin');
+      // navigate('/admin');
     } catch (error) {
       console.error(error);
     }
+    // navigate('/admin');
   };
 
   return (
