@@ -5,7 +5,7 @@ import Router from './shared/Router';
 import { backgroundImageAtom, themeAtom, userAtom } from './atoms/Atom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './firebase/firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 const queryClient = new QueryClient();
 
