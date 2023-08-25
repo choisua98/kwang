@@ -3,30 +3,33 @@ import {
   getAuth,
   fetchSignInMethodsForEmail,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
 } from 'firebase/auth';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+
+const { naver } = window;
+
+const NAVER_CLIENT_ID = 'hsnzexHuuJiVHO_hh5EP';
+const NAVER_CALLBACK_URL = 'http://www.localhost:3000/login';
+
+export const naverLogin = new naver.LoginWithNaverId({
+  clientId: NAVER_CLIENT_ID,
+  callbackUrl: NAVER_CALLBACK_URL,
+  isPopup: false,
+  loginButton: { color: 'green', type: 1, height: 50 },
+  callbackHandle: true,
+});
 
 const NaverLogin = () => {
   const auth = getAuth();
   const navigate = useNavigate();
 
-  // --네이버 로그인--
-  const { naver } = window;
-  const NAVER_CLIENT_ID = 'hsnzexHuuJiVHO_hh5EP';
-  const NAVER_CALLBACK_URL = 'http://www.localhost:3000/login';
-
   const initializeNaverLogin = () => {
-    const naverLogin = new naver.LoginWithNaverId({
-      clientId: NAVER_CLIENT_ID,
-      callbackUrl: NAVER_CALLBACK_URL,
-      isPopup: false,
-      loginButton: { color: 'green', type: 1, height: 50 },
-      callbackHandle: true,
-    });
     naverLogin.init();
     naverLogin.logout();
 
+    //페이지이동
+    //+아래코드
     naverLogin.getLoginStatus(async (status) => {
       if (status) {
         console.log(`로그인?: ${status}`);
@@ -70,7 +73,7 @@ const NaverLogin = () => {
             console.error(error);
           }
         };
-        checkEmailExists();
+        await checkEmailExists();
         navigate('/admin');
       }
     });
