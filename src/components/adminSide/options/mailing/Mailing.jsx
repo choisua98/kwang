@@ -79,7 +79,6 @@ const Mailing = () => {
         defaultValue={blockId ? selectedBlock.title : title}
         onChange={handleTitleChange}
         autoFocus
-        required
       />
 
       <label>메일링 서비스에 대한 간략한 설명</label>
@@ -89,7 +88,6 @@ const Mailing = () => {
         placeholder={blockId ? '' : '설명을 작성해 주세요'}
         defaultValue={blockId ? selectedBlock.description : description}
         onChange={handleDescriptionChange}
-        required
       />
       <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
     </M.Container>

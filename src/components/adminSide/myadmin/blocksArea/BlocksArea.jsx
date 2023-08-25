@@ -17,8 +17,7 @@ import { deleteObject, getDownloadURL, ref } from 'firebase/storage';
 const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
-  const [imageUrl, setImageUrl] = useState('');
-  const image = useAtom(bannerImageAtom);
+  const [image] = useAtom(bannerImageAtom);
 
   // Jotai에서 유저 정보 가져오기
   const user = useAtomValue(userAtom);
@@ -111,7 +110,11 @@ const BlocksArea = () => {
       </>
       {/* {image[0] ? (
         <>
-          <img src={image[0]} onClick={() => navigate('/admin/bannerimage')} />
+          <img
+            src={image[0]}
+            onClick={() => navigate('/admin/bannerimage')}
+            alt="bannerimage"
+          />
           <button onClick={deleteImageButton}>삭제</button>
         </>
       ) : (
