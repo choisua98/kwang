@@ -168,8 +168,9 @@ const Faq = () => {
       <F.Container
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
-        <label>질문 입력</label>
+        <label htmlFor="question">질문 입력</label>
         <input
+          id="question"
           name="question"
           type="text"
           placeholder="질문을 입력해 주세요"
@@ -178,8 +179,9 @@ const Faq = () => {
           autoFocus
         />
 
-        <label>답변 입력</label>
+        <label htmlFor="answer">답변 입력</label>
         <textarea
+          id="answer"
           name="answer"
           type="text"
           placeholder="답변을 작성해 주세요"

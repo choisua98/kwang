@@ -71,8 +71,9 @@ const Mailing = () => {
     <M.Container
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
-      <label>서비스 이름 변경하기</label>
+      <label htmlFor="title">서비스 이름 변경하기</label>
       <input
+        id="title"
         name="title"
         type="text"
         placeholder={blockId ? '' : '메일링 서비스'}
@@ -81,8 +82,9 @@ const Mailing = () => {
         autoFocus
       />
 
-      <label>메일링 서비스에 대한 간략한 설명</label>
+      <label htmlFor="description">메일링 서비스에 대한 간략한 설명</label>
       <textarea
+        id="description"
         name="description"
         type="text"
         placeholder={blockId ? '' : '설명을 작성해 주세요'}
