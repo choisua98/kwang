@@ -4,7 +4,7 @@ import { useAtom } from 'jotai';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
 import { modalVisibleAtom, themeAtom } from '../../../../atoms/Atom';
 import { auth, db } from '../../../../firebase/firebaseConfig';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 const Theme = () => {
   // 사용자 UID 가져오기
@@ -19,7 +19,7 @@ const Theme = () => {
   useEffect(() => {
     // 페이지 로드시나 테마 변경시 스타일
     applyThemeStyles();
-  }, []);
+  }, [theme, backgroundImage]);
 
   const applyThemeStyles = () => {
     document.body.style.height = '100vh';
@@ -88,29 +88,33 @@ const Theme = () => {
   };
 
   const handleApplyClick = async () => {
-    if (tempTheme) {
-      setTheme(tempTheme);
-      localStorage.setItem('theme', tempTheme);
-    }
-    if (tempBackgroundImage !== null) {
-      if (tempBackgroundImage === '') {
-        localStorage.removeItem('backgroundImage');
-      } else {
-        localStorage.setItem('backgroundImage', tempBackgroundImage);
-      }
-      setBackgroundImage(tempBackgroundImage);
-    }
-    applyThemeStyles();
-    setModalVisible(false);
-
-    // Firestore에 사용자의 테마 정보 저장
+    // Firestore에 사용자의 테마 및 배경 이미지 정보 저장
     if (userUid) {
       const userDocRef = doc(db, 'users', userUid);
-      await updateDoc(userDocRef, {
-        theme: tempTheme,
-        backgroundImage: tempBackgroundImage,
-      });
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists()) {
+        // 문서가 있는 경우 업데이트
+        await updateDoc(userDocRef, {
+          theme: tempTheme,
+          backgroundImage: tempBackgroundImage,
+        });
+      } else {
+        // 문서가 없는 경우 문서 생성 후 업데이트
+        await setDoc(userDocRef, {
+          theme: tempTheme,
+          backgroundImage: tempBackgroundImage,
+        });
+      }
     }
+
+    if (tempTheme) {
+      setTheme(tempTheme);
+    }
+    if (tempBackgroundImage !== null) {
+      setBackgroundImage(tempBackgroundImage);
+    }
+
+    setModalVisible(false);
   };
 
   return (

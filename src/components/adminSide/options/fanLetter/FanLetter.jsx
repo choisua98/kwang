@@ -3,15 +3,21 @@ import { F } from './FanLetter.styles';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
+import { useAtom, useAtomValue } from 'jotai';
+import { blocksAtom, userAtom } from '../../../../atoms/Atom';
 
 const FanLetter = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  // const [blockData, setBlockData] = useState(null);
+
+  // Jotai에서 유저 정보 가져오기
+  const user = useAtomValue(userAtom);
+  console.log('1', user);
+
+  // 유저의 UID 가져오기
+  const userUid = user?.uid;
 
   const blockId = location.state ? location.state.blocksId : null;
   const [blocks] = useAtom(blocksAtom);
@@ -25,7 +31,7 @@ const FanLetter = () => {
       title,
       description,
       blockKind: 'fanletter',
-      userId: '1',
+      userId: user?.uid,
     });
     navigate('/admin');
   };

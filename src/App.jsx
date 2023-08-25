@@ -30,23 +30,34 @@ function App() {
           setBackgroundImage(userData.backgroundImage || null);
         }
       } else {
-        setUser(null);
         // 로그인 안 한 사용자는 기본 테마로 light 사용
         setTheme('light');
         // 로그아웃 상태에서 배경이미지도 초기화
         setBackgroundImage(null);
       }
     });
+
     // cleanup 함수 등록
     return () => unsubscribe();
   }, [setUser, setTheme, setBackgroundImage]);
+
+  useEffect(() => {
+    document.body.style.backgroundColor = theme === 'dark' ? '#333' : '#fff';
+    document.body.style.color = theme === 'dark' ? '#fff' : '#000';
+    if (backgroundImage) {
+      document.body.style.backgroundImage = `url("${backgroundImage}")`;
+      document.body.style.backgroundSize = 'cover';
+    } else {
+      document.body.style.backgroundImage = '';
+    }
+  }, [theme, backgroundImage]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     const savedBackgroundImage = localStorage.getItem('backgroundImage');
     if (savedTheme) setTheme(savedTheme);
     if (savedBackgroundImage) setBackgroundImage(savedBackgroundImage);
-  }, []);
+  }, [setBackgroundImage, setTheme]);
 
   useEffect(() => {
     document.body.style.backgroundColor = theme === 'dark' ? '#333' : '#fff';
