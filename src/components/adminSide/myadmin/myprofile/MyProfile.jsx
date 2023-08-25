@@ -21,27 +21,17 @@ const MyProfile = () => {
   const userUID = user[0]?.uid;
   const [theme] = useAtom(themeAtom);
 
-  const splitNickname = () => {
-    if (userEmail) {
-      const parts = userEmail?.split('@');
-      const nicknameSet = parts[0];
-      console.log('split', nicknameSet);
-    } else {
-      console.log('User email is undefined');
+  // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
+  const extractNickname = (email) => {
+    const parts = email?.split('@');
+    if (parts?.length > 0) {
+      return parts[0];
     }
+    return '';
   };
 
-  // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
-  // const extractNickname = (email) => {
-  //   const parts = email?.split('@');
-  //   if (parts?.length > 0) {
-  //     return parts[0];
-  //   }
-  //   return '';
-  // };
-
   const [modalVisible, setModalVisible] = useState(false);
-  const [nickname, setNickname] = useState(splitNickname(userEmail));
+  const [nickname, setNickname] = useState(extractNickname(userEmail));
   const [updateNick, setUpdateNick] = useState(nickname);
   const [introduction, setIntroduction] = useState('');
   const [updateIntro, setUpdateIntro] = useState(introduction);
