@@ -113,7 +113,7 @@ const Challenge = () => {
     <C.Container
     // onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
-      <label htmlFor="title">서비스 이름 변경하기</label>
+      <label htmlFor="title">함께해요 챌린지 이름</label>
       <input
         id="title"
         name="title"
@@ -124,7 +124,7 @@ const Challenge = () => {
         autoFocus
       />
 
-      <label htmlFor="editor">챌린지 소개</label>
+      <label htmlFor="editor">챌린지 상세설명</label>
       <Editor
         id="editor"
         // ref={editorRef} // DOM 선택용 useRef

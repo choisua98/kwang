@@ -20,6 +20,7 @@ const Faq = () => {
   const location = useLocation();
 
   // 질문과 답변에 대한 상태 및 상태 변경 함수 설정
+  const [title, handleTitleChange] = useInput();
   const [question, handleQuestionChange, resetQuestion] = useInput();
   const [answer, handleAnswerChange, resetAuswer] = useInput();
 
@@ -32,12 +33,12 @@ const Faq = () => {
   // 전역 상태에서 블록 정보 가져오기
   const [blocks] = useAtom(blocksAtom);
 
+  // blocks 배열에서 선택된 블록 찾기
+  const selectedBlock = blocks.find((block) => block.id === blockId);
+
   useEffect(() => {
     // 만약 현재 블록 ID가 존재한다면 (수정 모드일 때)
     if (blockId) {
-      // blocks 배열에서 선택된 블록 찾기
-      const selectedBlock = blocks.find((block) => block.id === blockId);
-
       if (selectedBlock) {
         setFaqList(selectedBlock.faqs);
       }
@@ -72,7 +73,7 @@ const Faq = () => {
 
     // Firestore에 데이터 추가
     await addDoc(collection(db, 'template'), {
-      title: '자주 묻는 질문',
+      title,
       faqs: faqList,
       blockKind: 'faq',
       createdAt: serverTimestamp(),
@@ -91,6 +92,7 @@ const Faq = () => {
     // Firestore에 데이터 업로드
     const docRef = doc(db, 'template', blockId);
     await updateDoc(docRef, {
+      title,
       faqs: faqList,
       createdAt: serverTimestamp(),
     });
@@ -134,7 +136,20 @@ const Faq = () => {
   };
 
   return (
-    <>
+    <F.Container
+      onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+    >
+      <label htmlFor="title">자주묻는 질문 이름</label>
+      <input
+        id="title"
+        name="title"
+        type="text"
+        placeholder={blockId ? '' : '자주 묻는 질문'}
+        defaultValue={blockId ? selectedBlock.title : title}
+        onChange={handleTitleChange}
+        autoFocus
+      />
+
       <F.FaqList>
         {faqList.map((faq) => {
           return (
@@ -154,35 +169,32 @@ const Faq = () => {
           );
         })}
       </F.FaqList>
-      <F.Container
-        onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
-      >
-        <label htmlFor="question">질문 입력</label>
-        <input
-          id="question"
-          name="question"
-          type="text"
-          placeholder="질문을 입력해 주세요"
-          value={question}
-          onChange={handleQuestionChange}
-          autoFocus
-        />
 
-        <label htmlFor="answer">답변 입력</label>
-        <textarea
-          id="answer"
-          name="answer"
-          type="text"
-          placeholder="답변을 작성해 주세요"
-          value={answer}
-          onChange={handleAnswerChange}
-        />
-        <button type="button" onClick={handleAddFaqButtonClick}>
-          질문 추가하기
-        </button>
-        <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
-      </F.Container>
-    </>
+      <label htmlFor="question">질문 입력</label>
+      <input
+        id="question"
+        name="question"
+        type="text"
+        placeholder="질문을 입력해 주세요"
+        value={question}
+        onChange={handleQuestionChange}
+        autoFocus
+      />
+
+      <label htmlFor="answer">답변 입력</label>
+      <textarea
+        id="answer"
+        name="answer"
+        type="text"
+        placeholder="답변을 작성해 주세요"
+        value={answer}
+        onChange={handleAnswerChange}
+      />
+      <button type="button" onClick={handleAddFaqButtonClick}>
+        질문 추가하기
+      </button>
+      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
+    </F.Container>
   );
 };
 
