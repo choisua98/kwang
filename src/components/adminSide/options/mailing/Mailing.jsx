@@ -1,7 +1,7 @@
 import React from 'react';
 import { M } from './Mailing.styles';
 import { useNavigate, useLocation } from 'react-router-dom';
-import useInput from '../../../../hooks/useInput';
+import useInput from '../../../../hooks/UseInput';
 import {
   addDoc,
   collection,

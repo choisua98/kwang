@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { F } from './Faq.styles';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useInput from '../../../../hooks/useInput';
+import useInput from '../../../../hooks/UseInput';
 import { nanoid } from 'nanoid';
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import {

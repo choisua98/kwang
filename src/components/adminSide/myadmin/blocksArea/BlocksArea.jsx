@@ -63,8 +63,8 @@ const BlocksArea = () => {
   }, [user]);
 
   // const getImageUrl = async () => {
-  //   const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
-  //   const imageUrl = await getDownloadURL(imageRef);
+  //   const imageRef == ref(storage, `bannerImages/${userUid}/bannerimage`);
+  //   const imageUrl  await getDownloadURL(imageRef);
   //   return imageUrl;
   // };
 
@@ -83,18 +83,18 @@ const BlocksArea = () => {
     }
   };
 
-  // const deleteImageButton = async () => {
-  //   const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-  //   if (shouldDelete) {
-  //     const previousImageRef = ref(
-  //       storage,
-  //       `bannerImages/${user.uid}/bannerimage`,
-  //     );
-  //     await deleteObject(previousImageRef);
-  //     // 이미지 삭제 후 페이지 새로고침
-  //     window.location.reload();
-  //   }
-  // };
+  const deleteImageButton = async () => {
+    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+    if (shouldDelete) {
+      const previousImageRef = ref(
+        storage,
+        `bannerImages/${user.uid}/bannerimage`,
+      );
+      await deleteObject(previousImageRef);
+      // 이미지 삭제 후 페이지 새로고침
+      window.location.reload();
+    }
+  };
 
   return (
     <B.Container>
@@ -110,10 +110,10 @@ const BlocksArea = () => {
           );
         })}
       </>
-      {/* {image[0] ? (
+      {image ? (
         <>
           <img
-            src={image[0]}
+            src={image}
             onClick={() => navigate('/admin/bannerimage')}
             alt="bannerimage"
           />
@@ -121,7 +121,7 @@ const BlocksArea = () => {
         </>
       ) : (
         ''
-      )} */}
+      )}
     </B.Container>
   );
 };

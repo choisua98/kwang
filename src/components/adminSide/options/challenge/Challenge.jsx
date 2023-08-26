@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { C } from './Challenge.styles';
-import useInput from '../../../../hooks/useInput';
+import useInput from '../../../../hooks/UseInput';
 import { useAtom } from 'jotai';
 import { blocksAtom } from '../../../../atoms/Atom';
 import { auth, db } from '../../../../firebase/firebaseConfig';
