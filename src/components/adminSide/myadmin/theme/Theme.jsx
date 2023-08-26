@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Col, Modal, Row } from 'antd';
 import { useAtom } from 'jotai';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
-import { modalVisibleAtom, themeAtom } from '../../../../atoms/Atom';
+import {
+  backgroundImageAtom,
+  modalVisibleAtom,
+  themeAtom,
+} from '../../../../atoms/Atom';
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
@@ -10,86 +14,30 @@ const Theme = () => {
   // 사용자 UID 가져오기
   const userUid = auth.currentUser?.uid;
 
-  const [theme, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
+  const [, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
-  const [backgroundImage, setBackgroundImage] = useState('');
+  const [, setBackgroundImage] = useAtom(backgroundImageAtom);
+
+  // 임시로 테마와 배경 이미지 URL을 저장
   const [tempTheme, setTempTheme] = useState(null);
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null);
 
-  useEffect(() => {
-    // localStorage에서 테마 정보 가져오기
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setTempTheme(savedTheme);
-    }
-
-    //localStorage에서 배경 이미지 정보 가져오기
-    const savedBackgroundImage = localStorage.getItem('backgroundImage');
-    if (savedBackgroundImage) {
-      setBackgroundImage(savedBackgroundImage);
-    }
-  }, []);
-
-  useEffect(() => {
-    // 테마 변경 시 localStorage에 저장
-    if (tempTheme) {
-      localStorage.setItem('theme', tempTheme);
-    }
-
-    if (tempBackgroundImage !== null) {
-      localStorage.setItem('backgroundImage', tempBackgroundImage);
-    }
-  }, [tempTheme, tempBackgroundImage]);
-
-  useEffect(() => {
-    applyThemeStyles();
-  }, [theme, backgroundImage]);
-
-  const applyThemeStyles = () => {
-    document.body.style.height = '100vh';
-
-    // 배경 이미지 설정
-    if (tempTheme === 'dark' && tempBackgroundImage === null) {
-      setBackgroundImage(null);
-    } else {
-      if (tempBackgroundImage !== null) {
-        setBackgroundImage(tempBackgroundImage);
-      }
-    }
-
-    if (theme === 'dark') {
-      document.body.style.backgroundColor = '#333';
-      document.body.style.color = '#fff';
-    } else {
-      document.body.style.backgroundColor = '#fff';
-      document.body.style.color = '#000';
-    }
-
-    // 배경 이미지 설정 (상태가 업데이트 된 후)
-    if (backgroundImage) {
-      document.body.style.backgroundImage = `url("${backgroundImage}")`;
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-      document.body.style.backgroundRepeat = 'no-repeat';
-    } else {
-      document.body.style.backgroundImage = '';
-    }
-  };
-
-  // 테마 1 버튼 클릭 시
-  const handleThemeClick = () => {
-    setTempTheme('dark');
-    setTempBackgroundImage(null);
-  };
-
-  // 테마 2 버튼 클릭 시
-  const handleTheme2Click = () => {
-    setTempTheme('light');
+  // 테마(다크) 클릭 시
+  const handleDarkModeClick = () => {
     setTempBackgroundImage('');
+    setTempTheme('dark');
+    // setTempBackgroundImage('url_of_black_image'); // 검은색 이미지 URL로 변경
   };
 
-  // 테마 3 버튼 클릭 시 input
-  const handleTheme3Click = () => {
+  // 테마(라이트) 클릭 시
+  const handleLightModeClick = () => {
+    setTempBackgroundImage('');
+    setTempTheme('light');
+  };
+
+  // 테마(배경 이미지 업로드)시 input
+  const handleCustomBackgroundClick = () => {
+    // setTempTheme('');
     document.getElementById('image-upload').click();
   };
 
@@ -106,12 +54,17 @@ const Theme = () => {
     }
   };
 
-  // 테마 4 버튼 클릭 시
-  const handleTheme4Click = () => {
+  // 테마(샘플 이미지) 클릭 시
+  const handleSampleBackgroundClick = () => {
     setTempBackgroundImage(sampleImg);
   };
 
+  // 배경 적용하기
   const handleApplyClick = async () => {
+    // console.log(backgroundImage);
+    // console.log(tempTheme);
+    // console.log(tempBackgroundImage);
+
     // Firestore에 사용자의 테마 및 배경 이미지 정보 저장
     if (userUid) {
       const userDocRef = doc(db, 'users', userUid);
@@ -130,14 +83,21 @@ const Theme = () => {
         });
       }
     }
-
     if (tempTheme) {
       setTheme(tempTheme);
+      document.body.style.backgroundColor =
+        tempTheme === 'dark' ? '#333' : '#fff';
+      document.body.style.color = tempTheme === 'dark' ? '#fff' : '#000';
     }
     if (tempBackgroundImage !== null) {
       setBackgroundImage(tempBackgroundImage);
+      if (tempBackgroundImage) {
+        document.body.style.backgroundImage = `url("${tempBackgroundImage}")`;
+        document.body.style.backgroundSize = 'cover';
+      } else {
+        document.body.style.backgroundImage = '';
+      }
     }
-
     setModalVisible(false);
   };
 
@@ -173,7 +133,7 @@ const Theme = () => {
                     background: 'black',
                     color: '#fff',
                   }}
-                  onClick={handleThemeClick}
+                  onClick={handleDarkModeClick}
                 >
                   다크모드
                 </button>
@@ -188,7 +148,7 @@ const Theme = () => {
                     background: '#fff',
                     color: '#000',
                   }}
-                  onClick={handleTheme2Click}
+                  onClick={handleLightModeClick}
                 >
                   테마 2(화이트)
                 </button>
@@ -203,7 +163,7 @@ const Theme = () => {
                     border: '1px solid #000',
                     borderRadius: '5px',
                   }}
-                  onClick={handleTheme3Click}
+                  onClick={handleCustomBackgroundClick}
                 >
                   배경 이미지 선택
                 </button>
@@ -227,7 +187,7 @@ const Theme = () => {
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                   }}
-                  onClick={handleTheme4Click}
+                  onClick={handleSampleBackgroundClick}
                 >
                   샘플 이미지
                 </button>
