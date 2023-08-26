@@ -1,31 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  where,
-} from 'firebase/firestore';
-import { db, storage } from '../../../../firebase/firebaseConfig';
+import React, { useEffect } from 'react';
+import { B } from './BlocksArea.styles';
 import { useNavigate } from 'react-router-dom';
 import { useAtom, useAtomValue } from 'jotai';
-import { bannerImageAtom, blocksAtom, userAtom } from '../../../../atoms/Atom';
-import { B } from './BlocksArea.styles';
+import { userAtom, blocksAtom, bannerImageAtom } from '../../../../atoms/Atom';
+import {
+  query,
+  collection,
+  where,
+  orderBy,
+  doc,
+  getDocs,
+  deleteDoc,
+} from 'firebase/firestore';
+import { db, storage } from '../../../../firebase/firebaseConfig';
 import { deleteObject, getDownloadURL, ref } from 'firebase/storage';
 
 const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
-  const [imageUrl, setImageUrl] = useState('');
-  const image = useAtom(bannerImageAtom);
+  const [image] = useAtom(bannerImageAtom);
 
   // Jotai에서 유저 정보 가져오기
   const user = useAtomValue(userAtom);
 
   // 유저의 UID 가져오기
   const userUid = user?.uid;
-  console.log('2', userUid);
 
   // firebase에서 데이터 불러오기
   const fetchData = async () => {
@@ -35,6 +34,7 @@ const BlocksArea = () => {
       const q = query(
         collection(db, 'template'),
         where('userId', '==', userUid),
+        orderBy('createdAt'),
       );
       const querySnapshot = await getDocs(q);
 
@@ -55,8 +55,6 @@ const BlocksArea = () => {
     }
   };
 
-  // fetchData();
-
   // 컴포넌트 마운트 시 데이터 가져오기 함수 호출
   useEffect(() => {
     if (user) {
@@ -64,17 +62,19 @@ const BlocksArea = () => {
     }
   }, [user]);
 
-  const getImageUrl = async () => {
-    const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
-    const imageUrl = await getDownloadURL(imageRef);
-    return imageUrl;
-  };
+  // const getImageUrl = async () => {
+  //   const imageRef == ref(storage, `bannerImages/${userUid}/bannerimage`);
+  //   const imageUrl  await getDownloadURL(imageRef);
+  //   return imageUrl;
+  // };
 
+  // 수정 버튼 클릭 시 페이지 이동 함수
   const moveToEditButton = (block) =>
     navigate(`/admin/${block.blockKind}`, {
       state: { blocksId: `${block.id}` },
     });
 
+  // 삭제 버튼 클릭 시 데이터 삭제 함수
   const deleteButton = async (id) => {
     const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
     if (shouldDelete) {
@@ -110,9 +110,13 @@ const BlocksArea = () => {
           );
         })}
       </>
-      {image[0] ? (
+      {image ? (
         <>
-          <img src={image[0]} onClick={() => navigate('/admin/bannerimage')} />
+          <img
+            src={image}
+            onClick={() => navigate('/admin/bannerimage')}
+            alt="bannerimage"
+          />
           <button onClick={deleteImageButton}>삭제</button>
         </>
       ) : (

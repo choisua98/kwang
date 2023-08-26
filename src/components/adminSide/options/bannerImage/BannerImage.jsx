@@ -19,12 +19,12 @@ const BannerImage = () => {
   const navigate = useNavigate();
   const [previewImage, setPreviewImage] = useAtom(bannerImageAtom);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [updateImage, setUpdateImage] = useState('');
+  // const [updateImage, setUpdateImage] = useState('');
 
   const addButtonClick = async () => {
     try {
       // 이전 이미지 삭제
-      if (updateImage) {
+      if (previewImage) {
         const previousImageRef = ref(
           storage,
           `bannerImages/${user.uid}/bannerimage`,
@@ -37,7 +37,7 @@ const BannerImage = () => {
         const imageRef = ref(storage, `bannerImages/${user.uid}/bannerimage`);
         await uploadBytes(imageRef, selectedImage);
         const imageURL = await getDownloadURL(imageRef);
-        setUpdateImage(imageURL);
+        setPreviewImage(imageURL);
       }
 
       alert('데이터가 추가되었습니다.');
