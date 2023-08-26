@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { C } from './Challenge.styles';
 import useInput from '../../../../hooks/useInput';
@@ -49,6 +49,12 @@ const Challenge = () => {
   // blocks 배열에서 선택된 블록 찾기
   const selectedBlock = blocks.find((block) => block.id === blockId);
 
+  // Editor DOM 선택용
+  const editorRef = useRef();
+
+  // 입력창에 입력한 내용을 HTML 태그 형태로 취득
+  const content = editorRef.current?.getInstance().getHTML();
+
   // useEffect(() => {
   //   // 만약 현재 블록 ID가 존재한다면 (수정 모드일 때)
   //   if (blockId) {
@@ -61,64 +67,60 @@ const Challenge = () => {
   //   }
   // }, [blockId, blocks]);
 
-  // // "저장하기" 버튼 클릭 시 실행되는 함수
-  // const handleAddButtonClick = async (e) => {
-  //   e.preventDefault();
+  // "저장하기" 버튼 클릭 시 실행되는 함수
+  const handleAddButtonClick = async (e) => {
+    e.preventDefault();
 
-  //   // 사용자 UID 가져오기
-  //   const userUid = auth.currentUser?.uid;
+    // 사용자 UID 가져오기
+    const userUid = auth.currentUser?.uid;
 
-  //   if (!userUid) {
-  //     alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-  //     navigate('/login');
-  //     return;
-  //   }
+    if (!userUid) {
+      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      navigate('/login');
+      return;
+    }
 
-  //   const editorRef = useRef()
+    // Firestore에 데이터 추가
+    await addDoc(collection(db, 'template'), {
+      title,
+      content,
+      blockKind: 'challenge',
+      createdAt: serverTimestamp(),
+      userId: userUid,
+    });
 
-  //   // 입력창에 입력한 내용을 HTML 태그 형태로 취득
-  //   console.log(editorRef.current?.getInstance().getHTML());
+    // 저장 완료 알림 후 어드민 페이지로 이동
+    alert('저장 완료!');
+    navigate('/admin');
+  };
 
-  //   // Firestore에 데이터 추가
-  //   await addDoc(collection(db, 'template'), {
-  //     title,
+  // "수정하기" 버튼 클릭 시 실행되는 함수
+  const handleEditButtonClick = async (e) => {
+    e.preventDefault();
 
-  //     blockKind: 'challenge',
-  //     createdAt: serverTimestamp(),
-  //     userId: userUid,
-  //   });
+    // Firestore에 데이터 업로드
+    const docRef = doc(db, 'template', blockId);
+    await updateDoc(docRef, {
+      title,
+      content,
+      createdAt: serverTimestamp(),
+    });
 
-  //   // 저장 완료 알림 후 어드민 페이지로 이동
-  //   alert('저장 완료!');
-  //   navigate('/admin');
-  // };
-
-  // // 수정하기 버튼 클릭 시 실행되는 함수
-  // const handleEditButtonClick = async (e) => {
-  //   e.preventDefault();
-
-  //   // Firestore에 데이터 업로드
-  //   const docRef = doc(db, 'template', blockId);
-  //   await updateDoc(docRef, {
-  //     faqs: faqList,
-  //     createdAt: serverTimestamp(),
-  //   });
-
-  //   // 수정 완료 알림 후 어드민 페이지로 이동
-  //   alert('수정 완료!');
-  //   navigate('/admin');
-  // };
+    // 수정 완료 알림 후 어드민 페이지로 이동
+    alert('수정 완료!');
+    navigate('/admin');
+  };
 
   return (
     <C.Container
-    // onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+      onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
       <label htmlFor="title">함께해요 챌린지 이름</label>
       <input
         id="title"
         name="title"
         type="text"
-        placeholder={blockId ? '' : '제목을 입력해 주세요'}
+        placeholder={blockId ? '' : '함께해요 챌린지 🔥'}
         defaultValue={blockId ? selectedBlock.title : title}
         onChange={handleTitleChange}
         autoFocus
@@ -127,7 +129,7 @@ const Challenge = () => {
       <label htmlFor="editor">챌린지 상세설명</label>
       <Editor
         id="editor"
-        // ref={editorRef} // DOM 선택용 useRef
+        ref={editorRef} // DOM 선택용 useRef
         placeholder={blockId ? '' : '사진과 글을 추가해 챌린지를 소개해보세요.'}
         height="300px" // 에디터 창 높이
         initialEditType="wysiwyg" // 초기 입력모드 설정
@@ -147,7 +149,7 @@ const Challenge = () => {
         <RangePicker
           disabledDate={disabledDate}
           style={{ width: '100%' }}
-          dropdownClassName="customRangePickerPopup"
+          popupClassName="customRangePickerPopup"
         />
       </Space>
 

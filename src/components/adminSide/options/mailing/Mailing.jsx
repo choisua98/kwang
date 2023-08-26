@@ -28,7 +28,7 @@ const Mailing = () => {
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
-  // "저장하기" 버튼을 누를 때 실행되는 함수
+  // "저장하기" 버튼 클릭 시 실행되는 함수
   const handleAddButtonClick = async (e) => {
     e.preventDefault();
 
@@ -55,6 +55,7 @@ const Mailing = () => {
     navigate('/admin');
   };
 
+  // "수정하기" 버튼 클릭 시 실행되는 함수
   const handleEditButtonClick = async (e) => {
     e.preventDefault();
 
@@ -64,6 +65,8 @@ const Mailing = () => {
       title,
       description,
     });
+    // 수정 완료 알림 후 어드민 페이지로 이동
+    alert('수정 완료!');
     navigate('/admin');
   };
 
