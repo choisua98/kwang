@@ -1,13 +1,64 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* 달력(RangePicker) */
+:where(
+    .css-dev-only-do-not-override-17a39f8
+  ).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft
+  .ant-picker-range-arrow {
+  display: none;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-header
+  > button {
+  visibility: initial !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-panel-container {
+  width: 350px !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-panel-container
+  .ant-picker-panels {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  direction: ltr;
+  /* max-width: 350px !important; */
+  width: 350px !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-panel-container
+  .ant-picker-panels:last-child
+  .ant-picker-panel {
+  border-width: 0;
+  width: 100% !important;
+  max-width: 350px !important;
+  min-width: 350px !important;
+}
+.ant-picker-date-panel {
+  max-width: 350px !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-decade-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-year-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-quarter-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-month-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-week-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-date-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-time-panel {
+  display: flex;
+  flex-direction: column;
+  width: 350px !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-date-panel
+  .ant-picker-content {
+  width: 310px !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown-range {
+  padding: 40px 0 0 !important;
 }

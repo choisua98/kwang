@@ -47,7 +47,7 @@ const Faq = () => {
   // "질문 추가하기" 버튼 클릭 시 실행되는 함수
   const handleAddFaqButtonClick = () => {
     // 새로운 FAQ 객체 생성
-    const newFaq = { question, answer };
+    const newFaq = { faqId: nanoid(), question, answer };
 
     // faqList 상태 업데이트
     setFaqList((prev) => [...prev, newFaq]);
@@ -70,17 +70,10 @@ const Faq = () => {
       return;
     }
 
-    // faqList에 있는 데이터를 faqData에 매핑하여 저장
-    const faqData = faqList.map((faq) => ({
-      faqId: nanoid(),
-      question: faq.question,
-      answer: faq.answer,
-    }));
-
     // Firestore에 데이터 추가
     await addDoc(collection(db, 'template'), {
       title: '자주 묻는 질문',
-      faqs: faqData,
+      faqs: faqList,
       blockKind: 'faq',
       createdAt: serverTimestamp(),
       userId: userUid,
@@ -95,17 +88,10 @@ const Faq = () => {
   const handleEditButtonClick = async (e) => {
     e.preventDefault();
 
-    // faqList에 있는 데이터를 faqData에 매핑하여 저장
-    const faqData = faqList.map((faq) => ({
-      faqId: nanoid(),
-      question: faq.question,
-      answer: faq.answer,
-    }));
-
     // Firestore에 데이터 업로드
     const docRef = doc(db, 'template', blockId);
     await updateDoc(docRef, {
-      faqs: faqData,
+      faqs: faqList,
       createdAt: serverTimestamp(),
     });
 
@@ -115,8 +101,6 @@ const Faq = () => {
   };
 
   const handleDeleteFaqButtonClick = async (faqId) => {
-    console.log('faqId:', faqId, 'blockId:', blockId);
-
     const docRef = doc(db, 'template', blockId);
     const docSnapshot = await getDoc(docRef);
 
@@ -138,7 +122,6 @@ const Faq = () => {
   };
 
   const handleDeleteAddedFaq = (faqId) => {
-    console.log('faqId:', faqId);
     // FAQ 목록에서 삭제한 항목을 제거한 새로운 목록 생성
     const updatedFaqList = faqList.filter((faq) => faq.faqId !== faqId);
 
@@ -149,21 +132,23 @@ const Faq = () => {
   return (
     <>
       <F.FaqList>
-        {faqList.map((faq) => (
-          <div key={faq.faqId}>
-            <p>질문: {faq.question}</p>
-            <p>답변: {faq.answer}</p>
-            <button
-              onClick={
-                blockId
-                  ? () => handleDeleteFaqButtonClick(faq.faqId)
-                  : () => handleDeleteAddedFaq(faq.faqId)
-              }
-            >
-              삭제
-            </button>
-          </div>
-        ))}
+        {faqList.map((faq) => {
+          return (
+            <div key={faq.faqId}>
+              <p>질문: {faq.question}</p>
+              <p>답변: {faq.answer}</p>
+              <button
+                onClick={
+                  blockId
+                    ? () => handleDeleteFaqButtonClick(faq.faqId)
+                    : () => handleDeleteAddedFaq(faq.faqId)
+                }
+              >
+                삭제
+              </button>
+            </div>
+          );
+        })}
       </F.FaqList>
       <F.Container
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}

@@ -16,9 +16,5 @@ export const C = {
     button {
       height: 30px;
     }
-
-    textarea {
-      height: 60px;
-    }
   `,
 };

@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { B } from './BlocksArea.styles';
 import { useNavigate } from 'react-router-dom';
 import { useAtom, useAtomValue } from 'jotai';
 import { userAtom, blocksAtom, bannerImageAtom } from '../../../../atoms/Atom';
 import {
+  query,
   collection,
-  deleteDoc,
+  where,
+  orderBy,
   doc,
   getDocs,
-  query,
-  where,
+  deleteDoc,
 } from 'firebase/firestore';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import { deleteObject, getDownloadURL, ref } from 'firebase/storage';
@@ -33,6 +34,7 @@ const BlocksArea = () => {
       const q = query(
         collection(db, 'template'),
         where('userId', '==', userUid),
+        orderBy('createdAt'),
       );
       const querySnapshot = await getDocs(q);
 
