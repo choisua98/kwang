@@ -23,7 +23,7 @@ const EmailLogin = () => {
     } catch (error) {
       console.error(error);
     }
-    // navigate('/admin');
+    navigate('/admin');
   };
 
   return (
