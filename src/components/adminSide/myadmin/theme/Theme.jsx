@@ -17,7 +17,31 @@ const Theme = () => {
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null);
 
   useEffect(() => {
-    // 페이지 로드시나 테마 변경시 스타일
+    // localStorage에서 테마 정보 가져오기
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setTempTheme(savedTheme);
+    }
+
+    //localStorage에서 배경 이미지 정보 가져오기
+    const savedBackgroundImage = localStorage.getItem('backgroundImage');
+    if (savedBackgroundImage) {
+      setBackgroundImage(savedBackgroundImage);
+    }
+  }, []);
+
+  useEffect(() => {
+    // 테마 변경 시 localStorage에 저장
+    if (tempTheme) {
+      localStorage.setItem('theme', tempTheme);
+    }
+
+    if (tempBackgroundImage !== null) {
+      localStorage.setItem('backgroundImage', tempBackgroundImage);
+    }
+  }, [tempTheme, tempBackgroundImage]);
+
+  useEffect(() => {
     applyThemeStyles();
   }, [theme, backgroundImage]);
 

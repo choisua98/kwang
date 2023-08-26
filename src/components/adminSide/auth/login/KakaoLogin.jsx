@@ -9,6 +9,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const KakaoLogin = () => {
+  const navigate = useNavigate();
   const auth = getAuth();
 
   const kakaoLogin = async () => {
@@ -66,7 +67,9 @@ const KakaoLogin = () => {
                 console.error(error);
               }
             };
-            checkEmailExists();
+            checkEmailExists().then((res) => {
+              navigate('/admin');
+            });
           },
           fail(error) {
             console.log(error);
@@ -78,10 +81,6 @@ const KakaoLogin = () => {
       },
     });
   };
-
-  useEffect(() => {
-    kakaoLogin();
-  }, []);
 
   return (
     <div>
