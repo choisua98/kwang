@@ -5,6 +5,7 @@ import { db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
+import imageCompression from 'browser-image-compression';
 import { themeAtom, userAtom } from '../../../../atoms/Atom';
 import { useAtom } from 'jotai';
 import {
@@ -32,7 +33,9 @@ const MyProfile = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [nickname, setNickname] = useState(extractNickname(userEmail));
+  console.log(extractNickname(userEmail));
   const [updateNick, setUpdateNick] = useState(nickname);
+  console.log('업데이트닉네임', updateNick);
   const [introduction, setIntroduction] = useState('');
   const [updateIntro, setUpdateIntro] = useState(introduction);
 
@@ -61,25 +64,45 @@ const MyProfile = () => {
 
   // 프로필 이미지 업데이트 함수
   const handleImageUpdate = async () => {
-    // 기존 userUID 폴더의 이미지 전체 삭제
-    const userImagesRef = ref(storage, `profileImages/${userUID}`);
-    const userImagesList = await listAll(userImagesRef);
-
-    // userImagesList.items 배열에 있는 모든 이미지 삭제
-    await Promise.all(
-      userImagesList.items.map(async (item) => {
-        await deleteObject(item);
-      }),
-    );
-
-    // Firebase에 프로필 이미지 업로드
     try {
+      // 기존 userUID 폴더의 이미지 전체 삭제
+      const userImagesRef = ref(storage, `profileImages/${userUID}`);
+      const userImagesList = await listAll(userImagesRef);
+
+      // userImagesList.items 배열에 있는 모든 이미지 삭제
+      await Promise.all(
+        userImagesList.items.map(async (item) => {
+          await deleteObject(item);
+        }),
+      );
+
+      const options = {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 300,
+        useWebWorker: true,
+      };
+
+      // 이미지 압축 함수
+      const compressedImage = async (imageFile) => {
+        try {
+          const compressedFile = await imageCompression(imageFile, options);
+          return compressedFile;
+        } catch (error) {
+          console.error('이미지 압축 실패', error);
+          return null;
+        }
+      };
+
+      // 압축한 프로필 이미지 Firebase에 업로드
       if (selectedImage) {
-        const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`);
-        await uploadBytes(imageRef, selectedImage); // storage에 이미지 업로드
-        const imageURL = await getDownloadURL(imageRef);
-        setUpdatedImage(imageURL);
-        return imageURL;
+        const compressedFile = await compressedImage(selectedImage);
+        if (compressedFile) {
+          const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`);
+          await uploadBytes(imageRef, compressedFile); // 압축된 이미지 업로드
+          const imageURL = await getDownloadURL(imageRef);
+          setUpdatedImage(imageURL);
+          return imageURL;
+        }
       }
       return null;
     } catch (error) {
@@ -124,8 +147,6 @@ const MyProfile = () => {
         await setDoc(userDocRef, userInfo);
       }
 
-      // await handleImageUpdate();
-
       setModalVisible(false); // 모달 닫기
     } catch (error) {
       console.error('프로필 업데이트 실패', error);
@@ -140,6 +161,9 @@ const MyProfile = () => {
       // setUpdatedImage(defaultProfileImage); // 이미지 변경 시 갱신
     }
   };
+
+  console.log('처음', nickname);
+  console.log('업데이트', updateNick);
 
   return (
     <div>
@@ -181,7 +205,7 @@ const MyProfile = () => {
         <ProfileContainer>
           {/* 프로필 이미지 미리보기 */}
           <PreviewImage src={previewImage} alt="이미지 미리보기" />
-          <input type="file" onChange={onChangeImgaeFile} />
+          <input type="file" accept=" image/*" onChange={onChangeImgaeFile} />
           <div style={{ marginTop: '20px' }}>닉네임</div>
           <ProfileInput
             placeholder="변경하실 닉네임을 작성해주세요."

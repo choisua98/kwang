@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.2.1",
     "antd": "^5.8.4",
     "axios": "^1.4.0",
+    "browser-image-compression": "^2.0.2",
     "firebase": "^10.2.0",
     "jotai": "^2.3.1",
     "nanoid": "^4.0.2",
