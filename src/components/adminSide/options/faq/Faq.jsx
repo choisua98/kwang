@@ -100,18 +100,21 @@ const Faq = () => {
     navigate('/admin');
   };
 
+  // FAQ 삭제 버튼 클릭 시 호출되는 함수
   const handleDeleteFaqButtonClick = async (faqId) => {
     const docRef = doc(db, 'template', blockId);
     const docSnapshot = await getDoc(docRef);
 
     if (docSnapshot.exists()) {
       const data = docSnapshot.data();
+
+      // 삭제할 faqId를 제외한 나머지 FAQ 목록 필터링
       const updatedFaqs = data.faqs.filter((faq) => faq.faqId !== faqId);
 
       // faqs 필드를 업데이트하여 해당 faqId를 삭제한 상태로 업데이트
       await updateDoc(docRef, { faqs: updatedFaqs });
 
-      // FAQ 목록에서 삭제한 항목을 제거한 새로운 목록 생성
+      // 삭제한 항목을 제외한 새로운 FAQ 목록 생성
       const updatedFaqList = faqList.filter((faq) => faq.faqId !== faqId);
 
       // FAQ 목록 상태 업데이트
@@ -121,8 +124,9 @@ const Faq = () => {
     }
   };
 
+  // 추가한 FAQ 항목 삭제 시 호출되는 함수
   const handleDeleteAddedFaq = (faqId) => {
-    // FAQ 목록에서 삭제한 항목을 제거한 새로운 목록 생성
+    // 삭제한 항목을 제외한 새로운 FAQ 목록 생성
     const updatedFaqList = faqList.filter((faq) => faq.faqId !== faqId);
 
     // FAQ 목록 상태 업데이트

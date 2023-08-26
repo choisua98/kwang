@@ -1,6 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { C } from './Challenge.styles';
 import useInput from '../../../../hooks/useInput';
+import { useAtom } from 'jotai';
+import { blocksAtom } from '../../../../atoms/Atom';
+import { auth, db } from '../../../../firebase/firebaseConfig';
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from 'firebase/firestore';
 
 // Toast Editor
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -14,45 +25,101 @@ import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 // ant Design
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { DatePicker, InputNumber, Space, Tag } from 'antd';
+import { DatePicker, Space } from 'antd';
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
-const { CheckableTag } = Tag;
 
+// 오늘 이전의 날짜는 선택 불가능하도록 설정하는 함수
 const disabledDate = (current) => {
-  // Can not select days before today and today
   return current && current < dayjs().endOf('day');
 };
 
 const Challenge = () => {
-  const durationOptions = [
-    '1주 동안',
-    '2주 동안',
-    '3주 동안',
-    '4주 동안',
-    '기타 주기',
-  ];
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [title, handleTitleChange] = useInput();
-  const [selectedDurations, setSelectedDurations] = useState('');
-  const [participantCount, setParticipantCount] = useState(null);
 
-  const handleChange = (tag, checked) => {
-    if (checked) {
-      console.log(tag);
-      setSelectedDurations(tag); // 새로운 태그 선택 시 기존 선택한 태그를 덮어씀
-    }
-  };
+  // 현재 블록 ID 가져오기
+  const blockId = location.state ? location.state.blocksId : null;
+
+  // 전역 상태에서 블록 정보 가져오기
+  const [blocks] = useAtom(blocksAtom);
+
+  // blocks 배열에서 선택된 블록 찾기
+  const selectedBlock = blocks.find((block) => block.id === blockId);
+
+  // useEffect(() => {
+  //   // 만약 현재 블록 ID가 존재한다면 (수정 모드일 때)
+  //   if (blockId) {
+  //     // blocks 배열에서 선택된 블록 찾기
+  //     const selectedBlock = blocks.find((block) => block.id === blockId);
+
+  //     if (selectedBlock) {
+  //       setFaqList(selectedBlock.faqs);
+  //     }
+  //   }
+  // }, [blockId, blocks]);
+
+  // // "저장하기" 버튼 클릭 시 실행되는 함수
+  // const handleAddButtonClick = async (e) => {
+  //   e.preventDefault();
+
+  //   // 사용자 UID 가져오기
+  //   const userUid = auth.currentUser?.uid;
+
+  //   if (!userUid) {
+  //     alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+  //     navigate('/login');
+  //     return;
+  //   }
+
+  //   const editorRef = useRef()
+
+  //   // 입력창에 입력한 내용을 HTML 태그 형태로 취득
+  //   console.log(editorRef.current?.getInstance().getHTML());
+
+  //   // Firestore에 데이터 추가
+  //   await addDoc(collection(db, 'template'), {
+  //     title,
+
+  //     blockKind: 'challenge',
+  //     createdAt: serverTimestamp(),
+  //     userId: userUid,
+  //   });
+
+  //   // 저장 완료 알림 후 어드민 페이지로 이동
+  //   alert('저장 완료!');
+  //   navigate('/admin');
+  // };
+
+  // // 수정하기 버튼 클릭 시 실행되는 함수
+  // const handleEditButtonClick = async (e) => {
+  //   e.preventDefault();
+
+  //   // Firestore에 데이터 업로드
+  //   const docRef = doc(db, 'template', blockId);
+  //   await updateDoc(docRef, {
+  //     faqs: faqList,
+  //     createdAt: serverTimestamp(),
+  //   });
+
+  //   // 수정 완료 알림 후 어드민 페이지로 이동
+  //   alert('수정 완료!');
+  //   navigate('/admin');
+  // };
 
   return (
-    <C.Container>
-      <label htmlFor="title">챌린지 제목</label>
+    <C.Container
+    // onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+    >
+      <label htmlFor="title">서비스 이름 변경하기</label>
       <input
         id="title"
         name="title"
         type="text"
-        placeholder="제목을 입력해 주세요"
-        value={title}
+        placeholder={blockId ? '' : '제목을 입력해 주세요'}
+        defaultValue={blockId ? selectedBlock.title : title}
         onChange={handleTitleChange}
         autoFocus
       />
@@ -60,7 +127,8 @@ const Challenge = () => {
       <label htmlFor="editor">챌린지 소개</label>
       <Editor
         id="editor"
-        placeholder="사진과 글을 추가해 챌린지를 소개해보세요."
+        // ref={editorRef} // DOM 선택용 useRef
+        placeholder={blockId ? '' : '사진과 글을 추가해 챌린지를 소개해보세요.'}
         height="300px" // 에디터 창 높이
         initialEditType="wysiwyg" // 초기 입력모드 설정
         hideModeSwitch={true} // 텍스트 입력 모드 전환 버튼 숨김
@@ -70,11 +138,12 @@ const Challenge = () => {
           ['ul', 'ol', 'task'],
           ['table', 'image', 'link'],
         ]}
+        useCommandShortcut={false} // 키보드 입력 컨트롤 방지
         plugins={[colorSyntax]}
       />
 
-      <label htmlFor="date">챌린지 인증 기간</label>
-      <Space id="date" direction="vertical" size={12}>
+      <label htmlFor="period">챌린지 기간</label>
+      <Space id="period" direction="vertical" size={12}>
         <RangePicker
           disabledDate={disabledDate}
           style={{ width: '100%' }}
@@ -82,34 +151,7 @@ const Challenge = () => {
         />
       </Space>
 
-      <label htmlFor="participant">모집 인원</label>
-      <InputNumber
-        id="participant"
-        placeholder="참여할 인원을 입력해 주세요. ('제한없음' 입력 가능)"
-        value={participantCount}
-        onChange={setParticipantCount}
-        style={{ width: '100%' }}
-        min={0}
-      />
-
-      <label htmlFor="choice">챌린지 주기 선택</label>
-      <Space
-        id="choice"
-        size={[0, 8]}
-        style={{ display: 'flex', justifyContent: 'center' }}
-      >
-        {durationOptions.map((tag) => (
-          <CheckableTag
-            key={tag}
-            checked={selectedDurations === tag}
-            onChange={(checked) => handleChange(tag, checked)}
-          >
-            {tag}
-          </CheckableTag>
-        ))}
-      </Space>
-
-      <button type="submit">저장하기</button>
+      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
     </C.Container>
   );
 };
