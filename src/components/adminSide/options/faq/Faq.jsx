@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { F } from './Faq.styles';
 import { useNavigate } from 'react-router-dom';
-import useInput from '../../../../hooks/useInput';
+import useInput from '../../../../hooks/UseInput';
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 

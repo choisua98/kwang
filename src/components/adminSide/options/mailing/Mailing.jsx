@@ -1,7 +1,7 @@
 import React from 'react';
 import { M } from './Mailing.styles';
 import { useNavigate } from 'react-router-dom';
-import useInput from '../../../../hooks/useInput';
+import useInput from '../../../../hooks/UseInput';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../../../../firebase/firebaseConfig';
 
