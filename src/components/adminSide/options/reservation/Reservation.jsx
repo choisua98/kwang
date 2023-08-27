@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { R } from './Reservation.styles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -56,13 +56,15 @@ const Reservation = () => {
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
+  // dayjs().format('YYYY-MM-DD');
+
   const addButtonClick = async () => {
     // Firestore에 데이터 추가
     await addDoc(collection(db, 'template'), {
       title,
       description,
       numberOfPeople,
-      date: pickDate,
+      pickDate,
       startDate,
       endDate,
       blockKind: 'reservation',
@@ -94,21 +96,41 @@ const Reservation = () => {
     }
   };
 
+  // firebase에서 데이터 불러오기
+  const fetchData = async () => {
+    // 이미지 URL 가져오기
+    const imageRef = ref(storage, `reservationImages/${user.uid}/image`);
+    try {
+      const imageUrl = await getDownloadURL(imageRef);
+      setReservationImage(imageUrl);
+      console.log('>>', imageUrl);
+    } catch (error) {
+      console.error('프로필 이미지 업데이트 실패:', error);
+    }
+  };
+
+  // 컴포넌트 마운트 시 데이터 가져오기 함수 호출
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
+
   return (
     <R.Container>
       <R.Contents>
         <p>예약 서비스 이름</p>
         <input
-          placeholder="예약 서비스"
-          value={title}
+          placeholder={blockId ? '' : '예약 서비스'}
+          defaultValue={blockId ? selectedBlock.title : title}
           onChange={(e) => {
             setTitle(e.target.value);
           }}
         />
         <p>예약 상세설명</p>
         <textarea
-          placeholder="상세 설명을 입력해주세요"
-          value={description}
+          placeholder={blockId ? '' : '상세 설명을 입력해주세요'}
+          defaultValue={blockId ? selectedBlock.description : description}
           onChange={(e) => {
             setDescription(e.target.value);
           }}
@@ -135,8 +157,8 @@ const Reservation = () => {
         <p>모집 인원</p>
         <input
           type="number"
-          placeholder="모집 인원을 선택해주세요"
-          value={numberOfPeople}
+          placeholder={blockId ? '' : '모집 인원을 선택해주세요'}
+          defaultValue={blockId ? selectedBlock.numberOfPeople : numberOfPeople}
           onChange={(e) => {
             setNumberOfPeople(e.target.value);
           }}
@@ -144,6 +166,8 @@ const Reservation = () => {
         <p>예약 날짜 선택</p>
         <Space id="period" direction="vertical" size={12}>
           <DatePicker
+            placeholder={blockId ? '' : '날짜 선택'}
+            defaultValue={blockId ? dayjs(selectedBlock.pickDate) : undefined}
             disabledDate={disabledDate}
             onChange={datePickInput}
             popupClassName="datePickerPopup"

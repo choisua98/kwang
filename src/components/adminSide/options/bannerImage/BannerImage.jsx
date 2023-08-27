@@ -22,12 +22,6 @@ const BannerImage = () => {
 
   const addButtonClick = async () => {
     try {
-      // // 이전 이미지 삭제
-      // if (bannerImage) {
-      //   const previousImageRef = ref(storage, `test/${user.uid}/bannerimage`);
-      //   await deleteObject(previousImageRef);
-      // }
-
       // Firebase에 이미지 업로드
       if (selectedImage) {
         const imageRef = ref(storage, `bannerImages/${user.uid}/bannerimage`);
