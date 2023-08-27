@@ -42,7 +42,7 @@ const Reservation = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [numberOfPeople, setNumberOfPeople] = useState('');
-  const [date, setDate] = useState('');
+  const [pickDate, setPickDate] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
@@ -62,9 +62,9 @@ const Reservation = () => {
       title,
       description,
       numberOfPeople,
-      // date,
-      // startDate,
-      // endDate,
+      date: pickDate,
+      startDate,
+      endDate,
       blockKind: 'reservation',
       createdAt: serverTimestamp(),
       userId: userUid,
@@ -73,8 +73,12 @@ const Reservation = () => {
   };
 
   const datePickInput = (date, dateString) => {
-    console.log(date, dateString);
-    setDate(date);
+    setPickDate(dateString);
+  };
+
+  const periodPickInput = (date, dateString) => {
+    setStartDate(dateString[0]);
+    setEndDate(dateString[1]);
   };
 
   // 이미지 firebase 에 추가
@@ -139,17 +143,21 @@ const Reservation = () => {
         />
         <p>예약 날짜 선택</p>
         <Space id="period" direction="vertical" size={12}>
-          <DatePicker onChange={datePickInput} />
+          <DatePicker
+            disabledDate={disabledDate}
+            onChange={datePickInput}
+            popupClassName="datePickerPopup"
+          />
         </Space>
         <p>예약 기간</p>
         <Space id="period" direction="vertical" size={12}>
           <RangePicker
+            onChange={periodPickInput}
             disabledDate={disabledDate}
             style={{ width: '100%' }}
-            dropdownClassName="customRangePickerPopup"
+            popupClassName="periodPickerPopup"
           />
         </Space>{' '}
-        (
         <button
           onClick={() => {
             addButtonClick();
@@ -159,7 +167,7 @@ const Reservation = () => {
         >
           저장하기
         </button>
-        )<button>삭제하기</button>
+        <button>삭제하기</button>
       </R.Contents>
     </R.Container>
   );
