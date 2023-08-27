@@ -64,7 +64,8 @@ const FanLetter = () => {
 
   return (
     <F.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
-      <F.Title>
+      <F.Contents>
+        <p>팬레터 서비스 이름</p>
         <input
           name="title"
           type="text"
@@ -74,8 +75,6 @@ const FanLetter = () => {
             setTitle(e.target.value);
           }}
         />
-      </F.Title>
-      <F.Contents>
         <p>팬레터 설명을 작성해 주세요</p>
         <input
           name="description"

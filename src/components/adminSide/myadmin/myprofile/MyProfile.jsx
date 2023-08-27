@@ -20,7 +20,6 @@ const MyProfile = () => {
   const user = useAtom(userAtom);
   const userEmail = user[0]?.email;
   const userUID = user[0]?.uid;
-  console.log('userUID', userUID);
   const [theme] = useAtom(themeAtom);
 
   // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
@@ -34,9 +33,7 @@ const MyProfile = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [nickname, setNickname] = useState(extractNickname(userEmail));
-  console.log(extractNickname(userEmail));
   const [updateNick, setUpdateNick] = useState(nickname);
-  console.log('업데이트닉네임', updateNick);
   const [introduction, setIntroduction] = useState('');
   const [updateIntro, setUpdateIntro] = useState(introduction);
 
@@ -161,9 +158,6 @@ const MyProfile = () => {
       // setUpdatedImage(defaultProfileImage); // 이미지 변경 시 갱신
     }
   };
-
-  console.log('처음', nickname);
-  console.log('업데이트', updateNick);
 
   return (
     <div>

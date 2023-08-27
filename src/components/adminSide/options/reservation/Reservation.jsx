@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { R } from './Reservation.styles';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, InputNumber, Space, Tag } from 'antd';
-import { reservationImageAtom, userAtom } from '../../../../atoms/Atom';
-import { useAtom } from 'jotai';
+import {
+  blocksAtom,
+  reservationImageAtom,
+  userAtom,
+} from '../../../../atoms/Atom';
+import { useAtom, useAtomValue } from 'jotai';
 import { styled } from 'styled-components';
 import {
   deleteObject,
@@ -27,6 +31,7 @@ const disabledDate = (current) => {
 
 const Reservation = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -38,8 +43,12 @@ const Reservation = () => {
   const [reservationImage, setReservationImage] = useAtom(reservationImageAtom);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
+
+  const blockId = location.state ? location.state.blocksId : null;
+  const [blocks] = useAtom(blocksAtom);
+  const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
   const addButtonClick = async () => {
     // Firestore에 데이터 추가
@@ -47,11 +56,12 @@ const Reservation = () => {
       title,
       description,
       numberOfPeople,
-      date,
+      // date,
       // startDate,
       // endDate,
       blockKind: 'reservation',
       createdAt: serverTimestamp(),
+      userId: userUid,
     });
     alert('데이터가 추가되었습니다.');
   };
@@ -132,12 +142,14 @@ const Reservation = () => {
         </Space>
         <button
           onClick={() => {
+            addButtonClick();
             addImageButtonClick();
             navigate('/admin');
           }}
         >
           저장하기
         </button>
+        <button>삭제하기</button>
       </R.Contents>
     </R.Container>
   );

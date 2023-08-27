@@ -26,8 +26,6 @@ const BlocksArea = () => {
   // 유저의 UID 가져오기
   const userUid = user?.uid;
 
-  console.log('>>', userUid);
-
   // firebase에서 데이터 불러오기
   const fetchData = async () => {
     // Firestore에서 유저에 해당하는 데이터를 가져오기 위한 쿼리 생성
