@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
-import { ReactComponent as Logo } from '../../assets/images/logo.svg';
+import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
 import { H } from './Header.styles';
 
 const Header = () => {
