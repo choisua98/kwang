@@ -12,6 +12,7 @@ export const L = {
       background: none;
       img {
         width: 60px;
+        height: 60px;
         border-radius: 50%;
       }
     }
