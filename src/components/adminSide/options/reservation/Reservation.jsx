@@ -5,8 +5,11 @@ import {
   addDoc,
   collection,
   doc,
+  getDocs,
+  query,
   serverTimestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import dayjs from 'dayjs';
@@ -26,6 +29,7 @@ import {
   uploadBytes,
 } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
 
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
@@ -53,7 +57,7 @@ const Reservation = () => {
   const userUid = user?.uid;
 
   const blockId = location.state ? location.state.blocksId : null;
-  const [blocks] = useAtom(blocksAtom);
+  const [blocks, setBlocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
   // dayjs().format('YYYY-MM-DD');
@@ -98,18 +102,37 @@ const Reservation = () => {
 
   // firebase에서 데이터 불러오기
   const fetchData = async () => {
-    // 이미지 URL 가져오기
     const imageRef = ref(storage, `reservationImages/${user.uid}/image`);
     try {
+      // 이미지 Url 가져오기
       const imageUrl = await getDownloadURL(imageRef);
       setReservationImage(imageUrl);
-      console.log('>>', imageUrl);
+
+      // 쿼리 실행하여 데이터 가져오기
+      const q = query(
+        collection(db, 'template'),
+        where('userId', '==', userUid),
+      );
+      const querySnapshot = await getDocs(q);
+
+      // 가져온 데이터를 가공하여 배열에 저장
+      const initialDocuments = [];
+      querySnapshot.forEach((doc) => {
+        const data = {
+          id: doc.id,
+          ...doc.data(),
+        };
+        initialDocuments.push(data);
+      });
+
+      console.log(initialDocuments);
+      // 가공된 데이터를 상태에 업데이트
+      setBlocks(initialDocuments);
     } catch (error) {
-      console.error('프로필 이미지 업데이트 실패:', error);
+      console.error('데이터 가져오기 오류:', error);
     }
   };
 
-  // 컴포넌트 마운트 시 데이터 가져오기 함수 호출
   useEffect(() => {
     if (user) {
       fetchData();
@@ -163,19 +186,23 @@ const Reservation = () => {
             setNumberOfPeople(e.target.value);
           }}
         />
-        <p>예약 날짜 선택</p>
+        <p>시작 날짜 선택</p>
         <Space id="period" direction="vertical" size={12}>
           <DatePicker
-            placeholder={blockId ? '' : '날짜 선택'}
             defaultValue={blockId ? dayjs(selectedBlock.pickDate) : undefined}
             disabledDate={disabledDate}
             onChange={datePickInput}
             popupClassName="datePickerPopup"
           />
         </Space>
-        <p>예약 기간</p>
+        <p>모집 기간 선택</p>
         <Space id="period" direction="vertical" size={12}>
           <RangePicker
+            defaultValue={
+              blockId
+                ? [dayjs(selectedBlock.startDate), dayjs(selectedBlock.endDate)]
+                : undefined
+            }
             onChange={periodPickInput}
             disabledDate={disabledDate}
             style={{ width: '100%' }}
