@@ -16,43 +16,40 @@ import { useAtom, useAtomValue } from 'jotai';
 const BannerImage = () => {
   const auth = getAuth();
   const user = auth.currentUser;
-  const userUid = user?.uid;
   const navigate = useNavigate();
-  const [previewImage, setPreviewImage] = useAtom(bannerImageAtom);
+  const [bannerImage, setBannerImage] = useAtom(bannerImageAtom);
   const [selectedImage, setSelectedImage] = useState(null);
 
   const addButtonClick = async () => {
     try {
-      // 이전 이미지 삭제
-      if (previewImage) {
-        const previousImageRef = ref(
-          storage,
-          `bannerImages/${user.uid}/bannerimage`,
-        );
-        await deleteObject(previousImageRef);
-      }
+      // // 이전 이미지 삭제
+      // if (bannerImage) {
+      //   const previousImageRef = ref(storage, `test/${user.uid}/bannerimage`);
+      //   await deleteObject(previousImageRef);
+      // }
 
       // Firebase에 이미지 업로드
       if (selectedImage) {
         const imageRef = ref(storage, `bannerImages/${user.uid}/bannerimage`);
         await uploadBytes(imageRef, selectedImage);
         const imageURL = await getDownloadURL(imageRef);
-        setPreviewImage(imageURL);
+        setBannerImage(imageURL);
+        return imageURL;
       }
-
-      alert('데이터가 추가되었습니다.');
+      return null;
     } catch (error) {
       console.error('업데이트 실패', error);
+      return null;
     }
   };
 
   // firebase에서 데이터 불러오기
   const fetchData = async () => {
     // 이미지 URL 가져오기
-    const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
+    const imageRef = ref(storage, `bannerImages/${user.uid}/bannerimage`);
     try {
       const imageUrl = await getDownloadURL(imageRef);
-      setPreviewImage(imageUrl);
+      setBannerImage(imageUrl);
     } catch (error) {
       console.error('프로필 이미지 업데이트 실패:', error);
     }
@@ -65,6 +62,15 @@ const BannerImage = () => {
     }
   }, [user]);
 
+  const onChangeImgaeFile = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setBannerImage(URL.createObjectURL(file));
+      // setUpdatedImage(defaultProfileImage); // 이미지 변경 시 갱신
+    }
+  };
+
   return (
     <B.Container>
       <B.Title>
@@ -72,20 +78,19 @@ const BannerImage = () => {
       </B.Title>
       <B.Contents>
         <p>이미지를 추가해 주세요</p>
-        <label htmlFor="imageInput">이미지 추가 +</label>
-        {previewImage ? <PreviewImage src={previewImage} /> : ''}
+        {bannerImage ? (
+          <label htmlFor="imageInput">이미지 수정하기</label>
+        ) : (
+          <label htmlFor="imageInput">이미지 추가 +</label>
+        )}
+
+        {bannerImage ? <PreviewImage src={bannerImage} /> : ''}
 
         <input
           id="imageInput"
           type="file"
           style={{ display: 'none' }}
-          onChange={(e) => {
-            const file = e.target.files[0];
-            if (file) {
-              setSelectedImage(file);
-              setPreviewImage(URL.createObjectURL(file));
-            }
-          }}
+          onChange={onChangeImgaeFile}
         />
         <button
           type="submit"
