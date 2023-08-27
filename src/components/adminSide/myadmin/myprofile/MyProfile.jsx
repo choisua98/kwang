@@ -20,6 +20,7 @@ const MyProfile = () => {
   const user = useAtom(userAtom);
   const userEmail = user[0]?.email;
   const userUID = user[0]?.uid;
+  console.log('userUID', userUID);
   const [theme] = useAtom(themeAtom);
 
   // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
@@ -114,9 +115,6 @@ const MyProfile = () => {
   // 프로필 정보를 업데이트 하는 버튼 함수
   const handleProfileUpdate = async () => {
     try {
-      setUpdateNick(nickname);
-      setUpdateIntro(introduction);
-
       const usersCollection = collection(db, 'users');
       const userDocRef = doc(usersCollection, userUID);
 
@@ -134,8 +132,6 @@ const MyProfile = () => {
         userInfo.profileImageURL = imageURL;
       }
 
-      await updateDoc(userDocRef, userInfo);
-
       // 문서가 존재하는지 확인
       const userDoc = await getDoc(userDocRef);
 
@@ -146,6 +142,10 @@ const MyProfile = () => {
         // 문서가 없는 경우 문서 생성 후 업데이트
         await setDoc(userDocRef, userInfo);
       }
+
+      setUpdateNick(nickname);
+      setUpdateIntro(introduction);
+      console.log('업데이트 함수 속 닉네임', nickname);
 
       setModalVisible(false); // 모달 닫기
     } catch (error) {
@@ -170,7 +170,7 @@ const MyProfile = () => {
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
         <Col span={24} style={{ textAlign: 'center' }}>
           {/* <Profile /> */}
-          <ProfileImage src={updatedImage} />
+          <ProfileImage key={updatedImage} src={updatedImage} />
           <div style={{ margin: '20px 0 10px' }}>{updateNick}</div>
           <div style={{ margin: '20px 0' }}>{updateIntro}</div>
           <Button
@@ -204,7 +204,11 @@ const MyProfile = () => {
         {/* 모달 내용 */}
         <ProfileContainer>
           {/* 프로필 이미지 미리보기 */}
-          <PreviewImage src={previewImage} alt="이미지 미리보기" />
+          <PreviewImage
+            key={previewImage}
+            src={previewImage}
+            alt="이미지 미리보기"
+          />
           <input type="file" accept=" image/*" onChange={onChangeImgaeFile} />
           <div style={{ marginTop: '20px' }}>닉네임</div>
           <ProfileInput
