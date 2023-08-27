@@ -63,19 +63,57 @@ const Reservation = () => {
   // dayjs().format('YYYY-MM-DD');
 
   const addButtonClick = async () => {
-    // Firestore에 데이터 추가
-    await addDoc(collection(db, 'template'), {
-      title,
-      description,
-      numberOfPeople,
-      pickDate,
-      startDate,
-      endDate,
-      blockKind: 'reservation',
-      createdAt: serverTimestamp(),
-      userId: userUid,
-    });
-    alert('데이터가 추가되었습니다.');
+    try {
+      // Firestore에 데이터 추가
+      await addDoc(collection(db, 'template'), {
+        title,
+        description,
+        numberOfPeople,
+        pickDate,
+        startDate,
+        endDate,
+        blockKind: 'reservation',
+        createdAt: serverTimestamp(),
+        userId: userUid,
+      });
+      // Firebase에 이미지 업로드
+      const imageRef = ref(storage, `reservationImages/${user.uid}/image`);
+      await uploadBytes(imageRef, selectedImage);
+      const imageURL = await getDownloadURL(imageRef);
+      setReservationImage(imageURL);
+      alert('데이터가 추가되었습니다.');
+      navigate('/admin');
+    } catch (error) {
+      console.error('저장 실패', error);
+    }
+  };
+
+  // 수정하기 버튼
+  const editButtonClick = async () => {
+    try {
+      // Firestore에 데이터 업로드
+      const docRef = doc(db, 'template', blockId);
+      await updateDoc(docRef, {
+        title,
+        description,
+        numberOfPeople,
+        pickDate,
+        startDate,
+        endDate,
+        blockKind: 'reservation',
+        createdAt: serverTimestamp(),
+        userId: userUid,
+      });
+      // Firebase에 이미지 업로드
+      const imageRef = ref(storage, `reservationImages/${user.uid}/image`);
+      await uploadBytes(imageRef, selectedImage);
+      const imageURL = await getDownloadURL(imageRef);
+      setReservationImage(imageURL);
+      alert('데이터가 저장되었습니다.');
+      navigate('/admin');
+    } catch (error) {
+      console.error('업데이트 실패', error);
+    }
   };
 
   const datePickInput = (date, dateString) => {
@@ -85,19 +123,6 @@ const Reservation = () => {
   const periodPickInput = (date, dateString) => {
     setStartDate(dateString[0]);
     setEndDate(dateString[1]);
-  };
-
-  // 이미지 firebase 에 추가
-  const addImageButtonClick = async () => {
-    try {
-      // Firebase에 이미지 업로드
-      const imageRef = ref(storage, `reservationImages/${user.uid}/image`);
-      await uploadBytes(imageRef, selectedImage);
-      const imageURL = await getDownloadURL(imageRef);
-      setReservationImage(imageURL);
-    } catch (error) {
-      console.error('업데이트 실패', error);
-    }
   };
 
   // firebase에서 데이터 불러오기
@@ -209,15 +234,23 @@ const Reservation = () => {
             popupClassName="periodPickerPopup"
           />
         </Space>{' '}
-        <button
-          onClick={() => {
-            addButtonClick();
-            addImageButtonClick();
-            navigate('/admin');
-          }}
-        >
-          저장하기
-        </button>
+        {blockId ? (
+          <button
+            onClick={() => {
+              editButtonClick();
+            }}
+          >
+            수정하기
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              addButtonClick();
+            }}
+          >
+            저장하기
+          </button>
+        )}
         <button>삭제하기</button>
       </R.Contents>
     </R.Container>
