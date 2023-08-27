@@ -10,7 +10,7 @@ export const H = {
   `,
   MenuContentWrapper: styled.div`
     position: absolute;
-    right: 0;
+    right: 15px;
     padding: 10px;
     border: 1px solid rgb(217, 217, 217);
     border-radius: 5px;
