@@ -58,6 +58,7 @@ const Reservation = () => {
 
   const datePickInput = (date, dateString) => {
     console.log(date, dateString);
+    setDate(date);
   };
 
   // 이미지 firebase 에 추가
@@ -119,13 +120,7 @@ const Reservation = () => {
         />
         <p>예약 날짜 선택</p>
         <Space id="period" direction="vertical" size={12}>
-          <DatePicker
-            onChange={(date, dateString) => {
-              datePickInput(date, dateString);
-              setDate(date);
-            }}
-            value={date}
-          />
+          <DatePicker onChange={datePickInput} />
         </Space>
         <p>예약 기간</p>
         <Space id="period" direction="vertical" size={12}>

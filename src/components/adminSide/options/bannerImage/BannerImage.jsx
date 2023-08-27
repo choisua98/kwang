@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { B } from './BannerImage.styles';
 import { useNavigate } from 'react-router-dom';
 import { storage } from '../../../../firebase/firebaseConfig';
@@ -10,16 +10,16 @@ import {
   uploadBytes,
 } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
-import { bannerImageAtom } from '../../../../atoms/Atom';
-import { useAtom } from 'jotai';
+import { bannerImageAtom, userAtom } from '../../../../atoms/Atom';
+import { useAtom, useAtomValue } from 'jotai';
 
 const BannerImage = () => {
   const auth = getAuth();
   const user = auth.currentUser;
+  const userUid = user?.uid;
   const navigate = useNavigate();
   const [previewImage, setPreviewImage] = useAtom(bannerImageAtom);
   const [selectedImage, setSelectedImage] = useState(null);
-  // const [updateImage, setUpdateImage] = useState('');
 
   const addButtonClick = async () => {
     try {
@@ -45,6 +45,25 @@ const BannerImage = () => {
       console.error('업데이트 실패', error);
     }
   };
+
+  // firebase에서 데이터 불러오기
+  const fetchData = async () => {
+    // 이미지 URL 가져오기
+    const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
+    try {
+      const imageUrl = await getDownloadURL(imageRef);
+      setPreviewImage(imageUrl);
+    } catch (error) {
+      console.error('프로필 이미지 업데이트 실패:', error);
+    }
+  };
+
+  // 컴포넌트 마운트 시 데이터 가져오기 함수 호출
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
 
   return (
     <B.Container>
@@ -77,6 +96,7 @@ const BannerImage = () => {
         >
           저장하기
         </button>
+        <button>삭제하기</button>
       </B.Contents>
     </B.Container>
   );
