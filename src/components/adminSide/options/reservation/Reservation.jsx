@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { R } from './Reservation.styles';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from 'firebase/firestore';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -104,9 +110,12 @@ const Reservation = () => {
           }}
         />
         <p>이미지를 추가해 주세요</p>
-        <label htmlFor="imageInput">이미지 추가 +</label>
+        {reservationImage ? (
+          <label htmlFor="imageInput">이미지 수정하기</label>
+        ) : (
+          <label htmlFor="imageInput">이미지 추가 +</label>
+        )}
         {reservationImage ? <PreviewImage src={reservationImage} /> : ''}
-
         <input
           id="imageInput"
           type="file"
@@ -139,7 +148,8 @@ const Reservation = () => {
             style={{ width: '100%' }}
             dropdownClassName="customRangePickerPopup"
           />
-        </Space>
+        </Space>{' '}
+        (
         <button
           onClick={() => {
             addButtonClick();
@@ -149,7 +159,7 @@ const Reservation = () => {
         >
           저장하기
         </button>
-        <button>삭제하기</button>
+        )<button>삭제하기</button>
       </R.Contents>
     </R.Container>
   );
