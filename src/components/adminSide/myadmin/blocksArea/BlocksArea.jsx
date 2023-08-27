@@ -18,7 +18,7 @@ import { deleteObject, getDownloadURL, ref } from 'firebase/storage';
 const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
-  const [image] = useAtom(bannerImageAtom);
+  const [bannerImage, setBannerImage] = useAtom(bannerImageAtom);
 
   // Jotai에서 유저 정보 가져오기
   const user = useAtomValue(userAtom);
@@ -50,6 +50,15 @@ const BlocksArea = () => {
 
       // 가공된 데이터를 상태에 업데이트
       setBlocks(initialDocuments);
+
+      // 이미지 URL 가져오기
+      const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
+      try {
+        const imageUrl = await getDownloadURL(imageRef);
+        setBannerImage(imageUrl);
+      } catch (error) {
+        console.error('프로필 이미지 업데이트 실패:', error);
+      }
     } catch (error) {
       console.error('데이터 가져오기 오류:', error);
     }
@@ -61,12 +70,6 @@ const BlocksArea = () => {
       fetchData();
     }
   }, [user]);
-
-  // const getImageUrl = async () => {
-  //   const imageRef == ref(storage, `bannerImages/${userUid}/bannerimage`);
-  //   const imageUrl  await getDownloadURL(imageRef);
-  //   return imageUrl;
-  // };
 
   // 수정 버튼 클릭 시 페이지 이동 함수
   const moveToEditButton = (block) =>
@@ -110,10 +113,10 @@ const BlocksArea = () => {
           );
         })}
       </>
-      {image ? (
+      {bannerImage ? (
         <>
           <img
-            src={image}
+            src={bannerImage}
             onClick={() => navigate('/admin/bannerimage')}
             alt="bannerimage"
           />
