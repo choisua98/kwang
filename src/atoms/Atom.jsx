@@ -15,3 +15,6 @@ export const blocksAtom = atom([]);
 
 // bannerImage
 export const bannerImageAtom = atom(null);
+
+// reservation Image
+export const reservationImageAtom = atom(null);
