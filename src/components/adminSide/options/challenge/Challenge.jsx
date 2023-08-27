@@ -13,15 +13,6 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 
-// Toast Editor
-import '@toast-ui/editor/dist/toastui-editor.css';
-import { Editor } from '@toast-ui/react-editor';
-
-// Toast ColorSyntax Plugin
-import 'tui-color-picker/dist/tui-color-picker.css';
-import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
-import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
-
 // ant Design
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -126,22 +117,15 @@ const Challenge = () => {
         autoFocus
       />
 
-      <label htmlFor="editor">챌린지 상세설명</label>
-      <Editor
-        id="editor"
-        ref={editorRef} // DOM 선택용 useRef
+      <label htmlFor="title">챌린지 상세설명</label>
+      <textarea
+        id="title"
+        name="title"
+        type="text"
         placeholder={blockId ? '' : '사진과 글을 추가해 챌린지를 소개해보세요.'}
-        height="300px" // 에디터 창 높이
-        initialEditType="wysiwyg" // 초기 입력모드 설정
-        hideModeSwitch={true} // 텍스트 입력 모드 전환 버튼 숨김
-        toolbarItems={[
-          // 툴바 옵션 설정
-          ['heading', 'bold'],
-          ['ul', 'ol', 'task'],
-          ['table', 'image', 'link'],
-        ]}
-        useCommandShortcut={false} // 키보드 입력 컨트롤 방지
-        plugins={[colorSyntax]}
+        defaultValue={blockId ? selectedBlock.title : title}
+        onChange={handleTitleChange}
+        style={{ height: '80px' }}
       />
 
       <label htmlFor="period">챌린지 기간</label>
