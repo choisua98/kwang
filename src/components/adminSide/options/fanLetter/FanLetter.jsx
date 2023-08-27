@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { F } from './FanLetter.styles';
-import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../../../firebase/firebaseConfig';
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from 'firebase/firestore';
+import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtom, useAtomValue } from 'jotai';
 import { blocksAtom, userAtom } from '../../../../atoms/Atom';
@@ -9,6 +15,7 @@ import { blocksAtom, userAtom } from '../../../../atoms/Atom';
 const FanLetter = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
@@ -17,7 +24,7 @@ const FanLetter = () => {
   console.log('1', user);
 
   // 유저의 UID 가져오기
-  const userUid = user?.uid;
+  const userUid = auth.currentUser?.uid;
 
   const blockId = location.state ? location.state.blocksId : null;
   const [blocks] = useAtom(blocksAtom);
@@ -26,12 +33,19 @@ const FanLetter = () => {
   const addButtonClick = async (e) => {
     e.preventDefault();
 
+    if (!userUid) {
+      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      navigate('/login');
+      return;
+    }
+
     // Firestore에 데이터 추가
     await addDoc(collection(db, 'template'), {
       title,
       description,
       blockKind: 'fanletter',
-      userId: user?.uid,
+      createdAt: serverTimestamp(),
+      userId: userUid,
     });
     navigate('/admin');
   };
@@ -50,7 +64,8 @@ const FanLetter = () => {
 
   return (
     <F.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
-      <F.Title>
+      <F.Contents>
+        <p>팬레터 서비스 이름</p>
         <input
           name="title"
           type="text"
@@ -60,8 +75,6 @@ const FanLetter = () => {
             setTitle(e.target.value);
           }}
         />
-      </F.Title>
-      <F.Contents>
         <p>팬레터 설명을 작성해 주세요</p>
         <input
           name="description"

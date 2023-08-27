@@ -25,11 +25,12 @@ export const B = {
       margin: 10px 0px;
     }
     label {
-      cursor: pointer;
-      height: 30px;
-      margin: 10px 0px;
-      background-color: white;
+      justify-content: center;
       text-align: center;
+      background-color: lightgray;
+      padding: 8px 0px;
+      margin-bottom: 10px;
+      cursor: pointer;
     }
   `,
 };
