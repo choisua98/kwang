@@ -38,7 +38,7 @@ const Header = () => {
   return (
     <H.HeaderWrapper>
       <Row align="middle">
-        <Col span={23}>
+        <Col span={22}>
           {/* 로고 영역 */}
           <Link to="/">
             <Logo />
