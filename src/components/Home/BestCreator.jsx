@@ -31,7 +31,6 @@ const BestCreator = () => {
         console.log('문서를 가져오지 못하는 오류: ', error);
       });
   }, []);
-  // console.log(usersData);
   // console.log(usersData.profileImageURL);
 
   return (
