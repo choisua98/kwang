@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Modal } from 'antd';
-import { styled } from 'styled-components';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import imageCompression from 'browser-image-compression';
 import { themeAtom, userAtom } from '../../../../atoms/Atom';
+import { P } from './MyProfile.styles';
 import { useAtom } from 'jotai';
 import {
   ref,
@@ -182,7 +182,7 @@ const MyProfile = () => {
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
         <Col span={24} style={{ textAlign: 'center' }}>
           {/* <Profile /> */}
-          <ProfileImage key={updatedImage} src={updatedImage} />
+          <P.ProfileImage src={updatedImage} />
           <div style={{ margin: '20px 0 10px' }}>{updateNick}</div>
           <div style={{ margin: '20px 0' }}>{updateIntro}</div>
           <Button
@@ -214,59 +214,28 @@ const MyProfile = () => {
         }
       >
         {/* 모달 내용 */}
-        <ProfileContainer>
+        <P.ProfileContainer>
           {/* 프로필 이미지 미리보기 */}
-          <PreviewImage
-            key={previewImage}
-            src={previewImage}
-            alt="이미지 미리보기"
-          />
+          <P.PreviewImage src={previewImage} alt="이미지 미리보기" />
           <input type="file" accept=" image/*" onChange={onChangeImgaeFile} />
           <div style={{ marginTop: '20px' }}>닉네임</div>
-          <ProfileInput
+          <P.ProfileInput
             placeholder="변경하실 닉네임을 작성해주세요."
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
           <div style={{ marginTop: '5px' }}>소개</div>
 
-          <ProfileInput
+          <P.ProfileInput
             placeholder="소개를 작성해 주세요."
             value={introduction}
             onChange={(e) => setIntroduction(e.target.value)}
             style={{ marginBottom: '20px' }}
           />
-        </ProfileContainer>
+        </P.ProfileContainer>
       </Modal>
     </div>
   );
 };
 
 export default MyProfile;
-
-const ProfileInput = styled.input`
-  width: 96%;
-  height: 25px;
-`;
-
-const ProfileContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const ProfileImage = styled.img`
-  width: 140px;
-  height: 140px;
-  object-fit: cover; // 이미지가 잘리지 않도록 설정
-  background-color: #d6d6d6;
-  border-radius: 100%;
-`;
-
-const PreviewImage = styled.img`
-  width: 140px;
-  height: 140px;
-  object-fit: cover; // 이미지가 잘리지 않도록 설정
-  background-color: #d6d6d6;
-  border-radius: 100%;
-`;
