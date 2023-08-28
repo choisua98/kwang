@@ -93,7 +93,6 @@ const Theme = () => {
       setBackgroundImage(tempBackgroundImage);
       if (tempBackgroundImage) {
         document.body.style.backgroundImage = `url("${tempBackgroundImage}")`;
-        document.body.style.backgroundSize = 'cover';
       } else {
         document.body.style.backgroundImage = '';
       }
@@ -122,7 +121,7 @@ const Theme = () => {
       >
         <Row justify="center">
           <Col span={24}>
-            <Row gutter={[10, 20]}>
+            <Row gutter={[5, 0]} style={{ margin: '10px 0' }}>
               <Col span={12}>
                 <button
                   style={{
@@ -154,7 +153,7 @@ const Theme = () => {
                 </button>
               </Col>
             </Row>
-            <Row gutter={[10, 40]}>
+            <Row gutter={[5, 0]} style={{ margin: '10px 0' }}>
               <Col span={12}>
                 <button
                   style={{

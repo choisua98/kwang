@@ -17,11 +17,22 @@ const GlobalStyle = createGlobalStyle`
       font-weight: 400;
       font-style: normal;
   } 
-    
+
+  html {
+    background: #fff;
+  }
+
   body {
-    /* background-color: var(--color-bg); */
-    color: var(--color-text); 
+    margin: 0 auto;
+    max-width: 390px;
+    width: 100%;
+    height: 100vh;
     font-family: 'Pretendard-Regular'; 
+    color: var(--color-text); 
+    /* background-color: var(--color-bg); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
   }
 
   a,button {
