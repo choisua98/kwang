@@ -1,6 +1,6 @@
 import React from 'react';
 import { S } from './Service.style';
-import ServiceBanner from '../../assets/images/customer/home/banner/service/service-banner-1.svg';
+import ServiceBanner from '../../../assets/images/customer/home/banner/service/service-banner-1.svg';
 
 const Service = () => {
   return (

@@ -1,15 +1,19 @@
 import React from 'react';
-import MainBanner from '../components/Home/MainBanner';
-import Service from '../components/Home/Service';
-import BestCreator from '../components/Home/BestCreator';
+import UserHome from '../components/customerSide/Home/UserHome';
+// import MainBanner from '../components/customerSide/Home/MainBanner';
+// import Service from '../components/customerSide/Home/Service';
+// import BestCreator from '../components/customerSide/Home/BestCreator';
 
 const Home = () => {
   return (
-    <div style={{ padding: '0 20px' }}>
-      <MainBanner />
-      <Service />
-      <BestCreator />
-    </div>
+    // <div style={{ padding: '0 20px' }}>
+    //   <MainBanner />
+    //   <Service />
+    //   <BestCreator />
+    // </div>
+    <>
+      <UserHome />
+    </>
   );
 };
 

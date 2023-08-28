@@ -52,12 +52,14 @@ const BlocksArea = () => {
       setBlocks(initialDocuments);
 
       // 이미지 URL 가져오기
+
       const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
+      console.log(imageRef);
       try {
-        const imageUrl = await getDownloadURL(imageRef);
-        setBannerImage(imageUrl);
+        // const imageUrl = await getDownloadURL(imageRef);
+        // setBannerImage(imageUrl);
       } catch (error) {
-        console.error('프로필 이미지 업데이트 실패:', error);
+        // console.error('배너 이미지 업데이트 실패:', error);
       }
     } catch (error) {
       console.error('데이터 가져오기 오류:', error);
