@@ -94,8 +94,7 @@ const BlocksArea = () => {
         `bannerImages/${user.uid}/bannerimage`,
       );
       await deleteObject(previousImageRef);
-      // 이미지 삭제 후 페이지 새로고침
-      window.location.reload();
+      navigate('/admin');
     }
   };
 

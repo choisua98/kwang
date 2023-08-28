@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   query,
@@ -60,8 +61,7 @@ const Reservation = () => {
   const [blocks, setBlocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
-  // dayjs().format('YYYY-MM-DD');
-
+  // 저장 버튼
   const addButtonClick = async () => {
     try {
       // Firestore에 데이터 추가
@@ -76,7 +76,7 @@ const Reservation = () => {
         createdAt: serverTimestamp(),
         userId: userUid,
       });
-      // Firebase에 이미지 업로드
+      // Firebase에 이미지 추가
       const imageRef = ref(storage, `reservationImages/${user.uid}/image`);
       await uploadBytes(imageRef, selectedImage);
       const imageURL = await getDownloadURL(imageRef);
@@ -88,7 +88,7 @@ const Reservation = () => {
     }
   };
 
-  // 수정하기 버튼
+  // 수정 버튼
   const editButtonClick = async () => {
     try {
       // Firestore에 데이터 업로드
