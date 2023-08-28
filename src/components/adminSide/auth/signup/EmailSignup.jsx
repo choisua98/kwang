@@ -130,7 +130,7 @@ const EmailSignup = () => {
           ></input>
         </div>
         <button type="submit" onClick={onSignupButtonClickHandler}>
-          회원가입
+          회원가입하기
         </button>
       </form>
     </div>
