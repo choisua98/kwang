@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { auth } from '../firebase/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
-  const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
   // 회원가입 버튼클릭 핸들러
-  const onSignupButtonClickHandler = (e) => {
+  const onSignupButtonClickHandler = async (e) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password)
+    await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // 회원가입 성공시
         console.log(userCredential);
@@ -20,24 +21,13 @@ const Signup = () => {
         // 회원가입 실패시
         console.error(error);
       });
+    navigate('/admin');
   };
+
   return (
     <div>
       <div>signup page</div>
       <form>
-        <div>
-          <input
-            type="text"
-            value={nickname}
-            name="nickname"
-            placeholder="닉네임"
-            required
-            autoFocus
-            onChange={(e) => {
-              setNickname(e.target.value);
-            }}
-          ></input>
-        </div>
         <div>
           <input
             type="email"
