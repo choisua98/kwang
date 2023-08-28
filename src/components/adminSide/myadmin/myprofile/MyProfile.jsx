@@ -71,6 +71,7 @@ const MyProfile = () => {
           setIntroduction(userData.introduction || '');
           setUpdateIntro(userData.introduction || '');
           setUpdatedImage(userData?.profileImageURL || defaultProfileImage);
+          setPreviewImage(userData?.profileImageURL || defaultProfileImage);
         }
       };
       fetchProfileInfo();
