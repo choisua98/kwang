@@ -28,8 +28,6 @@ const NaverLogin = () => {
     naverLogin.init();
     naverLogin.logout();
 
-    //페이지이동
-    //+아래코드
     naverLogin.getLoginStatus(async (status) => {
       if (status) {
         console.log(`로그인?: ${status}`);

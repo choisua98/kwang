@@ -73,7 +73,6 @@ const Login = () => {
         {user ? (
           <div>
             <h2>**로그인 성공!**</h2>
-            <h3>이름:{user.name}</h3>
             <h3>이메일:{user.email}</h3>
             <h3>프로필사진</h3>
             <img src={user.profile_image} alt="프로필 사진" />

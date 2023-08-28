@@ -9,20 +9,19 @@ const EmailLogin = () => {
   const auth = getAuth();
   const navigate = useNavigate();
 
-  // --이메일 로그인--
+  // --이메일 로그인 버튼클릭 핸들러--
   const onLoginButtonClickHandler = async (e) => {
     e.preventDefault();
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      console.log(userCredential);
-      // navigate('/admin');
-    } catch (error) {
-      console.error(error);
-    }
+
+    await signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // 로그인 성공시
+        console.log(userCredential);
+      })
+      .catch((error) => {
+        // 로그인 실패시
+        console.error(error);
+      });
     navigate('/admin');
   };
 

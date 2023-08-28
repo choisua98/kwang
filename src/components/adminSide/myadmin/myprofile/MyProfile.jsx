@@ -22,6 +22,12 @@ const MyProfile = () => {
   const userUID = user[0]?.uid;
   const [theme] = useAtom(themeAtom);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [nickname, setNickname] = useState('');
+  const [updateNick, setUpdateNick] = useState('');
+  const [introduction, setIntroduction] = useState('');
+  const [updateIntro, setUpdateIntro] = useState('');
+
   // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
   const extractNickname = (email) => {
     const parts = email?.split('@');
@@ -31,11 +37,22 @@ const MyProfile = () => {
     return '';
   };
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [nickname, setNickname] = useState(extractNickname(userEmail));
-  const [updateNick, setUpdateNick] = useState(nickname);
-  const [introduction, setIntroduction] = useState('');
-  const [updateIntro, setUpdateIntro] = useState(introduction);
+  useEffect(() => {
+    if (userEmail) {
+      const extractedNickname = extractNickname(userEmail);
+      setNickname(extractedNickname);
+      setUpdateNick(extractedNickname);
+      localStorage.setItem('userNickname', extractedNickname); // 첫 로그인 시 로컬 스토리지에 저장
+    }
+  }, [userEmail]);
+
+  useEffect(() => {
+    const storedNickname = localStorage.getItem('userNickname');
+    if (storedNickname) {
+      setNickname(storedNickname);
+      setUpdateNick(storedNickname);
+    }
+  }, []);
 
   const [previewImage, setPreviewImage] = useState(defaultProfileImage);
   const [selectedImage, setSelectedImage] = useState(null);
