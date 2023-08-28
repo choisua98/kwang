@@ -85,7 +85,7 @@ const Faq = () => {
     navigate('/admin');
   };
 
-  // 수정하기 버튼 클릭 시 실행되는 함수
+  // "수정하기" 버튼 클릭 시 실행되는 함수
   const handleEditButtonClick = async (e) => {
     e.preventDefault();
 
