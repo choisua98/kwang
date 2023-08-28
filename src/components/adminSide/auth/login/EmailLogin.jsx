@@ -57,6 +57,14 @@ const EmailLogin = () => {
           로그인
         </button>
         <br />
+        <button
+          onClick={() => {
+            navigate('/signup');
+          }}
+        >
+          회원가입
+        </button>
+        <br />
       </form>
     </div>
   );
