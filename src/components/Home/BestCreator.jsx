@@ -5,9 +5,9 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-// import { B } from './BestCreator.styles';
+import { B } from './BestCreator.styles';
 // import BestBanner from '../../../assets/images/customer/home/banner/best/best-banner-1.svg';
-import { db } from './../../../firebase/firebaseConfig';
+import { db } from '../../firebase/firebaseConfig';
 import { collection, query, limit, getDocs } from 'firebase/firestore';
 
 const BestCreator = () => {
@@ -34,19 +34,21 @@ const BestCreator = () => {
   // console.log(usersData.profileImageURL);
 
   return (
-    <>
+    <div style={{ margin: '10px auto' }}>
       <h1>인기 크리에이터 BEST</h1>
-
       <Swiper
-        // install Swiper modules
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         spaceBetween={20}
         slidesPerView={2.2}
         // navigation
         // pagination={{ clickable: true }}
         // scrollbar={{ draggable: true }}
-        onSwiper={(swiper) => console.log(swiper)}
-        onSlideChange={() => console.log('slide change')}
+        onSwiper={(swiper) => {
+          /* console.log(swiper); */
+        }}
+        onSlideChange={() => {
+          // console.log('slide change')
+        }}
         style={{
           margin: '20px auto 0',
           width: '349px',
@@ -71,7 +73,7 @@ const BestCreator = () => {
           </SwiperSlide>
         ))}
       </Swiper>
-    </>
+    </div>
   );
 };
 
