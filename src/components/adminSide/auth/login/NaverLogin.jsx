@@ -51,6 +51,7 @@ const NaverLogin = () => {
                 );
                 console.log(userCredential);
                 console.log('로그인성공.');
+                navigate('/admin');
               } catch (error) {
                 console.error(error);
               }
@@ -74,7 +75,6 @@ const NaverLogin = () => {
           }
         };
         await checkEmailExists();
-        navigate('/admin');
       }
     });
   };
