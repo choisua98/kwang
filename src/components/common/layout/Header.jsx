@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Row, Col, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
@@ -12,6 +12,12 @@ import { auth } from '../../../firebase/firebaseConfig';
 const Header = () => {
   const navigate = useNavigate();
   const [user, setUser] = useAtom(userAtom);
+  const userUid = user?.uid;
+
+  const location = useLocation(); // 현재 페이지의 URL 추출
+  const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
+  const adminUser = userUid; // 방문자인지 크리에이터인지 확인
+
   // 메뉴 열림
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // 메뉴 열렸을 때 바깥 영역 클릭시 닫힘
@@ -61,12 +67,14 @@ const Header = () => {
             <Logo />
           </Link>
         </Col>
-        <Col span={1}>
-          {/* 우측 영역 */}
-          <div className="right-area">
-            <Button icon={<MenuOutlined />} onClick={handleMenuClick} />
-          </div>
-        </Col>
+        {adminUser && (
+          <Col span={1}>
+            {/* 우측 영역 */}
+            <div className="right-area">
+              <Button icon={<MenuOutlined />} onClick={handleMenuClick} />
+            </div>
+          </Col>
+        )}
       </Row>
 
       {/* 메뉴 */}
@@ -79,6 +87,18 @@ const Header = () => {
             <li>
               <button onClick={onLogoutButtonClickHandler}>로그아웃</button>
             </li>
+            {/* 해당 크리에이터가 마이페이지로 넘어가면 마이페이지 버튼 숨기기 */}
+            {!isMyPage && (
+              <li>
+                <Link to={`/${userUid}`}>마이페이지</Link>
+              </li>
+            )}
+            {/* 마이페이지인 경우 편집하기 버튼이 나오고 버튼을 클릭 시, 기존의 admin 페이지로 이동함 */}
+            {isMyPage && (
+              <li>
+                <Link to={`/admin`}>편집하기</Link>
+              </li>
+            )}
           </ul>
         </H.MenuContentWrapper>
       )}

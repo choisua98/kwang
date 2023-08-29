@@ -2,16 +2,23 @@ import { styled } from 'styled-components';
 
 export const F = {
   Container: styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     padding: 20px;
-  `,
-  Contents: styled.div`
-    display: grid;
-    padding: 20px 10px;
-    background-color: #d9d9d9;
 
-    input {
-      height: 50px;
-      margin: 10px 0px;
+    ::placeholder {
+      color: #999;
+      padding: 5px 7px;
+    }
+
+    input,
+    button {
+      height: 30px;
+    }
+
+    textarea {
+      height: 60px;
     }
   `,
 };
