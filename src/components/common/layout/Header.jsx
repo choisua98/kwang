@@ -21,15 +21,16 @@ const Header = () => {
   const handleMenuClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  // 로그아웃 버튼클릭 핸들러 -> 로그아웃 시 로그인 페이지로 이동시켜 놓음
+  // 로그아웃 버튼클릭 핸들러 -> 로그아웃 시 홈페이지로 이동시켜 놓음
   const onLogoutButtonClickHandler = async () => {
     if (user) {
       console.log('유저가있습니다. 로그아웃하겠습니다.');
     }
     await signOut(auth); //파이어베이스 로그아웃
     setUser('');
-    alert('로그아웃 되었습니다.');
-    navigate('/login');
+    alert('로그아웃 되었습니다.'); //로그아웃누르면 signOut이 다 되지 않았는데 navigate 됨.
+    navigate('/');
+    window.location.reload();
   };
 
   // 마운트 시 외부 영역 클릭시 이벤트 추가, 언마운트 시 제거
