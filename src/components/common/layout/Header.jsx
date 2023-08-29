@@ -12,6 +12,9 @@ import { auth } from '../../../firebase/firebaseConfig';
 const Header = () => {
   const navigate = useNavigate();
   const [user, setUser] = useAtom(userAtom);
+  console.log(user?.uid);
+  const userUid = user?.uid;
+
   // 메뉴 열림
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // 메뉴 열렸을 때 바깥 영역 클릭시 닫힘
@@ -77,6 +80,9 @@ const Header = () => {
             </li>
             <li>
               <button onClick={onLogoutButtonClickHandler}>로그아웃</button>
+            </li>
+            <li>
+              <Link to={`/${userUid}`}>마이페이지</Link>
             </li>
           </ul>
         </H.MenuContentWrapper>
