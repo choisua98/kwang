@@ -19,11 +19,6 @@ const Faq = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 질문과 답변에 대한 상태 및 상태 변경 함수 설정
-  const [title, handleTitleChange] = useInput();
-  const [question, handleQuestionChange, resetQuestion] = useInput();
-  const [answer, handleAnswerChange, resetAuswer] = useInput();
-
   // FAQ 리스트를 관리하는 상태 설정
   const [faqList, setFaqList] = useState([]);
 
@@ -35,6 +30,11 @@ const Faq = () => {
 
   // blocks 배열에서 선택된 블록 찾기
   const selectedBlock = blocks.find((block) => block.id === blockId);
+
+  // 질문과 답변에 대한 상태 및 상태 변경 함수 설정
+  const [title, handleTitleChange] = useInput(selectedBlock?.title);
+  const [question, handleQuestionChange, resetQuestion] = useInput();
+  const [answer, handleAnswerChange, resetAuswer] = useInput();
 
   useEffect(() => {
     // 만약 현재 블록 ID가 존재한다면 (수정 모드일 때)
@@ -144,8 +144,8 @@ const Faq = () => {
         id="title"
         name="title"
         type="text"
-        placeholder={blockId ? '' : '자주 묻는 질문'}
-        defaultValue={blockId ? selectedBlock.title : title}
+        placeholder="자주 묻는 질문"
+        value={title}
         onChange={handleTitleChange}
         autoFocus
       />

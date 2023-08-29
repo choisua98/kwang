@@ -39,6 +39,10 @@ export const C = {
       cursor: pointer;
     }
 
+    .disabled {
+      pointer-events: none;
+    }
+
     span {
       padding-top: 2px;
       font-size: 0.8rem;
