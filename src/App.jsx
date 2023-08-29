@@ -18,6 +18,15 @@ function App() {
 
   // onAuthStateChanged 사용
   useEffect(() => {
+    onAuthStateChanged(auth, async (user) => {
+      console.log({ 로그인한유저: user });
+      if (user) {
+        setUser(user);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       console.log({ onAuthStateChanged: user });
       if (user) {
@@ -40,7 +49,7 @@ function App() {
         setBackgroundImage(null);
       }
     });
-
+    // unsubscribe();
     // cleanup 함수 등록
     return () => unsubscribe();
   }, [setUser, setTheme, user]);
@@ -51,7 +60,6 @@ function App() {
     // 배경 이미지가 있으면 body의 배경 이미지 적용
     if (backgroundImage) {
       document.body.style.backgroundImage = `url("${backgroundImage}")`;
-      document.body.style.backgroundSize = 'cover';
     } else {
       // 배경 이미지가 없으면 body의 배경 이미지 제거
       document.body.style.backgroundImage = '';

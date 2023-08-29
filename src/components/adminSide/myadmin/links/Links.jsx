@@ -17,26 +17,16 @@ import {
 } from 'firebase/firestore';
 
 const Links = () => {
-  // 현재 로그인한 사용자 UID 가져오기
-  const userUid = auth.currentUser?.uid;
-  // 모달 열림, 닫힘
-  const [modalVisible, setModalVisible] = useState(false);
-  // URL 텍스트 입력 필드 변경
-  const [urlText, setUrlText] = useState('');
-  // 선택된 이미지 파일 변경(파일 업로드에 사용)
-  const [imageFile, setImageFile] = useState(null);
-  // 이미지 업로드 중인지 확인
-  const [uploadingImage, setUploadingImage] = useState(false);
-  // Firestore에서 가져온 링크 데이터를 저장
-  const [linksData, setLinksData] = useState([]);
-  // 기본으로 보여줄 링크 버튼 3개. 새 링크가 추가되면 하나씩 감소
-  const [defaultLinks, setDefaultLinks] = useState([0, 1, 2]);
-  // 현재 편집 중인 링크의 ID. null이면 새 링크를 생성하고 아니면 해당 ID 링크를 수정
-  const [editingLinkId, setEditingLinkId] = useState(null);
-  // 선택된 이미지 파일 대신에 사용할 이미지 URL 저장
-  const [imageUrl, setImageUrl] = useState(null);
-  // 이미지 업로드 파일 입력 필드ㄴ
-  const fileInputRef = useRef();
+  const userUid = auth.currentUser?.uid; // 현재 로그인한 사용자 UID 가져오기
+  const [modalVisible, setModalVisible] = useState(false); // 모달 열림, 닫힘
+  const [urlText, setUrlText] = useState(''); // URL 텍스트 입력 필드 변경
+  const [imageFile, setImageFile] = useState(null); // 선택된 이미지 파일 변경(파일 업로드에 사용)
+  const [uploadingImage, setUploadingImage] = useState(false); // 이미지 업로드 중인지 확인
+  const [linksData, setLinksData] = useState([]); // Firestore에서 가져온 링크 데이터를 저장
+  const [defaultLinks, setDefaultLinks] = useState([0, 1, 2]); // 기본으로 보여줄 링크 버튼 3개. 새 링크가 추가되면 하나씩 감소
+  const [editingLinkId, setEditingLinkId] = useState(null); // 현재 편집 중인 링크의 ID. null이면 새 링크를 생성하고 아니면 해당 ID 링크를 수정
+  const [imageUrl, setImageUrl] = useState(null); // 선택된 이미지 파일 대신에 사용할 이미지 URL 저장
+  const fileInputRef = useRef(); // 이미지 업로드 파일 입력 필드
 
   // URL 입력 필드 변경
   const handleUrlChange = (e) => {
@@ -54,7 +44,7 @@ const Links = () => {
     if (!imageFile) return;
     setUploadingImage(true);
     // 업로드 할 파일 생성
-    let storageRef = ref(storage, 'images/' + imageFile.name);
+    let storageRef = ref(storage, 'linkImages/' + imageFile.name);
     // 파일 업로드 스냅샷 가져오기
     let taskSnapshot;
     try {
@@ -184,6 +174,7 @@ const Links = () => {
             <L.ButtonContainer style={{ marginTop: '20px' }}>
               {linksData.map((link) => (
                 <button
+                  key={link.id}
                   onClick={() => {
                     setModalVisible(true);
                     setEditingLinkId(link.id); // 수정 중인 링크의 ID

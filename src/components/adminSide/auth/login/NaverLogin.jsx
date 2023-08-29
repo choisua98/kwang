@@ -28,8 +28,6 @@ const NaverLogin = () => {
     naverLogin.init();
     naverLogin.logout();
 
-    //페이지이동
-    //+아래코드
     naverLogin.getLoginStatus(async (status) => {
       if (status) {
         console.log(`로그인?: ${status}`);
@@ -44,14 +42,13 @@ const NaverLogin = () => {
             if (methods.length > 0) {
               console.log('기존회원/로그인진행합니다.');
               try {
-                const userCredential = await signInWithEmailAndPassword(
+                await signInWithEmailAndPassword(
                   auth,
                   naverLogin.user.email,
-                  naverLogin.user.id,
+                  naverLogin.user.email, //비번으로 쓸값이 없음
                 );
-                console.log(userCredential);
-                console.log('로그인성공.');
-                navigate('/admin');
+                // console.log(userCredential);
+                console.log('이메일로 로그인성공.');
               } catch (error) {
                 console.error(error);
               }
@@ -60,11 +57,11 @@ const NaverLogin = () => {
               createUserWithEmailAndPassword(
                 auth,
                 naverLogin.user.email,
-                naverLogin.user.id,
+                naverLogin.user.email,
               )
                 .then((userCredential) => {
                   console.log(`회원가입유저${userCredential}`);
-                  console.log('회원가입성공. 로그인완료.');
+                  console.log('회원가입성공. 이메일로 로그인완료.');
                 })
                 .catch((error) => {
                   console.error(error);
@@ -74,7 +71,9 @@ const NaverLogin = () => {
             console.error(error);
           }
         };
-        await checkEmailExists();
+        checkEmailExists().then((res) => {
+          navigate('/admin');
+        });
       }
     });
   };

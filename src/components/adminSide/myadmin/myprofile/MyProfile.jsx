@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Modal } from 'antd';
-import { styled } from 'styled-components';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import imageCompression from 'browser-image-compression';
 import { themeAtom, userAtom } from '../../../../atoms/Atom';
+import { P } from './MyProfile.styles';
 import { useAtom } from 'jotai';
 import {
   ref,
@@ -22,6 +22,12 @@ const MyProfile = () => {
   const userUID = user[0]?.uid;
   const [theme] = useAtom(themeAtom);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [nickname, setNickname] = useState('');
+  const [updateNick, setUpdateNick] = useState('');
+  const [introduction, setIntroduction] = useState('');
+  const [updateIntro, setUpdateIntro] = useState('');
+
   // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
   const extractNickname = (email) => {
     const parts = email?.split('@');
@@ -31,11 +37,22 @@ const MyProfile = () => {
     return '';
   };
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [nickname, setNickname] = useState(extractNickname(userEmail));
-  const [updateNick, setUpdateNick] = useState(nickname);
-  const [introduction, setIntroduction] = useState('');
-  const [updateIntro, setUpdateIntro] = useState(introduction);
+  useEffect(() => {
+    if (userEmail) {
+      const extractedNickname = extractNickname(userEmail);
+      setNickname(extractedNickname);
+      setUpdateNick(extractedNickname);
+      localStorage.setItem('userNickname', extractedNickname); // 첫 로그인 시 로컬 스토리지에 저장
+    }
+  }, [userEmail]);
+
+  useEffect(() => {
+    const storedNickname = localStorage.getItem('userNickname');
+    if (storedNickname) {
+      setNickname(storedNickname);
+      setUpdateNick(storedNickname);
+    }
+  }, []);
 
   const [previewImage, setPreviewImage] = useState(defaultProfileImage);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -54,6 +71,7 @@ const MyProfile = () => {
           setIntroduction(userData.introduction || '');
           setUpdateIntro(userData.introduction || '');
           setUpdatedImage(userData?.profileImageURL || defaultProfileImage);
+          setPreviewImage(userData?.profileImageURL || defaultProfileImage);
         }
       };
       fetchProfileInfo();
@@ -164,7 +182,7 @@ const MyProfile = () => {
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
         <Col span={24} style={{ textAlign: 'center' }}>
           {/* <Profile /> */}
-          <ProfileImage key={updatedImage} src={updatedImage} />
+          <P.ProfileImage src={updatedImage} />
           <div style={{ margin: '20px 0 10px' }}>{updateNick}</div>
           <div style={{ margin: '20px 0' }}>{updateIntro}</div>
           <Button
@@ -196,59 +214,28 @@ const MyProfile = () => {
         }
       >
         {/* 모달 내용 */}
-        <ProfileContainer>
+        <P.ProfileContainer>
           {/* 프로필 이미지 미리보기 */}
-          <PreviewImage
-            key={previewImage}
-            src={previewImage}
-            alt="이미지 미리보기"
-          />
+          <P.PreviewImage src={previewImage} alt="이미지 미리보기" />
           <input type="file" accept=" image/*" onChange={onChangeImgaeFile} />
           <div style={{ marginTop: '20px' }}>닉네임</div>
-          <ProfileInput
+          <P.ProfileInput
             placeholder="변경하실 닉네임을 작성해주세요."
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
           <div style={{ marginTop: '5px' }}>소개</div>
 
-          <ProfileInput
+          <P.ProfileInput
             placeholder="소개를 작성해 주세요."
             value={introduction}
             onChange={(e) => setIntroduction(e.target.value)}
             style={{ marginBottom: '20px' }}
           />
-        </ProfileContainer>
+        </P.ProfileContainer>
       </Modal>
     </div>
   );
 };
 
 export default MyProfile;
-
-const ProfileInput = styled.input`
-  width: 96%;
-  height: 25px;
-`;
-
-const ProfileContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const ProfileImage = styled.img`
-  width: 140px;
-  height: 140px;
-  object-fit: cover; // 이미지가 잘리지 않도록 설정
-  background-color: #d6d6d6;
-  border-radius: 100%;
-`;
-
-const PreviewImage = styled.img`
-  width: 140px;
-  height: 140px;
-  object-fit: cover; // 이미지가 잘리지 않도록 설정
-  background-color: #d6d6d6;
-  border-radius: 100%;
-`;

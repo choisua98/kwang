@@ -17,7 +17,7 @@ import {
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 // ant Design
-import { CameraOutlined } from '@ant-design/icons';
+import { CameraOutlined, DeleteOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Modal, Space } from 'antd';
@@ -48,7 +48,7 @@ const Challenge = () => {
   );
 
   // 선택한 날짜 정보를 저장할 상태 변수들
-  console.log('1', selectedBlock?.startDate.toDate());
+  // console.log('1', selectedBlock?.startDate.toDate());
   const [startDate, setStartDate] = useState(selectedBlock?.startDate.toDate());
   const [endDate, setEndDate] = useState(selectedBlock?.endDate.toDate());
 
@@ -64,8 +64,8 @@ const Challenge = () => {
       const initialImages = selectedBlock?.images || [];
       setUploadedImages(initialImages);
 
-      console.log(selectedBlock.startDate.toDate());
-      console.log(selectedBlock.endDate.toDate());
+      // console.log(selectedBlock.startDate.toDate());
+      // console.log(selectedBlock.endDate.toDate());
 
       // 선택된 블록의 날짜 정보가 있다면 날짜를 설정
       if (selectedBlock.startDate) {
@@ -176,7 +176,7 @@ const Challenge = () => {
 
       // 글쓰는 페이지, 수정하는 페이지를 분리하기
 
-      console.log('1', uploadedImages);
+      // console.log('1', uploadedImages);
       // 이미지 업로드 및 URL 저장
       const imageUrls = [];
       for (const imageFile of uploadedImages) {
@@ -221,6 +221,12 @@ const Challenge = () => {
     }
   };
 
+  const handleRemoveImage = (index) => {
+    const updatedImages = [...uploadedImages];
+    updatedImages.splice(index, 1); // 이미지 삭제
+    setUploadedImages(updatedImages); // 업데이트
+  };
+
   return (
     <C.Container
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
@@ -230,7 +236,7 @@ const Challenge = () => {
         id="title"
         name="title"
         type="text"
-        placeholder="함께해요 챌린지 :fire:"
+        placeholder="함께해요 챌린지 🔥"
         value={title}
         onChange={handleTitleChange}
         autoFocus
@@ -259,22 +265,19 @@ const Challenge = () => {
           onChange={handleImageChange}
         />
         {uploadedImages.map((image, index) => (
-          <label
-            key={index}
-            className="square-preview"
-            style={{
-              backgroundImage: `url(${
-                typeof image === 'string' ? image : URL.createObjectURL(image)
-              })`,
-            }}
-          >
-            <input
-              id={`editImageInput-${index}`}
-              type="file"
-              accept="image/*"
-              onChange={handleEditImageClick(index)}
+          <div key={index}>
+            <div
+              className="square-preview"
+              style={{
+                backgroundImage: `url(${
+                  typeof image === 'string' ? image : URL.createObjectURL(image)
+                })`,
+              }}
             />
-          </label>
+            <button onClick={() => handleRemoveImage(index)}>
+              <DeleteOutlined />
+            </button>
+          </div>
         ))}
       </C.ImageContainer>
 

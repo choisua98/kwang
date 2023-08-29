@@ -5,7 +5,6 @@
   .ant-picker-range-arrow {
   display: none;
 }
-
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
   .ant-picker-header
   > button {

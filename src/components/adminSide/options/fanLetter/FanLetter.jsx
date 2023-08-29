@@ -1,38 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { F } from './FanLetter.styles';
 import {
-  QuerySnapshot,
   addDoc,
   collection,
+  deleteDoc,
   doc,
-  getDoc,
-  getDocs,
-  query,
   serverTimestamp,
   updateDoc,
-  where,
 } from 'firebase/firestore';
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAtom, useAtomValue } from 'jotai';
-import { blocksAtom, userAtom } from '../../../../atoms/Atom';
+import { useAtom } from 'jotai';
+import { blocksAtom } from '../../../../atoms/Atom';
 
 const FanLetter = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-
-  // Jotai에서 유저 정보 가져오기
-  const user = useAtomValue(userAtom);
-
   // 유저의 UID 가져오기
   const userUid = auth.currentUser?.uid;
 
   const blockId = location.state ? location.state.blocksId : null;
-  const [blocks, setBlocks] = useAtom(blocksAtom);
+  const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
+
+  const [title, setTitle] = useState(selectedBlock?.title);
+  const [description, setDescription] = useState(selectedBlock?.description);
 
   const addButtonClick = async (e) => {
     e.preventDefault();
@@ -43,87 +36,85 @@ const FanLetter = () => {
       return;
     }
 
-    // Firestore에 데이터 추가
-    await addDoc(collection(db, 'template'), {
-      title,
-      description,
-      blockKind: 'fanletter',
-      createdAt: serverTimestamp(),
-      userId: userUid,
-    });
-    navigate('/admin');
+    try {
+      // Firestore에 데이터 추가
+      await addDoc(collection(db, 'template'), {
+        title,
+        description,
+        blockKind: 'fanletter',
+        createdAt: serverTimestamp(),
+        userId: userUid,
+      });
+
+      alert('저장 완료!');
+      navigate('/admin');
+    } catch (error) {
+      console.error('저장 중 오류 발생:', error.message);
+    }
   };
 
   const editButtonClick = async (e) => {
     e.preventDefault();
 
-    // Firestore에 데이터 업로드
-    const docRef = doc(db, 'template', blockId);
-    await updateDoc(docRef, {
-      title,
-      description,
-    });
-    navigate('/admin');
-  };
-
-  // firebase에서 데이터 불러오기
-  const fetchData = async () => {
     try {
-      // 쿼리 실행하여 데이터 가져오기
-      const q = query(
-        collection(db, 'template'),
-        where('userId', '==', userUid),
-      );
-      const querySnapshot = await getDocs(q);
-
-      // 가져온 데이터를 가공하여 배열에 저장
-      const initialDocuments = [];
-      querySnapshot.forEach((doc) => {
-        const data = {
-          id: doc.id,
-          ...doc.data(),
-        };
-        initialDocuments.push(data);
+      // Firestore에 데이터 업로드
+      const docRef = doc(db, 'template', blockId);
+      await updateDoc(docRef, {
+        title,
+        description,
       });
 
-      // 가공된 데이터를 상태에 업데이트
-      setBlocks(initialDocuments);
+      alert('수정 완료!');
+      navigate('/admin');
     } catch (error) {
-      console.error('데이터 가져오기 오류:', error);
+      console.error('수정 중 오류 발생:', error.message);
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      fetchData();
+  // "삭제하기" 버튼 클릭 시 실행되는 함수
+  const handleRemoveButtonClick = async (id) => {
+    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+    if (shouldDelete) {
+      try {
+        // 사용자 확인 후 삭제 작업 진행
+        await deleteDoc(doc(db, 'template', id));
+        alert('삭제 완료!');
+        navigate('/admin');
+      } catch (error) {
+        console.error('삭제 중 오류 발생:', error.message);
+      }
     }
-  }, [user]);
+  };
 
   return (
     <F.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
-      <F.Contents>
-        <p>팬레터 서비스 이름</p>
-        <input
-          name="title"
-          type="text"
-          placeholder={blockId ? '' : '팬레터'}
-          defaultValue={blockId ? selectedBlock.title : title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-        />
-        <p>팬레터 설명을 작성해 주세요</p>
-        <input
-          name="description"
-          type="text"
-          placeholder={blockId ? '' : '설명을 작성해 주세요'}
-          defaultValue={blockId ? selectedBlock.description : description}
-          onChange={(e) => {
-            setDescription(e.target.value);
-          }}
-        />
-        <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
-      </F.Contents>
+      <label htmlFor="title">팬레터 서비스 이름</label>
+      <input
+        id="title"
+        name="title"
+        type="text"
+        placeholder="팬레터"
+        value={title}
+        onChange={(e) => {
+          setTitle(e.target.value);
+        }}
+        autoFocus
+      />
+      <label htmlFor="description">팬레터 설명을 작성해 주세요</label>
+      <input
+        id="description"
+        name="description"
+        type="text"
+        placeholder="설명을 작성해 주세요"
+        value={description}
+        onChange={(e) => {
+          setDescription(e.target.value);
+        }}
+      />
+      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
+      <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
+        삭제하기
+      </button>
     </F.Container>
   );
 };

@@ -52,18 +52,14 @@ const BlocksArea = () => {
       setBlocks(initialDocuments);
 
       // 이미지 URL 가져오기
+
       const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
 
-      // 이미지가 존재하는 경우에만 URL 가져오도록 처리
       try {
         const imageUrl = await getDownloadURL(imageRef);
         setBannerImage(imageUrl);
       } catch (error) {
-        if (error.code === 'storage/object-not-found') {
-          setBannerImage(null);
-        } else {
-          console.error('이미지 업데이트 실패:', error);
-        }
+        console.error('배너 이미지 업데이트 실패:', error);
       }
     } catch (error) {
       console.error('데이터 가져오기 오류:', error);
@@ -83,28 +79,6 @@ const BlocksArea = () => {
       state: { blocksId: `${block.id}` },
     });
 
-  // 삭제 버튼 클릭 시 데이터 삭제 함수
-  const deleteButton = async (id) => {
-    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-    if (shouldDelete) {
-      await deleteDoc(doc(db, 'template', `${id}`));
-      fetchData(); // 데이터 삭제 후 새로고침
-    }
-  };
-
-  const deleteImageButton = async () => {
-    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-    if (shouldDelete) {
-      const previousImageRef = ref(
-        storage,
-        `bannerImages/${user.uid}/bannerimage`,
-      );
-      await deleteObject(previousImageRef);
-      navigate('/admin');
-      window.location.reload();
-    }
-  };
-
   return (
     <B.Container>
       <>
@@ -114,23 +88,10 @@ const BlocksArea = () => {
               <button onClick={() => moveToEditButton(block)}>
                 {block.title}
               </button>
-              <button onClick={() => deleteButton(block.id)}>삭제</button>
             </div>
           );
         })}
       </>
-      {bannerImage ? (
-        <>
-          <img
-            src={bannerImage}
-            onClick={() => navigate('/admin/bannerimage')}
-            alt="bannerimage"
-          />
-          <button onClick={deleteImageButton}>삭제</button>
-        </>
-      ) : (
-        ''
-      )}
     </B.Container>
   );
 };

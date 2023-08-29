@@ -7,13 +7,13 @@ import BlocksArea from '../components/adminSide/myadmin/blocksArea/BlocksArea';
 
 const Admin = () => {
   return (
-    <>
+    <div style={{ padding: '20px' }}>
       <Theme />
       <MyProfile />
       <Links />
       <BlocksArea />
       <Blocks />
-    </>
+    </div>
   );
 };
 
