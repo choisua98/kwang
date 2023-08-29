@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Button, Col, Modal, Row } from 'antd';
 import { useAtom } from 'jotai';
+import { nanoid } from 'nanoid';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
 import {
   backgroundImageAtom,
   modalVisibleAtom,
   themeAtom,
 } from '../../../../atoms/Atom';
-import { auth, db } from '../../../../firebase/firebaseConfig';
+import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import imageCompression from 'browser-image-compression';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const Theme = () => {
   // 사용자 UID 가져오기
@@ -21,6 +24,24 @@ const Theme = () => {
   // 임시로 테마와 배경 이미지 URL을 저장
   const [tempTheme, setTempTheme] = useState(null);
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null);
+
+  // 업로드 할 배경 이미지 압축 옵션 설정
+  const options = {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 300,
+    useWebWorker: true,
+  };
+
+  // 이미지 압축 함수
+  const compressImage = async (imageFile) => {
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      return compressedFile;
+    } catch (error) {
+      console.error('이미지 압축 실패', error);
+      return null;
+    }
+  };
 
   // 테마(다크) 클릭 시
   const handleDarkModeClick = () => {
@@ -42,7 +63,7 @@ const Theme = () => {
   };
 
   // 이미지 저장 및 변경
-  const onImageChange = (event) => {
+  const onImageChange = async (event) => {
     const file = event.target.files[0];
 
     if (file) {
@@ -51,6 +72,17 @@ const Theme = () => {
         setTempBackgroundImage(reader.result);
       };
       reader.readAsDataURL(file);
+    }
+
+    // 압축된 배경 이미지 생성
+    const compressedFile = await compressImage(file);
+    // 압축한 배경 이미지 Firebase storage에 업로드
+    if (compressedFile) {
+      const imageRef = ref(storage, `backgroundImages/${userUid}/${nanoid()}`);
+      await uploadBytes(imageRef, compressedFile);
+      const imageURL = await getDownloadURL(imageRef);
+      setTempBackgroundImage(imageURL);
+      return imageURL;
     }
   };
 
