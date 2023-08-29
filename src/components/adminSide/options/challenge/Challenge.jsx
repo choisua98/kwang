@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { C } from './Challenge.styles';
 import useInput from '../../../../hooks/useInput';
@@ -6,8 +6,10 @@ import { useAtom } from 'jotai';
 import { blocksAtom } from '../../../../atoms/Atom';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import {
+  Timestamp,
   addDoc,
   collection,
+  deleteDoc,
   doc,
   serverTimestamp,
   updateDoc,
@@ -15,7 +17,7 @@ import {
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 // ant Design
-import { CameraOutlined } from '@ant-design/icons';
+import { CameraOutlined, DeleteOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Modal, Space } from 'antd';
@@ -31,9 +33,6 @@ const Challenge = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [title, handleTitleChange] = useInput();
-  const [description, handleDescriptionChange] = useInput();
-
   // 현재 블록 ID 가져오기
   const blockId = location.state ? location.state.blocksId : null;
 
@@ -42,6 +41,16 @@ const Challenge = () => {
 
   // blocks 배열에서 선택된 블록 찾기
   const selectedBlock = blocks.find((block) => block.id === blockId);
+
+  const [title, handleTitleChange] = useInput(selectedBlock?.title);
+  const [description, handleDescriptionChange] = useInput(
+    selectedBlock?.description,
+  );
+
+  // 선택한 날짜 정보를 저장할 상태 변수들
+  // console.log('1', selectedBlock?.startDate.toDate());
+  const [startDate, setStartDate] = useState(selectedBlock?.startDate.toDate());
+  const [endDate, setEndDate] = useState(selectedBlock?.endDate.toDate());
 
   // 실제로 업로드한 이미지 정보를 저장하는 배열
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -52,13 +61,24 @@ const Challenge = () => {
   useEffect(() => {
     if (blockId) {
       // 이미지 데이터를 가져와서 업로드된 이미지 배열을 초기화
-      const initialImages = selectedBlock.images || [];
+      const initialImages = selectedBlock?.images || [];
       setUploadedImages(initialImages);
+
+      // console.log(selectedBlock.startDate.toDate());
+      // console.log(selectedBlock.endDate.toDate());
+
+      // 선택된 블록의 날짜 정보가 있다면 날짜를 설정
+      if (selectedBlock.startDate) {
+        setStartDate(selectedBlock.startDate.toDate());
+      }
+      if (selectedBlock.endDate) {
+        setEndDate(selectedBlock.endDate.toDate());
+      }
     }
   }, [blockId, selectedBlock]);
 
   // 이미지 업로드 시 실행되는 함수
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     if (uploadedImages.length >= maxUploads) {
       // 이미지 개수가 최대 개수에 도달한 경우 모달 창을 띄워 알림 표시
       Modal.info({
@@ -82,7 +102,6 @@ const Challenge = () => {
       // 업데이트된 이미지 배열을 생성하고, 기존 이미지를 교체
       const updatedImages = [...uploadedImages];
       updatedImages[index] = newImageFile;
-
       setUploadedImages(updatedImages);
     }
   };
@@ -105,6 +124,8 @@ const Challenge = () => {
       const docRef = await addDoc(collection(db, 'template'), {
         title,
         description,
+        startDate: Timestamp.fromDate(startDate?.toDate()),
+        endDate: Timestamp.fromDate(endDate?.toDate()),
         blockKind: 'challenge',
         createdAt: serverTimestamp(),
         userId: userUid,
@@ -148,19 +169,28 @@ const Challenge = () => {
       await updateDoc(docRef, {
         title,
         description,
+        startDate: Timestamp.fromDate(startDate?.toDate()),
+        endDate: Timestamp.fromDate(endDate?.toDate()),
         createdAt: serverTimestamp(),
       });
 
+      // 글쓰는 페이지, 수정하는 페이지를 분리하기
+
+      // console.log('1', uploadedImages);
       // 이미지 업로드 및 URL 저장
       const imageUrls = [];
       for (const imageFile of uploadedImages) {
-        const imageRef = ref(
-          storage,
-          `callengeImages/${blockId}/${imageFile.name}`,
-        );
-        await uploadBytes(imageRef, imageFile);
-        const imageUrl = await getDownloadURL(imageRef);
-        imageUrls.push(imageUrl);
+        if (typeof imageFile === 'string') {
+          imageUrls.push(imageFile);
+        } else {
+          const imageRef = ref(
+            storage,
+            `callengeImages/${blockId}/${imageFile.name}`,
+          );
+          await uploadBytes(imageRef, imageFile);
+          const imageUrl = await getDownloadURL(imageRef);
+          imageUrls.push(imageUrl);
+        }
       }
 
       // 이미지 URL들을 Firestore 문서에 업데이트
@@ -176,6 +206,27 @@ const Challenge = () => {
     }
   };
 
+  // "삭제하기" 버튼 클릭 시 실행되는 함수
+  const handleRemoveButtonClick = async (id) => {
+    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+    if (shouldDelete) {
+      try {
+        // 사용자 확인 후 삭제 작업 진행
+        await deleteDoc(doc(db, 'template', id));
+        alert('삭제 완료!');
+        navigate('/admin');
+      } catch (error) {
+        console.error('삭제 중 오류 발생:', error.message);
+      }
+    }
+  };
+
+  const handleRemoveImage = (index) => {
+    const updatedImages = [...uploadedImages];
+    updatedImages.splice(index, 1); // 이미지 삭제
+    setUploadedImages(updatedImages); // 업데이트
+  };
+
   return (
     <C.Container
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
@@ -185,17 +236,28 @@ const Challenge = () => {
         id="title"
         name="title"
         type="text"
-        placeholder={blockId ? '' : '함께해요 챌린지 🔥'}
-        defaultValue={blockId ? selectedBlock.title : title}
+        placeholder="함께해요 챌린지 🔥"
+        value={title}
         onChange={handleTitleChange}
         autoFocus
       />
 
       <C.ImageContainer>
-        <label htmlFor="imageInput">
-          <CameraOutlined style={{ fontSize: '30px' }} />
-          <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
-        </label>
+        {uploadedImages.length >= 4 ? (
+          <label
+            htmlFor="imageInput"
+            className={uploadedImages.length >= maxUploads ? 'disabled' : ''}
+          >
+            <CameraOutlined style={{ fontSize: '30px' }} />
+            <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+          </label>
+        ) : (
+          <label htmlFor="imageInput">
+            <CameraOutlined style={{ fontSize: '30px' }} />
+            <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+          </label>
+        )}
+
         <input
           id="imageInput"
           type="file"
@@ -203,22 +265,19 @@ const Challenge = () => {
           onChange={handleImageChange}
         />
         {uploadedImages.map((image, index) => (
-          <label
-            key={index}
-            className="square-preview"
-            style={{
-              backgroundImage: `url(${
-                typeof image === 'string' ? image : URL.createObjectURL(image)
-              })`,
-            }}
-          >
-            <input
-              id={`editImageInput-${index}`}
-              type="file"
-              accept="image/*"
-              onChange={handleEditImageClick(index)}
+          <div key={index}>
+            <div
+              className="square-preview"
+              style={{
+                backgroundImage: `url(${
+                  typeof image === 'string' ? image : URL.createObjectURL(image)
+                })`,
+              }}
             />
-          </label>
+            <button onClick={() => handleRemoveImage(index)}>
+              <DeleteOutlined />
+            </button>
+          </div>
         ))}
       </C.ImageContainer>
 
@@ -227,8 +286,8 @@ const Challenge = () => {
         id="description"
         name="description"
         type="text"
-        placeholder={blockId ? '' : '사진과 글을 추가해 챌린지를 소개해보세요.'}
-        defaultValue={blockId ? selectedBlock.description : description}
+        placeholder="사진과 글을 추가해 챌린지를 소개해보세요."
+        value={description}
         onChange={handleDescriptionChange}
       />
 
@@ -238,10 +297,20 @@ const Challenge = () => {
           disabledDate={disabledDate}
           style={{ width: '100%' }}
           popupClassName="customRangePickerPopup"
+          onChange={(dates) => {
+            console.log(dates);
+            if (dates && dates.length === 2) {
+              setStartDate(dates[0]);
+              setEndDate(dates[1]);
+            }
+          }}
         />
       </Space>
 
       <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
+      <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
+        삭제하기
+      </button>
     </C.Container>
   );
 };
