@@ -92,15 +92,6 @@ const BlocksArea = () => {
           );
         })}
       </>
-      {bannerImage ? (
-        <img
-          src={bannerImage}
-          onClick={() => navigate('/admin/bannerimage')}
-          alt="bannerimage"
-        />
-      ) : (
-        ''
-      )}
     </B.Container>
   );
 };
