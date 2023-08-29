@@ -16,6 +16,7 @@ import { useAtom, useAtomValue } from 'jotai';
 const BannerImage = () => {
   const auth = getAuth();
   const user = auth.currentUser;
+  const userUid = user[0]?.uid;
   const navigate = useNavigate();
   const [bannerImage, setBannerImage] = useAtom(bannerImageAtom);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -37,15 +38,19 @@ const BannerImage = () => {
     }
   };
 
+  const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
   // firebase에서 데이터 불러오기
   const fetchData = async () => {
     // 이미지 URL 가져오기
-    const imageRef = ref(storage, `bannerImages/${user.uid}/bannerimage`);
     try {
       const imageUrl = await getDownloadURL(imageRef);
       setBannerImage(imageUrl);
     } catch (error) {
-      console.error('프로필 이미지 업데이트 실패:', error);
+      if (error.code === 'storage/object-not-found') {
+        setBannerImage(null); // 이미지가 없을 경우 상태를 업데이트
+      } else {
+        console.error('이미지 업데이트 실패:', error);
+      }
     }
   };
 

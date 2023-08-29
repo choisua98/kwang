@@ -29,8 +29,7 @@ import {
   ref,
   uploadBytes,
 } from 'firebase/storage';
-import { getAuth } from 'firebase/auth';
-import { initializeApp } from 'firebase/app';
+import moment from 'moment';
 
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
@@ -116,11 +115,11 @@ const Reservation = () => {
     }
   };
 
-  const datePickInput = (date, dateString) => {
+  const datePickInput = (_, dateString) => {
     setPickDate(dateString);
   };
 
-  const periodPickInput = (date, dateString) => {
+  const periodPickInput = (_, dateString) => {
     setStartDate(dateString[0]);
     setEndDate(dateString[1]);
   };
@@ -213,12 +212,13 @@ const Reservation = () => {
         />
         <p>시작 날짜 선택</p>
         <Space id="period" direction="vertical" size={12}>
-          <DatePicker
+          {/* <DatePicker
             defaultValue={blockId ? dayjs(selectedBlock.pickDate) : undefined}
             disabledDate={disabledDate}
             onChange={datePickInput}
             popupClassName="datePickerPopup"
-          />
+          /> */}
+          <DatePicker defaultValue={moment('2023-09-01', 'YYYY-MM-DD')} />
         </Space>
         <p>모집 기간 선택</p>
         <Space id="period" direction="vertical" size={12}>

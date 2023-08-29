@@ -53,11 +53,17 @@ const BlocksArea = () => {
 
       // 이미지 URL 가져오기
       const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
+
+      // 이미지가 존재하는 경우에만 URL 가져오도록 처리
       try {
         const imageUrl = await getDownloadURL(imageRef);
         setBannerImage(imageUrl);
       } catch (error) {
-        console.error('프로필 이미지 업데이트 실패:', error);
+        if (error.code === 'storage/object-not-found') {
+          setBannerImage(null);
+        } else {
+          console.error('이미지 업데이트 실패:', error);
+        }
       }
     } catch (error) {
       console.error('데이터 가져오기 오류:', error);
@@ -95,6 +101,7 @@ const BlocksArea = () => {
       );
       await deleteObject(previousImageRef);
       navigate('/admin');
+      window.location.reload();
     }
   };
 
