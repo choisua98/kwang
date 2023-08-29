@@ -1,155 +1,64 @@
 import React, { useEffect, useState } from 'react';
-import { Collapse, Select } from 'antd';
-import { auth, db, storage } from '../firebase/firebaseConfig';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
-
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
-const items = [
-  {
-    key: '1',
-    label: 'This is panel header 1',
-    children: <p>{text}</p>,
-  },
-  {
-    key: '2',
-    label: 'This is panel header 2',
-    children: <p>{text}</p>,
-  },
-  {
-    key: '3',
-    label: 'This is panel header 3',
-    children: <p>{text}</p>,
-  },
-];
+import { Collapse } from 'antd';
+import { auth, db } from '../firebase/firebaseConfig';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 const CustomerFaq = () => {
-  const [faqs, setFaqs] = useState([]);
-  const userUid = auth.currentUser?.uid; // 현재 로그인한 사용자 UID 가져오기
-  const [defaultActiveKey, setDefaultActiveKey] = useState(null); // 첫 번째 항목이 기본으로 펼쳐 보여짐
-
-  const [expandIconPosition, setExpandIconPosition] = useState('start');
-  const onPositionChange = (newExpandIconPosition) => {
-    setExpandIconPosition(newExpandIconPosition);
-  };
-  const onChange = (key) => {
-    console.log(key);
-  };
+  const userUid = auth.currentUser?.uid; // 현재 로그인한 사용자 uid
+  const [faqs, setFaqs] = useState([]); // Firebase에서 가져온 faq 데이터가 저장될 state
+  const [activeKey, setActiveKey] = useState(null); // 현재 열려있는 faq 아이템의 키 값을 관리하는 state
 
   useEffect(() => {
-    // 데이터 가져오기
     const fetchData = async () => {
-      if (userUid) {
-        const q = query(
-          collection(db, 'template'),
-          where('userId', '==', userUid),
-          //   orderBy('createdAt', 'desc'), // 최신 순서대로 정렬
-        );
+      try {
+        if (userUid) {
+          // Firestore의 template 컬렉션 userId가 현재 로그인한 사용자의 uid와 같은 문서들을 찾기
+          const q = query(
+            collection(db, 'template'),
+            where('userId', '==', userUid),
+          );
+          // 쿼리 실행하고 결과값 받기
+          const querySnapshot = await getDocs(q);
+          // 문서의 id와 데이터들을 객체로 만들어 fetchedFaqs 배열에 저장
+          const fetchedFaqs = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
 
-        const querySnapshot = await getDocs(q);
-        const fetchedFaqs = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        console.log('faq 리스트', fetchedFaqs);
-        console.log('faq 리스트2', fetchedFaqs[0].faqs);
-        fetchedFaqs.forEach((faq, index) => {
-          console.log(faq.faqs);
-        });
-
-        let firstFaqId;
-
-        for (let i = 0; i < fetchedFaqs.length; i++) {
-          if (fetchedFaqs[i].faqs.length > 0) {
-            firstFaqId = fetchedFaqs[i].faqs[0].faqId;
-            break;
+          for (let i = 0; i < fetchedFaqs.length; i++) {
+            if (fetchedFaqs[i].faqs.length > 0) {
+              // 문서 안에 faq항목이 하나라도 있으면 첫 번째 faq의 id 값을 activeKey로 설정
+              setActiveKey(fetchedFaqs[i].faqs[0].faqId);
+              break;
+            }
           }
+          // 받아온 데이터를 faq state에 저장
+          setFaqs(fetchedFaqs);
         }
-
-        setDefaultActiveKey(firstFaqId);
-
-        setFaqs(fetchedFaqs);
+      } catch (error) {
+        console.error('데이터를 가져오는 동안 오류 발생:', error);
       }
     };
 
     fetchData();
   }, [userUid]);
 
-  //   console.log(faqs);
+  // faqs 배열 내부의 모든 FAQ 항목을 평탄화하여 반환하여 Collapse에 전달
+  const items = faqs.flatMap((faq) =>
+    faq.faqs.map((innerFaq) => ({
+      key: innerFaq.faqId, // faq의 ID
+      label: innerFaq.question, // faq의 질문
+      children: <p>{innerFaq.answer}</p>, // faq의 답변
+    })),
+  );
+
   return (
-    <>
-      {/* <Collapse
-        defaultActiveKey={['1']}
-        onChange={onChange}
-        expandIconPosition={expandIconPosition}
-        items={items}
-        accordion
-      >
-        {faqs.map((faq) => (
-          <>
-            {faq.faqs.map((innerFaq) => (
-              <Collapse.Panel header={innerFaq.question} key={innerFaq.faqId}>
-                <p>{innerFaq.answer}</p>
-              </Collapse.Panel>
-            ))}
-          </>
-        ))}
-      </Collapse> */}
-
-      {/* {faqs.map((faq) => (
-        <Collapse
-          defaultActiveKey={['1']}
-          onChange={onChange}
-          expandIconPosition={expandIconPosition}
-          items={items}
-          accordion
-          key={faq.id}
-        >
-          {faq.faqs.map((innerFaq) => {
-            console.log(innerFaq.faqId);
-            return (
-              <Collapse.Panel header={innerFaq.question} key={innerFaq.faqId}>
-                <p>{innerFaq.answer}</p>
-              </Collapse.Panel>
-            );
-          })}
-        </Collapse>
-      ))}*/}
-
-      <Collapse accordion defaultActiveKey={defaultActiveKey}>
-        {faqs.map((faq) => (
-          <>
-            {faq.faqs.map((innerFaq) => (
-              <Collapse.Panel header={innerFaq.question} key={innerFaq.faqId}>
-                <p>{innerFaq.answer}</p>
-              </Collapse.Panel>
-            ))}
-          </>
-        ))}
-      </Collapse>
-
-      {/* <Collapse accordion>
-        {faqs.map((faq) => (
-          <Collapse.Panel header={faq.title} key={faq.id}>
-            <p>{faq.answer}</p>
-          </Collapse.Panel>
-        ))}
-      </Collapse> */}
-      {/* <Collapse accordion items={items} /> */}
-      {/* <Collapse accordion>
-        {faqs.map((faq) => (
-          <Collapse.Panel header={faq.title} key={faq.id}>
-            <p>{faq.content}</p>
-          </Collapse.Panel>
-        ))}
-      </Collapse> */}
-    </>
+    <Collapse
+      activeKey={activeKey}
+      onChange={(key) => setActiveKey(key)}
+      accordion
+      items={items}
+    />
   );
 };
 
