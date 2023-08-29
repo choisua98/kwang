@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { M } from './Mailing.styles';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useInput from '../../../../hooks/useInput';
@@ -30,6 +30,8 @@ const Mailing = () => {
   const [description, handleDescriptionChange] = useInput(
     selectedBlock?.description,
   );
+  const [titleCount, setTitleCount] = useState(0);
+  const [descriptionCount, setDescriptionCount] = useState(0);
 
   // "저장하기" 버튼 클릭 시 실행되는 함수
   const handleAddButtonClick = async (e) => {
@@ -101,6 +103,7 @@ const Mailing = () => {
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
       <label htmlFor="title">서비스 이름 변경하기</label>
+      <p>{titleCount}/20자</p>
       <input
         id="title"
         name="title"
@@ -108,10 +111,12 @@ const Mailing = () => {
         placeholder="메일링 서비스"
         value={title}
         onChange={handleTitleChange}
+        maxLength={20}
         autoFocus
       />
 
       <label htmlFor="description">메일링 서비스에 대한 간략한 설명</label>
+      <p>{descriptionCount}/20자</p>
       <textarea
         id="description"
         name="description"
@@ -119,6 +124,7 @@ const Mailing = () => {
         placeholder="설명을 작성해 주세요"
         value={description}
         onChange={handleDescriptionChange}
+        maxLength={50}
       />
       <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
