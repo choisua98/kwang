@@ -16,6 +16,7 @@ const Header = () => {
 
   const location = useLocation(); // 현재 페이지의 URL 추출
   const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
+  const isLoginPage = location.pathname === '/login';
   const adminUser = userUid; // 방문자인지 크리에이터인지 확인
 
   // 메뉴 열림
@@ -61,19 +62,39 @@ const Header = () => {
   return (
     <H.HeaderWrapper>
       <Row align="middle">
-        <Col span={22}>
-          {/* 로고 영역 */}
-          <Link to="/">
-            <Logo />
-          </Link>
-        </Col>
+        {/* 로그아웃 상태 */}
+        {!adminUser && (
+          <>
+            <Col span={21}>
+              {/* 로고 영역 */}
+              <Link to="/">
+                <Logo />
+              </Link>
+            </Col>
+            {!isLoginPage && (
+              <Col span={3}>
+                <Link to="/login">로그인</Link>
+              </Col>
+            )}
+          </>
+        )}
+
+        {/* 로그인된 상태 */}
         {adminUser && (
-          <Col span={1}>
-            {/* 우측 영역 */}
-            <div className="right-area">
-              <Button icon={<MenuOutlined />} onClick={handleMenuClick} />
-            </div>
-          </Col>
+          <>
+            <Col span={22}>
+              {/* 로고 영역 */}
+              <Link to="/">
+                <Logo />
+              </Link>
+            </Col>
+            <Col span={1}>
+              {/* 우측 영역 */}
+              <div className="right-area">
+                <Button icon={<MenuOutlined />} onClick={handleMenuClick} />
+              </div>
+            </Col>
+          </>
         )}
       </Row>
 
@@ -81,9 +102,6 @@ const Header = () => {
       {isMenuOpen && (
         <H.MenuContentWrapper ref={menuRef}>
           <ul>
-            <li>
-              <Link to="/login">로그인</Link>
-            </li>
             <li>
               <button onClick={onLogoutButtonClickHandler}>로그아웃</button>
             </li>
