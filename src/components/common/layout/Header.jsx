@@ -87,11 +87,16 @@ const Header = () => {
             <li>
               <button onClick={onLogoutButtonClickHandler}>로그아웃</button>
             </li>
-            {/* 로그인된 사용자인 경우에만 마이페이지 버튼 보여주기 */}
-            {/* 마이페이지로 넘어가면 마이페이지 버튼 숨기기 */}
+            {/* 해당 크리에이터가 마이페이지로 넘어가면 마이페이지 버튼 숨기기 */}
             {!isMyPage && (
               <li>
                 <Link to={`/${userUid}`}>마이페이지</Link>
+              </li>
+            )}
+            {/* 마이페이지인 경우 편집하기 버튼이 나오고 버튼을 클릭 시, 기존의 admin 페이지로 이동함 */}
+            {isMyPage && (
+              <li>
+                <Link to={`/admin`}>편집하기</Link>
               </li>
             )}
           </ul>
