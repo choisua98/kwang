@@ -31,6 +31,7 @@ const items = [
 const CustomerFaq = () => {
   const [faqs, setFaqs] = useState([]);
   const userUid = auth.currentUser?.uid; // 현재 로그인한 사용자 UID 가져오기
+  const [defaultActiveKey, setDefaultActiveKey] = useState(null); // 첫 번째 항목이 기본으로 펼쳐 보여짐
 
   const [expandIconPosition, setExpandIconPosition] = useState('start');
   const onPositionChange = (newExpandIconPosition) => {
@@ -61,6 +62,17 @@ const CustomerFaq = () => {
         fetchedFaqs.forEach((faq, index) => {
           console.log(faq.faqs);
         });
+
+        let firstFaqId;
+
+        for (let i = 0; i < fetchedFaqs.length; i++) {
+          if (fetchedFaqs[i].faqs.length > 0) {
+            firstFaqId = fetchedFaqs[i].faqs[0].faqId;
+            break;
+          }
+        }
+
+        setDefaultActiveKey(firstFaqId);
 
         setFaqs(fetchedFaqs);
       }
@@ -110,7 +122,7 @@ const CustomerFaq = () => {
         </Collapse>
       ))}*/}
 
-      <Collapse accordion>
+      <Collapse accordion defaultActiveKey={defaultActiveKey}>
         {faqs.map((faq) => (
           <>
             {faq.faqs.map((innerFaq) => (
