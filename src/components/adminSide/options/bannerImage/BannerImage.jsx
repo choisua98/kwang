@@ -3,15 +3,10 @@ import { B } from './BannerImage.styles';
 import { useNavigate } from 'react-router-dom';
 import { storage } from '../../../../firebase/firebaseConfig';
 import { styled } from 'styled-components';
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
-import { bannerImageAtom, userAtom } from '../../../../atoms/Atom';
-import { useAtom, useAtomValue } from 'jotai';
+import { bannerImageAtom } from '../../../../atoms/Atom';
+import { useAtom } from 'jotai';
 
 const BannerImage = () => {
   const auth = getAuth();
@@ -22,12 +17,6 @@ const BannerImage = () => {
 
   const addButtonClick = async () => {
     try {
-      // // 이전 이미지 삭제
-      // if (bannerImage) {
-      //   const previousImageRef = ref(storage, `test/${user.uid}/bannerimage`);
-      //   await deleteObject(previousImageRef);
-      // }
-
       // Firebase에 이미지 업로드
       if (selectedImage) {
         const imageRef = ref(storage, `bannerImages/${user.uid}/bannerimage`);

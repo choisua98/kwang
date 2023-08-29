@@ -7,6 +7,7 @@ import { auth, db } from '../../../../firebase/firebaseConfig';
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   serverTimestamp,
@@ -71,56 +72,67 @@ const Faq = () => {
       return;
     }
 
-    // Firestore에 데이터 추가
-    await addDoc(collection(db, 'template'), {
-      title,
-      faqs: faqList,
-      blockKind: 'faq',
-      createdAt: serverTimestamp(),
-      userId: userUid,
-    });
+    try {
+      // Firestore에 데이터 추가
+      await addDoc(collection(db, 'template'), {
+        title,
+        faqs: faqList,
+        blockKind: 'faq',
+        createdAt: serverTimestamp(),
+        userId: userUid,
+      });
 
-    // 저장 완료 알림 후 어드민 페이지로 이동
-    alert('저장 완료!');
-    navigate('/admin');
+      // 저장 완료 알림 후 어드민 페이지로 이동
+      alert('저장 완료!');
+      navigate('/admin');
+    } catch (error) {
+      console.error('저장 중 오류 발생:', error.message);
+    }
   };
 
   // "수정하기" 버튼 클릭 시 실행되는 함수
   const handleEditButtonClick = async (e) => {
     e.preventDefault();
 
-    // Firestore에 데이터 업로드
-    const docRef = doc(db, 'template', blockId);
-    await updateDoc(docRef, {
-      title,
-      faqs: faqList,
-      createdAt: serverTimestamp(),
-    });
+    try {
+      // Firestore에 데이터 업로드
+      const docRef = doc(db, 'template', blockId);
+      await updateDoc(docRef, {
+        title,
+        faqs: faqList,
+        createdAt: serverTimestamp(),
+      });
 
-    // 수정 완료 알림 후 어드민 페이지로 이동
-    alert('수정 완료!');
-    navigate('/admin');
+      // 수정 완료 알림 후 어드민 페이지로 이동
+      alert('수정 완료!');
+      navigate('/admin');
+    } catch (error) {
+      console.error('수정 중 오류 발생:', error.message);
+    }
   };
 
   // FAQ 삭제 버튼 클릭 시 호출되는 함수
   const handleDeleteFaqButtonClick = async (faqId) => {
-    const docRef = doc(db, 'template', blockId);
-    const docSnapshot = await getDoc(docRef);
+    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+    if (shouldDelete) {
+      const docRef = doc(db, 'template', blockId);
+      const docSnapshot = await getDoc(docRef);
 
-    if (docSnapshot.exists()) {
-      const data = docSnapshot.data();
+      if (docSnapshot.exists()) {
+        const data = docSnapshot.data();
 
-      // 삭제할 faqId를 제외한 나머지 FAQ 목록 필터링
-      const updatedFaqs = data.faqs.filter((faq) => faq.faqId !== faqId);
+        // 삭제할 faqId를 제외한 나머지 FAQ 목록 필터링
+        const updatedFaqs = data.faqs.filter((faq) => faq.faqId !== faqId);
 
-      // faqs 필드를 업데이트하여 해당 faqId를 삭제한 상태로 업데이트
-      await updateDoc(docRef, { faqs: updatedFaqs });
+        // faqs 필드를 업데이트하여 해당 faqId를 삭제한 상태로 업데이트
+        await updateDoc(docRef, { faqs: updatedFaqs });
 
-      // 삭제한 항목을 제외한 새로운 FAQ 목록 생성
-      const updatedFaqList = faqList.filter((faq) => faq.faqId !== faqId);
+        // 삭제한 항목을 제외한 새로운 FAQ 목록 생성
+        const updatedFaqList = faqList.filter((faq) => faq.faqId !== faqId);
 
-      // FAQ 목록 상태 업데이트
-      setFaqList(updatedFaqList);
+        // FAQ 목록 상태 업데이트
+        setFaqList(updatedFaqList);
+      }
     } else {
       console.error('문서가 존재하지 않습니다.');
     }
@@ -133,6 +145,21 @@ const Faq = () => {
 
     // FAQ 목록 상태 업데이트
     setFaqList(updatedFaqList);
+  };
+
+  // "삭제하기" 버튼 클릭 시 실행되는 함수
+  const handleRemoveButtonClick = async (id) => {
+    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+    if (shouldDelete) {
+      try {
+        // 사용자 확인 후 삭제 작업 진행
+        await deleteDoc(doc(db, 'template', id));
+        alert('삭제 완료!');
+        navigate('/admin');
+      } catch (error) {
+        console.error('삭제 중 오류 발생:', error.message);
+      }
+    }
   };
 
   return (
@@ -157,6 +184,7 @@ const Faq = () => {
               <p>질문: {faq.question}</p>
               <p>답변: {faq.answer}</p>
               <button
+                type="button"
                 onClick={
                   blockId
                     ? () => handleDeleteFaqButtonClick(faq.faqId)
@@ -178,7 +206,6 @@ const Faq = () => {
         placeholder="질문을 입력해 주세요"
         value={question}
         onChange={handleQuestionChange}
-        autoFocus
       />
 
       <label htmlFor="answer">답변 입력</label>
@@ -194,6 +221,9 @@ const Faq = () => {
         질문 추가하기
       </button>
       <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
+      <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
+        삭제하기
+      </button>
     </F.Container>
   );
 };

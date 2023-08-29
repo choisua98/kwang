@@ -54,7 +54,7 @@ const BlocksArea = () => {
       // 이미지 URL 가져오기
 
       const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
-      // console.log(imageRef);
+
       try {
         const imageUrl = await getDownloadURL(imageRef);
         setBannerImage(imageUrl);
@@ -79,28 +79,6 @@ const BlocksArea = () => {
       state: { blocksId: `${block.id}` },
     });
 
-  // 삭제 버튼 클릭 시 데이터 삭제 함수
-  const deleteButton = async (id) => {
-    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-    if (shouldDelete) {
-      await deleteDoc(doc(db, 'template', `${id}`));
-      fetchData(); // 데이터 삭제 후 새로고침
-    }
-  };
-
-  const deleteImageButton = async () => {
-    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-    if (shouldDelete) {
-      const previousImageRef = ref(
-        storage,
-        `bannerImages/${user.uid}/bannerimage`,
-      );
-      await deleteObject(previousImageRef);
-      // 이미지 삭제 후 페이지 새로고침
-      window.location.reload();
-    }
-  };
-
   return (
     <B.Container>
       <>
@@ -110,20 +88,16 @@ const BlocksArea = () => {
               <button onClick={() => moveToEditButton(block)}>
                 {block.title}
               </button>
-              <button onClick={() => deleteButton(block.id)}>삭제</button>
             </div>
           );
         })}
       </>
       {bannerImage ? (
-        <>
-          <img
-            src={bannerImage}
-            onClick={() => navigate('/admin/bannerimage')}
-            alt="bannerimage"
-          />
-          <button onClick={deleteImageButton}>삭제</button>
-        </>
+        <img
+          src={bannerImage}
+          onClick={() => navigate('/admin/bannerimage')}
+          alt="bannerimage"
+        />
       ) : (
         ''
       )}
