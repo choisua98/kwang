@@ -31,7 +31,7 @@ const Router = () => {
           <Route path="/admin/faq" element={<AdminFaq />} />
           <Route path="/admin/bannerimage" element={<AdminBannerImage />} />
           <Route path="/admin/fanletter" element={<AdminFanLetter />} />
-          <Route path="/:id" element={<Main />} />
+          <Route path="/:uid" element={<Main />} />
 
           <Route
             path="*"
