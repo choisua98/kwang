@@ -16,6 +16,7 @@ const Header = () => {
 
   const location = useLocation(); // 현재 페이지의 URL 추출
   const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
+  const adminUser = userUid; // 방문자인지 크리에이터인지 확인
 
   // 메뉴 열림
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -66,12 +67,14 @@ const Header = () => {
             <Logo />
           </Link>
         </Col>
-        <Col span={1}>
-          {/* 우측 영역 */}
-          <div className="right-area">
-            <Button icon={<MenuOutlined />} onClick={handleMenuClick} />
-          </div>
-        </Col>
+        {adminUser && (
+          <Col span={1}>
+            {/* 우측 영역 */}
+            <div className="right-area">
+              <Button icon={<MenuOutlined />} onClick={handleMenuClick} />
+            </div>
+          </Col>
+        )}
       </Row>
 
       {/* 메뉴 */}
@@ -84,7 +87,8 @@ const Header = () => {
             <li>
               <button onClick={onLogoutButtonClickHandler}>로그아웃</button>
             </li>
-            {/* 마이페이지로 넘어가면 '마이페이지'버튼 숨기기 */}
+            {/* 로그인된 사용자인 경우에만 마이페이지 버튼 보여주기 */}
+            {/* 마이페이지로 넘어가면 마이페이지 버튼 숨기기 */}
             {!isMyPage && (
               <li>
                 <Link to={`/${userUid}`}>마이페이지</Link>
