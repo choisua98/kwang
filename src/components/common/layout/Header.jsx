@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Row, Col, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
@@ -12,8 +12,10 @@ import { auth } from '../../../firebase/firebaseConfig';
 const Header = () => {
   const navigate = useNavigate();
   const [user, setUser] = useAtom(userAtom);
-  console.log(user?.uid);
   const userUid = user?.uid;
+
+  const location = useLocation(); // 현재 페이지의 URL 추출
+  const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
 
   // 메뉴 열림
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -82,9 +84,12 @@ const Header = () => {
             <li>
               <button onClick={onLogoutButtonClickHandler}>로그아웃</button>
             </li>
-            <li>
-              <Link to={`/${userUid}`}>마이페이지</Link>
-            </li>
+            {/* 마이페이지로 넘어가면 '마이페이지'버튼 숨기기 */}
+            {!isMyPage && (
+              <li>
+                <Link to={`/${userUid}`}>마이페이지</Link>
+              </li>
+            )}
           </ul>
         </H.MenuContentWrapper>
       )}
