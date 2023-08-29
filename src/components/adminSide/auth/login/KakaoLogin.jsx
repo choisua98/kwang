@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const KakaoLogin = () => {
@@ -38,12 +38,12 @@ const KakaoLogin = () => {
                 if (methods.length > 0) {
                   console.log('기존회원/로그인진행합니다.');
                   try {
-                    const userCredential = await signInWithEmailAndPassword(
+                    await signInWithEmailAndPassword(
                       auth,
                       kakaoAccount.email,
                       kakaoAccount.email, //비번으로 쓸값이 없음
                     );
-                    console.log(userCredential);
+                    // console.log(userCredential);
                     console.log('이메일로 로그인성공.');
                   } catch (error) {
                     console.error(error);
