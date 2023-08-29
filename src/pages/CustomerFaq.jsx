@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Collapse } from 'antd';
+import { Collapse, Select } from 'antd';
 import { auth, db, storage } from '../firebase/firebaseConfig';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
@@ -32,6 +32,14 @@ const CustomerFaq = () => {
   const [faqs, setFaqs] = useState([]);
   const userUid = auth.currentUser?.uid; // 현재 로그인한 사용자 UID 가져오기
 
+  const [expandIconPosition, setExpandIconPosition] = useState('start');
+  const onPositionChange = (newExpandIconPosition) => {
+    setExpandIconPosition(newExpandIconPosition);
+  };
+  const onChange = (key) => {
+    console.log(key);
+  };
+
   useEffect(() => {
     // 데이터 가져오기
     const fetchData = async () => {
@@ -47,9 +55,13 @@ const CustomerFaq = () => {
           id: doc.id,
           ...doc.data(),
         }));
-        // console.log('Fetched FAQs:', fetchedFaqs);
-        console.log('Fetched FAQs:', fetchedFaqs);
-        console.log('Fetched FAQs:', fetchedFaqs[0].title);
+
+        console.log('faq 리스트', fetchedFaqs);
+        console.log('faq 리스트2', fetchedFaqs[0].faqs);
+        fetchedFaqs.forEach((faq, index) => {
+          console.log(faq.faqs);
+        });
+
         setFaqs(fetchedFaqs);
       }
     };
@@ -59,14 +71,64 @@ const CustomerFaq = () => {
 
   //   console.log(faqs);
   return (
-    <div>
+    <>
+      {/* <Collapse
+        defaultActiveKey={['1']}
+        onChange={onChange}
+        expandIconPosition={expandIconPosition}
+        items={items}
+        accordion
+      >
+        {faqs.map((faq) => (
+          <>
+            {faq.faqs.map((innerFaq) => (
+              <Collapse.Panel header={innerFaq.question} key={innerFaq.faqId}>
+                <p>{innerFaq.answer}</p>
+              </Collapse.Panel>
+            ))}
+          </>
+        ))}
+      </Collapse> */}
+
+      {/* {faqs.map((faq) => (
+        <Collapse
+          defaultActiveKey={['1']}
+          onChange={onChange}
+          expandIconPosition={expandIconPosition}
+          items={items}
+          accordion
+          key={faq.id}
+        >
+          {faq.faqs.map((innerFaq) => {
+            console.log(innerFaq.faqId);
+            return (
+              <Collapse.Panel header={innerFaq.question} key={innerFaq.faqId}>
+                <p>{innerFaq.answer}</p>
+              </Collapse.Panel>
+            );
+          })}
+        </Collapse>
+      ))}*/}
+
       <Collapse accordion>
+        {faqs.map((faq) => (
+          <>
+            {faq.faqs.map((innerFaq) => (
+              <Collapse.Panel header={innerFaq.question} key={innerFaq.faqId}>
+                <p>{innerFaq.answer}</p>
+              </Collapse.Panel>
+            ))}
+          </>
+        ))}
+      </Collapse>
+
+      {/* <Collapse accordion>
         {faqs.map((faq) => (
           <Collapse.Panel header={faq.title} key={faq.id}>
             <p>{faq.answer}</p>
           </Collapse.Panel>
         ))}
-      </Collapse>
+      </Collapse> */}
       {/* <Collapse accordion items={items} /> */}
       {/* <Collapse accordion>
         {faqs.map((faq) => (
@@ -75,7 +137,7 @@ const CustomerFaq = () => {
           </Collapse.Panel>
         ))}
       </Collapse> */}
-    </div>
+    </>
   );
 };
 
