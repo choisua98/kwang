@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { B } from './BannerImage.styles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { blocksAtom } from '../../../../atoms/Atom';
-import { useAtom } from 'jotai';
-import { Modal } from 'antd';
-import { CameraOutlined, DeleteOutlined } from '@ant-design/icons';
+import {
+  deleteObject,
+  getDownloadURL,
+  listAll,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 import {
   addDoc,
   collection,
@@ -15,6 +17,11 @@ import {
   serverTimestamp,
   updateDoc,
 } from 'firebase/firestore';
+import { blocksAtom } from '../../../../atoms/Atom';
+import { useAtom } from 'jotai';
+import { Modal } from 'antd';
+import { CameraOutlined } from '@ant-design/icons';
+import imageCompression from 'browser-image-compression';
 
 const BannerImage = () => {
   const navigate = useNavigate();
@@ -31,6 +38,8 @@ const BannerImage = () => {
 
   // 실제로 업로드한 이미지 정보를 저장하는 배열
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [test, setTest] = useState();
+  console.log(test);
 
   // 최대 업로드 가능한 이미지 개수
   const maxUploads = 4;
@@ -57,6 +66,7 @@ const BannerImage = () => {
 
     if (file) {
       setUploadedImages([...uploadedImages, file]);
+      setTest([...uploadedImages, file.name]);
     }
   };
 
@@ -74,6 +84,24 @@ const BannerImage = () => {
     }
 
     try {
+      // 이미지 압축 설정 옵션
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 300,
+        useWebWorker: true,
+      };
+
+      // 이미지 압축 함수
+      const compressedImage = async (imageFile) => {
+        try {
+          const compressedFile = await imageCompression(imageFile, options);
+          return compressedFile;
+        } catch (error) {
+          console.error('이미지 압축 실패', error);
+          return null;
+        }
+      };
+
       // Firestore에 데이터 추가
       const docRef = await addDoc(collection(db, 'template'), {
         blockKind: 'bannerimage',
@@ -86,14 +114,20 @@ const BannerImage = () => {
 
       // 이미지 업로드 및 URL 저장
       const imageUrls = [];
+
       for (const imageFile of uploadedImages) {
-        const imageRef = ref(
-          storage,
-          `callengeImages/${docId}/${imageFile.name}`,
-        );
-        await uploadBytes(imageRef, imageFile);
-        const imageUrl = await getDownloadURL(imageRef);
-        imageUrls.push(imageUrl);
+        // 이미지 압축
+        const compressedFile = await compressedImage(imageFile);
+
+        if (compressedFile) {
+          const imageRef = ref(
+            storage,
+            `bannerImages/${docId}/${imageFile.name}`,
+          );
+          await uploadBytes(imageRef, compressedFile);
+          const imageUrl = await getDownloadURL(imageRef);
+          imageUrls.push(imageUrl);
+        }
       }
 
       // 이미지 URL들을 Firestore 문서에 업데이트
@@ -128,7 +162,7 @@ const BannerImage = () => {
         } else {
           const imageRef = ref(
             storage,
-            `callengeImages/${blockId}/${imageFile.name}`,
+            `bannerImages/${blockId}/${imageFile.name}`,
           );
           await uploadBytes(imageRef, imageFile);
           const imageUrl = await getDownloadURL(imageRef);
@@ -151,19 +185,34 @@ const BannerImage = () => {
 
   // "삭제하기" 버튼 클릭 시 실행되는 함수
   const handleRemoveButtonClick = async (id) => {
-    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-    if (shouldDelete) {
-      try {
-        // 사용자 확인 후 삭제 작업 진행
+    const folderRef = ref(storage, `bannerImages/${id}`);
+
+    try {
+      const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+      if (shouldDelete) {
+        // 폴더 내의 모든 파일 가져오기
+        const fileList = await listAll(folderRef);
+
+        // 폴더 내의 각 파일을 순회하며 삭제
+        await Promise.all(
+          fileList.items.map(async (file) => {
+            await deleteObject(file);
+            console.log(`Image ${file.name} deleted`);
+          }),
+        );
+
+        // 사용자 확인 후 Firestore 문서 삭제
         await deleteDoc(doc(db, 'template', id));
+
         alert('삭제 완료!');
         navigate('/admin');
-      } catch (error) {
-        console.error('삭제 중 오류 발생:', error.message);
       }
+    } catch (error) {
+      console.error('삭제 중 오류 발생:', error.message);
     }
   };
 
+  // 이미지 삭제 시 실행되는 함수
   const handleRemoveImage = (index) => {
     const updatedImages = [...uploadedImages];
     updatedImages.splice(index, 1);
@@ -178,43 +227,58 @@ const BannerImage = () => {
         <p>설정</p>
       </div>
       <B.ImageContainer>
-        {uploadedImages.length >= 4 ? (
-          <label
-            htmlFor="imageInput"
-            className={uploadedImages.length >= maxUploads ? 'disabled' : ''}
-          >
-            <CameraOutlined style={{ fontSize: '30px' }} />
-            <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
-          </label>
+        {uploadedImages.length >= maxUploads ? (
+          <>
+            <div onClick={handleImageChange}>
+              <label
+                htmlFor="imageInput"
+                className={
+                  uploadedImages.length >= maxUploads ? 'disabled' : ''
+                }
+              >
+                <CameraOutlined style={{ fontSize: '30px' }} />
+                <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+              </label>
+            </div>
+          </>
         ) : (
-          <label htmlFor="imageInput">
-            <CameraOutlined style={{ fontSize: '30px' }} />
-            <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
-          </label>
+          <>
+            <label htmlFor="imageInput">
+              <div>
+                <CameraOutlined style={{ fontSize: '30px' }} />
+              </div>
+              <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+            </label>
+            <input
+              id="imageInput"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </>
         )}
 
-        <input
-          id="imageInput"
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-        />
-        {uploadedImages.map((image, index) => (
-          <div key={index}>
-            <div
-              className="square-preview"
-              style={{
-                backgroundImage: `url(${
-                  typeof image === 'string' ? image : URL.createObjectURL(image)
-                })`,
-              }}
-            />
-            <button onClick={() => handleRemoveImage(index)}>
-              <DeleteOutlined />
-            </button>
-          </div>
-        ))}
+        {uploadedImages.map((image, index) => {
+          return (
+            <div key={index}>
+              <div
+                className="square-preview"
+                style={{
+                  backgroundImage: `url(${
+                    typeof image === 'string'
+                      ? image
+                      : URL.createObjectURL(image)
+                  })`,
+                }}
+              />
+              <button type="button" onClick={() => handleRemoveImage(index)}>
+                -
+              </button>
+            </div>
+          );
+        })}
       </B.ImageContainer>
+
       <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
         삭제하기
