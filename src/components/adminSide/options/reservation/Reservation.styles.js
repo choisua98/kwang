@@ -13,10 +13,10 @@ export const R = {
     }
 
     p {
-      padding: 10px 0px;
+      text-align: end;
     }
 
-    label {
+    h3 {
       display: flex;
       justify-content: center;
       text-align: center;
@@ -26,15 +26,11 @@ export const R = {
       cursor: pointer;
     }
 
+    input,
     button {
       height: 30px;
-      margin: 10px 0px;
     }
 
-    input {
-      height: 50px;
-      margin: 10px 0px;
-    }
     textarea {
       height: 80px;
     }

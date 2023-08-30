@@ -26,6 +26,8 @@ const FanLetter = () => {
 
   const [title, setTitle] = useState(selectedBlock?.title);
   const [description, setDescription] = useState(selectedBlock?.description);
+  const [titleCount, setTitleCount] = useState(0);
+  const [descriptionCount, setDescriptionCount] = useState(0);
 
   const addButtonClick = async (e) => {
     e.preventDefault();
@@ -89,6 +91,7 @@ const FanLetter = () => {
   return (
     <F.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
       <label htmlFor="title">팬레터 서비스 이름</label>
+      <p>{titleCount}/20자</p>
       <input
         id="title"
         name="title"
@@ -97,10 +100,13 @@ const FanLetter = () => {
         value={title}
         onChange={(e) => {
           setTitle(e.target.value);
+          setTitleCount(e.target.value.length);
         }}
+        maxLength={20} // 최대 글자수를 여기에 설정 (예: 50)
         autoFocus
       />
       <label htmlFor="description">팬레터 설명을 작성해 주세요</label>
+      <p>{descriptionCount}/50자</p>
       <input
         id="description"
         name="description"
@@ -109,7 +115,9 @@ const FanLetter = () => {
         value={description}
         onChange={(e) => {
           setDescription(e.target.value);
+          setDescriptionCount(e.target.value.length);
         }}
+        maxLength={50}
       />
       <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
