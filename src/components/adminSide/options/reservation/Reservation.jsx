@@ -244,7 +244,7 @@ const Reservation = () => {
           popupClassName="periodPickerPopup"
         />
       </Space>{' '}
-      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
+      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>git
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
         삭제하기
       </button>
