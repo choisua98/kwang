@@ -30,7 +30,7 @@ const Theme = () => {
     let intervalId;
 
     if (loading) {
-      const increment = Math.ceil(100 / (imageUploadTime / 1000));
+      const increment = Math.ceil(50 / (imageUploadTime / 1000));
       let currentProgress = progress;
 
       intervalId = setInterval(() => {
@@ -38,7 +38,7 @@ const Theme = () => {
         setProgress((prevProgress) =>
           prevProgress < 100 ? prevProgress + increment : prevProgress,
         );
-      }, imageUploadTime / 10);
+      }, imageUploadTime / 7);
     }
 
     return () => clearInterval(intervalId);
