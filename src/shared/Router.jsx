@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
@@ -33,7 +33,7 @@ const Router = () => {
           <Route path="/admin/bannerimage" element={<AdminBannerImage />} />
           <Route path="/admin/fanletter" element={<AdminFanLetter />} />
           <Route path="/:uid" element={<Main />} />
-          <Route path="/faq" element={<CustomerFaq />} />
+          <Route path="/faq" element={<CustomerFaq />} />$
           <Route
             path="*"
             element={
