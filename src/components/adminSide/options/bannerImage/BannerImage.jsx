@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { B } from './BannerImage.styles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
-import { styled } from 'styled-components';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { blocksAtom } from '../../../../atoms/Atom';
 import { useAtom } from 'jotai';
@@ -121,9 +120,6 @@ const BannerImage = () => {
         createdAt: serverTimestamp(),
       });
 
-      // 글쓰는 페이지, 수정하는 페이지를 분리하기
-
-      // console.log('1', uploadedImages);
       // 이미지 업로드 및 URL 저장
       const imageUrls = [];
       for (const imageFile of uploadedImages) {
@@ -170,8 +166,8 @@ const BannerImage = () => {
 
   const handleRemoveImage = (index) => {
     const updatedImages = [...uploadedImages];
-    updatedImages.splice(index, 1); // 이미지 삭제
-    setUploadedImages(updatedImages); // 업데이트
+    updatedImages.splice(index, 1);
+    setUploadedImages(updatedImages);
   };
 
   return (
@@ -228,10 +224,3 @@ const BannerImage = () => {
 };
 
 export default BannerImage;
-
-const PreviewImage = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover; // 이미지가 잘리지 않도록 설정
-  background-color: #d6d6d6;
-`;
