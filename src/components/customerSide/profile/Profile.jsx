@@ -8,11 +8,11 @@ import { S } from './Profile.styles';
 
 const Profile = () => {
   const { uid } = useParams();
-  // console.log(id);
 
-  const [viewNickname, setViewNickname] = useState('');
-  const [viewIntroduction, setViewIntroduction] = useState('');
-  const [viewProfileImage, setViewProfileImage] = useState('');
+  const [viewNickname, setViewNickname] = useState('닉네임을 설정해 주세요');
+  const [viewIntroduction, setViewIntroduction] =
+    useState('소개를 작성해 주세요');
+  const [viewProfileImage, setViewProfileImage] = useState(defaultProfileImage);
 
   // uid로 저장된 문서가 있을 경우 프로필 정보 가져오기
   useEffect(() => {
@@ -24,7 +24,7 @@ const Profile = () => {
           const userData = userDoc.data();
           setViewNickname(userData.nickname || '');
           setViewIntroduction(userData.introduction || '');
-          setViewProfileImage(userData?.profileImageURL || defaultProfileImage);
+          setViewProfileImage(userData.profileImageURL || defaultProfileImage);
         }
       };
       fetchProfileInfo();
