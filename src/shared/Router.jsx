@@ -13,6 +13,7 @@ import AdminReservation from '../pages/AdminReservation';
 import AdminFaq from '../pages/AdminFaq';
 import AdminBannerImage from '../pages/AdminBannerImage';
 import AdminFanLetter from '../pages/AdminFanLetter';
+import CustomerFaq from '../pages/CustomerFaq';
 
 const Router = () => {
   return (
@@ -32,7 +33,7 @@ const Router = () => {
           <Route path="/admin/bannerimage" element={<AdminBannerImage />} />
           <Route path="/admin/fanletter" element={<AdminFanLetter />} />
           <Route path="/:uid" element={<Main />} />
-
+          <Route path="/faq" element={<CustomerFaq />} />
           <Route
             path="*"
             element={
