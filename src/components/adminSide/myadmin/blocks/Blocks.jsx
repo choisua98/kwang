@@ -21,8 +21,6 @@ const Blocks = () => {
           // where('blockKind', '==', 'mailing'),
         );
         const querySnapshot = await getDocs(q);
-        console.log('>>', querySnapshot);
-
         const initialDocuments = [];
         querySnapshot.forEach((doc) => {
           const data = {
@@ -37,8 +35,6 @@ const Blocks = () => {
 
     fetchData();
   }, [userUid]);
-
-  console.log('>>>', disableBlocks);
 
   const isBlockDisabled = (blockKind) => {
     return disableBlocks.some((block) => block.blockKind === blockKind);
