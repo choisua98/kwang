@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Col, Modal, Row } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Modal, Progress, Row } from 'antd';
 import { useAtom } from 'jotai';
 import { nanoid } from 'nanoid';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
@@ -13,6 +13,7 @@ import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
+const imageUploadTime = 3000;
 const Theme = () => {
   // 사용자 UID 가져오기
   const userUid = auth.currentUser?.uid;
@@ -20,15 +21,33 @@ const Theme = () => {
   const [, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
   const [, setBackgroundImage] = useAtom(backgroundImageAtom);
+  const [tempTheme, setTempTheme] = useState(null); // 임시로 테마와 배경 이미지 URL을 저장
+  const [tempBackgroundImage, setTempBackgroundImage] = useState(null); // 배경 이미지 URL을 저장
+  const [loading, setLoading] = useState(false); // 이미지 업로드 진행상태 저장
+  const [progress, setProgress] = useState(0); // 프로그래스바 0 ~ 100% 진행률 업데이트
 
-  // 임시로 테마와 배경 이미지 URL을 저장
-  const [tempTheme, setTempTheme] = useState(null);
-  const [tempBackgroundImage, setTempBackgroundImage] = useState(null);
+  useEffect(() => {
+    let intervalId;
+
+    if (loading) {
+      const increment = Math.ceil(100 / (imageUploadTime / 1000));
+      let currentProgress = progress;
+
+      intervalId = setInterval(() => {
+        currentProgress += increment;
+        setProgress((prevProgress) =>
+          prevProgress < 100 ? prevProgress + increment : prevProgress,
+        );
+      }, imageUploadTime / 10);
+    }
+
+    return () => clearInterval(intervalId);
+  }, [loading]);
 
   // 업로드 할 배경 이미지 압축 옵션 설정
   const options = {
-    maxSizeMB: 0.5,
-    maxWidthOrHeight: 300,
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1000,
     useWebWorker: true,
   };
 
@@ -45,43 +64,58 @@ const Theme = () => {
 
   // 테마(다크) 클릭 시
   const handleDarkModeClick = () => {
-    setTempBackgroundImage('');
+    // setTempBackgroundImage('');
     setTempTheme('dark');
+    setTempBackgroundImage('');
     // setTempBackgroundImage('url_of_black_image'); // 검은색 이미지 URL로 변경
   };
 
   // 테마(라이트) 클릭 시
   const handleLightModeClick = () => {
-    setTempBackgroundImage('');
+    // setTempBackgroundImage('');
     setTempTheme('light');
+    setTempBackgroundImage('');
   };
 
   // 테마(배경 이미지 업로드)시 input
   const handleCustomBackgroundClick = () => {
     // setTempTheme('');
-    document.getElementById('image-upload').click();
+    const imageInput = document.getElementById('image-upload'); // useRef로 변경
+    imageInput.click();
+    // console.log(imageInput.value);
+    imageInput.value = null;
   };
 
   // 이미지 저장 및 변경
-  const onImageChange = async (event) => {
-    const file = event.target.files[0];
+  const onImageChange = async (e) => {
+    // 이미지 업로드 시간 추가
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, imageUploadTime);
+
+    const file = e.target.files[0];
 
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = (e) => {
         setTempBackgroundImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
 
     // 압축된 배경 이미지 생성
+    // console.log('시작');
     const compressedFile = await compressImage(file);
+
     // 압축한 배경 이미지 Firebase storage에 업로드
     if (compressedFile) {
       const imageRef = ref(storage, `backgroundImages/${userUid}/${nanoid()}`);
       await uploadBytes(imageRef, compressedFile);
       const imageURL = await getDownloadURL(imageRef);
       setTempBackgroundImage(imageURL);
+      // console.log('완료');
+      // setLoading(false); // 이미지 업로드 완료 후 로딩 상태 변경
       return imageURL;
     }
   };
@@ -96,7 +130,8 @@ const Theme = () => {
     // console.log(backgroundImage);
     // console.log(tempTheme);
     // console.log(tempBackgroundImage);
-
+    setLoading(false); // 로딩 상태 초기화
+    setProgress(0); // 진행률 초기화
     // Firestore에 사용자의 테마 및 배경 이미지 정보 저장
     if (userUid) {
       const userDocRef = doc(db, 'users', userUid);
@@ -117,12 +152,14 @@ const Theme = () => {
     }
     if (tempTheme) {
       setTheme(tempTheme);
+      // setTempTheme(tempTheme); // 수정된 부분: tempTheme을 themeAtom으로 업데이트
       document.body.style.backgroundColor =
         tempTheme === 'dark' ? '#333' : '#fff';
       document.body.style.color = tempTheme === 'dark' ? '#fff' : '#000';
     }
     if (tempBackgroundImage !== null) {
       setBackgroundImage(tempBackgroundImage);
+
       if (tempBackgroundImage) {
         document.body.style.backgroundImage = `url("${tempBackgroundImage}")`;
       } else {
@@ -228,16 +265,21 @@ const Theme = () => {
         </Row>
         <Row>
           <Col span={24}>
-            <button
-              style={{
-                width: '100%',
-                border: '1px solid #000',
-                borderRadius: '5px',
-              }}
-              onClick={handleApplyClick}
-            >
-              적용하기
-            </button>
+            {loading ? (
+              <Progress percent={Math.round(progress)} status="active" />
+            ) : (
+              <button
+                style={{
+                  width: '100%',
+                  border: '1px solid #000',
+                  borderRadius: '5px',
+                }}
+                disabled={loading}
+                onClick={handleApplyClick}
+              >
+                적용하기
+              </button>
+            )}
           </Col>
         </Row>
       </Modal>

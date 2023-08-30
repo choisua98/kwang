@@ -16,6 +16,8 @@ const Header = () => {
 
   const location = useLocation(); // 현재 페이지의 URL 추출
   const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
+  const isLoginPage = location.pathname === '/login';
+  const isHomePage = location.pathname === '/';
   const adminUser = userUid; // 방문자인지 크리에이터인지 확인
 
   // 메뉴 열림
@@ -61,19 +63,39 @@ const Header = () => {
   return (
     <H.HeaderWrapper>
       <Row align="middle">
-        <Col span={22}>
-          {/* 로고 영역 */}
-          <Link to="/">
-            <Logo />
-          </Link>
-        </Col>
+        {/* 로그아웃 상태 */}
+        {!adminUser && (
+          <>
+            <Col span={21}>
+              {/* 로고 영역 */}
+              <Link to="/">
+                <Logo />
+              </Link>
+            </Col>
+            {!isLoginPage && isHomePage && (
+              <Col span={3}>
+                <Link to="/login">로그인</Link>
+              </Col>
+            )}
+          </>
+        )}
+
+        {/* 로그인된 상태 */}
         {adminUser && (
-          <Col span={1}>
-            {/* 우측 영역 */}
-            <div className="right-area">
-              <Button icon={<MenuOutlined />} onClick={handleMenuClick} />
-            </div>
-          </Col>
+          <>
+            <Col span={22}>
+              {/* 로고 영역 */}
+              <Link to="/">
+                <Logo />
+              </Link>
+            </Col>
+            <Col span={1}>
+              {/* 우측 영역 */}
+              <div className="right-area">
+                <Button icon={<MenuOutlined />} onClick={handleMenuClick} />
+              </div>
+            </Col>
+          </>
         )}
       </Row>
 
@@ -82,15 +104,12 @@ const Header = () => {
         <H.MenuContentWrapper ref={menuRef}>
           <ul>
             <li>
-              <Link to="/login">로그인</Link>
-            </li>
-            <li>
               <button onClick={onLogoutButtonClickHandler}>로그아웃</button>
             </li>
             {/* 해당 크리에이터가 마이페이지로 넘어가면 마이페이지 버튼 숨기기 */}
             {!isMyPage && (
               <li>
-                <Link to={`/${userUid}`}>마이페이지</Link>
+                <Link to={`/${userUid}`}>마이 홈</Link>
               </li>
             )}
             {/* 마이페이지인 경우 편집하기 버튼이 나오고 버튼을 클릭 시, 기존의 admin 페이지로 이동함 */}

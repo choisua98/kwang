@@ -9,8 +9,9 @@ import {
   where,
 } from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig';
-import { P } from '../../adminSide/myadmin/myprofile/MyProfile.styles';
 import defaultProfileImage from '../../../assets/images/profile-default-image.png';
+
+import { S } from './Profile.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { userUidAtom } from '../../../atoms/Atom';
@@ -61,7 +62,7 @@ const Profile = () => {
           const userData = userDoc.data();
           setViewNickname(userData.nickname || '');
           setViewIntroduction(userData.introduction || '');
-          setViewProfileImage(userData?.profileImageURL || defaultProfileImage);
+          setViewProfileImage(userData.profileImageURL || defaultProfileImage);
         }
       };
       fetchProfileInfo();
@@ -72,7 +73,7 @@ const Profile = () => {
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
         <Col span={24} style={{ textAlign: 'center' }}>
-          <P.ProfileImage src={viewProfileImage} />
+          <S.ProfileImage src={viewProfileImage} />
           <div style={{ margin: '20px 0 10px' }}>{viewNickname}</div>
           <div style={{ margin: '20px 0' }}>{viewIntroduction}</div>
         </Col>
