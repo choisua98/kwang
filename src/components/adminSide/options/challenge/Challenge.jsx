@@ -47,6 +47,10 @@ const Challenge = () => {
     selectedBlock?.description,
   );
 
+  // 제목과 설명의 글자 수를 추적하는 상태
+  const [titleCount, setTitleCount] = useState(0);
+  const [descriptionCount, setDescriptionCount] = useState(0);
+
   // 선택한 날짜 정보를 저장할 상태 변수들
   // console.log('1', selectedBlock?.startDate.toDate());
   const [startDate, setStartDate] = useState(selectedBlock?.startDate.toDate());
@@ -232,13 +236,18 @@ const Challenge = () => {
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
       <label htmlFor="title">함께해요 챌린지 이름</label>
+      <p>{titleCount}/20자</p>
       <input
         id="title"
         name="title"
         type="text"
         placeholder="함께해요 챌린지 🔥"
         value={title}
-        onChange={handleTitleChange}
+        onChange={(e) => {
+          handleTitleChange(e);
+          setTitleCount(e.target.value.length);
+        }}
+        maxLength={20}
         autoFocus
       />
 
@@ -282,13 +291,18 @@ const Challenge = () => {
       </C.ImageContainer>
 
       <label htmlFor="description">챌린지 상세설명</label>
+      <p>{descriptionCount}/80자</p>
       <textarea
         id="description"
         name="description"
         type="text"
-        placeholder="사진과 글을 추가해 챌린지를 소개해보세요."
+        placeholder="상세 설명을 입력해주세요."
         value={description}
-        onChange={handleDescriptionChange}
+        onChange={(e) => {
+          handleDescriptionChange(e);
+          setDescriptionCount(e.target.value.length);
+        }}
+        maxLength={80}
       />
 
       <label htmlFor="period">챌린지 기간</label>
