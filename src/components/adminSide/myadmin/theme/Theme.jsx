@@ -26,20 +26,6 @@ const Theme = () => {
   const [loading, setLoading] = useState(false); // 이미지 업로드 진행상태 저장
   const [progress, setProgress] = useState(0); // 프로그래스바 0 ~ 100% 진행률 업데이트
 
-  // useEffect(() => {
-  //   let intervalId;
-  //   if (loading) {
-  //     intervalId = setInterval(() => {
-  //       setProgress((prevProgress) =>
-  //         prevProgress < 100
-  //           ? prevProgress + 100 / (imageUploadTime / 3000)
-  //           : prevProgress,
-  //       );
-  //     }, imageUploadTime / 100);
-  //   }
-  //   return () => clearInterval(intervalId);
-  // }, [loading]);
-
   useEffect(() => {
     let intervalId;
 
@@ -282,11 +268,6 @@ const Theme = () => {
             {loading ? (
               <Progress percent={Math.round(progress)} status="active" />
             ) : (
-              // <Progress
-              //   type="line"
-              //   percent={100}
-              //   format={() => '이미지 파일 업로드 중...'}
-              // />
               <button
                 style={{
                   width: '100%',
@@ -299,17 +280,6 @@ const Theme = () => {
                 적용하기
               </button>
             )}
-            {/* <button
-              style={{
-                width: '100%',
-                border: '1px solid #000',
-                borderRadius: '5px',
-              }}
-              disabled={loading}
-              onClick={handleApplyClick}
-            >
-              적용하기
-            </button> */}
           </Col>
         </Row>
       </Modal>
