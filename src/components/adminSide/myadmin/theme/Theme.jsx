@@ -13,6 +13,7 @@ import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
+const imageUploadTime = 3000;
 const Theme = () => {
   // 사용자 UID 가져오기
   const userUid = auth.currentUser?.uid;
@@ -20,6 +21,7 @@ const Theme = () => {
   const [, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
   const [, setBackgroundImage] = useAtom(backgroundImageAtom);
+  const [loading, setLoading] = useState(false); // 이미지 업로드 로딩 시간
 
   // 임시로 테마와 배경 이미지 URL을 저장
   const [tempTheme, setTempTheme] = useState(null);
@@ -27,8 +29,8 @@ const Theme = () => {
 
   // 업로드 할 배경 이미지 압축 옵션 설정
   const options = {
-    maxSizeMB: 0.5,
-    maxWidthOrHeight: 300,
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1000,
     useWebWorker: true,
   };
 
@@ -64,6 +66,12 @@ const Theme = () => {
 
   // 이미지 저장 및 변경
   const onImageChange = async (event) => {
+    // 이미지 업로드 시간 추가
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, imageUploadTime);
+
     const file = event.target.files[0];
 
     if (file) {
@@ -75,13 +83,16 @@ const Theme = () => {
     }
 
     // 압축된 배경 이미지 생성
+    // console.log('시작');
     const compressedFile = await compressImage(file);
+
     // 압축한 배경 이미지 Firebase storage에 업로드
     if (compressedFile) {
       const imageRef = ref(storage, `backgroundImages/${userUid}/${nanoid()}`);
       await uploadBytes(imageRef, compressedFile);
       const imageURL = await getDownloadURL(imageRef);
       setTempBackgroundImage(imageURL);
+      // console.log('완료');
       return imageURL;
     }
   };
@@ -228,16 +239,32 @@ const Theme = () => {
         </Row>
         <Row>
           <Col span={24}>
-            <button
+            {loading ? (
+              <>이미지 파일 업로드 중...</>
+            ) : (
+              <button
+                style={{
+                  width: '100%',
+                  border: '1px solid #000',
+                  borderRadius: '5px',
+                }}
+                disabled={loading}
+                onClick={handleApplyClick}
+              >
+                적용하기
+              </button>
+            )}
+            {/* <button
               style={{
                 width: '100%',
                 border: '1px solid #000',
                 borderRadius: '5px',
               }}
+              disabled={loading}
               onClick={handleApplyClick}
             >
               적용하기
-            </button>
+            </button> */}
           </Col>
         </Row>
       </Modal>
