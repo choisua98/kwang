@@ -14,6 +14,7 @@ import AdminFaq from '../pages/AdminFaq';
 import AdminBannerImage from '../pages/AdminBannerImage';
 import AdminFanLetter from '../pages/AdminFanLetter';
 import CustomerFaq from '../pages/CustomerFaq';
+import CustomerMailing from '../pages/CustomerMailing';
 
 const Router = () => {
   return (
@@ -32,8 +33,15 @@ const Router = () => {
           <Route path="/admin/faq" element={<AdminFaq />} />
           <Route path="/admin/bannerimage" element={<AdminBannerImage />} />
           <Route path="/admin/fanletter" element={<AdminFanLetter />} />
+<<<<<<< HEAD
           <Route path="/:uid" element={<Main />} />
           <Route path="/faq" element={<CustomerFaq />} />$
+=======
+          <Route path="/:nickname" element={<Main />} />
+          {/* 파라미터를 닉네임으로 바꿨습니다. */}
+          <Route path="/:nickname/faq" element={<CustomerFaq />} />
+          <Route path="/:nickname/mailing" element={<CustomerMailing />} />
+>>>>>>> af32ce777c23197c4f539d10abf6c5c1ec01ef5e
           <Route
             path="*"
             element={
