@@ -38,8 +38,6 @@ const BannerImage = () => {
 
   // 실제로 업로드한 이미지 정보를 저장하는 배열
   const [uploadedImages, setUploadedImages] = useState([]);
-  const [test, setTest] = useState();
-  console.log(test);
 
   // 최대 업로드 가능한 이미지 개수
   const maxUploads = 4;
@@ -66,7 +64,6 @@ const BannerImage = () => {
 
     if (file) {
       setUploadedImages([...uploadedImages, file]);
-      setTest([...uploadedImages, file.name]);
     }
   };
 
