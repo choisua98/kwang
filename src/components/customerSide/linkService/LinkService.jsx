@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 import { db } from '../../../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { Col, Row } from 'antd';
 import { L } from '../../adminSide/myadmin/links/Links.styles';
+import { useAtomValue } from 'jotai';
+import { userUidAtom } from '../../../atoms/Atom';
 
 const LinkService = () => {
-  const { uid } = useParams();
-  //   console.log(uid);
+  // const { uid } = useParams();
+  const uid = useAtomValue(userUidAtom); //여기도 userUidAtom에 담긴 값을 사용하겠습니다. -수아
+  console.log(uid);
 
   const [linkDataArray, setLinkDataArray] = useState([]); // 여러 문서 데이터를 저장할 배열
   //   console.log(linkDataArray);

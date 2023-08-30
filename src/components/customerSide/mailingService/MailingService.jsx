@@ -14,14 +14,13 @@ import { useNavigate } from 'react-router-dom';
 import { userUidAtom } from '../../../atoms/Atom';
 import { useAtomValue } from 'jotai';
 const MailingService = () => {
-  // 조타이에 저장된 유저Uid 정보 가져오기
+  // 조타이에 저장된 userUid 정보 가져오기
   const userUid = useAtomValue(userUidAtom);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [email, setEmail] = useState('');
-  // const [userUid, setUserUid] = useState('');
   const navigate = useNavigate();
   console.log(userUid);
 
@@ -45,7 +44,6 @@ const MailingService = () => {
             const data = firstDocument.data();
             setTitle(data?.title);
             setDesc(data?.description);
-            console.log(data?.title);
             // console.log('데이터 가져오기 성공', data);
           }
         } catch (error) {
