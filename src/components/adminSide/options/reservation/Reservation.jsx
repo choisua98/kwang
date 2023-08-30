@@ -1,52 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { R } from './Reservation.styles';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import {
-  Timestamp,
   addDoc,
   collection,
   deleteDoc,
   doc,
-  getDocs,
-  query,
   serverTimestamp,
   updateDoc,
-  where,
 } from 'firebase/firestore';
-import { auth, db, storage } from '../../../../firebase/firebaseConfig';
+import {
+  deleteObject,
+  getDownloadURL,
+  listAll,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { DatePicker, Space } from 'antd';
-import {
-  blocksAtom,
-  reservationImageAtom,
-  userAtom,
-} from '../../../../atoms/Atom';
-import { useAtom, useAtomValue } from 'jotai';
-import { styled } from 'styled-components';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import moment from 'moment';
-
+import { DatePicker, Modal, Space } from 'antd';
+import { blocksAtom } from '../../../../atoms/Atom';
+import { useAtom } from 'jotai';
+import { CameraOutlined } from '@ant-design/icons';
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
-
 // 오늘 이전의 날짜는 선택 불가능하도록 설정하는 함수
 const disabledDate = (current) => {
   return current && current < dayjs().endOf('day');
 };
-
 const Reservation = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const userUid = auth.currentUser?.uid;
-
   const blockId = location.state ? location.state.blocksId : null;
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
-
   const [title, setTitle] = useState(selectedBlock?.title);
   const [description, setDescription] = useState(selectedBlock?.description);
+  const [titleCount, setTitleCount] = useState(0);
+  const [descriptionCount, setDescriptionCount] = useState(0);
   const [numberOfPeople, setNumberOfPeople] = useState(
     selectedBlock?.numberOfPeople,
   );
@@ -60,16 +53,50 @@ const Reservation = () => {
     selectedBlock ? selectedBlock?.endDate : '',
   );
 
-  const [reservationImage, setReservationImage] = useAtom(reservationImageAtom);
-  const [selectedImage, setSelectedImage] = useState(null);
+  // 실제로 업로드한 이미지 정보를 저장하는 배열
+  const [uploadedImages, setUploadedImages] = useState([]);
+
+  // 최대 업로드 가능한 이미지 개수
+  const maxUploads = 4;
+
+  useEffect(() => {
+    if (blockId) {
+      // 이미지 데이터를 가져와서 업로드된 이미지 배열을 초기화
+      const initialImages = selectedBlock?.images || [];
+      setUploadedImages(initialImages);
+    }
+  }, [blockId, selectedBlock]);
+
+  // 이미지 업로드 시 실행되는 함수
+  const handleImageChange = async (e) => {
+    if (uploadedImages.length >= maxUploads) {
+      // 이미지 개수가 최대 개수에 도달한 경우 모달 창을 띄워 알림 표시
+      Modal.info({
+        content: `이미지는 최대 ${maxUploads}장까지 첨부할 수 있어요.`,
+      });
+      return;
+    }
+
+    const file = e.target.files[0];
+
+    if (file) {
+      setUploadedImages([...uploadedImages, file]);
+    }
+  };
 
   // 저장 버튼
   const handleAddButtonClick = async (e) => {
     e.preventDefault();
 
+    if (!userUid) {
+      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      navigate('/login');
+      return;
+    }
+
     try {
       // Firestore에 데이터 추가
-      await addDoc(collection(db, 'template'), {
+      const docRef = await addDoc(collection(db, 'template'), {
         title,
         description,
         numberOfPeople,
@@ -80,22 +107,38 @@ const Reservation = () => {
         createdAt: serverTimestamp(),
         userId: userUid,
       });
-      // Firebase에 이미지 추가
-      const imageRef = ref(storage, `reservationImages/${userUid}/image`);
-      await uploadBytes(imageRef, selectedImage);
-      const imageURL = await getDownloadURL(imageRef);
-      setReservationImage(imageURL);
-      alert('데이터가 추가되었습니다.');
+
+      // 저장된 문서의 ID 가져오기
+      const docId = docRef.id;
+
+      // 이미지 업로드 및 URL 저장
+      const imageUrls = [];
+      for (const imageFile of uploadedImages) {
+        const imageRef = ref(
+          storage,
+          `reservationImages/${docId}/${imageFile.name}`,
+        );
+        await uploadBytes(imageRef, imageFile);
+        const imageUrl = await getDownloadURL(imageRef);
+        imageUrls.push(imageUrl);
+      }
+
+      // 이미지 URL들을 Firestore 문서에 업데이트
+      await updateDoc(docRef, {
+        images: imageUrls,
+      });
+
+      // 저장 완료 알림 후 어드민 페이지로 이동
+      alert('저장 완료!');
       navigate('/admin');
     } catch (error) {
-      console.error('저장 실패', error);
+      console.error('저장 중 오류 발생:', error.message);
     }
   };
 
   // "수정하기" 버튼 클릭 시 실행되는 함수
   const handleEditButtonClick = async (e) => {
     e.preventDefault();
-
     try {
       // Firestore에 데이터 업로드
       const docRef = doc(db, 'template', blockId);
@@ -108,10 +151,9 @@ const Reservation = () => {
         endDate,
         createdAt: serverTimestamp(),
       });
-
       // 이미지 업로드 및 URL 저장
       const imageUrls = [];
-      for (const imageFile of reservationImage) {
+      for (const imageFile of uploadedImages) {
         if (typeof imageFile === 'string') {
           imageUrls.push(imageFile);
         } else {
@@ -124,12 +166,10 @@ const Reservation = () => {
           imageUrls.push(imageUrl);
         }
       }
-
       // 이미지 URL들을 Firestore 문서에 업데이트
       await updateDoc(docRef, {
         images: imageUrls,
       });
-
       // 수정 완료 알림 후 어드민 페이지로 이동
       alert('수정 완료!');
       navigate('/admin');
@@ -146,62 +186,123 @@ const Reservation = () => {
     setStartDate(dateString[0]);
     setEndDate(dateString[1]);
   };
-
   // "삭제하기" 버튼 클릭 시 실행되는 함수
   const handleRemoveButtonClick = async (id) => {
-    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-    if (shouldDelete) {
-      try {
-        // 사용자 확인 후 삭제 작업 진행
+    const folderRef = ref(storage, `reservationImages/${id}`);
+
+    try {
+      const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+      if (shouldDelete) {
+        // 폴더 내의 모든 파일 가져오기
+        const fileList = await listAll(folderRef);
+
+        // 폴더 내의 각 파일을 순회하며 삭제
+        await Promise.all(
+          fileList.items.map(async (file) => {
+            await deleteObject(file);
+            console.log(`${file.name} 이미지가 삭제되었습니다`);
+          }),
+        );
+
+        // 사용자 확인 후 Firestore 문서 삭제
         await deleteDoc(doc(db, 'template', id));
+
         alert('삭제 완료!');
         navigate('/admin');
-      } catch (error) {
-        console.error('삭제 중 오류 발생:', error.message);
       }
+    } catch (error) {
+      console.error('삭제 중 오류 발생:', error.message);
     }
+  };
+
+  // 이미지 삭제 시 실행되는 함수
+  const handleRemoveImage = (index) => {
+    const updatedImages = [...uploadedImages];
+    updatedImages.splice(index, 1);
+    setUploadedImages(updatedImages);
   };
 
   return (
     <R.Container
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
-      <p>예약 서비스 이름</p>
+      <label htmlFor="title">예약 서비스 이름</label>
+      <p>{titleCount}/20자</p>
       <input
+        id="title"
         placeholder={'예약 서비스'}
         value={title}
         onChange={(e) => {
           setTitle(e.target.value);
+          setTitleCount(e.target.value.length);
         }}
+        maxLength={20}
+        autoFocus
       />
-      <p>예약 상세설명</p>
+      <label htmlFor="description">예약 상세설명</label>
+      <p>{descriptionCount}/50자</p>
       <textarea
+        id="description"
         placeholder={'상세 설명을 입력해주세요'}
         value={description}
         onChange={(e) => {
           setDescription(e.target.value);
+          setDescriptionCount(e.target.value.length);
         }}
+        maxLength={50}
       />
-      <p>이미지를 추가해 주세요</p>
-      {reservationImage ? (
-        <label htmlFor="imageInput">이미지 수정하기</label>
-      ) : (
-        <label htmlFor="imageInput">이미지 추가 +</label>
-      )}
-      {reservationImage ? <PreviewImage src={reservationImage} /> : ''}
-      <input
-        id="imageInput"
-        type="file"
-        style={{ display: 'none' }}
-        onChange={(e) => {
-          const file = e.target.files[0];
-          if (file) {
-            setSelectedImage(file);
-            setReservationImage(URL.createObjectURL(file));
-          }
-        }}
-      />
-      <p>모집 인원</p>
+      <R.ImageContainer>
+        {uploadedImages.length >= maxUploads ? (
+          <>
+            <div onClick={handleImageChange}>
+              <label
+                htmlFor="imageInput"
+                className={
+                  uploadedImages.length >= maxUploads ? 'disabled' : ''
+                }
+              >
+                <CameraOutlined style={{ fontSize: '30px' }} />
+                <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+              </label>
+            </div>
+          </>
+        ) : (
+          <>
+            <label htmlFor="imageInput">
+              <div>
+                <CameraOutlined style={{ fontSize: '30px' }} />
+              </div>
+              <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+            </label>
+            <input
+              id="imageInput"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </>
+        )}
+        {uploadedImages.map((image, index) => {
+          return (
+            <div key={index}>
+              <div
+                className="square-preview"
+                style={{
+                  backgroundImage: `url(${
+                    typeof image === 'string'
+                      ? image
+                      : URL.createObjectURL(image)
+                  })`,
+                }}
+              />
+              <button type="button" onClick={() => handleRemoveImage(index)}>
+                -
+              </button>
+            </div>
+          );
+        })}
+      </R.ImageContainer>
+      <label>모집 인원</label>
       <input
         type="number"
         placeholder={'모집 인원을 선택해주세요'}
@@ -210,8 +311,8 @@ const Reservation = () => {
           setNumberOfPeople(e.target.value);
         }}
       />
-      <p>시작 날짜 선택</p>
-      <Space id="period" direction="vertical" size={12}>
+      <label htmlFor="datePicker">시작 날짜 선택</label>
+      <Space id="datePicker" direction="vertical" size={12}>
         <DatePicker
           value={blockId ? dayjs(pickDate) : undefined}
           disabledDate={disabledDate}
@@ -220,39 +321,24 @@ const Reservation = () => {
           popupClassName="datePickerPopup"
         />
       </Space>
-      <p>모집 기간 선택</p>
-      <Space id="period" direction="vertical" size={12}>
+      <label htmlFor="rangePicker">모집 기간 선택</label>
+      <Space id="rangePicker" direction="vertical" size={12}>
         <RangePicker
-          // value={blockId ? moment(pickDate, 'YYYY-MM-DD') : undefined}
-          value={
-            blockId
-              ? [dayjs(selectedBlock.startDate), dayjs(selectedBlock.endDate)]
-              : undefined
-          }
+          value={[
+            startDate ? dayjs(startDate) : null,
+            endDate ? dayjs(endDate) : null,
+          ]}
           onChange={periodPickInput}
           disabledDate={disabledDate}
           style={{ width: '100%' }}
           popupClassName="periodPickerPopup"
         />
-      </Space>{' '}
+      </Space>
       <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
-      {/* {blockId ? (
-        <button onClick={handleEditButtonClick}>수정하기</button>
-      ) : (
-        <button onClick={handleAddButtonClick}>저장하기</button>
-      )} */}
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
         삭제하기
       </button>
     </R.Container>
   );
 };
-
 export default Reservation;
-
-const PreviewImage = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover; // 이미지가 잘리지 않도록 설정
-  background-color: #d6d6d6;
-`;

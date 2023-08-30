@@ -12,31 +12,56 @@ export const R = {
       padding: 5px 7px;
     }
 
-    p {
-      padding: 10px 0px;
+    input,
+    button {
+      height: 30px;
     }
+
+    textarea {
+      height: 100px;
+    }
+
+    p {
+      text-align: end;
+    }
+  `,
+
+  ImageContainer: styled.div`
+    display: flex;
+    gap: 10px;
+    color: #d3d3d3;
 
     label {
       display: flex;
+      flex-direction: column;
       justify-content: center;
-      text-align: center;
-      background-color: lightgray;
-      padding: 8px 0px;
-      margin-bottom: 10px;
+      align-items: center;
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+      background: #fafafa;
       cursor: pointer;
     }
 
-    button {
-      height: 30px;
-      margin: 10px 0px;
+    .disabled {
+      pointer-events: none;
+    }
+
+    span {
+      padding-top: 2px;
+      font-size: 0.8rem;
     }
 
     input {
-      height: 50px;
-      margin: 10px 0px;
+      display: none;
     }
-    textarea {
-      height: 80px;
+
+    .square-preview {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+      background-size: cover;
+      background-position: center;
     }
   `,
 };
