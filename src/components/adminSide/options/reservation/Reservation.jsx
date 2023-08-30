@@ -47,6 +47,8 @@ const Reservation = () => {
 
   const [title, setTitle] = useState(selectedBlock?.title);
   const [description, setDescription] = useState(selectedBlock?.description);
+  const [titleCount, setTitleCount] = useState(0);
+  const [descriptionCount, setDescriptionCount] = useState(0);
   const [numberOfPeople, setNumberOfPeople] = useState(
     selectedBlock?.numberOfPeople,
   );
@@ -166,27 +168,34 @@ const Reservation = () => {
     <R.Container
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
-      <p>예약 서비스 이름</p>
+      <label>예약 서비스 이름</label>
+      <p>{titleCount}/20자</p>
       <input
         placeholder={'예약 서비스'}
         value={title}
         onChange={(e) => {
           setTitle(e.target.value);
+          setTitleCount(e.target.value.length);
         }}
+        maxLength={20}
+        autoFocus
       />
-      <p>예약 상세설명</p>
+      <label>예약 상세설명</label>
+      <p>{descriptionCount}/50자</p>
       <textarea
         placeholder={'상세 설명을 입력해주세요'}
         value={description}
         onChange={(e) => {
           setDescription(e.target.value);
+          setDescriptionCount(e.target.value.length);
         }}
+        maxLength={50}
       />
-      <p>이미지를 추가해 주세요</p>
+      <label>이미지를 추가해 주세요</label>
       {reservationImage ? (
-        <label htmlFor="imageInput">이미지 수정하기</label>
+        <h3 htmlFor="imageInput">이미지 수정하기</h3>
       ) : (
-        <label htmlFor="imageInput">이미지 추가 +</label>
+        <h3 htmlFor="imageInput">이미지 추가 +</h3>
       )}
       {reservationImage ? <PreviewImage src={reservationImage} /> : ''}
       <input
@@ -201,7 +210,7 @@ const Reservation = () => {
           }
         }}
       />
-      <p>모집 인원</p>
+      <label>모집 인원</label>
       <input
         type="number"
         placeholder={'모집 인원을 선택해주세요'}
@@ -210,7 +219,7 @@ const Reservation = () => {
           setNumberOfPeople(e.target.value);
         }}
       />
-      <p>시작 날짜 선택</p>
+      <label>시작 날짜 선택</label>
       <Space id="period" direction="vertical" size={12}>
         <DatePicker
           value={blockId ? dayjs(pickDate) : undefined}
@@ -220,7 +229,7 @@ const Reservation = () => {
           popupClassName="datePickerPopup"
         />
       </Space>
-      <p>모집 기간 선택</p>
+      <label>모집 기간 선택</label>
       <Space id="period" direction="vertical" size={12}>
         <RangePicker
           // value={blockId ? moment(pickDate, 'YYYY-MM-DD') : undefined}
@@ -235,12 +244,7 @@ const Reservation = () => {
           popupClassName="periodPickerPopup"
         />
       </Space>{' '}
-      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
-      {/* {blockId ? (
-        <button onClick={handleEditButtonClick}>수정하기</button>
-      ) : (
-        <button onClick={handleAddButtonClick}>저장하기</button>
-      )} */}
+      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>git
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
         삭제하기
       </button>

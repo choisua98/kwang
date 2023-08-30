@@ -20,5 +20,9 @@ export const M = {
     textarea {
       height: 60px;
     }
+
+    p {
+      text-align: end;
+    }
   `,
 };
