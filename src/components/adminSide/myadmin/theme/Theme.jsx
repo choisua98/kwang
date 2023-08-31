@@ -175,7 +175,16 @@ const Theme = () => {
         <Button
           type="primary"
           onClick={() => setModalVisible(true)}
-          style={{ width: '100%' }}
+          style={{
+            marginBottom: '15px',
+            padding: '18px 0',
+            width: '100%',
+            height: 'auto',
+            fontSize: '14px',
+            color: '#000',
+            borderRadius: '15px',
+            background: '#D9D9D9',
+          }}
         >
           테마 바꾸기
         </Button>
@@ -270,6 +279,7 @@ const Theme = () => {
             ) : (
               <button
                 style={{
+                  padding: '7px 0',
                   width: '100%',
                   border: '1px solid #000',
                   borderRadius: '5px',
