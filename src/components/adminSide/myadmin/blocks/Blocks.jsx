@@ -18,7 +18,6 @@ const Blocks = () => {
         const q = query(
           collection(db, 'template'),
           where('userId', '==', userUid),
-          // where('blockKind', '==', 'mailing'),
         );
         const querySnapshot = await getDocs(q);
         const initialDocuments = [];

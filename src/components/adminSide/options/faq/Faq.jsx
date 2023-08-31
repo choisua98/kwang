@@ -176,7 +176,6 @@ const Faq = () => {
         onChange={handleTitleChange}
         autoFocus
       />
-
       <F.FaqList>
         {faqList.map((faq) => {
           return (
