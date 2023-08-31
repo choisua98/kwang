@@ -52,8 +52,16 @@ const EmailLogin = () => {
     }
   };
   return (
-    <div>
-      <div>login page</div>
+    <>
+      <h1 style={{ fontSize: '20px', lineHeight: '26px' }}>
+        <b style={{ fontWeight: 'bold' }}>크리에이터를 위한</b>
+        <br />단 하나의 링크, 크왕
+      </h1>
+      <img
+        src="https://picsum.photos/350/100"
+        style={{ margin: '25px auto', width: '100%' }}
+        alt="배너 이미지"
+      />
       <form>
         <div>
           <input
@@ -65,7 +73,15 @@ const EmailLogin = () => {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
-          ></input>
+            style={{
+              padding: '15.5px 15px',
+              width: '100%',
+              boxSizing: 'border-box',
+              fontSize: '14px',
+              border: '2px solid #f5f5f5',
+              borderRadius: '15px',
+            }}
+          />
         </div>
         <div>
           <input
@@ -77,22 +93,53 @@ const EmailLogin = () => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-          ></input>
+            style={{
+              margin: '15px auto 0',
+              padding: '15.5px 15px',
+              width: '100%',
+              boxSizing: 'border-box',
+              fontSize: '14px',
+              border: '2px solid #f5f5f5',
+              borderRadius: '15px',
+            }}
+          />
         </div>
-        <button type="submit" onClick={onLoginButtonClickHandler}>
+        <button
+          type="submit"
+          onClick={onLoginButtonClickHandler}
+          style={{
+            margin: '26px auto 0',
+            width: '100%',
+            height: '60px',
+            fontSize: '14px',
+            fontWeight: '700',
+            color: '#fff',
+            background: '#202328',
+            borderRadius: '15px',
+          }}
+        >
           로그인
         </button>
-        <br />
-        <button
+        <div
+          style={{
+            margin: '61px auto 0',
+            fontSize: '14px',
+            textAlign: 'center',
+            color: '#484848',
+          }}
+        >
+          SNS 계정으로 로그인
+        </div>
+        {/* Login.jsx로 회원가입 버튼 이동 */}
+        {/* <button
           onClick={() => {
             navigate('/signup');
           }}
         >
           회원가입
-        </button>
-        <br />
+        </button> */}
       </form>
-    </div>
+    </>
   );
 };
 

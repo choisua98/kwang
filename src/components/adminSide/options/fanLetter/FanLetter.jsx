@@ -24,8 +24,10 @@ const FanLetter = () => {
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
-  const [title, setTitle] = useState(selectedBlock?.title);
-  const [description, setDescription] = useState(selectedBlock?.description);
+  const [title, setTitle] = useState(selectedBlock?.title || '');
+  const [description, setDescription] = useState(
+    selectedBlock?.description || '',
+  );
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
 
@@ -102,7 +104,7 @@ const FanLetter = () => {
           setTitle(e.target.value);
           setTitleCount(e.target.value.length);
         }}
-        maxLength={20} // 최대 글자수를 여기에 설정 (예: 50)
+        maxLength={20}
         autoFocus
       />
       <label htmlFor="description">팬레터 설명을 작성해 주세요</label>

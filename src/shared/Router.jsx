@@ -13,10 +13,12 @@ import AdminReservation from '../pages/AdminReservation';
 import AdminFaq from '../pages/AdminFaq';
 import AdminBannerImage from '../pages/AdminBannerImage';
 import AdminFanLetter from '../pages/AdminFanLetter';
-import CustomerFaq from '../pages/CustomerFaq';
-import CustomerMailing from '../pages/CustomerMailing';
-import CustomerFanletter from '../pages/CustomerFanletter';
 import CustomerChallenge from '../pages/CustomerChallenge';
+import CustomerMailing from '../pages/CustomerMailing';
+import CustomerReservation from '../pages/CustomerReservation';
+import CustomerFaq from '../pages/CustomerFaq';
+import CustomerBannerimage from '../pages/CustomerBannerimage';
+import CustomerFanletter from '../pages/CustomerFanletter';
 
 const Router = () => {
   return (
@@ -36,10 +38,12 @@ const Router = () => {
           <Route path="/admin/bannerimage" element={<AdminBannerImage />} />
           <Route path="/admin/fanletter" element={<AdminFanLetter />} />
           <Route path="/:uid" element={<Main />} />
-          <Route path="/:uid/faq" element={<CustomerFaq />} />
-          <Route path="/:uid/mailing" element={<CustomerMailing />} />
-          <Route path="/:uid/fanletter" element={<CustomerFanletter />} />
           <Route path="/:uid/challenge" element={<CustomerChallenge />} />
+          <Route path="/:uid/mailing" element={<CustomerMailing />} />
+          <Route path="/:uid/reservation" element={<CustomerReservation />} />
+          <Route path="/:uid/faq" element={<CustomerFaq />} />
+          <Route path="/:uid/bannerimage" element={<CustomerBannerimage />} />
+          <Route path="/:uid/fanletter" element={<CustomerFanletter />} />
           <Route
             path="*"
             element={

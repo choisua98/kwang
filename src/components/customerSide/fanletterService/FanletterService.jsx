@@ -12,10 +12,12 @@ import { auth, db } from '../../../firebase/firebaseConfig';
 import { Button, Col, Input, Modal, Row } from 'antd';
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../atoms/Atom';
+import { useParams } from 'react-router-dom';
 const { TextArea } = Input;
 
 const FanletterService = () => {
-  const userUid = auth.currentUser?.uid; // 사용자 UID 가져오기
+  const { uid } = useParams();
+  const userUid = uid; // 사용자 UID 가져오기
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom); // 모달
   const [templates, setTemplates] = useState([]); // 템플릿 데이터 저장
   const [description, setDescription] = useState(''); // TextArea 값을 저장
@@ -26,7 +28,11 @@ const FanletterService = () => {
         // Firestore의 template 컬렉션 userId가 현재 로그인한 사용자의 uid와 같은 문서들을 찾기
         const templatesCollection = collection(db, 'template');
         // 현재 사용자에 대한 문서만 가져오기
-        const q = query(templatesCollection, where('userId', '==', userUid));
+        const q = query(
+          templatesCollection,
+          where('userId', '==', userUid),
+          where('blockKind', '==', 'fanletter'),
+        );
         // 쿼리 실행하고 결과값 받기
         const templateSnapshot = await getDocs(q);
         setTemplates(
@@ -56,11 +62,13 @@ const FanletterService = () => {
   return (
     <div style={{ padding: '20px' }}>
       <Row justify="left">
-        <h1>팬레터 보내기</h1>
         {templates.map((template) => {
           return (
             <div key={template.id} style={{ margin: '10px auto 0' }}>
-              <h2>{template.description}</h2>
+              <h1>{template.title}</h1>
+              <h2 style={{ margin: '10px 0', lineHeight: '16px' }}>
+                {template.description}
+              </h2>
             </div>
           );
         })}

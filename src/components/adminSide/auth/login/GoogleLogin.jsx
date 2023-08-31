@@ -21,19 +21,14 @@ const GoogleLogin = () => {
   };
 
   return (
-    <div>
-      <div>
-        {' '}
-        <img
-          src={GoogleIcon}
-          alt="google"
-          onClick={onGoogleLoginButtonClickHandler}
-          style={{
-            height: '50px',
-          }}
-        />
-      </div>
-    </div>
+    <>
+      {' '}
+      <img
+        src={GoogleIcon}
+        alt="google"
+        onClick={onGoogleLoginButtonClickHandler}
+      />
+    </>
   );
 };
 
