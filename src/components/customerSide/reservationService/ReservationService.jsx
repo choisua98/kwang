@@ -103,7 +103,7 @@ const ReservationService = () => {
             <p>
               신청기간 : {data.startDate} ~ {data.endDate}
             </p>
-            <p>모집인원 : {data.numberOfPeople}</p>
+            <p>모집인원 : {data.numberOfPeople} 명</p>
             <br />
             <p>{data.description}</p>
           </div>

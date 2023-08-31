@@ -17,7 +17,6 @@ import CustomerChallenge from '../pages/CustomerChallenge';
 import CustomerMailing from '../pages/CustomerMailing';
 import CustomerReservation from '../pages/CustomerReservation';
 import CustomerFaq from '../pages/CustomerFaq';
-import CustomerBannerimage from '../pages/CustomerBannerimage';
 import CustomerFanletter from '../pages/CustomerFanletter';
 
 const Router = () => {
@@ -42,7 +41,6 @@ const Router = () => {
           <Route path="/:uid/mailing" element={<CustomerMailing />} />
           <Route path="/:uid/reservation" element={<CustomerReservation />} />
           <Route path="/:uid/faq" element={<CustomerFaq />} />
-          <Route path="/:uid/bannerimage" element={<CustomerBannerimage />} />
           <Route path="/:uid/fanletter" element={<CustomerFanletter />} />
           <Route
             path="*"
