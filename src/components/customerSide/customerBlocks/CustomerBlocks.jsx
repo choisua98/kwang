@@ -1,6 +1,6 @@
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import React, { useEffect } from 'react';
-import { blocksAtom, userAtom } from '../../../atoms/Atom';
+import { blocksAtom } from '../../../atoms/Atom';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig';
 import { C } from './CustomerBlocks.styles';
@@ -70,11 +70,7 @@ const CustomerBlocks = () => {
             >
               {block.images.map((image, index) => (
                 <SwiperSlide key={index}>
-                  <img
-                    src={image}
-                    alt={`bannerimage ${index + 1}`}
-                    onClick={() => navigate(`/${userUid}/bannerimage`)}
-                  />
+                  <img src={image} alt={`bannerimage ${index + 1}`} />
                 </SwiperSlide>
               ))}
             </Swiper>

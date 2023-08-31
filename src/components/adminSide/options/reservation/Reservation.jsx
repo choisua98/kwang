@@ -313,6 +313,7 @@ const Reservation = () => {
         onChange={(e) => {
           setNumberOfPeople(e.target.value);
         }}
+        min={0}
       />
       <label htmlFor="datePicker">시작 날짜 선택</label>
       <Space direction="vertical" size={12}>
