@@ -323,8 +323,9 @@ const Challenge = () => {
       />
 
       <label htmlFor="rangePicker">챌린지 기간</label>
-      <Space id="rangePicker" direction="vertical" size={12}>
+      <Space direction="vertical" size={12}>
         <RangePicker
+          id="rangePicker"
           disabledDate={disabledDate}
           style={{ width: '100%' }}
           popupClassName="customRangePickerPopup"

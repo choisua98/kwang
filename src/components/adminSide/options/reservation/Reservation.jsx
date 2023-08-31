@@ -239,6 +239,7 @@ const Reservation = () => {
         maxLength={20}
         autoFocus
       />
+
       <label htmlFor="description">예약 상세설명</label>
       <p>{descriptionCount}/50자</p>
       <textarea
@@ -251,6 +252,7 @@ const Reservation = () => {
         }}
         maxLength={50}
       />
+
       <R.ImageContainer>
         {uploadedImages.length >= maxUploads ? (
           <>
@@ -302,8 +304,9 @@ const Reservation = () => {
           );
         })}
       </R.ImageContainer>
-      <label>모집 인원</label>
+      <label htmlFor="number">모집 인원</label>
       <input
+        id="number"
         type="number"
         placeholder={'모집 인원을 선택해주세요'}
         value={numberOfPeople}
@@ -312,8 +315,9 @@ const Reservation = () => {
         }}
       />
       <label htmlFor="datePicker">시작 날짜 선택</label>
-      <Space id="datePicker" direction="vertical" size={12}>
+      <Space direction="vertical" size={12}>
         <DatePicker
+          id="datePicker"
           value={blockId ? dayjs(pickDate) : undefined}
           disabledDate={disabledDate}
           onChange={datePickInput}
@@ -322,8 +326,9 @@ const Reservation = () => {
         />
       </Space>
       <label htmlFor="rangePicker">모집 기간 선택</label>
-      <Space id="rangePicker" direction="vertical" size={12}>
+      <Space direction="vertical" size={12}>
         <RangePicker
+          id="rangePicker"
           value={[
             startDate ? dayjs(startDate) : null,
             endDate ? dayjs(endDate) : null,
