@@ -8,7 +8,7 @@ import {
   serverTimestamp,
   where,
 } from 'firebase/firestore';
-import { auth, db } from '../../../firebase/firebaseConfig';
+import { db } from '../../../firebase/firebaseConfig';
 import { Button, Col, Input, Modal, Row } from 'antd';
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../atoms/Atom';
