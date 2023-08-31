@@ -124,6 +124,11 @@ const Header = () => {
                 <Link to={`/admin`}>편집하기</Link>
               </li>
             )}
+            {isMyPage && (
+              <li>
+                <Link to={`/admindata`}>고객관리 페이지</Link>
+              </li>
+            )}
           </ul>
         </H.MenuContentWrapper>
       )}
