@@ -5,8 +5,8 @@ import ChallengeComment from '../components/customerSide/challengeService/Challe
 const CustomerChallenge = () => {
   return (
     <>
-      <ChallengeService />;
-      <ChallengeComment />;
+      <ChallengeService />
+      <ChallengeComment />
     </>
   );
 };
