@@ -42,14 +42,6 @@ const Profile = () => {
           <div style={{ margin: '20px 0' }}>{viewIntroduction}</div>
         </Col>
       </Row>
-      <button
-        onClick={() => {
-          navigate(`/${userUid}/mailing`);
-        }}
-      >
-        메일로 이동
-      </button>
-      {/* 테스트용도의 버튼입니다. 메일링 블록이 생겼을 때(url자체를 입력해서 이동하면 전역 상태관리가 사라짐)*/}
     </div>
   );
 };
