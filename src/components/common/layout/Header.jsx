@@ -112,6 +112,12 @@ const Header = () => {
                 <Link to={`/${userUid}`}>마이 홈</Link>
               </li>
             )}
+            {!isMyPage && (
+              <li>
+                <Link to={`/admindata`}>고객관리 페이지</Link>
+              </li>
+            )}
+
             {/* 마이페이지인 경우 편집하기 버튼이 나오고 버튼을 클릭 시, 기존의 admin 페이지로 이동함 */}
             {isMyPage && (
               <li>
