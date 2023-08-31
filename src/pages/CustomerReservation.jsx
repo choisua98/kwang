@@ -1,7 +1,8 @@
 import React from 'react';
+import ReservationService from '../components/customerSide/reservationService/ReservationService';
 
 const CustomerReservation = () => {
-  return <div>CustomerReservation</div>;
+  return <ReservationService />;
 };
 
 export default CustomerReservation;
