@@ -12,27 +12,56 @@ export const R = {
       padding: 5px 7px;
     }
 
-    p {
-      text-align: end;
-    }
-
-    h3 {
-      display: flex;
-      justify-content: center;
-      text-align: center;
-      background-color: lightgray;
-      padding: 8px 0px;
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
-
     input,
     button {
       height: 30px;
     }
 
     textarea {
-      height: 80px;
+      height: 100px;
+    }
+
+    p {
+      text-align: end;
+    }
+  `,
+
+  ImageContainer: styled.div`
+    display: flex;
+    gap: 10px;
+    color: #d3d3d3;
+
+    label {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+      background: #fafafa;
+      cursor: pointer;
+    }
+
+    .disabled {
+      pointer-events: none;
+    }
+
+    span {
+      padding-top: 2px;
+      font-size: 0.8rem;
+    }
+
+    input {
+      display: none;
+    }
+
+    .square-preview {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+      background-size: cover;
+      background-position: center;
     }
   `,
 };
