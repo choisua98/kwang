@@ -69,7 +69,17 @@ const BlocksArea = () => {
       {blocks.map((block) => (
         <div key={block.id}>
           {block.title && (
-            <button onClick={() => moveToEditButton(block)}>
+            <button
+              onClick={() => moveToEditButton(block)}
+              style={{
+                marginBottom: '15px',
+                padding: '21.5px 0',
+                width: '100%',
+                fontSize: '14px',
+                borderRadius: '15px',
+                background: '#D9D9D9',
+              }}
+            >
               {block.title}
             </button>
           )}

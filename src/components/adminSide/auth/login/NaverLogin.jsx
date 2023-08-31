@@ -83,9 +83,9 @@ const NaverLogin = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <span id="naverIdLogin"></span>
-    </div>
+    </>
   );
 };
 

@@ -45,7 +45,16 @@ const Blocks = () => {
         <Button
           type="primary"
           onClick={() => setModalVisible(true)}
-          style={{ width: '100%' }}
+          style={{
+            padding: '17px 0',
+            width: '100%',
+            height: 'auto',
+            fontSize: '14px',
+            color: '#000',
+            borderRadius: '15px',
+            border: '2px solid #E6E6E6',
+            background: '#fff',
+          }}
         >
           메뉴추가하기
         </Button>

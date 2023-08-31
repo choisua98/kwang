@@ -36,10 +36,18 @@ const GlobalStyle = createGlobalStyle`
   }
 
   a,button {
-    color: #000;
     text-decoration: none;
+    color: #000;
     border: none;
     cursor: pointer; 
+  }
+
+  input {
+    width: 100%;
+  }
+  
+  input::placeholder {
+    color: #D3D3D3;
   }
 
 `;

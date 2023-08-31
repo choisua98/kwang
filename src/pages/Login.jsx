@@ -7,9 +7,12 @@ import { userAtom } from '../atoms/Atom';
 import NaverLogin from '../components/adminSide/auth/login/NaverLogin';
 import { signOut } from 'firebase/auth';
 import KakaoLogin from '../components/adminSide/auth/login/KakaoLogin';
+import { L } from './Login.styles';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [user, setUser] = useAtom(userAtom);
+  const navigate = useNavigate();
 
   const 통합로그아웃 = async () => {
     if (user) {
@@ -21,13 +24,33 @@ const Login = () => {
   console.log(user);
 
   return (
-    <div>
+    <L.Login>
       <EmailLogin />
-      <br />
-      <br />
-      <NaverLogin />
-      <GoogleLogin />
-      <KakaoLogin />
+      <L.Sns>
+        <NaverLogin />
+        <GoogleLogin />
+        <KakaoLogin />
+      </L.Sns>
+      <div
+        style={{ margin: '37.5px auto', fontSize: '16px', textAlign: 'center' }}
+      >
+        아직 크왕 회원이 아니신가요?
+      </div>
+      <button
+        onClick={() => {
+          navigate('/signup');
+        }}
+        style={{
+          margin: '0 auto',
+          display: 'block',
+          fontSize: '14px',
+          textDecoration: 'underline',
+          color: '#a1a1a1',
+          background: 'none',
+        }}
+      >
+        회원가입 바로가기
+      </button>
       <div>
         {user ? (
           <div>
@@ -41,7 +64,7 @@ const Login = () => {
           </div>
         ) : null}
       </div>
-    </div>
+    </L.Login>
   );
 };
 
