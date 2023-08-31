@@ -34,11 +34,10 @@ const Router = () => {
           <Route path="/admin/faq" element={<AdminFaq />} />
           <Route path="/admin/bannerimage" element={<AdminBannerImage />} />
           <Route path="/admin/fanletter" element={<AdminFanLetter />} />
-          <Route path="/:nickname" element={<Main />} />
-          {/* 파라미터를 닉네임으로 바꿨습니다. */}
-          <Route path="/:nickname/faq" element={<CustomerFaq />} />
-          <Route path="/:nickname/mailing" element={<CustomerMailing />} />
-          <Route path="/:nickname/fanletter" element={<CustomerFanletter />} />
+          <Route path="/:uid" element={<Main />} />
+          <Route path="/:uid/faq" element={<CustomerFaq />} />
+          <Route path="/:uid/mailing" element={<CustomerMailing />} />
+          <Route path="/:uid/fanletter" element={<CustomerFanletter />} />
           <Route
             path="*"
             element={

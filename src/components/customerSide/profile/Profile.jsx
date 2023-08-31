@@ -1,57 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'antd';
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig';
 import defaultProfileImage from '../../../assets/images/profile-default-image.png';
 
 import { S } from './Profile.styles';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAtom } from 'jotai';
-import { userUidAtom } from '../../../atoms/Atom';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { nickname } = useParams();
-  const [userUid, setUserUid] = useAtom(userUidAtom);
+
   const [viewNickname, setViewNickname] = useState('');
   const [viewIntroduction, setViewIntroduction] = useState('');
   const [viewProfileImage, setViewProfileImage] = useState('');
-
-  // 파라미터로 받은 nickname을 createrNickname에 담기.
-  //createrNickname이랑 같은 nickname을 가지고 있는 id를 찾아서 -> userUid에 담기.
-  const createrNickname = nickname;
-  console.log(createrNickname);
-
-  useEffect(() => {
-    // firebase에서 데이터 불러오기
-    const fetchData = async (nickname) => {
-      if (createrNickname) {
-        try {
-          const q = query(
-            collection(db, 'users'),
-            where('nickname', '==', createrNickname),
-          );
-          const querySnapshot = await getDocs(q);
-
-          if (!querySnapshot.empty) {
-            const firstDocument = querySnapshot.docs[0];
-            setUserUid(firstDocument.id);
-          }
-        } catch (error) {
-          console.error('데이터 가져오기 오류:', error);
-        }
-      }
-    };
-    fetchData(userUid);
-  }, []);
-  console.log(userUid);
+  const { uid } = useParams();
+  const userUid = uid;
 
   // userUid로 저장된 문서가 있을 경우 프로필 정보 가져오기
   useEffect(() => {
@@ -81,7 +44,7 @@ const Profile = () => {
       </Row>
       <button
         onClick={() => {
-          navigate(`/${nickname}/mailing`);
+          navigate(`/${userUid}/mailing`);
         }}
       >
         메일로 이동
