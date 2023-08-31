@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-export const F = {
+export const M = {
   Container: styled.form`
     display: flex;
     flex-direction: column;
@@ -19,10 +19,6 @@ export const F = {
 
     textarea {
       height: 60px;
-    }
-
-    p {
-      text-align: end;
     }
   `,
 };
