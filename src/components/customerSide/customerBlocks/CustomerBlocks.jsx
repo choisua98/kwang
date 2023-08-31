@@ -1,6 +1,6 @@
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import React, { useEffect } from 'react';
-import { blocksAtom, userAtom } from '../../../atoms/Atom';
+import { blocksAtom } from '../../../atoms/Atom';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig';
 import { C } from './CustomerBlocks.styles';
