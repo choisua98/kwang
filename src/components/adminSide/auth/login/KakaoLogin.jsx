@@ -83,7 +83,7 @@ const KakaoLogin = () => {
   };
 
   return (
-    <div>
+    <>
       <button onClick={kakaoLogin}>
         <img
           src="https://i.ibb.co/Vqbm6F2/kakao-login-medium.png"
@@ -91,7 +91,7 @@ const KakaoLogin = () => {
           border="0"
         />
       </button>
-    </div>
+    </>
   );
 };
 
