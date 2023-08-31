@@ -12,10 +12,12 @@ import { auth, db } from '../../../firebase/firebaseConfig';
 import { Button, Col, Input, Modal, Row } from 'antd';
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../atoms/Atom';
+import { useParams } from 'react-router-dom';
 const { TextArea } = Input;
 
 const FanletterService = () => {
-  const userUid = auth.currentUser?.uid; // 사용자 UID 가져오기
+  const { uid } = useParams();
+  const userUid = uid; // 사용자 UID 가져오기
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom); // 모달
   const [templates, setTemplates] = useState([]); // 템플릿 데이터 저장
   const [description, setDescription] = useState(''); // TextArea 값을 저장

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Modal } from 'antd';
-import { db, storage } from '../../../../firebase/firebaseConfig';
+import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import imageCompression from 'browser-image-compression';
-import { themeAtom, userAtom } from '../../../../atoms/Atom';
+import { themeAtom } from '../../../../atoms/Atom';
 import { P } from './MyProfile.styles';
 import { useAtom } from 'jotai';
 import {
@@ -17,9 +17,9 @@ import {
 } from 'firebase/storage';
 
 const MyProfile = () => {
-  const user = useAtom(userAtom);
-  const userEmail = user[0]?.email;
-  const userUID = user[0]?.uid;
+  const user = auth.currentUser;
+  const userEmail = user?.email;
+  const userUid = auth.currentUser?.uid;
   const [theme] = useAtom(themeAtom);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -58,10 +58,10 @@ const MyProfile = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [updatedImage, setUpdatedImage] = useState(defaultProfileImage);
 
-  // userUID로 저장된 문서가 있을 경우 프로필 정보 가져오기
+  // userUid 저장된 문서가 있을 경우 프로필 정보 가져오기
   useEffect(() => {
-    if (userUID) {
-      const userDocRef = doc(db, 'users', userUID);
+    if (userUid) {
+      const userDocRef = doc(db, 'users', userUid);
       const fetchProfileInfo = async () => {
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
@@ -76,13 +76,13 @@ const MyProfile = () => {
       };
       fetchProfileInfo();
     }
-  }, [userUID]);
+  }, [userUid]);
 
   // 프로필 이미지 업데이트 함수
   const handleImageUpdate = async () => {
     try {
       // 기존 userUID 폴더의 이미지 전체 삭제
-      const userImagesRef = ref(storage, `profileImages/${userUID}`);
+      const userImagesRef = ref(storage, `profileImages/${userUid}`);
       const userImagesList = await listAll(userImagesRef);
 
       // userImagesList.items 배열에 있는 모든 이미지 삭제
@@ -113,7 +113,7 @@ const MyProfile = () => {
       if (selectedImage) {
         const compressedFile = await compressedImage(selectedImage);
         if (compressedFile) {
-          const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`);
+          const imageRef = ref(storage, `profileImages/${userUid}/${nanoid()}`);
           await uploadBytes(imageRef, compressedFile); // 압축된 이미지 업로드
           const imageURL = await getDownloadURL(imageRef);
           setUpdatedImage(imageURL);
@@ -131,7 +131,7 @@ const MyProfile = () => {
   const handleProfileUpdate = async () => {
     try {
       const usersCollection = collection(db, 'users');
-      const userDocRef = doc(usersCollection, userUID);
+      const userDocRef = doc(usersCollection, userUid);
 
       // 사용자 정보 업데이트
       const userInfo = {

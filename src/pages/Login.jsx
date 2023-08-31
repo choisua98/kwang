@@ -2,8 +2,6 @@ import React from 'react';
 import { auth } from '../firebase/firebaseConfig';
 import EmailLogin from '../components/adminSide/auth/login/EmailLogin';
 import GoogleLogin from '../components/adminSide/auth/login/GoogleLogin';
-import { useAtom } from 'jotai';
-import { userAtom } from '../atoms/Atom';
 import NaverLogin from '../components/adminSide/auth/login/NaverLogin';
 import { signOut } from 'firebase/auth';
 import KakaoLogin from '../components/adminSide/auth/login/KakaoLogin';
@@ -11,7 +9,7 @@ import { L } from './Login.styles';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [user, setUser] = useAtom(userAtom);
+  const user = auth.currentUser;
   const navigate = useNavigate();
 
   const 통합로그아웃 = async () => {
@@ -19,7 +17,6 @@ const Login = () => {
       console.log('유저가있습니다.');
     }
     await signOut(auth); //파이어베이스 로그아웃
-    setUser();
   };
   console.log(user);
 

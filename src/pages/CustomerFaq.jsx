@@ -18,6 +18,7 @@ const CustomerFaq = () => {
           const q = query(
             collection(db, 'template'),
             where('userId', '==', userUid),
+            where('blockKind', '==', 'faq'),
           );
           // 쿼리 실행하고 결과값 받기
           const querySnapshot = await getDocs(q);

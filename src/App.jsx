@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useAtom } from 'jotai';
 import Router from './shared/Router';
-import { backgroundImageAtom, themeAtom, userAtom } from './atoms/Atom';
+import { backgroundImageAtom, themeAtom } from './atoms/Atom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './firebase/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
@@ -14,7 +14,7 @@ function App() {
   const [theme, setTheme] = useAtom(themeAtom);
   // 배경 이미지
   const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
-  const [user, setUser] = useAtom(userAtom); // userAtom 사용
+  const [user, setUser] = useState('');
 
   // onAuthStateChanged 사용
   useEffect(() => {

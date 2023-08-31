@@ -4,15 +4,13 @@ import { Row, Col, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
 import { H } from './Header.styles';
-import { useAtom } from 'jotai';
-import { userAtom } from '../../../atoms/Atom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebase/firebaseConfig';
 
 const Header = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useAtom(userAtom);
-  const userUid = user?.uid;
+  const user = auth.currentUser;
+  const userUid = auth.currentUser?.uid;
 
   const location = useLocation(); // 현재 페이지의 URL 추출
   const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
@@ -35,7 +33,7 @@ const Header = () => {
       console.log('유저가있습니다. 로그아웃하겠습니다.');
     }
     await signOut(auth); //파이어베이스 로그아웃
-    setUser('');
+    // setUser('');
     alert('로그아웃 되었습니다.'); //로그아웃누르면 signOut이 다 되지 않았는데 navigate 됨.
     navigate('/');
     window.location.reload();
@@ -122,6 +120,11 @@ const Header = () => {
             {isMyPage && (
               <li>
                 <Link to={`/admin`}>편집하기</Link>
+              </li>
+            )}
+            {isMyPage && (
+              <li>
+                <Link to={`/admindata`}>고객관리 페이지</Link>
               </li>
             )}
           </ul>
