@@ -59,6 +59,7 @@ const Blocks = () => {
           메뉴추가하기
         </Button>
       </Row>
+
       <Modal
         title="메뉴 추가하기"
         centered

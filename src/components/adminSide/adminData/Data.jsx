@@ -1,0 +1,74 @@
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { auth, db } from '../../../firebase/firebaseConfig';
+
+const Data = () => {
+  const [mailingData, setMailingData] = useState([]);
+  const [fanletterData, setFanletterData] = useState([]);
+  const userUid = auth.currentUser?.uid;
+
+  console.log(userUid);
+
+  useEffect(() => {
+    // firebase에서 데이터 불러오기
+    if (userUid) {
+      console.log('useruid 있당');
+      const fetchData = async (userUid) => {
+        console.log('fetchData한당');
+        try {
+          const q = query(
+            collection(db, 'userTemplate'),
+            where('userId', '==', userUid),
+          );
+          const querySnapshot = await getDocs(q);
+          const data = querySnapshot.docs?.map((doc) => doc.data());
+
+          // 메일링 데이터와 팬레터 데이터 분리
+          const mailingData = data?.filter(
+            (item) => item.dataKind === 'mailingData',
+          );
+          const fanletterData = data?.filter(
+            (item) => item.dataKind === 'fanletterData',
+          );
+          setMailingData(mailingData);
+          setFanletterData(fanletterData);
+        } catch (error) {
+          console.error('데이터 가져오기 오류:', error);
+        }
+      };
+
+      fetchData(userUid);
+    }
+  }, [userUid]);
+  console.log(mailingData);
+  console.log(fanletterData);
+  return (
+    <div>
+      <div>
+        <p>메일링 서비스에서 받은 데이터 영역</p>
+        {mailingData.map((data) => (
+          <div key={data.createdAt}>
+            <br />
+            <div>{data.name}</div>
+            <div>{data.email}</div>
+            <div>{data.number}</div>
+            <br />
+          </div>
+        ))}
+      </div>
+      <p>------------------------------</p>
+      <div>
+        <p>팬레터 서비스에서 받은 데이터 영역</p>
+        {fanletterData.map((data) => (
+          <div key={data.createdAt}>
+            <br />
+            <div>{data.description}</div>
+            <br />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Data;
