@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { B } from './BlocksArea.styles';
 import { useNavigate } from 'react-router-dom';
-import { useAtom, useAtomValue } from 'jotai';
-import { userAtom, blocksAtom } from '../../../../atoms/Atom';
+import { useAtom } from 'jotai';
+import { blocksAtom } from '../../../../atoms/Atom';
 import { query, collection, where, orderBy, getDocs } from 'firebase/firestore';
-import { db } from '../../../../firebase/firebaseConfig';
+import { auth, db } from '../../../../firebase/firebaseConfig';
 
 // swiper
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -15,13 +15,8 @@ import 'swiper/css/pagination';
 const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
-
-  // Jotai에서 유저 정보 가져오기
-  const user = useAtomValue(userAtom);
-
-  // 유저의 UID 가져오기
-  const userUid = user?.uid;
-
+  const user = auth.currentUser;
+  const userUid = auth.currentUser?.uid;
   // firebase에서 데이터 불러오기
   const fetchData = async () => {
     // Firestore에서 유저에 해당하는 데이터를 가져오기 위한 쿼리 생성

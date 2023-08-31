@@ -6,14 +6,14 @@ import { db } from '../../../firebase/firebaseConfig';
 import { C } from './CustomerBlocks.styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, A11y } from 'swiper/modules';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const CustomerBlocks = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
 
-  const user = useAtomValue(userAtom);
-  const userUid = user?.uid;
+  const { uid } = useParams();
+  const userUid = uid;
 
   // firebase에서 데이터 불러오기
   const fetchData = async () => {
@@ -45,10 +45,10 @@ const CustomerBlocks = () => {
 
   // 컴포넌트 마운트 시 데이터 가져오기 함수 호출
   useEffect(() => {
-    if (user) {
+    if (userUid) {
       fetchData();
     }
-  }, [user]);
+  }, [userUid]);
 
   const moveToPageButton = (block) =>
     navigate(`/${userUid}/${block.blockKind}`);

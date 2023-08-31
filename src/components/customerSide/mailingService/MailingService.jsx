@@ -34,6 +34,7 @@ const MailingService = () => {
             collection(db, 'template'),
             where('userId', '==', userUid),
             where('blockKind', '==', 'mailing'),
+            orderBy('createdAt'),
           );
           const querySnapshot = await getDocs(q);
 

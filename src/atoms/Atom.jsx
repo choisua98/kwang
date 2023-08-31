@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 
-export const userAtom = atom(null); // 로그인한 사용자 정보를 담을 Atom
+// export const userAtom = atom(null); // 로그인한 사용자 정보를 담을 Atom
 export const userUidAtom = atom(null); // 크리에이터의 uid를 담는  Atom
 // 모달, 테마, 배경 이미지 atoms 생성
 export const modalVisibleAtom = atom(false);
