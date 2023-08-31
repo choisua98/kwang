@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 import { db } from '../../../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { Col, Row } from 'antd';
 import { L } from '../../adminSide/myadmin/links/Links.styles';
+import { useParams } from 'react-router-dom';
 
 const LinkService = () => {
   const { uid } = useParams();
-  //   console.log(uid);
+  console.log(uid);
 
   const [linkDataArray, setLinkDataArray] = useState([]); // 여러 문서 데이터를 저장할 배열
   //   console.log(linkDataArray);

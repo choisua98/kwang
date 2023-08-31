@@ -15,6 +15,10 @@ import AdminBannerImage from '../pages/AdminBannerImage';
 import AdminFanLetter from '../pages/AdminFanLetter';
 import CustomerFaq from '../pages/CustomerFaq';
 import CustomerMailing from '../pages/CustomerMailing';
+import CustomerFanletter from '../pages/CustomerFanletter';
+import CustomerReservation from '../pages/CustomerReservation';
+import CustomerChallenge from '../pages/CustomerChallenge';
+import CustomerBannerimage from '../pages/CustomerBannerimage';
 
 const Router = () => {
   return (
@@ -33,10 +37,13 @@ const Router = () => {
           <Route path="/admin/faq" element={<AdminFaq />} />
           <Route path="/admin/bannerimage" element={<AdminBannerImage />} />
           <Route path="/admin/fanletter" element={<AdminFanLetter />} />
-          <Route path="/:nickname" element={<Main />} />
-          {/* 파라미터를 닉네임으로 바꿨습니다. */}
-          <Route path="/:nickname/faq" element={<CustomerFaq />} />
-          <Route path="/:nickname/mailing" element={<CustomerMailing />} />
+          <Route path="/:uid" element={<Main />} />
+          <Route path="/:uid/faq" element={<CustomerFaq />} />
+          <Route path="/:uid/mailing" element={<CustomerMailing />} />
+          <Route path="/:uid/fanletter" element={<CustomerFanletter />} />
+          <Route path="/:uid/bannerimage" element={<CustomerBannerimage />} />
+          <Route path="/:uid/reservation" element={<CustomerReservation />} />
+          <Route path="/:uid/challenge" element={<CustomerChallenge />} />
           <Route
             path="*"
             element={

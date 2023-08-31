@@ -20,6 +20,10 @@ export const C = {
     textarea {
       height: 100px;
     }
+
+    p {
+      text-align: end;
+    }
   `,
 
   ImageContainer: styled.div`

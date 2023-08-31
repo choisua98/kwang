@@ -1,15 +1,16 @@
 import React from 'react';
+import { H } from './Home.styles';
 import MainBanner from '../components/Home/MainBanner';
 import Service from '../components/Home/Service';
 import BestCreator from '../components/Home/BestCreator';
 
 const Home = () => {
   return (
-    <div style={{ padding: '0 20px' }}>
+    <H.BodyWrapper>
       <MainBanner />
       <Service />
       <BestCreator />
-    </div>
+    </H.BodyWrapper>
   );
 };
 

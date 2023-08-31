@@ -1,30 +1,22 @@
-import React, { useEffect } from 'react';
-import { B } from './BlocksArea.styles';
-import { useNavigate } from 'react-router-dom';
 import { useAtom, useAtomValue } from 'jotai';
-import { userAtom, blocksAtom } from '../../../../atoms/Atom';
-import { query, collection, where, orderBy, getDocs } from 'firebase/firestore';
-import { db } from '../../../../firebase/firebaseConfig';
-
-// swiper
+import React, { useEffect } from 'react';
+import { blocksAtom, userAtom } from '../../../atoms/Atom';
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
+import { db } from '../../../firebase/firebaseConfig';
+import { C } from './CustomerBlocks.styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, A11y } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
+import { useNavigate } from 'react-router-dom';
 
-const BlocksArea = () => {
+const CustomerBlocks = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
 
-  // Jotai에서 유저 정보 가져오기
   const user = useAtomValue(userAtom);
-
-  // 유저의 UID 가져오기
   const userUid = user?.uid;
 
   // firebase에서 데이터 불러오기
   const fetchData = async () => {
-    // Firestore에서 유저에 해당하는 데이터를 가져오기 위한 쿼리 생성
     try {
       // 쿼리 실행하여 데이터 가져오기
       const q = query(
@@ -58,18 +50,15 @@ const BlocksArea = () => {
     }
   }, [user]);
 
-  // 수정 버튼 클릭 시 페이지 이동 함수
-  const moveToEditButton = (block) =>
-    navigate(`/admin/${block.blockKind}`, {
-      state: { blocksId: `${block.id}` },
-    });
+  const moveToPageButton = (block) =>
+    navigate(`/${userUid}/${block.blockKind}`);
 
   return (
-    <B.Container>
+    <C.Container>
       {blocks.map((block) => (
         <div key={block.id}>
           {block.title && (
-            <button onClick={() => moveToEditButton(block)}>
+            <button onClick={() => moveToPageButton(block)}>
               {block.title}
             </button>
           )}
@@ -84,7 +73,7 @@ const BlocksArea = () => {
                   <img
                     src={image}
                     alt={`bannerimage ${index + 1}`}
-                    onClick={() => moveToEditButton(block)}
+                    onClick={() => navigate(`/${userUid}/bannerimage`)}
                   />
                 </SwiperSlide>
               ))}
@@ -92,7 +81,8 @@ const BlocksArea = () => {
           )}
         </div>
       ))}
-    </B.Container>
+    </C.Container>
   );
 };
-export default BlocksArea;
+
+export default CustomerBlocks;

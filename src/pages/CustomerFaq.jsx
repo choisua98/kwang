@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Collapse } from 'antd';
 import { auth, db } from '../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
+import { useParams } from 'react-router-dom';
 
 const CustomerFaq = () => {
-  const userUid = auth.currentUser?.uid; // 현재 로그인한 사용자 uid
   const [faqs, setFaqs] = useState([]); // Firebase에서 가져온 faq 데이터가 저장될 state
   const [activeKey, setActiveKey] = useState(null); // 현재 열려있는 faq 아이템의 키 값을 관리하는 state
-
+  const { uid } = useParams();
+  const userUid = uid;
+  console.log(userUid);
   useEffect(() => {
     const fetchData = async () => {
       try {
