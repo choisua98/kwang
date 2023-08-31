@@ -23,11 +23,11 @@ export const L = {
     }
 
     // 구글
-     & img {
+    & img {
       overflow: hidden;
       width: 52.5px;
       height: 52.5px;
-      border-radius: 50%;s
+      border-radius: 50%;
     }
 
     // 카카오
@@ -37,8 +37,8 @@ export const L = {
         width: 52.5px;
         height: 52.5px;
         border-radius: 50%;
+        background-color: none;
       }
     }
-
   `,
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import GoogleIcon from '../../../../assets/images/google.png';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const GoogleLogin = () => {
   const navigate = useNavigate();
@@ -21,14 +21,13 @@ const GoogleLogin = () => {
   };
 
   return (
-    <>
-      {' '}
+    <Link to="#">
       <img
         src={GoogleIcon}
         alt="google"
         onClick={onGoogleLoginButtonClickHandler}
       />
-    </>
+    </Link>
   );
 };
 
