@@ -3,6 +3,8 @@ import { styled } from 'styled-components';
 export const L = {
   Login: styled.div`
     padding: 25px 20px;
+    height: calc(100vh - 113px);
+    background: #fff;
   `,
   Sns: styled.div`
     margin-top: 17.5px;
@@ -23,15 +25,17 @@ export const L = {
     }
 
     // 구글
-     & img {
+    & img {
       overflow: hidden;
       width: 52.5px;
       height: 52.5px;
-      border-radius: 50%;s
+      border-radius: 50%;
+      cursor: pointer;
     }
 
     // 카카오
     button {
+      background: none;
       img {
         overflow: hidden;
         width: 52.5px;
@@ -39,6 +43,5 @@ export const L = {
         border-radius: 50%;
       }
     }
-
   `,
 };

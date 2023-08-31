@@ -22,7 +22,6 @@ const GoogleLogin = () => {
 
   return (
     <>
-      {' '}
       <img
         src={GoogleIcon}
         alt="google"
