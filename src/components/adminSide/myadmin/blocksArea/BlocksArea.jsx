@@ -2,23 +2,19 @@ import React, { useEffect } from 'react';
 import { B } from './BlocksArea.styles';
 import { useNavigate } from 'react-router-dom';
 import { useAtom, useAtomValue } from 'jotai';
-import { userAtom, blocksAtom, bannerImageAtom } from '../../../../atoms/Atom';
-import {
-  query,
-  collection,
-  where,
-  orderBy,
-  doc,
-  getDocs,
-  deleteDoc,
-} from 'firebase/firestore';
-import { db, storage } from '../../../../firebase/firebaseConfig';
-import { deleteObject, getDownloadURL, ref } from 'firebase/storage';
+import { userAtom, blocksAtom } from '../../../../atoms/Atom';
+import { query, collection, where, orderBy, getDocs } from 'firebase/firestore';
+import { db } from '../../../../firebase/firebaseConfig';
+
+// swiper
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
-  const [bannerImage, setBannerImage] = useAtom(bannerImageAtom);
 
   // Jotai에서 유저 정보 가져오기
   const user = useAtomValue(userAtom);
@@ -50,17 +46,6 @@ const BlocksArea = () => {
 
       // 가공된 데이터를 상태에 업데이트
       setBlocks(initialDocuments);
-
-      // 이미지 URL 가져오기
-
-      const imageRef = ref(storage, `bannerImages/${userUid}/bannerimage`);
-
-      try {
-        const imageUrl = await getDownloadURL(imageRef);
-        setBannerImage(imageUrl);
-      } catch (error) {
-        console.error('배너 이미지 업데이트 실패:', error);
-      }
     } catch (error) {
       console.error('데이터 가져오기 오류:', error);
     }
@@ -81,17 +66,32 @@ const BlocksArea = () => {
 
   return (
     <B.Container>
-      <>
-        {blocks.map((block) => {
-          return (
-            <div key={block.id}>
-              <button onClick={() => moveToEditButton(block)}>
-                {block.title}
-              </button>
-            </div>
-          );
-        })}
-      </>
+      {blocks.map((block) => (
+        <div key={block.id}>
+          {block.title && (
+            <button onClick={() => moveToEditButton(block)}>
+              {block.title}
+            </button>
+          )}
+          {block.blockKind === 'bannerimage' && (
+            <Swiper
+              modules={[Pagination, A11y]}
+              pagination={{ clickable: true }}
+              a11y
+            >
+              {block.images.map((image, index) => (
+                <SwiperSlide key={index}>
+                  <img
+                    src={image}
+                    alt={`bannerimage ${index + 1}`}
+                    onClick={() => moveToEditButton(block)}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
+        </div>
+      ))}
     </B.Container>
   );
 };

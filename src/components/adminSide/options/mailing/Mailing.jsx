@@ -13,7 +13,6 @@ import {
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useAtom } from 'jotai';
 import { blocksAtom } from '../../../../atoms/Atom';
-
 const Mailing = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,22 +29,21 @@ const Mailing = () => {
   const [description, handleDescriptionChange] = useInput(
     selectedBlock?.description,
   );
+
+  // 제목과 설명의 글자 수를 추적하는 상태
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
 
   // "저장하기" 버튼 클릭 시 실행되는 함수
   const handleAddButtonClick = async (e) => {
     e.preventDefault();
-
     // 사용자 UID 가져오기
     const userUid = auth.currentUser?.uid;
-
     if (!userUid) {
       alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
       navigate('/login');
       return;
     }
-
     try {
       // Firestore에 데이터 추가
       await addDoc(collection(db, 'template'), {
@@ -55,7 +53,6 @@ const Mailing = () => {
         createdAt: serverTimestamp(),
         userId: userUid,
       });
-
       // 저장 완료 알림 후 어드민 페이지로 이동
       alert('저장 완료!');
       navigate('/admin');
@@ -67,7 +64,6 @@ const Mailing = () => {
   // "수정하기" 버튼 클릭 시 실행되는 함수
   const handleEditButtonClick = async (e) => {
     e.preventDefault();
-
     try {
       // Firestore에 데이터 업로드
       const docRef = doc(db, 'template', blockId);
@@ -102,29 +98,34 @@ const Mailing = () => {
     <M.Container
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
-      <label htmlFor="title">서비스 이름 변경하기</label>
+      <label htmlFor="title">메일링 서비스 이름</label>
       <p>{titleCount}/20자</p>
       <input
         id="title"
         name="title"
         type="text"
-        placeholder="메일링 서비스"
+        placeholder="메일링 서비스 📩"
         value={title}
-        onChange={handleTitleChange}
+        onChange={(e) => {
+          handleTitleChange(e);
+          setTitleCount(e.target.value.length);
+        }}
         maxLength={20}
         autoFocus
       />
-
       <label htmlFor="description">메일링 서비스에 대한 간략한 설명</label>
-      <p>{descriptionCount}/20자</p>
+      <p>{descriptionCount}/80자</p>
       <textarea
         id="description"
         name="description"
         type="text"
-        placeholder="설명을 작성해 주세요"
+        placeholder="메일링 서비스에 대해 간단히 설명해주세요."
         value={description}
-        onChange={handleDescriptionChange}
-        maxLength={50}
+        onChange={(e) => {
+          handleDescriptionChange(e);
+          setDescriptionCount(e.target.value.length);
+        }}
+        maxLength={80}
       />
       <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
@@ -133,5 +134,4 @@ const Mailing = () => {
     </M.Container>
   );
 };
-
 export default Mailing;
