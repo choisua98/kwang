@@ -10,18 +10,17 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig';
-import { useNavigate } from 'react-router-dom';
-import { userUidAtom } from '../../../atoms/Atom';
-import { useAtomValue } from 'jotai';
+import { useNavigate, useParams } from 'react-router-dom';
+
 const MailingService = () => {
-  // 조타이에 저장된 userUid 정보 가져오기
-  const userUid = useAtomValue(userUidAtom);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
+  const { uid } = useParams();
+  const userUid = uid;
   console.log(userUid);
 
   useEffect(() => {
