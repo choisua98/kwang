@@ -16,6 +16,7 @@ import AdminFanLetter from '../pages/AdminFanLetter';
 import CustomerFaq from '../pages/CustomerFaq';
 import CustomerMailing from '../pages/CustomerMailing';
 import CustomerFanletter from '../pages/CustomerFanletter';
+import CustomerChallenge from '../pages/CustomerChallenge';
 
 const Router = () => {
   return (
@@ -38,6 +39,7 @@ const Router = () => {
           <Route path="/:uid/faq" element={<CustomerFaq />} />
           <Route path="/:uid/mailing" element={<CustomerMailing />} />
           <Route path="/:uid/fanletter" element={<CustomerFanletter />} />
+          <Route path="/:uid/challenge" element={<CustomerChallenge />} />
           <Route
             path="*"
             element={
