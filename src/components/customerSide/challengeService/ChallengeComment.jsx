@@ -24,6 +24,25 @@ const ChallengeComment = () => {
 
   const commentCollection = collection(db, 'comments');
 
+  // 댓글 데이터를 가져오는 함수
+  const fetchComments = async () => {
+    try {
+      const querySnapshot = await getDocs(commentCollection);
+      const commentList = []; // 임시로 데이터 보관
+      querySnapshot.forEach((doc) => {
+        commentList.push(doc.data()); // 댓글 데이터 배열에 추가
+      });
+      setComments(commentList);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // 컴포넌트가 마운트 될 때 댓글 데이터 불러오기
+  useEffect(() => {
+    fetchComments();
+  }, []);
+
   // 댓글 추가
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,29 +69,33 @@ const ChallengeComment = () => {
     }
   };
 
-  // 댓글 수정
-  const handleEditButton = () => {};
-
   // 댓글 삭제
-  const handleDeleteButton = () => {};
-
-  // 댓글 데이터를 가져오는 함수
-  const fetchComments = async () => {
+  const handleDeleteButton = async (id, passwordToDelete) => {
     try {
       const querySnapshot = await getDocs(commentCollection);
-      const commentList = []; // 임시로 데이터 보관
-      querySnapshot.forEach((doc) => {
-        commentList.push(doc.data()); // 댓글 데이터 배열에 추가
+      querySnapshot.forEach(async (doc) => {
+        const commentData = doc.data();
+        console.log(commentData);
+
+        // 선택된 댓글의 id와 일치하는 댓글 --> 비밀번호가 일치할 경우에만 삭제
+        if (id === commentData.id) {
+          if (commentData.password === passwordToDelete) {
+            await deleteDoc(doc.ref);
+            alert('댓글이 삭제되었습니다.');
+            setCount(count - 1); // 댓글이 삭제될 때 카운트 -1
+            fetchComments(); // 댓글 목록을 다시 불러옴
+          } else {
+            alert('비밀번호가 일치하지 않습니다.');
+          }
+        }
       });
-      setComments(commentList);
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  useEffect(() => {
-    fetchComments(); // 댓글이 추가될 때 마다 데이터를 가져오기
-  }, []);
+  // 댓글 수정
+  const handleEditButton = () => {};
 
   return (
     <>
@@ -105,8 +128,8 @@ const ChallengeComment = () => {
       </form>
 
       {/* 불러온 댓글 데이터를 화면에 표시 */}
-      {comments.map((commentData) => (
-        <CommentBox key={commentData.id}>
+      {comments.map((commentData, index) => (
+        <CommentBox key={index}>
           {/* {console.log(commentData)} */}
 
           <p>닉네임: {commentData.nickname}</p>
@@ -115,7 +138,7 @@ const ChallengeComment = () => {
             onClick={() => {
               const password = prompt('비밀번호를 입력하세요.');
               if (password !== null) {
-                handleEditButton(commentData.id, password);
+                handleEditButton();
               }
             }}
           >
