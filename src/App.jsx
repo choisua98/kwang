@@ -39,8 +39,6 @@ function App() {
           const userData = userDoc.data();
           setTheme(userData.theme || 'light');
           setBackgroundImage(userData.backgroundImage || null);
-          // console.log('테마:', userData.theme);
-          // console.log('배경 이미지:', userData.backgroundImage);
         }
       } else {
         // 로그인 안 한 사용자는 기본 테마로 light 사용
