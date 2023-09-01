@@ -92,12 +92,6 @@ const Links = () => {
     // urlText가 비어있거나 이미지가 업로드 중이면 종료
     if (!urlText || uploadingImage) return;
 
-    // 파일이 선택되지 않았을 때
-    if (!imageFile) {
-      alert('로고 이미지 파일을 업로드 해주세요');
-      return;
-    }
-
     // URL 유효성 검사
     const urlRegExp =
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
