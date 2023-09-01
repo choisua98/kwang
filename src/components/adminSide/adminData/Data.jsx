@@ -1,7 +1,7 @@
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../../../firebase/firebaseConfig';
-
+import { D } from './Data.styles';
 const Data = () => {
   const [mailingData, setMailingData] = useState([]);
   const [fanletterData, setFanletterData] = useState([]);
@@ -51,8 +51,8 @@ const Data = () => {
 
   return (
     <div>
-      <div>
-        <p>메일링 서비스에서 받은 데이터 영역</p>
+      <D.Container>
+        <p>메일링 서비스 데이터</p>
         {mailingData.map((data) => (
           <div key={data.createdAt}>
             <br />
@@ -62,10 +62,10 @@ const Data = () => {
             <br />
           </div>
         ))}
-      </div>
-      <p>------------------------------</p>
-      <div>
-        <p>팬레터 서비스에서 받은 데이터 영역</p>
+      </D.Container>
+
+      <D.Container>
+        <p>팬레터 서비스 데이터</p>
         {fanletterData.map((data) => (
           <div key={data.createdAt}>
             <br />
@@ -73,10 +73,10 @@ const Data = () => {
             <br />
           </div>
         ))}
-      </div>
-      <p>------------------------------</p>
-      <div>
-        <p>예약 서비스에서 받은 데이터 영역</p>
+      </D.Container>
+
+      <D.Container>
+        <p>예약 서비스 데이터</p>
         {reservationData.map((data) => (
           <div key={data.createdAt}>
             <br />
@@ -85,7 +85,7 @@ const Data = () => {
             <br />
           </div>
         ))}
-      </div>
+      </D.Container>
     </div>
   );
 };
