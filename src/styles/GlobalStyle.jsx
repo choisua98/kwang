@@ -26,7 +26,8 @@ const GlobalStyle = createGlobalStyle`
     margin: 0 auto;
     max-width: 390px;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
     font-family: 'Pretendard-Regular'; 
     color: var(--color-text); 
     /* background-color: var(--color-bg); */
