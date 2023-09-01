@@ -41,7 +41,6 @@ const Main = () => {
     return () => unsubscribe();
   }, [setTheme, userUid]);
 
-  console.log(userUid);
   return (
     <div>
       <div style={{ padding: '20px' }}>
