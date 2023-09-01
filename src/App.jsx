@@ -1,39 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useAtom } from 'jotai';
 import Router from './shared/Router';
 import { backgroundImageAtom, themeAtom } from './atoms/Atom';
-import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './firebase/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 
 const queryClient = new QueryClient();
-
+const userUid = auth.currentUser?.uid;
 function App() {
   // 테마 상태
   const [theme, setTheme] = useAtom(themeAtom);
   // 배경 이미지
   const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
-  const [user, setUser] = useState('');
-
-  // onAuthStateChanged 사용
-  useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      console.log({ 로그인한유저: user });
-      if (user) {
-        setUser(user);
-      }
-    });
-  }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      console.log({ onAuthStateChanged: user });
-      if (user) {
-        setUser(user);
+    const unsubscribe = async () => {
+      if (userUid) {
+        // setUser(user);
 
         // Firestore에서 사용자의 테마 정보 불러오기
-        const userDocRef = doc(db, 'users', user.uid);
+        const userDocRef = doc(db, 'users', userUid);
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
           const userData = userDoc.data();
@@ -46,11 +33,11 @@ function App() {
         // 로그아웃 상태에서 배경이미지도 초기화
         setBackgroundImage(null);
       }
-    });
+    };
     // unsubscribe();
     // cleanup 함수 등록
     return () => unsubscribe();
-  }, [setUser, setTheme, user]);
+  }, [setTheme, userUid]);
 
   useEffect(() => {
     document.body.style.backgroundColor = theme === 'dark' ? '#333' : '#fff';
