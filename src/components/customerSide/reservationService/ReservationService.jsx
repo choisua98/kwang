@@ -11,9 +11,10 @@ import { db } from '../../../firebase/firebaseConfig';
 import { Pagination, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { R } from './ReservationService.styles';
-import { Navigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ReservationService = () => {
+  const navigate = useNavigate();
   const [reservationData, setReservationData] = useState([]);
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -69,9 +70,7 @@ const ReservationService = () => {
       });
 
       alert('신청 완료!');
-      setName('');
-      setPhoneNumber('');
-      Navigate(-1);
+      navigate(-1);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -79,36 +78,33 @@ const ReservationService = () => {
 
   return (
     <R.Container>
-      {reservationData.map((data) => {
-        console.log(data);
-        return (
-          <div key={data.id}>
-            <h3>{data.title}</h3>
-            <br />
-            {data.blockKind === 'reservation' && (
-              <Swiper
-                modules={[Pagination, A11y]}
-                pagination={{ clickable: true }}
-                a11y
-              >
-                {data.images.map((image, index) => (
-                  <SwiperSlide key={index}>
-                    <img src={image} alt={`reservationimage ${index + 1}`} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            )}
-            <br />
-            <p>일시 : {data.pickDate} </p>
-            <p>
-              신청기간 : {data.startDate} ~ {data.endDate}
-            </p>
-            <p>모집인원 : {data.numberOfPeople} 명</p>
-            <br />
-            <p>{data.description}</p>
-          </div>
-        );
-      })}
+      {reservationData.map((data) => (
+        <div key={data.id}>
+          <h3>{data.title}</h3>
+          <br />
+          {data.blockKind === 'reservation' && (
+            <Swiper
+              modules={[Pagination, A11y]}
+              pagination={{ clickable: true }}
+              a11y
+            >
+              {data.images.map((image, index) => (
+                <SwiperSlide key={index}>
+                  <img src={image} alt={`reservationimage ${index + 1}`} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
+          <br />
+          <p>일시 : {data.pickDate} </p>
+          <p>
+            신청기간 : {data.startDate} ~ {data.endDate}
+          </p>
+          <p>모집인원 : {data.numberOfPeople} 명</p>
+          <br />
+          <p>{data.description}</p>
+        </div>
+      ))}
       <h3>신청 방법</h3>
       <h4>하단의 신청 폼을 작성해 주세요.</h4>
       <label htmlFor="name">이름</label>
@@ -117,20 +113,15 @@ const ReservationService = () => {
         name="name"
         type="text"
         value={name}
-        onChange={(e) => {
-          setName(e.target.value);
-        }}
+        onChange={(e) => setName(e.target.value)}
       />
       <label htmlFor="phoneNumber">연락처</label>
       <input
         id="phoneNumber"
         name="phoneNumber"
         type="tel"
-        maxlength={11}
         value={phoneNumber}
-        onChange={(e) => {
-          setPhoneNumber(e.target.value);
-        }}
+        onChange={(e) => setPhoneNumber(e.target.value)}
       />
 
       <button type="submit" onClick={submitButtonClick}>

@@ -100,7 +100,6 @@ const Faq = () => {
       await updateDoc(docRef, {
         title,
         faqs: faqList,
-        createdAt: serverTimestamp(),
       });
 
       // 수정 완료 알림 후 어드민 페이지로 이동
