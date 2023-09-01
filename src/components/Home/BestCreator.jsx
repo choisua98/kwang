@@ -31,7 +31,6 @@ const BestCreator = () => {
         console.log('문서를 가져오지 못하는 오류: ', error);
       });
   }, []);
-  // console.log(usersData.profileImageURL);
 
   return (
     <div style={{ margin: '10px auto' }}>
@@ -40,15 +39,6 @@ const BestCreator = () => {
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         spaceBetween={20}
         slidesPerView={2.2}
-        // navigation
-        // pagination={{ clickable: true }}
-        // scrollbar={{ draggable: true }}
-        onSwiper={(swiper) => {
-          /* console.log(swiper); */
-        }}
-        onSlideChange={() => {
-          // console.log('slide change')
-        }}
         style={{
           margin: '20px auto 0',
           width: '349px',
@@ -64,7 +54,6 @@ const BestCreator = () => {
                 width: '100%',
                 height: '100px',
                 borderRadius: '10px',
-                // objectFit: 'contain',
               }}
               alt={`Service Banner ${index + 1}`}
             />

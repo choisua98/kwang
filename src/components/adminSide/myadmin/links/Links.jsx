@@ -65,9 +65,7 @@ const Links = () => {
     // 새 이미지 파일이 선택되면 압축하고 그 결과를 사용
     let fileToUpload = imageFile;
     const compressedFile = await compressImage(imageFile);
-
     if (compressedFile) {
-      // If compression was successful, use the compressed file for upload.
       fileToUpload = compressedFile;
       // 업로드 할 파일 생성
       let storageRef = ref(storage, 'linkImages/' + fileToUpload.name);
