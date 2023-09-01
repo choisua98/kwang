@@ -4,9 +4,9 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-
+import KakaoIcon from '../../../../assets/images/kakao.png';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const KakaoLogin = () => {
   const navigate = useNavigate();
@@ -83,15 +83,11 @@ const KakaoLogin = () => {
   };
 
   return (
-    <>
+    <Link to="#">
       <button onClick={kakaoLogin}>
-        <img
-          src="https://i.ibb.co/Vqbm6F2/kakao-login-medium.png"
-          alt="kakao-login-medium"
-          border="0"
-        />
+        <img src={KakaoIcon} alt="kakao-login-medium" border="0" />
       </button>
-    </>
+    </Link>
   );
 };
 

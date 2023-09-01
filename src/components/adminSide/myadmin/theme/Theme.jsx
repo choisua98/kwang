@@ -19,7 +19,8 @@ const Theme = () => {
   const userUid = auth.currentUser?.uid;
   const [, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
-  const [, setBackgroundImage] = useAtom(backgroundImageAtom);
+  const [theme] = useAtom(themeAtom);
+  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
   const [tempTheme, setTempTheme] = useState(null); // 임시로 테마와 배경 이미지 URL을 저장
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null); // 배경 이미지 URL을 저장
   const [loading, setLoading] = useState(false); // 이미지 업로드 진행상태 저장
@@ -154,6 +155,18 @@ const Theme = () => {
     }
     setModalVisible(false);
   };
+
+  useEffect(() => {
+    if (modalVisible) {
+      // 모달이 열릴 때 현재 설정된 테마와 배경 이미지를 임시 변수에 저장합니다.
+      setTempTheme(theme);
+      setTempBackgroundImage(backgroundImage);
+    } else {
+      // 모달이 닫힐 때 임시 변수에 저장된 값을 원래 상태로 되돌립니다.
+      setTempTheme(null);
+      setTempBackgroundImage(null);
+    }
+  }, [modalVisible]);
 
   return (
     <>
