@@ -116,7 +116,6 @@ const Challenge = () => {
         startDate,
         endDate,
         blockKind: 'challenge',
-        createdAt: serverTimestamp(),
         userId: userUid,
       });
 
@@ -160,7 +159,6 @@ const Challenge = () => {
         description,
         startDate,
         endDate,
-        createdAt: serverTimestamp(),
       });
 
       // 이미지 업로드 및 URL 저장
