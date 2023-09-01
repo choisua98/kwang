@@ -15,6 +15,7 @@ import {
   orderBy,
   serverTimestamp,
 } from 'firebase/firestore';
+import imageCompression from 'browser-image-compression';
 
 const Links = () => {
   const userUid = auth.currentUser?.uid; // 현재 로그인한 사용자 UID 가져오기
@@ -39,23 +40,51 @@ const Links = () => {
     setImageUrl(URL.createObjectURL(e.target.files[0]));
   };
 
-  // 선택된 이미지 파일을  Firebase Storage에 업로드하고 다운로드 URL을 가져옴
+  // 이미지 압축 옵션
+  const options = {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 300,
+    useWebWorker: true,
+  };
+
+  const compressImage = async (imageFile) => {
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      return compressedFile;
+    } catch (error) {
+      console.error('Failed to compress image', error);
+      return null;
+    }
+  };
+
+  // 선택된 이미지 파일을 Firebase Storage에 업로드하고 다운로드 URL을 가져옴
   const uploadImage = async () => {
     if (!imageFile) return;
     setUploadingImage(true);
-    // 업로드 할 파일 생성
-    let storageRef = ref(storage, 'linkImages/' + imageFile.name);
-    // 파일 업로드 스냅샷 가져오기
-    let taskSnapshot;
-    try {
-      taskSnapshot = await uploadBytesResumable(storageRef, imageFile);
-    } catch (error) {
-      console.error(error);
+
+    // 새 이미지 파일이 선택되면 압축하고 그 결과를 사용
+    let fileToUpload = imageFile;
+    const compressedFile = await compressImage(imageFile);
+    if (compressedFile) {
+      fileToUpload = compressedFile;
+      // 업로드 할 파일 생성
+      let storageRef = ref(storage, 'linkImages/' + fileToUpload.name);
+      // 파일 업로드 스냅샷 가져오기
+      let taskSnapshot;
+      try {
+        taskSnapshot = await uploadBytesResumable(storageRef, fileToUpload);
+      } catch (error) {
+        console.error(error);
+      }
+      // 다운로드 URL 가져오기
+      let downloadURL = await getDownloadURL(taskSnapshot.ref);
+      setUploadingImage(false);
+      return downloadURL;
+    } else {
+      console.error('이미지 압축 실패');
+      setUploadingImage(false);
+      return;
     }
-    // 다운로드 URL 가져오기
-    let downloadURL = await getDownloadURL(taskSnapshot.ref);
-    setUploadingImage(false);
-    return downloadURL;
   };
 
   // 저장 버튼(링크 데이터를 Firestore에 저장 및 업데이트)
@@ -66,7 +95,6 @@ const Links = () => {
     const urlRegExp =
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
     if (!urlRegExp.test(urlText)) {
-      // console.error('잘못된 URL 형식입니다.');
       alert('잘못된 URL 형식입니다.(https://kwang.com) 형식으로 입력해주세요');
       return;
     }
@@ -134,27 +162,19 @@ const Links = () => {
       ...doc.data(),
       timestamp: doc.data().createdAt?.seconds,
     }));
-    // console.log(newLinksData);
     // timestamp를 기준으로 오름차순 정렬
     let sortedLinksData = [...newLinksData];
     // 비교하는 값들을 출력
     sortedLinksData.sort((a, b) => {
-      // console.log(a.timestamp);
-      // console.log(b.timestamp);
       return a.timestamp - b.timestamp;
     });
-    // console.log(sortedLinksData);
-    // console.log(newLinksData);
     setDefaultLinks(
       Array(3 - newLinksData.length)
         .fill()
         .map((_, i) => i),
     );
-    // setLinksData(newLinksData);
     // 정렬된 데이터를 setLinksData 저장
     setLinksData(sortedLinksData);
-    // console.log(sortedLinksData);
-    // console.log(linksData);
   };
 
   // 컴포넌트가 마운트되거나 userUid가 변경되면 fetchLink 링크 데이터를 가져옴
@@ -162,9 +182,8 @@ const Links = () => {
     fetchLinks();
   }, [userUid]);
 
-  useEffect(() => {
-    // console.log(linksData);
-  }, [linksData]);
+  useEffect(() => {}, [linksData]);
+
   return (
     <>
       <L.Container>

@@ -81,46 +81,53 @@ const MyProfile = () => {
   // 프로필 이미지 업데이트 함수
   const handleImageUpdate = async () => {
     try {
-      // 기존 userUID 폴더의 이미지 전체 삭제
-      const userImagesRef = ref(storage, `profileImages/${userUid}`);
-      const userImagesList = await listAll(userImagesRef);
-
-      // userImagesList.items 배열에 있는 모든 이미지 삭제
-      await Promise.all(
-        userImagesList.items.map(async (item) => {
-          await deleteObject(item);
-        }),
-      );
-
-      const options = {
-        maxSizeMB: 0.5,
-        maxWidthOrHeight: 300,
-        useWebWorker: true,
-      };
-
-      // 이미지 압축 함수
-      const compressedImage = async (imageFile) => {
-        try {
-          const compressedFile = await imageCompression(imageFile, options);
-          return compressedFile;
-        } catch (error) {
-          console.error('이미지 압축 실패', error);
-          return null;
-        }
-      };
-
-      // 압축한 프로필 이미지 Firebase에 업로드
       if (selectedImage) {
-        const compressedFile = await compressedImage(selectedImage);
-        if (compressedFile) {
-          const imageRef = ref(storage, `profileImages/${userUid}/${nanoid()}`);
-          await uploadBytes(imageRef, compressedFile); // 압축된 이미지 업로드
-          const imageURL = await getDownloadURL(imageRef);
-          setUpdatedImage(imageURL);
-          return imageURL;
+        // 기존 userUID 폴더의 이미지 전체 삭제
+        const userImagesRef = ref(storage, `profileImages/${userUid}`);
+        const userImagesList = await listAll(userImagesRef);
+
+        // userImagesList.items 배열에 있는 모든 이미지 삭제
+        await Promise.all(
+          userImagesList.items.map(async (item) => {
+            await deleteObject(item);
+          }),
+        );
+
+        const options = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 300,
+          useWebWorker: true,
+        };
+
+        // 이미지 압축 함수
+        const compressedImage = async (imageFile) => {
+          try {
+            const compressedFile = await imageCompression(imageFile, options);
+            return compressedFile;
+          } catch (error) {
+            console.error('이미지 압축 실패', error);
+            return null;
+          }
+        };
+
+        // 압축한 프로필 이미지 Firebase에 업로드
+        if (selectedImage) {
+          const compressedFile = await compressedImage(selectedImage);
+          if (compressedFile) {
+            const imageRef = ref(
+              storage,
+              `profileImages/${userUid}/${nanoid()}`,
+            );
+            await uploadBytes(imageRef, compressedFile); // 압축된 이미지 업로드
+            const imageURL = await getDownloadURL(imageRef);
+            setUpdatedImage(imageURL);
+            return imageURL;
+          }
         }
+        return null;
+      } else {
+        return updatedImage;
       }
-      return null;
     } catch (error) {
       console.error('프로필 이미지 업데이트 실패', error);
       return null;
@@ -139,6 +146,7 @@ const MyProfile = () => {
         nickname: nickname,
         introduction: introduction,
         theme: theme,
+        uid: userUid,
       };
 
       // 프로필 이미지 업데이트 및 이미지 URL 업데이트
