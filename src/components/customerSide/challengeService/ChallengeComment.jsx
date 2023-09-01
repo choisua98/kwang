@@ -46,6 +46,17 @@ const ChallengeComment = () => {
   // 댓글 추가
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!nickname || !password || !comment) {
+      alert('모두 입력해 주세요.');
+      return;
+    }
+
+    if (password.length < 4) {
+      alert('비밀번호는 최소 4자리 이상이어야 합니다.');
+      return;
+    }
+
     try {
       const commentCollection = collection(db, 'comments');
       const commentDocRef = doc(commentCollection, nanoid());
@@ -68,6 +79,8 @@ const ChallengeComment = () => {
       console.log(error.message);
     }
   };
+
+  // 댓글 유효성 검사
 
   // 댓글 삭제
   const handleDeleteButton = async (id, passwordToDelete) => {
