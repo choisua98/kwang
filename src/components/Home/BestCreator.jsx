@@ -14,7 +14,6 @@ import { useNavigate } from 'react-router-dom';
 const BestCreator = () => {
   const navigate = useNavigate();
   const [usersData, setUsersData] = useState([]);
-  // const [userUid, setUserUid] = useState([]);
 
   useEffect(() => {
     const q = query(
@@ -33,8 +32,7 @@ const BestCreator = () => {
       .catch((error) => {
         console.log('문서를 가져오지 못하는 오류: ', error);
       });
-    // setUserUid(usersData?.uid);
-    // console.log(usersData[4].uid);
+    console.log(usersData);
   }, []);
 
   return (
@@ -54,9 +52,12 @@ const BestCreator = () => {
         {usersData.map((user, index) => (
           <SwiperSlide
             key={index}
-            // onClick={() => {
-            //   navigate(`/${userUid}`);
-            // }}
+            onClick={() => {
+              navigate(`/${user.uid}`);
+            }}
+            style={{
+              cursor: 'pointer',
+            }}
           >
             <img
               src={user.profileImageURL}
