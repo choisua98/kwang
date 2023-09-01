@@ -40,6 +40,12 @@ const Links = () => {
     setImageUrl(URL.createObjectURL(e.target.files[0]));
   };
 
+  // 모달 닫기 핸들러
+  const handleModalClose = () => {
+    setModalVisible(false);
+    setImageUrl(null); // 모달이 닫힐 때 imageUrl를 null로 설정
+  };
+
   // 이미지 압축 옵션
   const options = {
     maxSizeMB: 0.5,
@@ -52,9 +58,17 @@ const Links = () => {
       const compressedFile = await imageCompression(imageFile, options);
       return compressedFile;
     } catch (error) {
-      console.error('Failed to compress image', error);
+      console.error('이미지 압축 실패', error);
       return null;
     }
+  };
+
+  // 새 링크 버튼 클릭 시
+  const handleNewLinkClick = () => {
+    setModalVisible(true); // 모달 창
+    setEditingLinkId(null); // 편집 중인 링크 ID를 null로 설정(새 링크 생성)
+    setUrlText(''); // URL 입력 필드 제거
+    setImageUrl(null); // 기존 선택된 이미지 초기화
   };
 
   // 선택된 이미지 파일을 Firebase Storage에 업로드하고 다운로드 URL을 가져옴
@@ -67,17 +81,14 @@ const Links = () => {
     const compressedFile = await compressImage(imageFile);
     if (compressedFile) {
       fileToUpload = compressedFile;
-      // 업로드 할 파일 생성
-      let storageRef = ref(storage, 'linkImages/' + fileToUpload.name);
-      // 파일 업로드 스냅샷 가져오기
-      let taskSnapshot;
+      let storageRef = ref(storage, 'linkImages/' + fileToUpload.name); // 업로드 할 파일 생성
+      let taskSnapshot; // 파일 업로드 스냅샷 가져오기
       try {
         taskSnapshot = await uploadBytesResumable(storageRef, fileToUpload);
       } catch (error) {
         console.error(error);
       }
-      // 다운로드 URL 가져오기
-      let downloadURL = await getDownloadURL(taskSnapshot.ref);
+      let downloadURL = await getDownloadURL(taskSnapshot.ref); // 다운로드 URL 가져오기
       setUploadingImage(false);
       return downloadURL;
     } else {
@@ -91,6 +102,13 @@ const Links = () => {
   const handleSaveClick = async () => {
     // urlText가 비어있거나 이미지가 업로드 중이면 종료
     if (!urlText || uploadingImage) return;
+
+    // 이미지 파일과 URL 둘 다 비어있는 경우, 경고 메시지 표시 후 종료
+    if (!imageFile && !imageUrl) {
+      alert('이미지와 URL 모두 입력해주세요.');
+      return;
+    }
+
     // URL 유효성 검사
     const urlRegExp =
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
@@ -125,23 +143,16 @@ const Links = () => {
           imageUrl: imageUrlToSave,
           createdAt: serverTimestamp(),
         });
-        // 새롭게 생성된 문서 ID 설정
-        setEditingLinkId(docRef.id);
-        // 기본 링크 버튼 하나 삭제
-        if (defaultLinks.length > 0) setDefaultLinks(defaultLinks.slice(1));
+        setEditingLinkId(docRef.id); // 새롭게 생성된 문서 ID 설정
+        if (defaultLinks.length > 0) setDefaultLinks(defaultLinks.slice(1)); // 기본 링크 버튼 하나 삭제
       }
       setModalVisible(false);
-      // 입력 필드 초기화
-      setUrlText('');
+      setUrlText(''); // 입력 필드 초기화
       setImageFile(null);
-      // URL 초기화
-      setImageUrl(null);
-      // 파일 입력 필드 초기화
-      fileInputRef.current.value = '';
-      // 링크 저장 후 최신 데이터 가져오기
-      fetchLinks();
-      // 수정 중인 링크 ID 초기화
-      setEditingLinkId(null);
+      setImageUrl(null); // URL 초기화
+      fileInputRef.current.value = ''; // 파일 입력 필드 초기화ㄴ
+      fetchLinks(); // 링크 저장 후 최신 데이터 가져오기
+      setEditingLinkId(null); // 수정 중인 링크 ID 초기화
     } catch (error) {
       console.error('업데이트 중 오류:', error);
       return;
@@ -162,8 +173,7 @@ const Links = () => {
       ...doc.data(),
       timestamp: doc.data().createdAt?.seconds,
     }));
-    // timestamp를 기준으로 오름차순 정렬
-    let sortedLinksData = [...newLinksData];
+    let sortedLinksData = [...newLinksData]; // timestamp를 기준으로 오름차순 정렬
     // 비교하는 값들을 출력
     sortedLinksData.sort((a, b) => {
       return a.timestamp - b.timestamp;
@@ -173,8 +183,7 @@ const Links = () => {
         .fill()
         .map((_, i) => i),
     );
-    // 정렬된 데이터를 setLinksData 저장
-    setLinksData(sortedLinksData);
+    setLinksData(sortedLinksData); // 정렬된 데이터를 setLinksData 저장
   };
 
   // 컴포넌트가 마운트되거나 userUid가 변경되면 fetchLink 링크 데이터를 가져옴
@@ -205,7 +214,7 @@ const Links = () => {
                 </button>
               ))}
               {defaultLinks.map((_, index) => (
-                <button key={index} onClick={() => setModalVisible(true)}>
+                <button key={index} onClick={handleNewLinkClick}>
                   <Link />
                 </button>
               ))}
@@ -216,7 +225,7 @@ const Links = () => {
           title="링크 수정"
           centered
           open={modalVisible}
-          onCancel={() => setModalVisible(false)}
+          onCancel={handleModalClose}
           footer={null}
           width={300}
         >
@@ -240,9 +249,22 @@ const Links = () => {
                 type="file"
                 onChange={handleImageChange}
                 ref={fileInputRef}
+                style={{ display: 'none' }}
               />
+              <button
+                onClick={() => fileInputRef.current.click()}
+                style={{
+                  margin: '10px auto',
+                  display: 'block',
+                  width: '100%',
+                  border: '1px solid #000',
+                  borderRadius: '5px',
+                }}
+              >
+                아이콘 이미지 업로드
+              </button>
             </Col>
-            <Col span={24} style={{ marginTop: '10px' }}>
+            <Col span={24}>
               <div style={{ marginBottom: '10px' }}>URL</div>
               <Input.TextArea
                 placeholder="텍스트를 입력하세요"

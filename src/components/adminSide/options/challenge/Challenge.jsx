@@ -116,6 +116,7 @@ const Challenge = () => {
         startDate,
         endDate,
         blockKind: 'challenge',
+        createdAt: serverTimestamp(),
         userId: userUid,
       });
 
