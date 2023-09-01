@@ -2,7 +2,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
   setDoc,
   updateDoc,
@@ -21,12 +20,13 @@ const ChallengeComment = () => {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]); // 댓글 데이터 저장
   const [count, setCount] = useAtom(countAtom); // 댓글 추가될 때 마다 카운트 + 1
-
-  const commentCollection = collection(db, 'comments');
+  const [editMode, setEditMode] = useState(null); // 수정 input 창과 수정하기 버튼 활성화
+  const [updateComment, setUpdateComment] = useState(''); // 수정된 댓글
 
   // 댓글 데이터를 가져오는 함수
   const fetchComments = async () => {
     try {
+      const commentCollection = collection(db, 'comments');
       const querySnapshot = await getDocs(commentCollection);
       const commentList = []; // 임시로 데이터 보관
       querySnapshot.forEach((doc) => {
@@ -80,22 +80,20 @@ const ChallengeComment = () => {
     }
   };
 
-  // 댓글 유효성 검사
-
   // 댓글 삭제
   const handleDeleteButton = async (id, passwordToDelete) => {
     try {
+      const commentCollection = collection(db, 'comments');
       const querySnapshot = await getDocs(commentCollection);
       querySnapshot.forEach(async (doc) => {
         const commentData = doc.data();
-        console.log(commentData);
+        // console.log(commentData);
 
-        // 선택된 댓글의 id와 일치하는 댓글 --> 비밀번호가 일치할 경우에만 삭제
+        // 선택된 댓글의 id와 일치하는 댓글을 찾음
         if (id === commentData.id) {
+          // 비밀번호가 일치할 경우에만 삭제 가능
           if (commentData.password === passwordToDelete) {
-            await deleteDoc(doc.ref);
-            alert('댓글이 삭제되었습니다.');
-            setCount(count - 1); // 댓글이 삭제될 때 카운트 -1
+            await updateDoc(doc.ref);
             fetchComments(); // 댓글 목록을 다시 불러옴
           } else {
             alert('비밀번호가 일치하지 않습니다.');
@@ -108,8 +106,48 @@ const ChallengeComment = () => {
   };
 
   // 댓글 수정
-  const handleEditButton = () => {};
+  const handleEditButton = async (id, passwordToEdit) => {
+    try {
+      const commentCollection = collection(db, 'comments');
+      const querySnapshot = await getDocs(commentCollection);
+      querySnapshot.forEach(async (doc) => {
+        const commentData = doc.data();
+        console.log(commentData);
 
+        // 선택된 댓글의 id와 일치하는 댓글을 찾음
+        if (id === commentData.id) {
+          // 비밀번호가 일치할 경우에만 수정 가능
+          if (commentData.password === passwordToEdit) {
+            // 수정 모드로 전환하고 수정할 내용을 설정합니다.
+            setEditMode(id);
+          } else {
+            alert('비밀번호가 일치하지 않습니다.');
+          }
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // 수정하기 버튼을 클릭하면 수정 모드가 해제되고 수정 내용이 파이어스토어에 저장
+  const handleEditSubmit = async (id) => {
+    try {
+      const commentCollection = collection(db, 'comments');
+      const commentRef = doc(commentCollection, id);
+      const updatedData = {
+        comment: updateComment,
+      };
+
+      await updateDoc(commentRef, updatedData);
+      alert('댓글이 수정되었습니다.');
+      fetchComments();
+      // 수정 모드 해제
+      setEditMode(null);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <>
       <div>{count}명이 함께하고 있어요!</div>
@@ -130,7 +168,7 @@ const ChallengeComment = () => {
             setPassword(e.target.value);
           }}
         />
-        <InputBox
+        <CommentInput
           placeholder="댓글"
           value={comment}
           onChange={(e) => {
@@ -139,34 +177,49 @@ const ChallengeComment = () => {
         />
         <AddButton type="submit">댓글 등록하기</AddButton>
       </form>
-
       {/* 불러온 댓글 데이터를 화면에 표시 */}
       {comments.map((commentData, index) => (
         <CommentBox key={index}>
           {/* {console.log(commentData)} */}
-
-          <p>닉네임: {commentData.nickname}</p>
-          <p>댓글: {commentData.comment}</p>
-          <button
-            onClick={() => {
-              const password = prompt('비밀번호를 입력하세요.');
-              if (password !== null) {
-                handleEditButton();
-              }
-            }}
-          >
-            수정
-          </button>
-          <button
-            onClick={() => {
-              const password = prompt('비밀번호를 입력하세요.');
-              if (password !== null) {
-                handleDeleteButton(commentData.id, password);
-              }
-            }}
-          >
-            삭제
-          </button>
+          {!editMode || editMode !== commentData.id ? (
+            <>
+              <p>닉네임: {commentData.nickname}</p>
+              <p>댓글: {commentData.comment}</p>
+              <button
+                onClick={() => {
+                  const password = prompt('비밀번호를 입력하세요.');
+                  if (password !== null) {
+                    handleEditButton(commentData.id, password);
+                  }
+                }}
+              >
+                수정
+              </button>
+              <button
+                onClick={() => {
+                  const password = prompt('비밀번호를 입력하세요.');
+                  if (password !== null) {
+                    handleDeleteButton(commentData.id, password);
+                  }
+                }}
+              >
+                삭제
+              </button>
+            </>
+          ) : (
+            <>
+              <CommentInput
+                type="text"
+                value={updateComment}
+                onChange={(e) => {
+                  setUpdateComment(e.target.value);
+                }}
+              />
+              <button onClick={() => handleEditSubmit(commentData.id)}>
+                수정하기
+              </button>
+            </>
+          )}
         </CommentBox>
       ))}
     </>
@@ -179,7 +232,7 @@ const Input = styled.input`
   width: 100px;
   /* margin-bottom: 10px; */
 `;
-const InputBox = styled.input`
+const CommentInput = styled.input`
   width: 300px;
   margin-bottom: 10px;
 `;
