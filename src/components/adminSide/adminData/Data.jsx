@@ -5,6 +5,7 @@ import { auth, db } from '../../../firebase/firebaseConfig';
 const Data = () => {
   const [mailingData, setMailingData] = useState([]);
   const [fanletterData, setFanletterData] = useState([]);
+  const [reservationData, setReservationData] = useState([]);
   const userUid = auth.currentUser?.uid;
 
   console.log(userUid);
@@ -23,15 +24,19 @@ const Data = () => {
           const querySnapshot = await getDocs(q);
           const data = querySnapshot.docs?.map((doc) => doc.data());
 
-          // 메일링 데이터와 팬레터 데이터 분리
+          // 메일링 데이터와 팬레터 데이터 예약 데이터 분리
           const mailingData = data?.filter(
             (item) => item.dataKind === 'mailingData',
           );
           const fanletterData = data?.filter(
             (item) => item.dataKind === 'fanletterData',
           );
+          const reservationData = data?.filter(
+            (item) => item.dataKind === 'reservationData',
+          );
           setMailingData(mailingData);
           setFanletterData(fanletterData);
+          setReservationData(reservationData);
         } catch (error) {
           console.error('데이터 가져오기 오류:', error);
         }
@@ -42,6 +47,8 @@ const Data = () => {
   }, [userUid]);
   console.log(mailingData);
   console.log(fanletterData);
+  console.log(reservationData);
+
   return (
     <div>
       <div>
@@ -49,9 +56,9 @@ const Data = () => {
         {mailingData.map((data) => (
           <div key={data.createdAt}>
             <br />
-            <div>{data.name}</div>
-            <div>{data.email}</div>
-            <div>{data.number}</div>
+            <div>이름:{data.name}</div>
+            <div>이메일:{data.email}</div>
+            <div>번호:{data.number}</div>
             <br />
           </div>
         ))}
@@ -62,7 +69,19 @@ const Data = () => {
         {fanletterData.map((data) => (
           <div key={data.createdAt}>
             <br />
-            <div>{data.description}</div>
+            <div>팬레터내용: {data.description}</div>
+            <br />
+          </div>
+        ))}
+      </div>
+      <p>------------------------------</p>
+      <div>
+        <p>예약 서비스에서 받은 데이터 영역</p>
+        {reservationData.map((data) => (
+          <div key={data.createdAt}>
+            <br />
+            <div>이름: {data.name}</div>
+            <div>번호: {data.phoneNumber}</div>
             <br />
           </div>
         ))}
