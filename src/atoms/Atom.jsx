@@ -18,3 +18,6 @@ export const bannerImageAtom = atom(null);
 
 // reservation Image
 export const reservationImageAtom = atom(null);
+
+// challenge Count Atom
+export const countAtom = atom(0);
