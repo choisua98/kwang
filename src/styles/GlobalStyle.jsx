@@ -20,6 +20,7 @@ const GlobalStyle = createGlobalStyle`
 
   html {
     background: #fff;
+    touch-action: pan-x pan-y;
   }
 
   body {
