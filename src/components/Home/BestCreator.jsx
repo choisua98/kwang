@@ -9,15 +9,18 @@ import { B } from './BestCreator.styles';
 // import BestBanner from '../../../assets/images/customer/home/banner/best/best-banner-1.svg';
 import { db } from '../../firebase/firebaseConfig';
 import { collection, query, limit, getDocs } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 const BestCreator = () => {
+  const navigate = useNavigate();
   const [usersData, setUsersData] = useState([]);
+  // const [userUid, setUserUid] = useState([]);
 
   useEffect(() => {
     const q = query(
       collection(db, 'users'),
       //   orderBy('popularity', 'desc'), // 인기순 필드 추가시
-      limit(10),
+      limit(100),
     );
     getDocs(q)
       .then((querySnapshot) => {
@@ -30,11 +33,13 @@ const BestCreator = () => {
       .catch((error) => {
         console.log('문서를 가져오지 못하는 오류: ', error);
       });
+    // setUserUid(usersData?.uid);
+    // console.log(usersData[4].uid);
   }, []);
 
   return (
     <div style={{ margin: '10px auto' }}>
-      <h1>인기 크리에이터 BEST</h1>
+      <h1>NEW 크리에이터</h1>
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         spaceBetween={20}
@@ -47,7 +52,12 @@ const BestCreator = () => {
         }}
       >
         {usersData.map((user, index) => (
-          <SwiperSlide key={index}>
+          <SwiperSlide
+            key={index}
+            // onClick={() => {
+            //   navigate(`/${userUid}`);
+            // }}
+          >
             <img
               src={user.profileImageURL}
               style={{

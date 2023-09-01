@@ -146,6 +146,7 @@ const MyProfile = () => {
         nickname: nickname,
         introduction: introduction,
         theme: theme,
+        uid: userUid,
       };
 
       // 프로필 이미지 업데이트 및 이미지 URL 업데이트
