@@ -19,7 +19,7 @@ const BestCreator = () => {
     const q = query(
       collection(db, 'users'),
       //   orderBy('popularity', 'desc'), // 인기순 필드 추가시
-      limit(100),
+      limit(30),
     );
     getDocs(q)
       .then((querySnapshot) => {
@@ -32,7 +32,6 @@ const BestCreator = () => {
       .catch((error) => {
         console.log('문서를 가져오지 못하는 오류: ', error);
       });
-    console.log(usersData);
   }, []);
 
   return (
