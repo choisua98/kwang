@@ -147,9 +147,6 @@ const BannerImage = () => {
     try {
       // Firestore에 데이터 업로드
       const docRef = doc(db, 'template', blockId);
-      await updateDoc(docRef, {
-        createdAt: serverTimestamp(),
-      });
 
       // 이미지 업로드 및 URL 저장
       const imageUrls = [];

@@ -149,7 +149,6 @@ const Reservation = () => {
         pickDate,
         startDate,
         endDate,
-        createdAt: serverTimestamp(),
       });
       // 이미지 업로드 및 URL 저장
       const imageUrls = [];
