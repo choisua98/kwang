@@ -9,7 +9,11 @@ const CustomerChallengeVerify = () => {
 
   return (
     <>
-      <div>{moment(selectedDate).format('YYYY년 MM월 DD일')}</div>
+      <div>
+        {moment(selectedDate, 'ddd MMM DD YYYY HH:mm:ss ZZ').format(
+          'YYYY년 MM월 DD일',
+        )}
+      </div>
       <ChallengeComment />
     </>
   );
