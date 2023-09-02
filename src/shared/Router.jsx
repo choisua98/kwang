@@ -14,11 +14,11 @@ import AdminFaq from '../pages/AdminFaq';
 import AdminBannerImage from '../pages/AdminBannerImage';
 import AdminFanLetter from '../pages/AdminFanLetter';
 import CustomerChallenge from '../pages/CustomerChallenge';
-import CustomerChallengeVerify from '../pages/CustomerChallengeVerify';
 import CustomerMailing from '../pages/CustomerMailing';
 import CustomerReservation from '../pages/CustomerReservation';
 import CustomerFaq from '../pages/CustomerFaq';
 import CustomerFanletter from '../pages/CustomerFanletter';
+import CustomerChallengeVerify from '../pages/CustomerChallengeVerify';
 
 const Router = () => {
   return (
