@@ -205,7 +205,6 @@ const Challenge = () => {
         await Promise.all(
           fileList.items.map(async (file) => {
             await deleteObject(file);
-            console.log(`${file.name} 이미지가 삭제되었습니다`);
           }),
         );
 
