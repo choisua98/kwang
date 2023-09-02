@@ -5,7 +5,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { M } from './MainBanner.styles';
-import { ReactComponent as PromoBanner } from '../../assets/images/customer/home/banner/promo/promo-banner-1.svg';
+import PromoBanner from '../../assets/images/customer/home/banner/promo/promo-banner-1.svg';
+import { Link } from 'react-router-dom';
 
 const MainBanner = () => {
   return (
@@ -16,14 +17,32 @@ const MainBanner = () => {
         style={{ margin: '20px auto 0', width: '100%', height: '100px' }}
       >
         <SwiperSlide>
-          <PromoBanner alt="Promo Banner 1" />
+          <Link to="#">
+            <img
+              src={PromoBanner}
+              alt="Promo Banner 1"
+              style={{ width: '100%' }}
+            />
+          </Link>
         </SwiperSlide>
         <SwiperSlide>
-          <PromoBanner alt="Promo Banner 2" />
+          <Link to="#">
+            <img
+              src={PromoBanner}
+              alt="Promo Banner 2"
+              style={{ width: '100%' }}
+            />
+          </Link>
         </SwiperSlide>
-        <SwiperSlide>Slide 3</SwiperSlide>
-        <SwiperSlide>Slide 4</SwiperSlide>
-        <SwiperSlide>Slide 5</SwiperSlide>
+        <SwiperSlide>
+          <Link to="#">
+            <img
+              src={PromoBanner}
+              alt="Promo Banner 3"
+              style={{ width: '100%' }}
+            />
+          </Link>
+        </SwiperSlide>
       </Swiper>
     </>
   );

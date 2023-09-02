@@ -4,6 +4,7 @@ import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
+import btnEditImage from '../../../../assets/images/common/btn/btn-edit.png';
 import imageCompression from 'browser-image-compression';
 import { themeAtom } from '../../../../atoms/Atom';
 import { P } from './MyProfile.styles';
@@ -188,18 +189,53 @@ const MyProfile = () => {
   return (
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
-        <Col span={24} style={{ textAlign: 'center' }}>
+        <Col
+          span={24}
+          style={{
+            position: 'relative',
+            maxWidth: '150px',
+            maxHeight: '150px',
+            textAlign: 'center',
+          }}
+        >
           {/* <Profile /> */}
-          <P.ProfileImage src={updatedImage} />
-          <div style={{ margin: '20px 0 10px' }}>{updateNick}</div>
-          <div style={{ margin: '20px 0' }}>{updateIntro}</div>
+          <P.ProfileImage
+            src={updatedImage}
+            style={{ width: '150px', height: '150px' }}
+          />
           <Button
             onClick={() => {
               setModalVisible(true);
             }}
+            style={{
+              position: 'absolute',
+              bottom: '4px',
+              right: '-5px',
+              backgroundImage: `url(${btnEditImage})`,
+              backgroundSize: 'cover',
+              borderRadius: '50%',
+              width: '35px',
+              height: '35px',
+            }}
+          ></Button>
+        </Col>
+      </Row>
+      <Row justify="center" align="middle" style={{ padding: '0' }}>
+        <Col>
+          <div
+            style={{ margin: '0 auto', fontSize: '16px', textAlign: 'center' }}
           >
-            내 정보 수정하기
-          </Button>
+            {updateNick}
+          </div>
+          <div
+            style={{
+              margin: '10px auto 0',
+              fontSize: '16px',
+              textAlign: 'center',
+            }}
+          >
+            {updateIntro}
+          </div>
         </Col>
       </Row>
       <Modal

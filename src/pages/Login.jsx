@@ -29,7 +29,11 @@ const Login = () => {
         <KakaoLogin />
       </L.Sns>
       <div
-        style={{ margin: '37.5px auto', fontSize: '16px', textAlign: 'center' }}
+        style={{
+          margin: '37.5px auto 10px',
+          fontSize: '16px',
+          textAlign: 'center',
+        }}
       >
         아직 크왕 회원이 아니신가요?
       </div>
@@ -39,6 +43,7 @@ const Login = () => {
         }}
         style={{
           margin: '0 auto',
+          paddingBottom: '68px',
           display: 'block',
           fontSize: '14px',
           textDecoration: 'underline',

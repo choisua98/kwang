@@ -116,8 +116,9 @@ const EmailSignup = () => {
             onClick={onDuplicateCheckButtonClickHandler}
             style={{
               margin: '12px 0 0 9px',
-              padding: '16.5px 33.5px',
+              padding: '16.5px 0',
               maxWidth: '116px',
+              width: '116px',
               height: '48.5px',
               boxSizing: 'border-box',
               color: '#B0B0B0',

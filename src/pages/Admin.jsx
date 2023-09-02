@@ -7,7 +7,7 @@ import BlocksArea from '../components/adminSide/myadmin/blocksArea/BlocksArea';
 
 const Admin = () => {
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: '20px 20px 74px' }}>
       <Theme />
       <MyProfile />
       <Links />
