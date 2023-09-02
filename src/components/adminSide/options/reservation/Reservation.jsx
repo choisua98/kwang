@@ -44,7 +44,7 @@ const Reservation = () => {
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
   const [numberOfPeople, setNumberOfPeople] = useState(
-    selectedBlock?.numberOfPeople,
+    selectedBlock?.numberOfPeople || '',
   );
   const [pickDate, setPickDate] = useState(
     selectedBlock ? selectedBlock?.pickDate : '',
