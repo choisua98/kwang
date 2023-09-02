@@ -16,12 +16,11 @@ const MailingService = () => {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
   const { uid } = useParams();
   const userUid = uid;
-  console.log(userUid);
 
   useEffect(() => {
     // firebase에서 데이터 불러오기
@@ -43,7 +42,6 @@ const MailingService = () => {
             const data = firstDocument.data();
             setTitle(data?.title);
             setDesc(data?.description);
-            // console.log('데이터 가져오기 성공', data);
           }
         } catch (error) {
           console.error('데이터 가져오기 오류:', error);
@@ -60,7 +58,7 @@ const MailingService = () => {
       await addDoc(collection(db, 'userTemplate'), {
         dataKind: 'mailingData',
         name,
-        number,
+        phoneNumber,
         email,
         createdAt: serverTimestamp(),
         userId: userUid,
@@ -99,9 +97,9 @@ const MailingService = () => {
           id="number"
           name="number"
           type="tel"
-          value={number}
+          value={phoneNumber}
           onChange={(e) => {
-            setNumber(e.target.value);
+            setPhoneNumber(e.target.value);
           }}
           pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
           required
