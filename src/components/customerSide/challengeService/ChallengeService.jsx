@@ -64,7 +64,10 @@ const ChallengeService = () => {
     if (view === 'month') {
       for (const data of challengeData) {
         const startDate = new Date(data.startDate);
+        startDate.setHours(0, 0, 0, 0);
+
         const endDate = new Date(data.endDate);
+        endDate.setHours(0, 0, 0, 0);
 
         // 날짜가 챌린지 기간에 포함되면 활성화
         if (date >= startDate && date <= endDate) {
