@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Row, Col, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
-import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
+import Logo from '../../../assets/images/logo.svg';
 import { H } from './Header.styles';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebase/firebaseConfig';
@@ -67,7 +67,7 @@ const Header = () => {
             <Col span={21}>
               {/* 로고 영역 */}
               <Link to="/">
-                <Logo />
+                <H.Logo src={Logo} alt="크왕" />
               </Link>
             </Col>
             {!isLoginPage && isHomePage && (
@@ -84,7 +84,7 @@ const Header = () => {
             <Col span={22}>
               {/* 로고 영역 */}
               <Link to="/">
-                <Logo />
+                <H.Logo src={Logo} alt="크왕" />
               </Link>
             </Col>
             <Col span={1}>

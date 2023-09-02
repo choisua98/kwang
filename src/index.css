@@ -1,3 +1,14 @@
+/* 상단 메뉴 토글 */
+:where(.css-dev-only-do-not-override-17a39f8).ant-btn-default {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only
+  .anticon {
+  font-size: 18px;
+}
+
 /* 달력(RangePicker) */
 :where(
     .css-dev-only-do-not-override-17a39f8

@@ -196,10 +196,14 @@ const Links = () => {
   return (
     <>
       <L.Container>
-        <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
+        <Row justify="center" align="middle">
           <Col span={24} style={{ textAlign: 'center' }}>
-            <p>링크와 원하는 메뉴를 추가해주세요</p>
-            <L.ButtonContainer style={{ marginTop: '20px' }}>
+            <p
+              style={{ fontSize: '16px', fontWeight: '600', textAlign: 'left' }}
+            >
+              링크 추가하기
+            </p>
+            <L.ButtonContainer style={{ marginTop: '24px' }}>
               {linksData.map((link) => (
                 <button
                   key={link.id}
@@ -218,6 +222,15 @@ const Links = () => {
                   <Link />
                 </button>
               ))}
+              <p
+                style={{
+                  marginTop: '31px',
+                  fontSize: '14px',
+                  color: '#7a7a7a',
+                }}
+              >
+                나만의 프로필 링크를 추가해주세요
+              </p>
             </L.ButtonContainer>
           </Col>
         </Row>

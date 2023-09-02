@@ -3,10 +3,14 @@ import { styled } from 'styled-components';
 export const H = {
   HeaderWrapper: styled.header`
     position: relative;
-    padding: 15px 20px;
+    padding: 50px 20px 11px;
     height: initial;
     line-height: initial;
     background-color: #fff;
+  `,
+  Logo: styled.img`
+    padding-top: 8px;
+    // padding-top: ${(props) => props.topPadding || '0'}px;
   `,
   MenuContentWrapper: styled.div`
     position: absolute;
