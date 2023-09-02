@@ -12,7 +12,7 @@ const Profile = () => {
 
   const [viewNickname, setViewNickname] = useState('');
   const [viewIntroduction, setViewIntroduction] = useState('');
-  const [viewProfileImage, setViewProfileImage] = useState('');
+  const [viewProfileImage, setViewProfileImage] = useState(defaultProfileImage);
   const { uid } = useParams();
   const userUid = uid;
 

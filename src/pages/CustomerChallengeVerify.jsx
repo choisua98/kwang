@@ -14,7 +14,8 @@ const CustomerChallengeVerify = () => {
           'YYYY년 MM월 DD일',
         )}
       </div>
-      <ChallengeComment />
+      {/* 선택된 날짜 props로 전달 */}
+      <ChallengeComment selectedDate={selectedDate} />
     </>
   );
 };
