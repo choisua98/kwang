@@ -13,8 +13,9 @@ import { styled } from 'styled-components';
 import { useAtom } from 'jotai';
 import { countAtom } from '../../../atoms/Atom';
 import { nanoid } from 'nanoid';
+import moment from 'moment';
 
-const ChallengeComment = () => {
+const ChallengeComment = ({ selectedDate }) => {
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [comment, setComment] = useState('');
@@ -26,10 +27,20 @@ const ChallengeComment = () => {
     try {
       const commentCollection = collection(db, 'comments');
       const querySnapshot = await getDocs(commentCollection);
-      const commentList = []; // 임시로 데이터 보관
+      const commentList = [];
+
       querySnapshot.forEach((doc) => {
-        commentList.push(doc.data()); // 댓글 데이터 배열에 추가
+        const commentData = doc.data();
+
+        // 댓글의 작성 날짜를 가져와 선택된 날짜와 비교하여 필터링
+        const commentDate = moment(commentData.timestamp.toDate()).format(
+          'YYYY년 MM월 DD일',
+        );
+        if (commentDate === selectedDate) {
+          commentList.push(commentData);
+        }
       });
+
       setComments(commentList);
     } catch (error) {
       console.log(error.message);
@@ -39,11 +50,21 @@ const ChallengeComment = () => {
   // 컴포넌트가 마운트 될 때 댓글 데이터 불러오기
   useEffect(() => {
     fetchComments();
-  }, []);
+  }, [selectedDate]);
 
   // 댓글 추가
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 선택된 날짜와 현재 날짜 비교
+    if (!moment(selectedDate).isSame(moment(), 'day')) {
+      alert('댓글은 현재 날짜에만 작성할 수 있습니다.');
+
+      setNickname('');
+      setPassword('');
+      setComment('');
+      return;
+    }
 
     if (!nickname || !password || !comment) {
       alert('모두 입력해 주세요.');
@@ -69,10 +90,12 @@ const ChallengeComment = () => {
       await setDoc(commentDocRef, CommentInfor);
       alert('댓글이 등록되었습니다.');
 
-      // 카운트 값을 업데이트
-      const updatedCount = count + 1;
-      await updateCountInFirestore(updatedCount);
-      setCount(updatedCount);
+      // 선택된 날짜가 현재 날짜와 같을 때만 카운트를 업데이트
+      if (moment(selectedDate).isSame(moment(), 'day')) {
+        const updatedCount = count + 1;
+        await updateCountInFirestore(updatedCount, selectedDate);
+        setCount(updatedCount);
+      }
 
       setNickname('');
       setPassword('');
@@ -109,7 +132,7 @@ const ChallengeComment = () => {
 
         // 카운트 값을 업데이트
         const updatedCount = count - 1;
-        await updateCountInFirestore(updatedCount);
+        await updateCountInFirestore(updatedCount, selectedDate);
         setCount(updatedCount);
 
         fetchComments(); // 댓글 목록을 다시 불러옴
@@ -133,9 +156,23 @@ const ChallengeComment = () => {
   };
 
   // 카운트 값을 Firestore에 업데이트하는 함수
-  const updateCountInFirestore = async (newCount) => {
-    const countDocRef = doc(db, 'counts', 'countDocument');
-    await setDoc(countDocRef, { count: newCount });
+  const updateCountInFirestore = async (newCount, selectedDate) => {
+    try {
+      // Firestore에서 해당 날짜에 대한 댓글 수를 가져오기
+      const countDocRef = doc(db, 'counts', selectedDate);
+      const countDocSnap = await getDoc(countDocRef);
+      const currentCount = countDocSnap.exists()
+        ? countDocSnap.data().count
+        : 0;
+
+      // 현재 댓글 수와 새로운 카운트 값을 더하여 업데이트
+      const updatedCount = currentCount + newCount;
+
+      // Firestore에 업데이트된 카운트 값을 저장
+      await setDoc(countDocRef, { count: updatedCount });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   useEffect(() => {
