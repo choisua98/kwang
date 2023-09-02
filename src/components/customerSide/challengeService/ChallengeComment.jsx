@@ -22,36 +22,6 @@ const ChallengeComment = ({ selectedDate }) => {
   const [comments, setComments] = useState([]); // 댓글 데이터 저장
   const [count, setCount] = useAtom(countAtom); // 댓글 추가될 때 마다 카운트 + 1
 
-  // 댓글 데이터를 가져오는 함수
-  const fetchComments = async () => {
-    try {
-      const commentCollection = collection(db, 'comments');
-      const querySnapshot = await getDocs(commentCollection);
-      const commentList = [];
-
-      querySnapshot.forEach((doc) => {
-        const commentData = doc.data();
-
-        // 댓글의 작성 날짜를 가져와 선택된 날짜와 비교하여 필터링
-        const commentDate = moment(commentData.timestamp.toDate()).format(
-          'YYYY년 MM월 DD일',
-        );
-        if (commentDate === selectedDate) {
-          commentList.push(commentData);
-        }
-      });
-
-      setComments(commentList);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  // 컴포넌트가 마운트 될 때 댓글 데이터 불러오기
-  useEffect(() => {
-    fetchComments();
-  }, [selectedDate]);
-
   // 댓글 추가
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,6 +55,8 @@ const ChallengeComment = ({ selectedDate }) => {
         password,
         comment,
         id: nanoid(),
+        timestamp: new Date(),
+        date: moment().format('YYYY년 MM월 DD일'),
       };
 
       await setDoc(commentDocRef, CommentInfor);
@@ -130,28 +102,19 @@ const ChallengeComment = ({ selectedDate }) => {
       if (passwordMatched) {
         alert('댓글이 삭제되었습니다.');
 
-        // 카운트 값을 업데이트
-        const updatedCount = count - 1;
-        await updateCountInFirestore(updatedCount, selectedDate);
-        setCount(updatedCount);
-
         fetchComments(); // 댓글 목록을 다시 불러옴
+
+        // 선택된 날짜가 현재 날짜와 같을 때만 카운트를 업데이트
+        if (moment(selectedDate).isSame(moment(), 'day')) {
+          const updatedCount = count - 1;
+          await updateCountInFirestore(updatedCount, selectedDate);
+          setCount(updatedCount);
+        }
       } else {
         alert('비밀번호가 일치하지 않습니다.');
       }
     } catch (error) {
       console.log(error.message);
-    }
-  };
-
-  // 카운트 값을 Firestore에서 읽어오는 함수
-  const getCountFromFirestore = async () => {
-    const countDocRef = doc(db, 'counts', 'countDocument');
-    const countDocSnap = await getDoc(countDocRef);
-    if (countDocSnap.exists()) {
-      return countDocSnap.data().count;
-    } else {
-      return 0; // 기본값 설정
     }
   };
 
@@ -175,13 +138,63 @@ const ChallengeComment = ({ selectedDate }) => {
     }
   };
 
+  // 카운트를 Firestore에서 가져오는 함수
+  const fetchCountFromFirestore = async () => {
+    try {
+      const countDocRef = doc(db, 'counts', selectedDate);
+      const countDocSnap = await getDoc(countDocRef);
+      if (countDocSnap.exists()) {
+        return countDocSnap.data().count;
+      } else {
+        return 0; // 기본값 설정
+      }
+    } catch (error) {
+      console.log(error.message);
+      return 0;
+    }
+  };
+
+  // 컴포넌트가 마운트 될 때와 selectedDate가 변경될 때 카운트를 Firestore에서 가져옴
   useEffect(() => {
     const fetchCount = async () => {
-      const count = await getCountFromFirestore();
+      const count = await fetchCountFromFirestore();
       setCount(count);
     };
     fetchCount();
-  }, []);
+    fetchComments();
+  }, [selectedDate, setCount]);
+
+  // 댓글 데이터를 가져오는 함수
+  const fetchComments = async () => {
+    try {
+      const commentCollection = collection(db, 'comments');
+      const querySnapshot = await getDocs(commentCollection);
+      const commentList = [];
+
+      querySnapshot.forEach((doc) => {
+        const commentData = doc.data();
+
+        // 댓글의 작성 날짜를 가져옴
+        const commentDate = moment(commentData.timestamp.toDate()).format(
+          'YYYY년 MM월 DD일',
+        );
+
+        // 댓글 작성 날짜가 현재 날짜와 같을 때만 추가
+        if (
+          moment(commentDate, 'YYYY년 MM월 DD일').isSame(
+            moment(selectedDate),
+            'day',
+          )
+        ) {
+          commentList.push(commentData);
+        }
+      });
+
+      setComments(commentList);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <>
