@@ -24,7 +24,7 @@ const Login = () => {
     <L.Login>
       <EmailLogin />
       <L.Sns>
-        {/* <NaverLogin /> */}
+        <NaverLogin />
         <GoogleLogin />
         <KakaoLogin />
       </L.Sns>
