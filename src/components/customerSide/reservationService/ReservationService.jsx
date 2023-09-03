@@ -11,9 +11,10 @@ import { db } from '../../../firebase/firebaseConfig';
 import { Pagination, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { R } from './ReservationService.styles';
-import { Navigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ReservationService = () => {
+  const navigate = useNavigate();
   const [reservationData, setReservationData] = useState([]);
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -69,9 +70,7 @@ const ReservationService = () => {
       });
 
       alert('신청 완료!');
-      setName('');
-      setPhoneNumber('');
-      Navigate(-1);
+      navigate(-1);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -80,7 +79,6 @@ const ReservationService = () => {
   return (
     <R.Container>
       {reservationData.map((data) => {
-        console.log(data);
         return (
           <div key={data.id}>
             <h3>{data.title}</h3>
@@ -117,20 +115,15 @@ const ReservationService = () => {
         name="name"
         type="text"
         value={name}
-        onChange={(e) => {
-          setName(e.target.value);
-        }}
+        onChange={(e) => setName(e.target.value)}
       />
       <label htmlFor="phoneNumber">연락처</label>
       <input
         id="phoneNumber"
         name="phoneNumber"
         type="tel"
-        maxlength={11}
         value={phoneNumber}
-        onChange={(e) => {
-          setPhoneNumber(e.target.value);
-        }}
+        onChange={(e) => setPhoneNumber(e.target.value)}
       />
 
       <button type="submit" onClick={submitButtonClick}>
