@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { auth, db } from '../../../firebase/firebaseConfig';
 import { D } from './Data.styles';
 import moment from 'moment';
-
+import * as XLSX from 'xlsx';
 const Data = () => {
   const [data, setData] = useState([]);
   const [mailingData, setMailingData] = useState([]);
@@ -11,6 +11,24 @@ const Data = () => {
   const [reservationData, setReservationData] = useState([]);
   const userUid = auth.currentUser?.uid;
 
+  const onMailDataDownloadButtonClickHandler = () => {
+    const ws = XLSX.utils.json_to_sheet(mailingData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'mailData.xlsx');
+  };
+  const onFanletterDataDownloadButtonClickHandler = () => {
+    const ws = XLSX.utils.json_to_sheet(fanletterData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'fandletterData.xlsx');
+  };
+  const onReservationDataDownloadButtonClickHandler = () => {
+    const ws = XLSX.utils.json_to_sheet(reservationData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'reservationData.xlsx');
+  };
   useEffect(() => {
     // firebase에서 데이터 불러오기
     if (userUid) {
@@ -99,7 +117,31 @@ const Data = () => {
   }));
 
   return (
-    <D.Tabs defaultActiveKey="1" size="small" tabBarGutter={30} items={items} />
+    <>
+      <D.Tabs
+        defaultActiveKey="1"
+        size="small"
+        tabBarGutter={30}
+        items={items}
+      />
+      <div>
+        <button onClick={onMailDataDownloadButtonClickHandler}>
+          메일링 데이터 엑셀로 내보내기
+        </button>
+      </div>
+      <br />
+      <div>
+        <button onClick={onFanletterDataDownloadButtonClickHandler}>
+          팬레터 데이터 엑셀로 내보내기
+        </button>
+      </div>
+      <br />
+      <div>
+        <button onClick={onReservationDataDownloadButtonClickHandler}>
+          예약서비스 데이터 엑셀로 내보내기
+        </button>
+      </div>
+    </>
   );
 };
 
