@@ -38,10 +38,16 @@ const LinkService = () => {
   }, [uid]);
   return (
     <>
-      <L.Container>
-        <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
+      <L.Container
+        style={{
+          margin: '-16px auto 0',
+          padding: '0 0 30px',
+          background: 'none',
+        }}
+      >
+        <Row justify="center" align="middle">
           <Col span={24} style={{ textAlign: 'center' }}>
-            <L.ButtonContainer style={{ marginTop: '20px' }}>
+            <L.ButtonContainer>
               {linkDataArray.map((linkData, index) => (
                 <button
                   key={index}

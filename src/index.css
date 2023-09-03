@@ -9,6 +9,13 @@
   font-size: 18px;
 }
 
+/* 스와이퍼 */
+.swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-pagination-horizontal.swiper-pagination-bullets
+  .swiper-pagination-bullet {
+  background: #ffbe51;
+}
+
 /* 달력(RangePicker) */
 :where(
     .css-dev-only-do-not-override-17a39f8

@@ -58,7 +58,18 @@ const CustomerBlocks = () => {
       {blocks.map((block) => (
         <div key={block.id}>
           {block.title && (
-            <button onClick={() => moveToPageButton(block)}>
+            <button
+              onClick={() => moveToPageButton(block)}
+              style={{
+                marginBottom: '15px',
+                padding: '21.5px 0',
+                width: '100%',
+                fontSize: '14px',
+                color: '#fff',
+                borderRadius: '15px',
+                background: '#FF7C38',
+              }}
+            >
               {block.title}
             </button>
           )}

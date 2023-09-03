@@ -185,7 +185,7 @@ const EmailSignup = () => {
             textDecoration: 'underline',
             color: '#fff',
             borderRadius: '15px',
-            background: '#202328',
+            background: '#FFBE51',
           }}
         >
           회원가입하기

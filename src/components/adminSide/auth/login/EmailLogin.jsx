@@ -114,7 +114,7 @@ const EmailLogin = () => {
             fontSize: '14px',
             fontWeight: '700',
             color: '#fff',
-            background: '#202328',
+            background: '#FFBE51',
             borderRadius: '15px',
           }}
         >
