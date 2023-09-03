@@ -6,7 +6,6 @@ export const H = {
     padding: 50px 20px 11px;
     height: initial;
     line-height: initial;
-    background-color: #fff;
   `,
   Logo: styled.img`
     // padding-top: ${(props) => props.topPadding || '0'}px;
