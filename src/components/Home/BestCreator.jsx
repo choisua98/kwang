@@ -36,7 +36,7 @@ const BestCreator = () => {
         setUsersData(usersArray);
       })
       .catch((error) => {
-        console.log('문서를 가져오지 못하는 오류: ', error);
+        console.error('문서를 가져오지 못하는 오류: ', error);
       });
   }, []);
 
