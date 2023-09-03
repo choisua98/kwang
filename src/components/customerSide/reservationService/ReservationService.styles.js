@@ -36,6 +36,11 @@ export const R = {
     input {
       height: 30px;
       margin: 10px 0px;
+      padding-left: 10px;
+    }
+
+    span {
+      color: red;
     }
   `,
 };
