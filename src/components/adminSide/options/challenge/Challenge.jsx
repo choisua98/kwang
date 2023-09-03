@@ -236,7 +236,9 @@ const Challenge = () => {
     <C.Container
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
-      <label htmlFor="title">함께해요 챌린지 이름</label>
+      <label htmlFor="title">
+        함께해요 챌린지 이름<span>*</span>
+      </label>
       <p>{titleCount}/20자</p>
       <input
         id="title"
@@ -305,7 +307,9 @@ const Challenge = () => {
         })}
       </C.ImageContainer>
 
-      <label htmlFor="description">챌린지 상세설명</label>
+      <label htmlFor="description">
+        챌린지 상세설명<span>*</span>
+      </label>
       <p>{descriptionCount}/80자</p>
       <textarea
         id="description"
@@ -320,7 +324,9 @@ const Challenge = () => {
         maxLength={80}
       />
 
-      <label htmlFor="rangePicker">챌린지 기간</label>
+      <label htmlFor="rangePicker">
+        챌린지 기간<span>*</span>
+      </label>
       <Space direction="vertical" size={12}>
         <RangePicker
           id="rangePicker"
@@ -335,7 +341,12 @@ const Challenge = () => {
         />
       </Space>
 
-      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
+      <button
+        type="submit"
+        disabled={!title || !description || !startDate || !endDate}
+      >
+        {blockId ? '수정하기' : '저장하기'}
+      </button>
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
         삭제하기
       </button>

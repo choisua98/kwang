@@ -216,9 +216,14 @@ const BannerImage = () => {
     <B.Container
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
-      <div>
+      <B.Div>
         <p>설정</p>
-      </div>
+        <div>
+          배너 이미지를 추가해주세요
+          <span>*</span>
+        </div>
+      </B.Div>
+
       <B.ImageContainer>
         {uploadedImages.length >= maxUploads ? (
           <>
@@ -272,7 +277,9 @@ const BannerImage = () => {
         })}
       </B.ImageContainer>
 
-      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
+      <button type="submit" disabled={uploadedImages.length === 0}>
+        {blockId ? '수정하기' : '저장하기'}
+      </button>
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
         삭제하기
       </button>
