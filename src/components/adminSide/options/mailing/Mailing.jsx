@@ -98,7 +98,9 @@ const Mailing = () => {
     <M.Container
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
-      <label htmlFor="title">메일링 서비스 이름</label>
+      <label htmlFor="title">
+        메일링 서비스 이름<span>*</span>
+      </label>
       <p>{titleCount}/20자</p>
       <input
         id="title"
@@ -113,7 +115,9 @@ const Mailing = () => {
         maxLength={20}
         autoFocus
       />
-      <label htmlFor="description">메일링 서비스에 대한 간략한 설명</label>
+      <label htmlFor="description">
+        메일링 서비스에 대한 간략한 설명<span>*</span>
+      </label>
       <p>{descriptionCount}/80자</p>
       <textarea
         id="description"
@@ -127,7 +131,9 @@ const Mailing = () => {
         }}
         maxLength={80}
       />
-      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
+      <button type="submit" disabled={!title || !description}>
+        {blockId ? '수정하기' : '저장하기'}
+      </button>
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
         삭제하기
       </button>

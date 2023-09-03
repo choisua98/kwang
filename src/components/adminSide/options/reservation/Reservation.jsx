@@ -227,11 +227,13 @@ const Reservation = () => {
     <R.Container
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
-      <label htmlFor="title">예약 서비스 이름</label>
+      <label htmlFor="title">
+        예약 서비스 이름<span>*</span>
+      </label>
       <p>{titleCount}/20자</p>
       <input
         id="title"
-        placeholder={'예약 서비스'}
+        placeholder="예약 서비스 🗓️"
         value={title}
         onChange={(e) => {
           setTitle(e.target.value);
@@ -241,11 +243,13 @@ const Reservation = () => {
         autoFocus
       />
 
-      <label htmlFor="description">예약 상세설명</label>
+      <label htmlFor="description">
+        예약 상세설명<span>*</span>
+      </label>
       <p>{descriptionCount}/50자</p>
       <textarea
         id="description"
-        placeholder={'상세 설명을 입력해주세요'}
+        placeholder="상세 설명을 입력해주세요"
         value={description}
         onChange={(e) => {
           setDescription(e.target.value);
@@ -305,7 +309,9 @@ const Reservation = () => {
           );
         })}
       </R.ImageContainer>
-      <label htmlFor="number">모집 인원</label>
+      <label htmlFor="number">
+        모집 인원<span>*</span>
+      </label>
       <input
         id="number"
         type="number"
@@ -316,7 +322,9 @@ const Reservation = () => {
         }}
         min={0}
       />
-      <label htmlFor="datePicker">시작 날짜 선택</label>
+      <label htmlFor="datePicker">
+        시작 날짜 선택<span>*</span>
+      </label>
       <Space direction="vertical" size={12}>
         <DatePicker
           id="datePicker"
@@ -327,7 +335,9 @@ const Reservation = () => {
           popupClassName="datePickerPopup"
         />
       </Space>
-      <label htmlFor="rangePicker">모집 기간 선택</label>
+      <label htmlFor="rangePicker">
+        모집 기간 선택<span>*</span>
+      </label>
       <Space direction="vertical" size={12}>
         <RangePicker
           id="rangePicker"
@@ -341,7 +351,19 @@ const Reservation = () => {
           popupClassName="periodPickerPopup"
         />
       </Space>
-      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
+      <button
+        type="submit"
+        disabled={
+          !title ||
+          !description ||
+          !numberOfPeople ||
+          !pickDate ||
+          !startDate ||
+          !endDate
+        }
+      >
+        {blockId ? '수정하기' : '저장하기'}
+      </button>
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
         삭제하기
       </button>
