@@ -43,7 +43,6 @@ const Login = () => {
         }}
         style={{
           margin: '0 auto',
-          paddingBottom: '68px',
           display: 'block',
           fontSize: '14px',
           textDecoration: 'underline',
