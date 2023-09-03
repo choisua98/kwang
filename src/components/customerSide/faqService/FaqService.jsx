@@ -9,7 +9,7 @@ const FaqService = () => {
   const [activeKey, setActiveKey] = useState(null); // 현재 열려있는 faq 아이템의 키 값을 관리하는 state
   const { uid } = useParams();
   const userUid = uid;
-  console.log(userUid);
+
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -120,14 +120,14 @@ const Header = () => {
                   </H.ProfileContainer>
                   <H.Container>
                     {!isMyPage ? (
-                      <H.MenuButton>
+                      <H.MenuButton onClick={onClose}>
                         <Link to={`/${userUid}`}>
                           <H.IconImage src={HomeIcon} alt="homeIcon" />
                           <p>마이홈</p>
                         </Link>
                       </H.MenuButton>
                     ) : (
-                      <H.MenuButton>
+                      <H.MenuButton onClick={onClose}>
                         <Link to={`/admin`}>
                           <H.IconImage src={HomeIcon} alt="homeIcon" />
                           <p>편집하기</p>
@@ -142,7 +142,7 @@ const Header = () => {
                     </H.MenuButton>
                   </H.Container>
                   <H.MenuContainer>
-                    <H.MenuStyle>
+                    <H.MenuStyle onClick={onClose}>
                       <Link to={`/admindata`}>고객관리</Link>
                     </H.MenuStyle>
                     <H.MenuStyle onClick={onLogoutButtonClickHandler}>
