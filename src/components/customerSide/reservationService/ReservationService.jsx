@@ -107,7 +107,9 @@ const ReservationService = () => {
       ))}
       <h3>신청 방법</h3>
       <h4>하단의 신청 폼을 작성해 주세요.</h4>
-      <label htmlFor="name">이름</label>
+      <label htmlFor="name">
+        이름<span>*</span>
+      </label>
       <input
         id="name"
         name="name"
@@ -115,7 +117,9 @@ const ReservationService = () => {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <label htmlFor="phoneNumber">연락처</label>
+      <label htmlFor="phoneNumber">
+        연락처<span>*</span>
+      </label>
       <input
         id="phoneNumber"
         name="phoneNumber"
@@ -124,7 +128,11 @@ const ReservationService = () => {
         onChange={(e) => setPhoneNumber(e.target.value)}
       />
 
-      <button type="submit" onClick={submitButtonClick}>
+      <button
+        type="submit"
+        disabled={!name || !phoneNumber}
+        onClick={submitButtonClick}
+      >
         신청하기
       </button>
     </R.Container>

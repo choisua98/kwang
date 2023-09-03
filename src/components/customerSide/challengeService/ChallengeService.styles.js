@@ -49,7 +49,7 @@ export const C = {
       line-height: 1.125em;
     }
     .react-calendar__navigation button {
-      color: #6f48eb;
+      color: #ff7c38;
       min-width: 44px;
       background: none;
       font-size: 16px;
@@ -70,7 +70,7 @@ export const C = {
       margin-top: 0;
       margin-bottom: 0;
       background: #f8f8fa;
-      color: #6f48eb;
+      color: #ff7c38;
       border-radius: 0;
     }
 
@@ -82,7 +82,7 @@ export const C = {
 
     .react-calendar__tile:enabled:hover,
     .react-calendar__tile:enabled:focus {
-      background: #6f48eb;
+      background: #ff7c38;
       color: white;
       border-radius: 6px;
     }
