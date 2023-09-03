@@ -72,10 +72,7 @@ const MailingService = () => {
   };
 
   return (
-    <div>
-      <button>＜</button>
-      <br />
-      <br />
+    <>
       <div>{title}</div>
       <div>{desc}</div>
       <M.Container>
@@ -121,7 +118,7 @@ const MailingService = () => {
           신청하기
         </button>
       </M.Container>
-    </div>
+    </>
   );
 };
 

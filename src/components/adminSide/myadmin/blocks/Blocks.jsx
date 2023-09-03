@@ -46,7 +46,6 @@ const Blocks = () => {
           type="primary"
           onClick={() => setModalVisible(true)}
           style={{
-            marginTop: '50px',
             padding: '18px 0',
             width: '100%',
             height: 'auto',

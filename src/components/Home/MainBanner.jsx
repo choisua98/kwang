@@ -10,11 +10,11 @@ import { Link } from 'react-router-dom';
 
 const MainBanner = () => {
   return (
-    <>
+    <div style={{ padding: '0 20px' }}>
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         pagination={{ clickable: true }}
-        style={{ margin: '20px auto 0', width: '100%', height: '100px' }}
+        style={{ margin: '20px auto 0', width: '100%', height: '115px' }}
       >
         <SwiperSlide>
           <Link to="#">
@@ -44,7 +44,7 @@ const MainBanner = () => {
           </Link>
         </SwiperSlide>
       </Swiper>
-    </>
+    </div>
   );
 };
 

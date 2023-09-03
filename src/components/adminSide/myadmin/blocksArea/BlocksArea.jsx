@@ -71,8 +71,9 @@ const BlocksArea = () => {
                 padding: '21.5px 0',
                 width: '100%',
                 fontSize: '14px',
+                color: '#fff',
                 borderRadius: '15px',
-                background: '#D9D9D9',
+                background: '#FF7C38',
               }}
             >
               {block.title}
@@ -83,6 +84,7 @@ const BlocksArea = () => {
               modules={[Pagination, A11y]}
               pagination={{ clickable: true }}
               a11y
+              style={{ marginBottom: '15px' }}
             >
               {block.images.map((image, index) => (
                 <SwiperSlide key={index}>
