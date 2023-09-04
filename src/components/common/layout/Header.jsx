@@ -26,7 +26,7 @@ const Header = () => {
   const [viewProfileImage, setViewProfileImage] = useState(defaultProfileImage);
 
   // 홈페이지 주소 변경 후 수정 필요!
-  const COPY_URL = `localhost:3000/${userUid}`;
+  const COPY_URL = `kwang-nine.vercel.app/${userUid}`;
 
   const [open, setOpen] = useState(false);
 
