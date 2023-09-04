@@ -181,9 +181,9 @@ const Theme = () => {
             width: '100%',
             height: 'auto',
             fontSize: '14px',
-            color: '#000',
+            color: '#fff',
             borderRadius: '15px',
-            background: '#D9D9D9',
+            background: '#FFBE51',
           }}
         >
           테마 바꾸기

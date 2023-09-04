@@ -84,7 +84,7 @@ const KakaoLogin = () => {
 
   return (
     <Link to="#">
-      <button onClick={kakaoLogin}>
+      <button onClick={kakaoLogin} style={{ padding: 0 }}>
         <img src={KakaoIcon} alt="kakao-login-medium" border="0" />
       </button>
     </Link>
