@@ -34,31 +34,30 @@ const LinkService = () => {
 
   return (
     <>
-      {linkDataArray <= linkDataArray[0] && (
-        <L.CustomerSideContainer>
-          <Row justify="center" align="middle">
-            <Col span={24} style={{ textAlign: 'center' }}>
-              <L.ButtonContainer>
-                {linkDataArray.map((linkData, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      let url = linkData.url;
-                      // www. 으로 시작되는 경우 앞에 http:// 붙여서 URL 설정하기
-                      if (url.startsWith('www')) {
-                        url = 'http://' + url;
-                      }
-                      window.open(url, '_blank'); // 새 탭에서 URL 열기
-                    }}
-                  >
-                    <img src={linkData.imageUrl} alt="Link Icon" />
-                  </button>
-                ))}
-              </L.ButtonContainer>
-            </Col>
-          </Row>
-        </L.CustomerSideContainer>
-      )}
+      <L.CustomerSideContainer>
+        <Row justify="center" align="middle">
+          <Col span={24} style={{ textAlign: 'center' }}>
+            <L.ButtonContainer>
+              {linkDataArray.map((linkData, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    let url = linkData.url;
+                    // www. 으로 시작되는 경우 앞에 http:// 붙여서 URL 설정하기
+                    if (url.startsWith('www')) {
+                      url = 'http://' + url;
+                    }
+                    window.open(url, '_blank'); // 새 탭에서 URL 열기
+                  }}
+                >
+                  <img src={linkData.imageUrl} alt="Link Icon" />
+                </button>
+              ))}
+            </L.ButtonContainer>
+            git
+          </Col>
+        </Row>
+      </L.CustomerSideContainer>
     </>
   );
 };
