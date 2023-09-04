@@ -1,20 +1,15 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
-import { styled } from 'styled-components';
+import { L } from './Layout.styles';
 
 const Layout = () => {
   return (
-    <StyledAppContainer>
+    <L.StyledAppContainer>
       <Header />
       <Outlet />
-    </StyledAppContainer>
+    </L.StyledAppContainer>
   );
 };
 
 export default Layout;
-
-const StyledAppContainer = styled.div`
-  max-width: 390px;
-  margin: 0 auto;
-`;

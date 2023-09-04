@@ -17,10 +17,10 @@ const imageUploadTime = 3000;
 const Theme = () => {
   // 사용자 UID 가져오기
   const userUid = auth.currentUser?.uid;
-
   const [, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
-  const [, setBackgroundImage] = useAtom(backgroundImageAtom);
+  const [theme] = useAtom(themeAtom);
+  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
   const [tempTheme, setTempTheme] = useState(null); // 임시로 테마와 배경 이미지 URL을 저장
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null); // 배경 이미지 URL을 저장
   const [loading, setLoading] = useState(false); // 이미지 업로드 진행상태 저장
@@ -64,25 +64,20 @@ const Theme = () => {
 
   // 테마(다크) 클릭 시
   const handleDarkModeClick = () => {
-    // setTempBackgroundImage('');
     setTempTheme('dark');
     setTempBackgroundImage('');
-    // setTempBackgroundImage('url_of_black_image'); // 검은색 이미지 URL로 변경
   };
 
   // 테마(라이트) 클릭 시
   const handleLightModeClick = () => {
-    // setTempBackgroundImage('');
     setTempTheme('light');
     setTempBackgroundImage('');
   };
 
   // 테마(배경 이미지 업로드)시 input
   const handleCustomBackgroundClick = () => {
-    // setTempTheme('');
     const imageInput = document.getElementById('image-upload'); // useRef로 변경
     imageInput.click();
-    // console.log(imageInput.value);
     imageInput.value = null;
   };
 
@@ -105,17 +100,13 @@ const Theme = () => {
     }
 
     // 압축된 배경 이미지 생성
-    // console.log('시작');
     const compressedFile = await compressImage(file);
-
     // 압축한 배경 이미지 Firebase storage에 업로드
     if (compressedFile) {
       const imageRef = ref(storage, `backgroundImages/${userUid}/${nanoid()}`);
       await uploadBytes(imageRef, compressedFile);
       const imageURL = await getDownloadURL(imageRef);
       setTempBackgroundImage(imageURL);
-      // console.log('완료');
-      // setLoading(false); // 이미지 업로드 완료 후 로딩 상태 변경
       return imageURL;
     }
   };
@@ -127,9 +118,6 @@ const Theme = () => {
 
   // 배경 적용하기
   const handleApplyClick = async () => {
-    // console.log(backgroundImage);
-    // console.log(tempTheme);
-    // console.log(tempBackgroundImage);
     setLoading(false); // 로딩 상태 초기화
     setProgress(0); // 진행률 초기화
     // Firestore에 사용자의 테마 및 배경 이미지 정보 저장
@@ -152,7 +140,6 @@ const Theme = () => {
     }
     if (tempTheme) {
       setTheme(tempTheme);
-      // setTempTheme(tempTheme); // 수정된 부분: tempTheme을 themeAtom으로 업데이트
       document.body.style.backgroundColor =
         tempTheme === 'dark' ? '#333' : '#fff';
       document.body.style.color = tempTheme === 'dark' ? '#fff' : '#000';
@@ -169,6 +156,18 @@ const Theme = () => {
     setModalVisible(false);
   };
 
+  useEffect(() => {
+    if (modalVisible) {
+      // 모달이 열릴 때 현재 설정된 테마와 배경 이미지를 임시 변수에 저장합니다.
+      setTempTheme(theme);
+      setTempBackgroundImage(backgroundImage);
+    } else {
+      // 모달이 닫힐 때 임시 변수에 저장된 값을 원래 상태로 되돌립니다.
+      setTempTheme(null);
+      setTempBackgroundImage(null);
+    }
+  }, [modalVisible]);
+
   return (
     <>
       <Row justify="center">
@@ -181,9 +180,9 @@ const Theme = () => {
             width: '100%',
             height: 'auto',
             fontSize: '14px',
-            color: '#000',
+            color: '#fff',
             borderRadius: '15px',
-            background: '#D9D9D9',
+            background: '#FFBE51',
           }}
         >
           테마 바꾸기

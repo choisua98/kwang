@@ -36,12 +36,15 @@ const Reservation = () => {
   const blockId = location.state ? location.state.blocksId : null;
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
-  const [title, setTitle] = useState(selectedBlock?.title);
-  const [description, setDescription] = useState(selectedBlock?.description);
+
+  const [title, setTitle] = useState(selectedBlock?.title || '');
+  const [description, setDescription] = useState(
+    selectedBlock?.description || '',
+  );
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
   const [numberOfPeople, setNumberOfPeople] = useState(
-    selectedBlock?.numberOfPeople,
+    selectedBlock?.numberOfPeople || '',
   );
   const [pickDate, setPickDate] = useState(
     selectedBlock ? selectedBlock?.pickDate : '',
@@ -149,7 +152,6 @@ const Reservation = () => {
         pickDate,
         startDate,
         endDate,
-        createdAt: serverTimestamp(),
       });
       // 이미지 업로드 및 URL 저장
       const imageUrls = [];
@@ -200,7 +202,6 @@ const Reservation = () => {
         await Promise.all(
           fileList.items.map(async (file) => {
             await deleteObject(file);
-            console.log(`${file.name} 이미지가 삭제되었습니다`);
           }),
         );
 

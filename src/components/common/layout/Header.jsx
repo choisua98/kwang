@@ -1,11 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Button, Drawer, Space } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
-import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
+import Logo from '../../../assets/images/logo.svg';
 import { H } from './Header.styles';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../../firebase/firebaseConfig';
+import { auth, db } from '../../../firebase/firebaseConfig';
+import { doc, getDoc } from 'firebase/firestore';
+import defaultProfileImage from '../../../assets/images/profile-default-image.png';
+import HomeIcon from '../../../assets/images/common/icon/Icon-home.png';
+import LinkIcon from '../../../assets/images/common/icon/icon-link.png';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -17,16 +21,37 @@ const Header = () => {
   const isLoginPage = location.pathname === '/login';
   const isHomePage = location.pathname === '/';
   const adminUser = userUid; // 방문자인지 크리에이터인지 확인
+  const [viewNickname, setViewNickname] = useState('');
+  const [viewProfileImage, setViewProfileImage] = useState(defaultProfileImage);
 
-  // 메뉴 열림
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // 메뉴 열렸을 때 바깥 영역 클릭시 닫힘
-  const menuRef = useRef();
+  // 홈페이지 주소 변경 후 수정 필요!
+  const COPY_URL = `localhost:3000/${userUid}`;
 
-  // 상단 메뉴 클릭시 메뉴 열기/닫기 토글
-  const handleMenuClick = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
   };
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  // userUid로 저장된 문서가 있을 경우 프로필 정보 가져오기
+  useEffect(() => {
+    if (userUid) {
+      const userDocRef = doc(db, 'users', userUid);
+      const fetchProfileInfo = async () => {
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setViewNickname(userData.nickname || '');
+          setViewProfileImage(userData.profileImageURL || defaultProfileImage);
+        }
+      };
+      fetchProfileInfo();
+    }
+  }, [userUid]);
+
   // 로그아웃 버튼클릭 핸들러 -> 로그아웃 시 홈페이지로 이동시켜 놓음
   const onLogoutButtonClickHandler = async () => {
     if (user) {
@@ -39,24 +64,14 @@ const Header = () => {
     window.location.reload();
   };
 
-  // 마운트 시 외부 영역 클릭시 이벤트 추가, 언마운트 시 제거
-  useEffect(() => {
-    const checkIfClickedOutside = (e) => {
-      if (
-        isMenuOpen && // 메뉴가 열려 있을때
-        menuRef.current && // menuRef가 존재
-        !menuRef.current.contains(e.target) // 클릭된 요소가 메뉴 내부에 없는 경우에만
-      ) {
-        setIsMenuOpen(false); // isMenuOpen 메뉴 닫음
-      }
-    };
-
-    document.addEventListener('mousedown', checkIfClickedOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', checkIfClickedOutside);
-    };
-  }, [isMenuOpen]);
+  const handleCopyClipBoard = async (url) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('클립보드에 링크가 복사되었어요.');
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <H.HeaderWrapper>
@@ -67,7 +82,7 @@ const Header = () => {
             <Col span={21}>
               {/* 로고 영역 */}
               <Link to="/">
-                <Logo />
+                <H.Logo src={Logo} alt="크왕" />
               </Link>
             </Col>
             {!isLoginPage && isHomePage && (
@@ -84,52 +99,62 @@ const Header = () => {
             <Col span={22}>
               {/* 로고 영역 */}
               <Link to="/">
-                <Logo />
+                <H.Logo src={Logo} alt="크왕" />
               </Link>
             </Col>
             <Col span={1}>
               {/* 우측 영역 */}
               <div className="right-area">
-                <Button icon={<MenuOutlined />} onClick={handleMenuClick} />
+                <Space>
+                  <Button icon={<MenuOutlined />} onClick={showDrawer} />
+                </Space>
+                <Drawer
+                  placement="right"
+                  width={320}
+                  onClose={onClose}
+                  open={open}
+                >
+                  <H.ProfileContainer>
+                    <H.ProfileImage src={viewProfileImage} />
+                    <H.NickName>{viewNickname}</H.NickName>
+                  </H.ProfileContainer>
+                  <H.Container>
+                    {!isMyPage ? (
+                      <H.MenuButton>
+                        <Link to={`/${userUid}`}>
+                          <H.IconImage src={HomeIcon} alt="homeIcon" />
+                          <p>마이홈</p>
+                        </Link>
+                      </H.MenuButton>
+                    ) : (
+                      <H.MenuButton>
+                        <Link to={`/admin`}>
+                          <H.IconImage src={HomeIcon} alt="homeIcon" />
+                          <p>편집하기</p>
+                        </Link>
+                      </H.MenuButton>
+                    )}
+                    <H.MenuButton
+                      onClick={() => handleCopyClipBoard(`${COPY_URL}`)}
+                    >
+                      <H.IconImage src={LinkIcon} alt="linkIcon" />
+                      링크 공유
+                    </H.MenuButton>
+                  </H.Container>
+                  <H.MenuContainer>
+                    <H.MenuStyle>
+                      <Link to={`/admindata`}>고객관리</Link>
+                    </H.MenuStyle>
+                    <H.MenuStyle onClick={onLogoutButtonClickHandler}>
+                      로그아웃
+                    </H.MenuStyle>
+                  </H.MenuContainer>
+                </Drawer>
               </div>
             </Col>
           </>
         )}
       </Row>
-
-      {/* 메뉴 */}
-      {isMenuOpen && (
-        <H.MenuContentWrapper ref={menuRef}>
-          <ul>
-            <li>
-              <button onClick={onLogoutButtonClickHandler}>로그아웃</button>
-            </li>
-            {/* 해당 크리에이터가 마이페이지로 넘어가면 마이페이지 버튼 숨기기 */}
-            {!isMyPage && (
-              <li>
-                <Link to={`/${userUid}`}>마이 홈</Link>
-              </li>
-            )}
-            {!isMyPage && (
-              <li>
-                <Link to={`/admindata`}>고객관리 페이지</Link>
-              </li>
-            )}
-
-            {/* 마이페이지인 경우 편집하기 버튼이 나오고 버튼을 클릭 시, 기존의 admin 페이지로 이동함 */}
-            {isMyPage && (
-              <li>
-                <Link to={`/admin`}>편집하기</Link>
-              </li>
-            )}
-            {isMyPage && (
-              <li>
-                <Link to={`/admindata`}>고객관리 페이지</Link>
-              </li>
-            )}
-          </ul>
-        </H.MenuContentWrapper>
-      )}
     </H.HeaderWrapper>
   );
 };

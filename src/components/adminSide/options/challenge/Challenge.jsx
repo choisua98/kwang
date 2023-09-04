@@ -160,7 +160,6 @@ const Challenge = () => {
         description,
         startDate,
         endDate,
-        createdAt: serverTimestamp(),
       });
 
       // 이미지 업로드 및 URL 저장
@@ -206,7 +205,6 @@ const Challenge = () => {
         await Promise.all(
           fileList.items.map(async (file) => {
             await deleteObject(file);
-            console.log(`${file.name} 이미지가 삭제되었습니다`);
           }),
         );
 

@@ -1,7 +1,12 @@
 import { styled } from 'styled-components';
 
 export const L = {
-  Container: styled.div``,
+  Container: styled.div`
+    margin-top: 40px;
+    padding: 40px 35px;
+    background: #fff;
+    border-radius: 15px;
+  `,
   ButtonContainer: styled.div`
     margin: 0 auto;
     display: block;

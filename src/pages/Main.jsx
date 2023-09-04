@@ -30,8 +30,6 @@ const Main = () => {
             const userData = userDoc.data();
             setTheme(userData.theme || 'light');
             setBackgroundImage(userData.backgroundImage || null);
-            // console.log('테마:', userData.theme);
-            // console.log('배경 이미지:', userData.backgroundImage);
           }
         } catch (error) {
           console.error('데이터 가져오기 오류:', error);
@@ -43,7 +41,6 @@ const Main = () => {
     return () => unsubscribe();
   }, [setTheme, userUid]);
 
-  console.log(userUid);
   return (
     <div>
       <div style={{ padding: '20px' }}>

@@ -78,35 +78,33 @@ const ReservationService = () => {
 
   return (
     <R.Container>
-      {reservationData.map((data) => {
-        return (
-          <div key={data.id}>
-            <h3>{data.title}</h3>
-            <br />
-            {data.blockKind === 'reservation' && (
-              <Swiper
-                modules={[Pagination, A11y]}
-                pagination={{ clickable: true }}
-                a11y
-              >
-                {data.images.map((image, index) => (
-                  <SwiperSlide key={index}>
-                    <img src={image} alt={`reservationimage ${index + 1}`} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            )}
-            <br />
-            <p>일시 : {data.pickDate} </p>
-            <p>
-              신청기간 : {data.startDate} ~ {data.endDate}
-            </p>
-            <p>모집인원 : {data.numberOfPeople}</p>
-            <br />
-            <p>{data.description}</p>
-          </div>
-        );
-      })}
+      {reservationData.map((data) => (
+        <div key={data.id}>
+          <h3>{data.title}</h3>
+          <br />
+          {data.blockKind === 'reservation' && (
+            <Swiper
+              modules={[Pagination, A11y]}
+              pagination={{ clickable: true }}
+              a11y
+            >
+              {data.images.map((image, index) => (
+                <SwiperSlide key={index}>
+                  <img src={image} alt={`reservationimage ${index + 1}`} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
+          <br />
+          <p>일시 : {data.pickDate} </p>
+          <p>
+            신청기간 : {data.startDate} ~ {data.endDate}
+          </p>
+          <p>모집인원 : {data.numberOfPeople} 명</p>
+          <br />
+          <p>{data.description}</p>
+        </div>
+      ))}
       <h3>신청 방법</h3>
       <h4>하단의 신청 폼을 작성해 주세요.</h4>
       <label htmlFor="name">이름</label>

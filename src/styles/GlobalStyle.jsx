@@ -2,13 +2,13 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
 
-  /* :root {
-    --color-bg: #FBFBFB;
+   :root {
+    --color-bg: #FFFAF0;
     --color-text: #160E0E;
     --color-accent: #C12D2D;
     --color-white: #FEFEFE;
     --color-primary: #D1CFCF
-  } */
+  } 
 
   /* 전체 폰트 적용 */
   @font-face {
@@ -20,16 +20,18 @@ const GlobalStyle = createGlobalStyle`
 
   html {
     background: #fff;
+    touch-action: pan-x pan-y;
   }
 
   body {
     margin: 0 auto;
     max-width: 390px;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
     font-family: 'Pretendard-Regular'; 
     color: var(--color-text); 
-    /* background-color: var(--color-bg); */
+    background-color: var(--color-bg); 
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 50% 50%;

@@ -70,11 +70,7 @@ const CustomerBlocks = () => {
             >
               {block.images.map((image, index) => (
                 <SwiperSlide key={index}>
-                  <img
-                    src={image}
-                    alt={`bannerimage ${index + 1}`}
-                    onClick={() => navigate(`/${userUid}/bannerimage`)}
-                  />
+                  <img src={image} alt={`bannerimage ${index + 1}`} />
                 </SwiperSlide>
               ))}
             </Swiper>

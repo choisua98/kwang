@@ -1,7 +1,12 @@
 import React from 'react';
+import ChallengeService from '../components/customerSide/challengeService/ChallengeService';
 
 const CustomerChallenge = () => {
-  return <div>CustomerChallenge</div>;
+  return (
+    <>
+      <ChallengeService />
+    </>
+  );
 };
 
 export default CustomerChallenge;

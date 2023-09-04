@@ -4,6 +4,7 @@ import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
+import btnEditImage from '../../../../assets/images/common/btn/btn-edit.png';
 import imageCompression from 'browser-image-compression';
 import { themeAtom } from '../../../../atoms/Atom';
 import { P } from './MyProfile.styles';
@@ -81,46 +82,53 @@ const MyProfile = () => {
   // 프로필 이미지 업데이트 함수
   const handleImageUpdate = async () => {
     try {
-      // 기존 userUID 폴더의 이미지 전체 삭제
-      const userImagesRef = ref(storage, `profileImages/${userUid}`);
-      const userImagesList = await listAll(userImagesRef);
-
-      // userImagesList.items 배열에 있는 모든 이미지 삭제
-      await Promise.all(
-        userImagesList.items.map(async (item) => {
-          await deleteObject(item);
-        }),
-      );
-
-      const options = {
-        maxSizeMB: 0.5,
-        maxWidthOrHeight: 300,
-        useWebWorker: true,
-      };
-
-      // 이미지 압축 함수
-      const compressedImage = async (imageFile) => {
-        try {
-          const compressedFile = await imageCompression(imageFile, options);
-          return compressedFile;
-        } catch (error) {
-          console.error('이미지 압축 실패', error);
-          return null;
-        }
-      };
-
-      // 압축한 프로필 이미지 Firebase에 업로드
       if (selectedImage) {
-        const compressedFile = await compressedImage(selectedImage);
-        if (compressedFile) {
-          const imageRef = ref(storage, `profileImages/${userUid}/${nanoid()}`);
-          await uploadBytes(imageRef, compressedFile); // 압축된 이미지 업로드
-          const imageURL = await getDownloadURL(imageRef);
-          setUpdatedImage(imageURL);
-          return imageURL;
+        // 기존 userUID 폴더의 이미지 전체 삭제
+        const userImagesRef = ref(storage, `profileImages/${userUid}`);
+        const userImagesList = await listAll(userImagesRef);
+
+        // userImagesList.items 배열에 있는 모든 이미지 삭제
+        await Promise.all(
+          userImagesList.items.map(async (item) => {
+            await deleteObject(item);
+          }),
+        );
+
+        const options = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 300,
+          useWebWorker: true,
+        };
+
+        // 이미지 압축 함수
+        const compressedImage = async (imageFile) => {
+          try {
+            const compressedFile = await imageCompression(imageFile, options);
+            return compressedFile;
+          } catch (error) {
+            console.error('이미지 압축 실패', error);
+            return null;
+          }
+        };
+
+        // 압축한 프로필 이미지 Firebase에 업로드
+        if (selectedImage) {
+          const compressedFile = await compressedImage(selectedImage);
+          if (compressedFile) {
+            const imageRef = ref(
+              storage,
+              `profileImages/${userUid}/${nanoid()}`,
+            );
+            await uploadBytes(imageRef, compressedFile); // 압축된 이미지 업로드
+            const imageURL = await getDownloadURL(imageRef);
+            setUpdatedImage(imageURL);
+            return imageURL;
+          }
         }
+        return null;
+      } else {
+        return updatedImage;
       }
-      return null;
     } catch (error) {
       console.error('프로필 이미지 업데이트 실패', error);
       return null;
@@ -139,6 +147,7 @@ const MyProfile = () => {
         nickname: nickname,
         introduction: introduction,
         theme: theme,
+        uid: userUid,
       };
 
       // 프로필 이미지 업데이트 및 이미지 URL 업데이트
@@ -180,18 +189,53 @@ const MyProfile = () => {
   return (
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
-        <Col span={24} style={{ textAlign: 'center' }}>
+        <Col
+          span={24}
+          style={{
+            position: 'relative',
+            maxWidth: '150px',
+            maxHeight: '150px',
+            textAlign: 'center',
+          }}
+        >
           {/* <Profile /> */}
-          <P.ProfileImage src={updatedImage} />
-          <div style={{ margin: '20px 0 10px' }}>{updateNick}</div>
-          <div style={{ margin: '20px 0' }}>{updateIntro}</div>
+          <P.ProfileImage
+            src={updatedImage}
+            style={{ width: '150px', height: '150px' }}
+          />
           <Button
             onClick={() => {
               setModalVisible(true);
             }}
+            style={{
+              position: 'absolute',
+              bottom: '4px',
+              right: '-5px',
+              backgroundImage: `url(${btnEditImage})`,
+              backgroundSize: 'cover',
+              borderRadius: '50%',
+              width: '35px',
+              height: '35px',
+            }}
+          ></Button>
+        </Col>
+      </Row>
+      <Row justify="center" align="middle" style={{ padding: '0' }}>
+        <Col>
+          <div
+            style={{ margin: '0 auto', fontSize: '16px', textAlign: 'center' }}
           >
-            내 정보 수정하기
-          </Button>
+            {updateNick}
+          </div>
+          <div
+            style={{
+              margin: '10px auto 0',
+              fontSize: '16px',
+              textAlign: 'center',
+            }}
+          >
+            {updateIntro}
+          </div>
         </Col>
       </Row>
       <Modal

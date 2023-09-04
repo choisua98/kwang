@@ -30,7 +30,7 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       console.log({ onAuthStateChanged: user });
       if (user) {
-        setUser(user);
+        // setUser(user);
 
         // Firestore에서 사용자의 테마 정보 불러오기
         const userDocRef = doc(db, 'users', user.uid);
@@ -39,8 +39,6 @@ function App() {
           const userData = userDoc.data();
           setTheme(userData.theme || 'light');
           setBackgroundImage(userData.backgroundImage || null);
-          // console.log('테마:', userData.theme);
-          // console.log('배경 이미지:', userData.backgroundImage);
         }
       } else {
         // 로그인 안 한 사용자는 기본 테마로 light 사용
@@ -55,8 +53,8 @@ function App() {
   }, [setUser, setTheme, user]);
 
   useEffect(() => {
-    document.body.style.backgroundColor = theme === 'dark' ? '#333' : '#fff';
-    document.body.style.color = theme === 'dark' ? '#fff' : '#000';
+    document.body.style.backgroundColor = theme === 'dark' ? '#333' : '#fffaf0';
+    document.body.style.color = theme === 'dark' ? '#fff' : '#313733';
     // 배경 이미지가 있으면 body의 배경 이미지 적용
     if (backgroundImage) {
       document.body.style.backgroundImage = `url("${backgroundImage}")`;
