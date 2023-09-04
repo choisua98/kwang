@@ -13,7 +13,7 @@ export const L = {
     max-width: 390px;
     width: 100%;
     & button {
-      padding: 0 15px;
+      /* padding: 0 15px; */
       border-radius: 50%;
       background: none;
       img {
