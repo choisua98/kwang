@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const { naver } = window;
 
 const NAVER_CLIENT_ID = 'hsnzexHuuJiVHO_hh5EP';
-const NAVER_CALLBACK_URL = 'http://www.localhost:3000/login';
+const NAVER_CALLBACK_URL = 'https://kwang-nine.vercel.app/login';
 
 export const naverLogin = new naver.LoginWithNaverId({
   clientId: NAVER_CLIENT_ID,
