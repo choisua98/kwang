@@ -4,7 +4,6 @@ import { db } from '../../../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { Col, Row } from 'antd';
 import { L } from '../../adminSide/myadmin/links/Links.styles';
-import imageUrl from '../../../assets/images/admin/link.svg';
 
 const LinkService = () => {
   const { uid } = useParams();
@@ -19,20 +18,12 @@ const LinkService = () => {
 
         const newDataArray = []; // 3개의 문서 데이터를 임시로 담을 배열
 
-        // forEach로 uid가 일치하는 문서 데이터를 돌아가며 데이터 추출
+        // forEach로 uid가 일치하는 문서 데이터 3개를 돌아가며 데이터 추출
         querySnapshot.forEach((doc) => {
           const linkData = doc.data();
           newDataArray.push(linkData);
+          setLinkDataArray(newDataArray); // 추출된 문서 데이터를 한 번에 업데이트
         });
-
-        // 데이터가 적어도 3개가 될 때까지 빈 데이터를 추가
-        while (newDataArray.length < 3) {
-          newDataArray.push({
-            imageUrl: imageUrl,
-          });
-        }
-
-        setLinkDataArray(newDataArray); // 추출된 문서 데이터를 업데이트
       } catch (error) {
         console.error('에러 발생:', error);
       }
@@ -42,16 +33,10 @@ const LinkService = () => {
   }, [uid]);
   return (
     <>
-      <L.Container
-        style={{
-          margin: '-16px auto 0',
-          padding: '0 0 30px',
-          background: 'none',
-        }}
-      >
-        <Row justify="center" align="middle">
+      <L.Container>
+        <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
           <Col span={24} style={{ textAlign: 'center' }}>
-            <L.ButtonContainer>
+            <L.ButtonContainer style={{ marginTop: '20px' }}>
               {linkDataArray.map((linkData, index) => (
                 <button
                   key={index}
