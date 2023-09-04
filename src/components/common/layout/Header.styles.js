@@ -29,7 +29,7 @@ export const H = {
     background-color: #fffaf0;
 
     p {
-      padding-top: 15px;
+      padding-top: 10px;
     }
   `,
 
