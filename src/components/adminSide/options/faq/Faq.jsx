@@ -184,12 +184,12 @@ const Faq = () => {
           onChange={handleTitleChange}
           autoFocus
         />
-        <div>
+        <O.FaqList>
           {faqList.map((faq) => {
             return (
               <div key={faq.faqId}>
-                <p>질문: {faq.question}</p>
-                <p>답변: {faq.answer}</p>
+                <p>Q. {faq.question}</p>
+                <p>A. {faq.answer}</p>
                 <button
                   type="button"
                   onClick={
@@ -203,7 +203,7 @@ const Faq = () => {
               </div>
             );
           })}
-        </div>
+        </O.FaqList>
 
         <label htmlFor="question">
           질문 입력<span>*</span>

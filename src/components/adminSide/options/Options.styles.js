@@ -97,6 +97,10 @@ export const O = {
       border-radius: 5px;
       background: #fafafa;
       cursor: pointer;
+
+      span {
+        color: #d3d3d3;
+      }
     }
 
     .disabled {
@@ -118,6 +122,29 @@ export const O = {
       border-radius: 5px;
       background-size: cover;
       background-position: center;
+    }
+  `,
+
+  // faqlist 스타일
+  FaqList: styled.div`
+    display: grid;
+
+    div {
+      display: grid;
+      padding: 5px 0px;
+      width: 100%;
+      background-color: #fff3d7;
+    }
+
+    p {
+      padding: 5px 0px;
+      text-align: center;
+    }
+
+    button {
+      margin-right: 0px;
+      padding: 5px;
+      margin-top: 10px;
     }
   `,
 };
