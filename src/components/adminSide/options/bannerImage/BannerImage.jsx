@@ -224,11 +224,8 @@ const BannerImage = () => {
       <O.Container
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
-        <label>
-          배너 이미지를 추가해주세요
-          <span>*</span>
-        </label>
-
+        배너 이미지를 추가해주세요
+        <span>*</span>
         <O.ImageContainer>
           {uploadedImages.length >= maxUploads ? (
             <>
