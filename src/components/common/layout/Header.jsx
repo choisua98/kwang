@@ -10,6 +10,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../assets/images/profile-default-image.png';
 import HomeIcon from '../../../assets/images/common/icon/Icon-home.png';
 import LinkIcon from '../../../assets/images/common/icon/icon-link.png';
+import EditIcon from '../../../assets/images/common/icon/icon-edit.png';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -129,7 +130,7 @@ const Header = () => {
                     ) : (
                       <H.MenuButton onClick={onClose}>
                         <Link to={`/admin`}>
-                          <H.IconImage src={HomeIcon} alt="homeIcon" />
+                          <H.IconImage src={EditIcon} alt="editIcon" />
                           <p>편집하기</p>
                         </Link>
                       </H.MenuButton>

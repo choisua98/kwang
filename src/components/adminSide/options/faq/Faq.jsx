@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { F } from './Faq.styles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useInput from '../../../../hooks/useInput';
 import { nanoid } from 'nanoid';
@@ -15,6 +14,9 @@ import {
 } from 'firebase/firestore';
 import { useAtom } from 'jotai';
 import { blocksAtom } from '../../../../atoms/Atom';
+import { O } from '../Options.styles';
+import { LeftOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 const Faq = () => {
   const navigate = useNavigate();
@@ -162,79 +164,95 @@ const Faq = () => {
   };
 
   return (
-    <F.Container
-      onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
-    >
-      <label htmlFor="title">
-        자주묻는 질문 이름<span>*</span>
-      </label>
-      <input
-        id="title"
-        name="title"
-        type="text"
-        placeholder="자주 묻는 질문"
-        value={title}
-        onChange={handleTitleChange}
-        autoFocus
-      />
-      <F.FaqList>
-        {faqList.map((faq) => {
-          return (
-            <div key={faq.faqId}>
-              <p>질문: {faq.question}</p>
-              <p>답변: {faq.answer}</p>
-              <button
-                type="button"
-                onClick={
-                  blockId
-                    ? () => handleDeleteFaqButtonClick(faq.faqId)
-                    : () => handleDeleteAddedFaq(faq.faqId)
-                }
-              >
-                삭제
-              </button>
-            </div>
-          );
-        })}
-      </F.FaqList>
-
-      <label htmlFor="question">
-        질문 입력<span>*</span>
-      </label>
-      <input
-        id="question"
-        name="question"
-        type="text"
-        placeholder="질문을 입력해 주세요"
-        value={question}
-        onChange={handleQuestionChange}
-      />
-
-      <label htmlFor="answer">
-        답변 입력<span>*</span>
-      </label>
-      <textarea
-        id="answer"
-        name="answer"
-        type="text"
-        placeholder="답변을 작성해 주세요"
-        value={answer}
-        onChange={handleAnswerChange}
-      />
-      <button
-        type="button"
-        disabled={!question || !answer}
-        onClick={handleAddFaqButtonClick}
+    <>
+      <O.HeaderStyle>
+        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
+        <p>설정</p>
+      </O.HeaderStyle>
+      <O.Container
+        onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
-        질문 추가하기
-      </button>
-      <button type="submit" disabled={!title || faqList.length === 0}>
-        {blockId ? '수정하기' : '저장하기'}
-      </button>
-      <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
-        삭제하기
-      </button>
-    </F.Container>
+        <label htmlFor="title">
+          자주묻는 질문 이름<span>*</span>
+        </label>
+        <input
+          id="title"
+          name="title"
+          type="text"
+          placeholder="자주 묻는 질문"
+          value={title}
+          onChange={handleTitleChange}
+          autoFocus
+        />
+        <O.FaqList>
+          {faqList.map((faq) => {
+            return (
+              <div key={faq.faqId}>
+                <p>Q. {faq.question}</p>
+                <p>A. {faq.answer}</p>
+                <button
+                  type="button"
+                  onClick={
+                    blockId
+                      ? () => handleDeleteFaqButtonClick(faq.faqId)
+                      : () => handleDeleteAddedFaq(faq.faqId)
+                  }
+                >
+                  삭제
+                </button>
+              </div>
+            );
+          })}
+        </O.FaqList>
+
+        <label htmlFor="question">
+          질문 입력<span>*</span>
+        </label>
+        <input
+          id="question"
+          name="question"
+          type="text"
+          placeholder="질문을 입력해 주세요"
+          value={question}
+          onChange={handleQuestionChange}
+        />
+
+        <label htmlFor="answer">
+          답변 입력<span>*</span>
+        </label>
+        <textarea
+          id="answer"
+          name="answer"
+          type="text"
+          placeholder="답변을 작성해 주세요"
+          value={answer}
+          onChange={handleAnswerChange}
+        />
+
+        <O.ButtonArea>
+          <O.SubmitButton
+            type="button"
+            disabled={!question || !answer}
+            onClick={handleAddFaqButtonClick}
+          >
+            질문 추가하기
+          </O.SubmitButton>
+          <O.SubmitButton
+            type="submit"
+            disabled={!title || faqList.length === 0}
+          >
+            {blockId ? '수정하기' : '저장하기'}
+          </O.SubmitButton>
+          <O.SubmitButton
+            type="button"
+            color="#313733"
+            onClick={() => handleRemoveButtonClick(blockId)}
+          >
+            삭제하기
+          </O.SubmitButton>
+        </O.ButtonArea>
+      </O.Container>
+    </>
   );
 };
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { C } from './Challenge.styles';
 import useInput from '../../../../hooks/useInput';
 import { useAtom } from 'jotai';
 import { blocksAtom } from '../../../../atoms/Atom';
@@ -20,6 +19,9 @@ import {
   ref,
   uploadBytes,
 } from 'firebase/storage';
+import { O } from '../Options.styles';
+import { LeftOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 // ant Design
 import { CameraOutlined } from '@ant-design/icons';
@@ -233,124 +235,137 @@ const Challenge = () => {
   };
 
   return (
-    <C.Container
-      onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
-    >
-      <label htmlFor="title">
-        함께해요 챌린지 이름<span>*</span>
-      </label>
-      <p>{titleCount}/20자</p>
-      <input
-        id="title"
-        name="title"
-        type="text"
-        placeholder="함께해요 챌린지 🔥"
-        value={title}
-        onChange={(e) => {
-          handleTitleChange(e);
-          setTitleCount(e.target.value.length);
-        }}
-        maxLength={20}
-        autoFocus
-      />
+    <>
+      <O.HeaderStyle>
+        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
+        <p>설정</p>
+      </O.HeaderStyle>
 
-      <C.ImageContainer>
-        {uploadedImages.length >= maxUploads ? (
-          <>
-            <div onClick={handleImageChange}>
-              <label
-                htmlFor="imageInput"
-                className={
-                  uploadedImages.length >= maxUploads ? 'disabled' : ''
-                }
-              >
-                <CameraOutlined style={{ fontSize: '30px' }} />
+      <O.Container
+        onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+      >
+        <label htmlFor="title">
+          함께해요 챌린지 이름<span>*</span>
+        </label>
+        <p>{titleCount}/20자</p>
+        <input
+          id="title"
+          name="title"
+          type="text"
+          placeholder="함께해요 챌린지 🔥"
+          value={title}
+          onChange={(e) => {
+            handleTitleChange(e);
+            setTitleCount(e.target.value.length);
+          }}
+          maxLength={20}
+          autoFocus
+        />
+
+        <O.ImageContainer>
+          {uploadedImages.length >= maxUploads ? (
+            <>
+              <div onClick={handleImageChange}>
+                <label
+                  htmlFor="imageInput"
+                  className={
+                    uploadedImages.length >= maxUploads ? 'disabled' : ''
+                  }
+                >
+                  <CameraOutlined style={{ fontSize: '30px' }} />
+                  <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+                </label>
+              </div>
+            </>
+          ) : (
+            <>
+              <label htmlFor="imageInput">
+                <div>
+                  <CameraOutlined style={{ fontSize: '30px' }} />
+                </div>
                 <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
               </label>
-            </div>
-          </>
-        ) : (
-          <>
-            <label htmlFor="imageInput">
-              <div>
-                <CameraOutlined style={{ fontSize: '30px' }} />
-              </div>
-              <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
-            </label>
-            <input
-              id="imageInput"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-          </>
-        )}
-
-        {uploadedImages.map((image, index) => {
-          return (
-            <div key={index}>
-              <div
-                className="square-preview"
-                style={{
-                  backgroundImage: `url(${
-                    typeof image === 'string'
-                      ? image
-                      : URL.createObjectURL(image)
-                  })`,
-                }}
+              <input
+                id="imageInput"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
               />
-              <button type="button" onClick={() => handleRemoveImage(index)}>
-                -
-              </button>
-            </div>
-          );
-        })}
-      </C.ImageContainer>
+            </>
+          )}
 
-      <label htmlFor="description">
-        챌린지 상세설명<span>*</span>
-      </label>
-      <p>{descriptionCount}/80자</p>
-      <textarea
-        id="description"
-        name="description"
-        type="text"
-        placeholder="상세 설명을 입력해주세요."
-        value={description}
-        onChange={(e) => {
-          handleDescriptionChange(e);
-          setDescriptionCount(e.target.value.length);
-        }}
-        maxLength={80}
-      />
+          {uploadedImages.map((image, index) => {
+            return (
+              <div key={index}>
+                <div
+                  className="square-preview"
+                  style={{
+                    backgroundImage: `url(${
+                      typeof image === 'string'
+                        ? image
+                        : URL.createObjectURL(image)
+                    })`,
+                  }}
+                />
+                <button type="button" onClick={() => handleRemoveImage(index)}>
+                  -
+                </button>
+              </div>
+            );
+          })}
+        </O.ImageContainer>
 
-      <label htmlFor="rangePicker">
-        챌린지 기간<span>*</span>
-      </label>
-      <Space direction="vertical" size={12}>
-        <RangePicker
-          id="rangePicker"
-          disabledDate={disabledDate}
-          style={{ width: '100%' }}
-          popupClassName="customRangePickerPopup"
-          value={[
-            startDate ? dayjs(startDate) : null,
-            endDate ? dayjs(endDate) : null,
-          ]}
-          onChange={periodPickInput}
+        <label htmlFor="description">
+          챌린지 상세설명<span>*</span>
+        </label>
+        <p>{descriptionCount}/80자</p>
+        <textarea
+          id="description"
+          name="description"
+          type="text"
+          placeholder="상세 설명을 입력해주세요."
+          value={description}
+          onChange={(e) => {
+            handleDescriptionChange(e);
+            setDescriptionCount(e.target.value.length);
+          }}
+          maxLength={80}
         />
-      </Space>
 
-      <button
-        type="submit"
-        disabled={!title || !description || !startDate || !endDate}
-      >
-        {blockId ? '수정하기' : '저장하기'}
-      </button>
-      <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
-        삭제하기
-      </button>
-    </C.Container>
+        <label htmlFor="rangePicker">
+          챌린지 기간<span>*</span>
+        </label>
+        <Space direction="vertical" size={12}>
+          <RangePicker
+            id="rangePicker"
+            disabledDate={disabledDate}
+            style={{ width: '100%' }}
+            popupClassName="customRangePickerPopup"
+            value={[
+              startDate ? dayjs(startDate) : null,
+              endDate ? dayjs(endDate) : null,
+            ]}
+            onChange={periodPickInput}
+          />
+        </Space>
+
+        <O.ButtonArea>
+          <O.SubmitButton
+            type="submit"
+            disabled={!title || !description || !startDate || !endDate}
+          >
+            {blockId ? '수정하기' : '저장하기'}
+          </O.SubmitButton>
+          <O.SubmitButton
+            type="button"
+            color="#313733"
+            onClick={() => handleRemoveButtonClick(blockId)}
+          >
+            삭제하기
+          </O.SubmitButton>
+        </O.ButtonArea>
+      </O.Container>
+    </>
   );
 };
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { B } from './BannerImage.styles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import {
@@ -22,6 +21,9 @@ import { useAtom } from 'jotai';
 import { Modal } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 import imageCompression from 'browser-image-compression';
+import { O } from '../Options.styles';
+import { LeftOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 const BannerImage = () => {
   const navigate = useNavigate();
@@ -213,77 +215,86 @@ const BannerImage = () => {
   };
 
   return (
-    <B.Container
-      onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
-    >
-      <B.Div>
+    <>
+      <O.HeaderStyle>
+        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
         <p>설정</p>
-        <div>
+      </O.HeaderStyle>
+
+      <O.Container
+        onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+      >
+        <label>
           배너 이미지를 추가해주세요
           <span>*</span>
-        </div>
-      </B.Div>
+        </label>
 
-      <B.ImageContainer>
-        {uploadedImages.length >= maxUploads ? (
-          <>
-            <div onClick={handleImageChange}>
-              <label
-                htmlFor="imageInput"
-                className={
-                  uploadedImages.length >= maxUploads ? 'disabled' : ''
-                }
-              >
-                <CameraOutlined style={{ fontSize: '30px' }} />
+        <O.ImageContainer>
+          {uploadedImages.length >= maxUploads ? (
+            <>
+              <div onClick={handleImageChange}>
+                <label
+                  htmlFor="imageInput"
+                  className={
+                    uploadedImages.length >= maxUploads ? 'disabled' : ''
+                  }
+                >
+                  <CameraOutlined style={{ fontSize: '30px' }} />
+                  <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+                </label>
+              </div>
+            </>
+          ) : (
+            <>
+              <label htmlFor="imageInput">
+                <div>
+                  <CameraOutlined style={{ fontSize: '30px' }} />
+                </div>
                 <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
               </label>
-            </div>
-          </>
-        ) : (
-          <>
-            <label htmlFor="imageInput">
-              <div>
-                <CameraOutlined style={{ fontSize: '30px' }} />
-              </div>
-              <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
-            </label>
-            <input
-              id="imageInput"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-          </>
-        )}
-
-        {uploadedImages.map((image, index) => {
-          return (
-            <div key={index}>
-              <div
-                className="square-preview"
-                style={{
-                  backgroundImage: `url(${
-                    typeof image === 'string'
-                      ? image
-                      : URL.createObjectURL(image)
-                  })`,
-                }}
+              <input
+                id="imageInput"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
               />
-              <button type="button" onClick={() => handleRemoveImage(index)}>
-                -
-              </button>
-            </div>
-          );
-        })}
-      </B.ImageContainer>
+            </>
+          )}
 
-      <button type="submit" disabled={uploadedImages.length === 0}>
-        {blockId ? '수정하기' : '저장하기'}
-      </button>
-      <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
-        삭제하기
-      </button>
-    </B.Container>
+          {uploadedImages.map((image, index) => {
+            return (
+              <div key={index}>
+                <div
+                  className="square-preview"
+                  style={{
+                    backgroundImage: `url(${
+                      typeof image === 'string'
+                        ? image
+                        : URL.createObjectURL(image)
+                    })`,
+                  }}
+                />
+                <button type="button" onClick={() => handleRemoveImage(index)}>
+                  -
+                </button>
+              </div>
+            );
+          })}
+        </O.ImageContainer>
+        <O.ButtonArea>
+          <O.SubmitButton type="submit" disabled={uploadedImages.length === 0}>
+            {blockId ? '수정하기' : '저장하기'}
+          </O.SubmitButton>
+          <O.SubmitButton
+            type="button"
+            color="#313733"
+            onClick={() => handleRemoveButtonClick(blockId)}
+          >
+            삭제하기
+          </O.SubmitButton>
+        </O.ButtonArea>
+      </O.Container>
+    </>
   );
 };
 

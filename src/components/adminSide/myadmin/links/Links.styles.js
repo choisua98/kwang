@@ -24,4 +24,8 @@ export const L = {
       }
     }
   `,
+
+  CustomerSideContainer: styled.div`
+    margin-bottom: 20px;
+  `,
 };
