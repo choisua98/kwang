@@ -54,7 +54,6 @@ const LinkService = () => {
                 </button>
               ))}
             </L.ButtonContainer>
-            git
           </Col>
         </Row>
       </L.CustomerSideContainer>
