@@ -33,7 +33,7 @@ const LinkService = () => {
   }, [uid]);
   return (
     <>
-      <L.Container>
+      <div style={{ height: '150px', marginTop: '-40px' }}>
         <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
           <Col span={24} style={{ textAlign: 'center' }}>
             <L.ButtonContainer style={{ marginTop: '20px' }}>
@@ -55,7 +55,7 @@ const LinkService = () => {
             </L.ButtonContainer>
           </Col>
         </Row>
-      </L.Container>
+      </div>
     </>
   );
 };
