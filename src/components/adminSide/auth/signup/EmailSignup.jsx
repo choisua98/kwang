@@ -6,6 +6,7 @@ import {
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
+import { E } from './EmailSignup.styles';
 
 const EmailSignup = () => {
   const [email, setEmail] = useState('');
@@ -88,9 +89,9 @@ const EmailSignup = () => {
 
   return (
     <>
-      <div style={{ fontSize: '14px' }}>아이디(이메일)</div>
-      <form style={{ position: 'relative', height: '100%' }}>
-        <div style={{ display: 'flex' }}>
+      <E.FormContainer style={{ position: 'relative', height: '100%' }}>
+        <label>아이디(이메일)</label>
+        <E.EmailDiv>
           <input
             type="email"
             value={email}
@@ -101,36 +102,14 @@ const EmailSignup = () => {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
-            style={{
-              marginTop: '12px',
-              padding: '16.5px 16px',
-              maxWidth: '225px',
-              boxSizing: 'border-box',
-              border: 'none',
-              borderRadius: '15px',
-              background: '#fafafa',
-            }}
           />
-          <button
-            type="button"
-            onClick={onDuplicateCheckButtonClickHandler}
-            style={{
-              margin: '12px 0 0 9px',
-              padding: '16.5px 0',
-              maxWidth: '116px',
-              width: '116px',
-              height: '48.5px',
-              boxSizing: 'border-box',
-              color: '#B0B0B0',
-              borderRadius: '10px',
-              background: '#E7E7E7',
-            }}
-          >
+          <button type="button" onClick={onDuplicateCheckButtonClickHandler}>
             중복확인
           </button>
-        </div>
-        <div style={{ margin: '35px 0 0', fontSize: '14px' }}>비밀번호</div>
-        <div>
+        </E.EmailDiv>
+
+        <E.PasswordDiv>
+          <label>비밀번호</label>
           <input
             type="password"
             value={password}
@@ -140,17 +119,7 @@ const EmailSignup = () => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-            style={{
-              marginTop: '12px',
-              padding: '16.5px 16px',
-              boxSizing: 'border-box',
-              border: 'none',
-              borderRadius: '15px',
-              background: '#fafafa',
-            }}
           />
-        </div>
-        <div>
           <input
             type="password"
             value={confirmPassword}
@@ -160,16 +129,8 @@ const EmailSignup = () => {
             onChange={(e) => {
               setConfirmPassword(e.target.value);
             }}
-            style={{
-              marginTop: '12px',
-              padding: '16.5px 16px',
-              boxSizing: 'border-box',
-              border: 'none',
-              borderRadius: '15px',
-              background: '#fafafa',
-            }}
           />
-        </div>
+        </E.PasswordDiv>
         <Button
           type="submit"
           onClick={onSignupButtonClickHandler}
@@ -190,7 +151,7 @@ const EmailSignup = () => {
         >
           회원가입하기
         </Button>
-      </form>
+      </E.FormContainer>
     </>
   );
 };

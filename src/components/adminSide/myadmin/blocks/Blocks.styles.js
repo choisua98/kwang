@@ -46,6 +46,8 @@ export const B = {
       border: 1px solid gray;
       color: gray;
       cursor: default;
+      background-color: rgb(255, 250, 240, 0.8);
+      border: none;
     }
   `,
 };

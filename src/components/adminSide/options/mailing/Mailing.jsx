@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { M } from './Mailing.styles';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useInput from '../../../../hooks/useInput';
 import {
@@ -13,6 +12,10 @@ import {
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useAtom } from 'jotai';
 import { blocksAtom } from '../../../../atoms/Atom';
+import { O } from '../Options.styles';
+import { LeftOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+
 const Mailing = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -95,49 +98,61 @@ const Mailing = () => {
   };
 
   return (
-    <M.Container
-      onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
-    >
-      <label htmlFor="title">
-        메일링 서비스 이름<span>*</span>
-      </label>
-      <p>{titleCount}/20자</p>
-      <input
-        id="title"
-        name="title"
-        type="text"
-        placeholder="메일링 서비스 📩"
-        value={title}
-        onChange={(e) => {
-          handleTitleChange(e);
-          setTitleCount(e.target.value.length);
-        }}
-        maxLength={20}
-        autoFocus
-      />
-      <label htmlFor="description">
-        메일링 서비스에 대한 간략한 설명<span>*</span>
-      </label>
-      <p>{descriptionCount}/80자</p>
-      <textarea
-        id="description"
-        name="description"
-        type="text"
-        placeholder="메일링 서비스에 대해 간단히 설명해주세요."
-        value={description}
-        onChange={(e) => {
-          handleDescriptionChange(e);
-          setDescriptionCount(e.target.value.length);
-        }}
-        maxLength={80}
-      />
-      <button type="submit" disabled={!title || !description}>
-        {blockId ? '수정하기' : '저장하기'}
-      </button>
-      <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
-        삭제하기
-      </button>
-    </M.Container>
+    <>
+      <O.HeaderStyle>
+        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
+        <p>설정</p>
+      </O.HeaderStyle>
+      <O.Container
+        onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+      >
+        <label htmlFor="title">
+          메일링 서비스 이름<span>*</span>
+        </label>
+        <p>{titleCount}/20자</p>
+        <input
+          id="title"
+          name="title"
+          type="text"
+          placeholder="메일링 서비스 📩"
+          value={title}
+          onChange={(e) => {
+            handleTitleChange(e);
+            setTitleCount(e.target.value.length);
+          }}
+          maxLength={20}
+          autoFocus
+        />
+        <label htmlFor="description">
+          메일링 서비스에 대한 간략한 설명<span>*</span>
+        </label>
+        <p>{descriptionCount}/80자</p>
+        <textarea
+          id="description"
+          name="description"
+          type="text"
+          placeholder="메일링 서비스에 대해 간단히 설명해주세요."
+          value={description}
+          onChange={(e) => {
+            handleDescriptionChange(e);
+            setDescriptionCount(e.target.value.length);
+          }}
+          maxLength={80}
+        />
+        <O.ButtonArea>
+          <O.SubmitButton type="submit" disabled={!title || !description}>
+            {blockId ? '수정하기' : '저장하기'}
+          </O.SubmitButton>
+          <O.SubmitButton
+            type="button"
+            color="#313733"
+            onClick={() => handleRemoveButtonClick(blockId)}
+          >
+            삭제하기
+          </O.SubmitButton>
+        </O.ButtonArea>
+      </O.Container>
+    </>
   );
 };
 export default Mailing;

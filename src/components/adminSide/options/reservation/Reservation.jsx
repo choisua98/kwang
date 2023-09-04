@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { R } from './Reservation.styles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import {
@@ -23,6 +22,10 @@ import { DatePicker, Modal, Space } from 'antd';
 import { blocksAtom } from '../../../../atoms/Atom';
 import { useAtom } from 'jotai';
 import { CameraOutlined } from '@ant-design/icons';
+import { O } from '../Options.styles';
+import { LeftOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
 // 오늘 이전의 날짜는 선택 불가능하도록 설정하는 함수
@@ -224,150 +227,164 @@ const Reservation = () => {
   };
 
   return (
-    <R.Container
-      onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
-    >
-      <label htmlFor="title">
-        예약 서비스 이름<span>*</span>
-      </label>
-      <p>{titleCount}/20자</p>
-      <input
-        id="title"
-        placeholder="예약 서비스 🗓️"
-        value={title}
-        onChange={(e) => {
-          setTitle(e.target.value);
-          setTitleCount(e.target.value.length);
-        }}
-        maxLength={20}
-        autoFocus
-      />
+    <>
+      <O.HeaderStyle>
+        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
+        <p>설정</p>
+      </O.HeaderStyle>
 
-      <label htmlFor="description">
-        예약 상세설명<span>*</span>
-      </label>
-      <p>{descriptionCount}/50자</p>
-      <textarea
-        id="description"
-        placeholder="상세 설명을 입력해주세요"
-        value={description}
-        onChange={(e) => {
-          setDescription(e.target.value);
-          setDescriptionCount(e.target.value.length);
-        }}
-        maxLength={50}
-      />
+      <O.Container
+        onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+      >
+        <label htmlFor="title">
+          예약 서비스 이름<span>*</span>
+        </label>
+        <p>{titleCount}/20자</p>
+        <input
+          id="title"
+          placeholder="예약 서비스 🗓️"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            setTitleCount(e.target.value.length);
+          }}
+          maxLength={20}
+          autoFocus
+        />
 
-      <R.ImageContainer>
-        {uploadedImages.length >= maxUploads ? (
-          <>
-            <div onClick={handleImageChange}>
-              <label
-                htmlFor="imageInput"
-                className={
-                  uploadedImages.length >= maxUploads ? 'disabled' : ''
-                }
-              >
-                <CameraOutlined style={{ fontSize: '30px' }} />
+        <label htmlFor="description">
+          예약 상세설명<span>*</span>
+        </label>
+        <p>{descriptionCount}/50자</p>
+        <textarea
+          id="description"
+          placeholder="상세 설명을 입력해주세요"
+          value={description}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            setDescriptionCount(e.target.value.length);
+          }}
+          maxLength={50}
+        />
+
+        <O.ImageContainer>
+          {uploadedImages.length >= maxUploads ? (
+            <>
+              <div onClick={handleImageChange}>
+                <label
+                  htmlFor="imageInput"
+                  className={
+                    uploadedImages.length >= maxUploads ? 'disabled' : ''
+                  }
+                >
+                  <CameraOutlined style={{ fontSize: '30px' }} />
+                  <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+                </label>
+              </div>
+            </>
+          ) : (
+            <>
+              <label htmlFor="imageInput">
+                <div>
+                  <CameraOutlined style={{ fontSize: '30px' }} />
+                </div>
                 <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
               </label>
-            </div>
-          </>
-        ) : (
-          <>
-            <label htmlFor="imageInput">
-              <div>
-                <CameraOutlined style={{ fontSize: '30px' }} />
-              </div>
-              <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
-            </label>
-            <input
-              id="imageInput"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-          </>
-        )}
-        {uploadedImages.map((image, index) => {
-          return (
-            <div key={index}>
-              <div
-                className="square-preview"
-                style={{
-                  backgroundImage: `url(${
-                    typeof image === 'string'
-                      ? image
-                      : URL.createObjectURL(image)
-                  })`,
-                }}
+              <input
+                id="imageInput"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
               />
-              <button type="button" onClick={() => handleRemoveImage(index)}>
-                -
-              </button>
-            </div>
-          );
-        })}
-      </R.ImageContainer>
-      <label htmlFor="number">
-        모집 인원<span>*</span>
-      </label>
-      <input
-        id="number"
-        type="number"
-        placeholder={'모집 인원을 선택해주세요'}
-        value={numberOfPeople}
-        onChange={(e) => {
-          setNumberOfPeople(e.target.value);
-        }}
-        min={0}
-      />
-      <label htmlFor="datePicker">
-        시작 날짜 선택<span>*</span>
-      </label>
-      <Space direction="vertical" size={12}>
-        <DatePicker
-          id="datePicker"
-          value={blockId ? dayjs(pickDate) : undefined}
-          disabledDate={disabledDate}
-          onChange={datePickInput}
-          style={{ width: '100%' }}
-          popupClassName="datePickerPopup"
+            </>
+          )}
+          {uploadedImages.map((image, index) => {
+            return (
+              <div key={index}>
+                <div
+                  className="square-preview"
+                  style={{
+                    backgroundImage: `url(${
+                      typeof image === 'string'
+                        ? image
+                        : URL.createObjectURL(image)
+                    })`,
+                  }}
+                />
+                <button type="button" onClick={() => handleRemoveImage(index)}>
+                  -
+                </button>
+              </div>
+            );
+          })}
+        </O.ImageContainer>
+        <label htmlFor="number">
+          모집 인원<span>*</span>
+        </label>
+        <input
+          id="number"
+          type="number"
+          placeholder={'모집 인원을 선택해주세요'}
+          value={numberOfPeople}
+          onChange={(e) => {
+            setNumberOfPeople(e.target.value);
+          }}
+          min={0}
         />
-      </Space>
-      <label htmlFor="rangePicker">
-        모집 기간 선택<span>*</span>
-      </label>
-      <Space direction="vertical" size={12}>
-        <RangePicker
-          id="rangePicker"
-          value={[
-            startDate ? dayjs(startDate) : null,
-            endDate ? dayjs(endDate) : null,
-          ]}
-          onChange={periodPickInput}
-          disabledDate={disabledDate}
-          style={{ width: '100%' }}
-          popupClassName="periodPickerPopup"
-        />
-      </Space>
-      <button
-        type="submit"
-        disabled={
-          !title ||
-          !description ||
-          !numberOfPeople ||
-          !pickDate ||
-          !startDate ||
-          !endDate
-        }
-      >
-        {blockId ? '수정하기' : '저장하기'}
-      </button>
-      <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
-        삭제하기
-      </button>
-    </R.Container>
+        <label htmlFor="datePicker">
+          시작 날짜 선택<span>*</span>
+        </label>
+        <Space direction="vertical" size={12}>
+          <DatePicker
+            id="datePicker"
+            value={blockId ? dayjs(pickDate) : undefined}
+            disabledDate={disabledDate}
+            onChange={datePickInput}
+            style={{ width: '100%' }}
+            popupClassName="datePickerPopup"
+          />
+        </Space>
+        <label htmlFor="rangePicker">
+          모집 기간 선택<span>*</span>
+        </label>
+        <Space direction="vertical" size={12}>
+          <RangePicker
+            id="rangePicker"
+            value={[
+              startDate ? dayjs(startDate) : null,
+              endDate ? dayjs(endDate) : null,
+            ]}
+            onChange={periodPickInput}
+            disabledDate={disabledDate}
+            style={{ width: '100%' }}
+            popupClassName="periodPickerPopup"
+          />
+        </Space>
+
+        <O.ButtonArea>
+          <O.SubmitButton
+            type="submit"
+            disabled={
+              !title ||
+              !description ||
+              !numberOfPeople ||
+              !pickDate ||
+              !startDate ||
+              !endDate
+            }
+          >
+            {blockId ? '수정하기' : '저장하기'}
+          </O.SubmitButton>
+          <O.SubmitButton
+            type="button"
+            color="#313733"
+            onClick={() => handleRemoveButtonClick(blockId)}
+          >
+            삭제하기
+          </O.SubmitButton>
+        </O.ButtonArea>
+      </O.Container>
+    </>
   );
 };
 export default Reservation;
