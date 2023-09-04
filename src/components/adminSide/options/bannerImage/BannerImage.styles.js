@@ -12,6 +12,20 @@ export const B = {
     }
   `,
 
+  Div: styled.div`
+    p {
+      font-size: 1.2rem;
+    }
+
+    div:nth-child(2) {
+      margin: 20px 0;
+
+      span {
+        color: red;
+      }
+    }
+  `,
+
   ImageContainer: styled.div`
     display: flex;
     gap: 10px;

@@ -2,13 +2,14 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
 
-   :root {
-    --color-bg: #FFFAF0;
-    --color-text: #160E0E;
-    --color-accent: #C12D2D;
-    --color-white: #FEFEFE;
-    --color-primary: #D1CFCF
-  } 
+:root {
+  --color-bg: #FFFAF0;
+  --color-text: #313733;
+  --color-accent: #FF7C38;
+  --color-white: #FFFFFF;
+  --color-primary: #FFBE51;
+  --color-secondary: #FFF3D7;
+}
 
   /* 전체 폰트 적용 */
   @font-face {
@@ -30,8 +31,8 @@ const GlobalStyle = createGlobalStyle`
     min-height: 100vh;
     height: auto;
     font-family: 'Pretendard-Regular'; 
-    color: var(--color-text); 
-    background-color: var(--color-bg); 
+    // color: var(--color-text); 
+    // background-color: var(--color-bg); 
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 50% 50%;

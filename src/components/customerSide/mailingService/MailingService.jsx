@@ -72,14 +72,13 @@ const MailingService = () => {
   };
 
   return (
-    <div>
-      <button>＜</button>
-      <br />
-      <br />
+    <>
       <div>{title}</div>
       <div>{desc}</div>
       <M.Container>
-        <label htmlFor="name">이름</label>
+        <label htmlFor="name">
+          이름<span>*</span>
+        </label>
         <input
           id="name"
           name="name"
@@ -92,10 +91,12 @@ const MailingService = () => {
           autoFocus
         />
 
-        <label htmlFor="number">연락처</label>
+        <label htmlFor="phoneNumber">
+          연락처<span>*</span>
+        </label>
         <input
-          id="number"
-          name="number"
+          id="phoneNumber"
+          name="phoneNumber"
           type="tel"
           value={phoneNumber}
           onChange={(e) => {
@@ -105,7 +106,9 @@ const MailingService = () => {
           required
         />
 
-        <label htmlFor="email">이메일</label>
+        <label htmlFor="email">
+          이메일<span>*</span>
+        </label>
         <input
           id="email"
           name="email"
@@ -117,11 +120,15 @@ const MailingService = () => {
           required
         />
 
-        <button type="submit" onClick={submitButtonClick}>
+        <button
+          type="submit"
+          disabled={!name || !phoneNumber || !email}
+          onClick={submitButtonClick}
+        >
           신청하기
         </button>
       </M.Container>
-    </div>
+    </>
   );
 };
 

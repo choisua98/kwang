@@ -4,7 +4,6 @@ export const L = {
   Login: styled.div`
     padding: 25px 20px;
     height: calc(100vh - 113px);
-    background: #fff;
   `,
   Sns: styled.div`
     margin-top: 17.5px;

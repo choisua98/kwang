@@ -92,13 +92,15 @@ const FanLetter = () => {
 
   return (
     <F.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
-      <label htmlFor="title">팬레터 서비스 이름</label>
+      <label htmlFor="title">
+        팬레터 서비스 이름<span>*</span>
+      </label>
       <p>{titleCount}/20자</p>
       <input
         id="title"
         name="title"
         type="text"
-        placeholder="팬레터"
+        placeholder="팬레터 보내기 💘"
         value={title}
         onChange={(e) => {
           setTitle(e.target.value);
@@ -107,13 +109,15 @@ const FanLetter = () => {
         maxLength={20}
         autoFocus
       />
-      <label htmlFor="description">팬레터 설명을 작성해 주세요</label>
+      <label htmlFor="description">
+        팬레터 설명을 작성해 주세요<span>*</span>
+      </label>
       <p>{descriptionCount}/50자</p>
       <input
         id="description"
         name="description"
         type="text"
-        placeholder="설명을 작성해 주세요"
+        placeholder="안녕하세요 크리에이터 크왕이에요! 저에게 전하고 싶은 메시지를 남겨주세용 ㅎㅎ"
         value={description}
         onChange={(e) => {
           setDescription(e.target.value);
@@ -121,7 +125,9 @@ const FanLetter = () => {
         }}
         maxLength={50}
       />
-      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
+      <button type="submit" disabled={!title || !description}>
+        {blockId ? '수정하기' : '저장하기'}
+      </button>
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
         삭제하기
       </button>

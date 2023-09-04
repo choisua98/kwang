@@ -15,13 +15,10 @@ const Main = () => {
   const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
   const { uid } = useParams();
   const userUid = uid;
-  console.log(userUid);
 
   useEffect(() => {
-    console.log('useEffect들어옴');
     const unsubscribe = async (userUid) => {
       if (userUid) {
-        console.log('userUid있음');
         // Firestore에서 사용자의 테마 정보 불러오기
         try {
           const userDocRef = doc(db, 'users', userUid);

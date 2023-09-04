@@ -12,17 +12,26 @@ export const C = {
       padding: 5px 7px;
     }
 
-    input,
-    button {
+    input {
       height: 30px;
+      padding-left: 10px;
     }
 
     textarea {
       height: 100px;
+      padding-left: 10px;
     }
 
     p {
       text-align: end;
+    }
+
+    label span {
+      color: red;
+    }
+
+    button {
+      height: 30px;
     }
   `,
 
@@ -41,6 +50,10 @@ export const C = {
       border-radius: 5px;
       background: #fafafa;
       cursor: pointer;
+
+      span {
+        color: #d3d3d3;
+      }
     }
 
     .disabled {

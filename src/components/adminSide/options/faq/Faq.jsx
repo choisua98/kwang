@@ -165,7 +165,9 @@ const Faq = () => {
     <F.Container
       onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
     >
-      <label htmlFor="title">자주묻는 질문 이름</label>
+      <label htmlFor="title">
+        자주묻는 질문 이름<span>*</span>
+      </label>
       <input
         id="title"
         name="title"
@@ -196,7 +198,9 @@ const Faq = () => {
         })}
       </F.FaqList>
 
-      <label htmlFor="question">질문 입력</label>
+      <label htmlFor="question">
+        질문 입력<span>*</span>
+      </label>
       <input
         id="question"
         name="question"
@@ -206,7 +210,9 @@ const Faq = () => {
         onChange={handleQuestionChange}
       />
 
-      <label htmlFor="answer">답변 입력</label>
+      <label htmlFor="answer">
+        답변 입력<span>*</span>
+      </label>
       <textarea
         id="answer"
         name="answer"
@@ -215,10 +221,16 @@ const Faq = () => {
         value={answer}
         onChange={handleAnswerChange}
       />
-      <button type="button" onClick={handleAddFaqButtonClick}>
+      <button
+        type="button"
+        disabled={!question || !answer}
+        onClick={handleAddFaqButtonClick}
+      >
         질문 추가하기
       </button>
-      <button type="submit">{blockId ? '수정하기' : '저장하기'}</button>
+      <button type="submit" disabled={!title || faqList.length === 0}>
+        {blockId ? '수정하기' : '저장하기'}
+      </button>
       <button type="button" onClick={() => handleRemoveButtonClick(blockId)}>
         삭제하기
       </button>

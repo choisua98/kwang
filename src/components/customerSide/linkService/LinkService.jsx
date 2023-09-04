@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { db } from '../../../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { Col, Row } from 'antd';
 import { L } from '../../adminSide/myadmin/links/Links.styles';
-import { useParams } from 'react-router-dom';
+import imageUrl from '../../../assets/images/admin/link.svg';
 
 const LinkService = () => {
   const { uid } = useParams();
-  console.log(uid);
 
   const [linkDataArray, setLinkDataArray] = useState([]); // 여러 문서 데이터를 저장할 배열
-  //   console.log(linkDataArray);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,14 +19,20 @@ const LinkService = () => {
 
         const newDataArray = []; // 3개의 문서 데이터를 임시로 담을 배열
 
-        // forEach로 uid가 일치하는 문서 데이터 3개를 돌아가며 데이터 추출
+        // forEach로 uid가 일치하는 문서 데이터를 돌아가며 데이터 추출
         querySnapshot.forEach((doc) => {
-          //   console.log('문서 데이터:', doc.data());
           const linkData = doc.data();
-          console.log(linkData);
           newDataArray.push(linkData);
-          setLinkDataArray(newDataArray); // 추출된 문서 데이터를 한 번에 업데이트
         });
+
+        // 데이터가 적어도 3개가 될 때까지 빈 데이터를 추가
+        while (newDataArray.length < 3) {
+          newDataArray.push({
+            imageUrl: imageUrl,
+          });
+        }
+
+        setLinkDataArray(newDataArray); // 추출된 문서 데이터를 업데이트
       } catch (error) {
         console.error('에러 발생:', error);
       }
@@ -38,10 +42,16 @@ const LinkService = () => {
   }, [uid]);
   return (
     <>
-      <L.Container>
-        <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
+      <L.Container
+        style={{
+          margin: '-16px auto 0',
+          padding: '0 0 30px',
+          background: 'none',
+        }}
+      >
+        <Row justify="center" align="middle">
           <Col span={24} style={{ textAlign: 'center' }}>
-            <L.ButtonContainer style={{ marginTop: '20px' }}>
+            <L.ButtonContainer>
               {linkDataArray.map((linkData, index) => (
                 <button
                   key={index}

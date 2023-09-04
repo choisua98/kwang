@@ -12,13 +12,22 @@ export const M = {
       padding: 5px 7px;
     }
 
-    input,
-    button {
+    input {
       height: 30px;
+      padding-left: 10px;
     }
 
     textarea {
-      height: 60px;
+      height: 100px;
+      padding-left: 10px;
+    }
+
+    label span {
+      color: red;
+    }
+
+    button {
+      height: 30px;
     }
   `,
 };

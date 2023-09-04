@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 
 export const L = {
   Container: styled.div`
-    margin-top: 40px;
+    margin: 40px auto;
     padding: 40px 35px;
     background: #fff;
     border-radius: 15px;
@@ -13,6 +13,7 @@ export const L = {
     max-width: 390px;
     width: 100%;
     & button {
+      padding: 0 15px;
       border-radius: 50%;
       background: none;
       img {

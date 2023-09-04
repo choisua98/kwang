@@ -15,6 +15,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const imageUploadTime = 3000;
 const Theme = () => {
+  // 파라미터
   // 사용자 UID 가져오기
   const userUid = auth.currentUser?.uid;
   const [, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
@@ -180,9 +181,9 @@ const Theme = () => {
             width: '100%',
             height: 'auto',
             fontSize: '14px',
-            color: '#fff',
+            color: '#000',
             borderRadius: '15px',
-            background: '#FFBE51',
+            background: '#D9D9D9',
           }}
         >
           테마 바꾸기

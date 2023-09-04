@@ -21,6 +21,7 @@ const FanletterService = () => {
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom); // 모달
   const [templates, setTemplates] = useState([]); // 템플릿 데이터 저장
   const [description, setDescription] = useState(''); // TextArea 값을 저장
+  const [nickname, setNickname] = useState('');
 
   useEffect(() => {
     const fetchTemplates = async () => {
@@ -41,7 +42,23 @@ const FanletterService = () => {
       }
     };
 
+    const fetchUserData = async () => {
+      if (userUid) {
+        // Firestore의 users 컬렉션에서 현재 사용자의 UID와 일치하는 문서 가져오기
+        const userDocRef = collection(db, 'users');
+        const userQuery = query(userDocRef, where('uid', '==', userUid));
+        const userSnapshot = await getDocs(userQuery);
+
+        if (!userSnapshot.empty) {
+          // 문서가 존재하면 해당 문서의 닉네임 값을 가져와 nickname 상태에 설정
+          const userData = userSnapshot.docs[0].data();
+          setNickname(userData.nickname);
+        }
+      }
+    };
+
     fetchTemplates();
+    fetchUserData();
   }, [userUid]);
 
   // 파이어스토어에 데이터 전송
@@ -75,14 +92,13 @@ const FanletterService = () => {
       </Row>
       <Row justify="left">
         <h3 style={{ display: 'flex', width: '100%' }}>
-          TO. 크왕에게
+          TO. {nickname}에게
           <span style={{ marginLeft: 'auto' }}>{description.length}/100자</span>
         </h3>
         <TextArea
           id="description"
           name="description"
           value={description}
-          showCount
           maxLength={100}
           style={{
             margin: '10px auto 0',
@@ -96,6 +112,7 @@ const FanletterService = () => {
       <Row justify="center">
         <Button
           type="primary"
+          disabled={!description}
           onClick={() => {
             submitButtonClick();
             setModalVisible(true);
