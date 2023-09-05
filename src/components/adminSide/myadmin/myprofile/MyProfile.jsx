@@ -182,7 +182,6 @@ const MyProfile = () => {
     if (file) {
       setSelectedImage(file);
       setPreviewImage(URL.createObjectURL(file));
-      // setUpdatedImage(defaultProfileImage); // 이미지 변경 시 갱신
     }
   };
 
@@ -198,7 +197,6 @@ const MyProfile = () => {
             textAlign: 'center',
           }}
         >
-          {/* <Profile /> */}
           <P.ProfileImage
             src={updatedImage}
             style={{ width: '150px', height: '150px' }}
@@ -239,7 +237,7 @@ const MyProfile = () => {
         </Col>
       </Row>
       <Modal
-        title="내 정보 수정하기"
+        title={<P.ModalTitle>내 정보 수정하기</P.ModalTitle>}
         centered
         open={modalVisible}
         onCancel={() => {
@@ -247,30 +245,35 @@ const MyProfile = () => {
         }}
         width={300}
         footer={
-          <Button
+          <P.ActivButton
             key="upload"
             type="primary"
             onClick={handleProfileUpdate}
-            style={{ width: '100%' }}
           >
             저장하기
-          </Button>
+          </P.ActivButton>
         }
       >
         {/* 모달 내용 */}
         <P.ProfileContainer>
           {/* 프로필 이미지 미리보기 */}
-          <P.PreviewImage src={previewImage} alt="이미지 미리보기" />
-          <input type="file" accept=" image/*" onChange={onChangeImgaeFile} />
-          <div style={{ marginTop: '20px' }}>닉네임</div>
-          <P.ProfileInput
-            placeholder="변경하실 닉네임을 작성해주세요."
+          <P.ProfileImageBox>
+            <P.PreviewImage src={previewImage} alt="이미지 미리보기" />
+          </P.ProfileImageBox>
+          <P.FileUploadButton
+            type="file"
+            accept=" image/*"
+            onChange={onChangeImgaeFile}
+          />
+          <P.label style={{ marginTop: '20px' }}>닉네임</P.label>
+          <P.ModalInput
+            placeholder="닉네임을 작성해 주세요."
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
-          <div style={{ marginTop: '5px' }}>소개</div>
+          <P.label style={{ marginTop: '5px' }}>소개</P.label>
 
-          <P.ProfileInput
+          <P.ModalInput
             placeholder="소개를 작성해 주세요."
             value={introduction}
             onChange={(e) => setIntroduction(e.target.value)}
