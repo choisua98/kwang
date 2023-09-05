@@ -29,6 +29,9 @@ const BannerImage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 사용자 UID 가져오기
+  const userUid = auth.currentUser?.uid;
+
   // 현재 블록 ID 가져오기
   const blockId = location.state ? location.state.blocksId : null;
 
@@ -72,9 +75,6 @@ const BannerImage = () => {
   // "저장하기" 버튼 클릭 시 실행되는 함수
   const handleAddButtonClick = async (e) => {
     e.preventDefault();
-
-    // 사용자 UID 가져오기
-    const userUid = auth.currentUser?.uid;
 
     if (!userUid) {
       alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
@@ -136,7 +136,7 @@ const BannerImage = () => {
 
       // 저장 완료 알림 후 어드민 페이지로 이동
       alert('저장 완료!');
-      navigate('/admin');
+      navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -173,7 +173,7 @@ const BannerImage = () => {
 
       // 수정 완료 알림 후 어드민 페이지로 이동
       alert('수정 완료!');
-      navigate('/admin');
+      navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('수정 중 오류 발생:', error.message);
     }
@@ -200,7 +200,7 @@ const BannerImage = () => {
         await deleteDoc(doc(db, 'template', id));
 
         alert('삭제 완료!');
-        navigate('/admin');
+        navigate(`/admin/${userUid}`);
       }
     } catch (error) {
       console.error('삭제 중 오류 발생:', error.message);
@@ -217,7 +217,9 @@ const BannerImage = () => {
   return (
     <>
       <O.HeaderStyle>
-        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
+        <Button
+          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
+        />
         <p>설정</p>
       </O.HeaderStyle>
 

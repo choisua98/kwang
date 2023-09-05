@@ -72,7 +72,6 @@ const NaverLogin = () => {
           }
         };
         checkEmailExists().then((res) => {
-          // navigate('/admin');
           navigate(`/admin/${auth.currentUser.uid}`);
         });
       }

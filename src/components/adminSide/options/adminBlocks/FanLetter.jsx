@@ -53,7 +53,7 @@ const FanLetter = () => {
       });
 
       alert('저장 완료!');
-      navigate('/admin');
+      navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -71,7 +71,7 @@ const FanLetter = () => {
       });
 
       alert('수정 완료!');
-      navigate('/admin');
+      navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('수정 중 오류 발생:', error.message);
     }
@@ -85,7 +85,7 @@ const FanLetter = () => {
         // 사용자 확인 후 삭제 작업 진행
         await deleteDoc(doc(db, 'template', id));
         alert('삭제 완료!');
-        navigate('/admin');
+        navigate(`/admin/${userUid}`);
       } catch (error) {
         console.error('삭제 중 오류 발생:', error.message);
       }
@@ -95,7 +95,9 @@ const FanLetter = () => {
   return (
     <>
       <O.HeaderStyle>
-        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
+        <Button
+          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
+        />
         <p>설정</p>
       </O.HeaderStyle>
 

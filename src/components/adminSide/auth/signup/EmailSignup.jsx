@@ -14,6 +14,9 @@ const EmailSignup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 
+  // 사용자 UID 가져오기
+  const userUid = auth.currentUser?.uid;
+
   // 이메일 중복확인 버튼클릭 핸들러
   const onDuplicateCheckButtonClickHandler = async () => {
     if (!email) {
@@ -49,7 +52,7 @@ const EmailSignup = () => {
             // 회원가입 성공시
             console.log(userCredential);
             alert('회원가입에 성공하셨습니다.');
-            navigate('/admin');
+            navigate(`/admin/${userCredential.user.uid}`);
           },
         );
       } else {

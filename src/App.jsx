@@ -18,6 +18,12 @@ function App() {
 
   // onAuthStateChanged 사용
   useEffect(() => {
+    onAuthStateChanged(auth, async (user) => {
+      console.log({ 로그인한유저: user });
+      if (user) {
+        setUser(user);
+      }
+    });
     setTheme('light');
     setBackgroundImage(null);
   }, []);
