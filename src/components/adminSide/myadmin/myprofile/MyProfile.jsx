@@ -3,8 +3,8 @@ import { Row, Col, Button, Modal } from 'antd';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import btnEditImage from '../../../../assets/images/common/btn/btn-edit.png';
+import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import imageCompression from 'browser-image-compression';
 import { themeAtom } from '../../../../atoms/Atom';
 import { P } from './MyProfile.styles';
@@ -82,7 +82,11 @@ const MyProfile = () => {
   // 프로필 이미지 업데이트 함수
   const handleImageUpdate = async () => {
     try {
-      if (selectedImage) {
+      if (!selectedImage) {
+        return updatedImage === defaultProfileImage
+          ? defaultProfileImage
+          : updatedImage;
+      } else {
         // 기존 userUID 폴더의 이미지 전체 삭제
         const userImagesRef = ref(storage, `profileImages/${userUid}`);
         const userImagesList = await listAll(userImagesRef);
@@ -94,14 +98,13 @@ const MyProfile = () => {
           }),
         );
 
-        const options = {
-          maxSizeMB: 0.5,
-          maxWidthOrHeight: 300,
-          useWebWorker: true,
-        };
-
         // 이미지 압축 함수
-        const compressedImage = async (imageFile) => {
+        const compressImage = async (imageFile) => {
+          const options = {
+            maxSizeMB: 0.5,
+            maxWidthOrHeight: 300,
+            useWebWorker: true,
+          };
           try {
             const compressedFile = await imageCompression(imageFile, options);
             return compressedFile;
@@ -113,7 +116,7 @@ const MyProfile = () => {
 
         // 압축한 프로필 이미지 Firebase에 업로드
         if (selectedImage) {
-          const compressedFile = await compressedImage(selectedImage);
+          const compressedFile = await compressImage(selectedImage);
           if (compressedFile) {
             const imageRef = ref(
               storage,
@@ -126,8 +129,6 @@ const MyProfile = () => {
           }
         }
         return null;
-      } else {
-        return updatedImage;
       }
     } catch (error) {
       console.error('프로필 이미지 업데이트 실패', error);
@@ -169,7 +170,6 @@ const MyProfile = () => {
 
       setUpdateNick(nickname);
       setUpdateIntro(introduction);
-      console.log('업데이트 함수 속 닉네임', nickname);
 
       setModalVisible(false); // 모달 닫기
     } catch (error) {
