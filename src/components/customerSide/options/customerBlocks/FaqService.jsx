@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Collapse } from 'antd';
 import { db } from '../../../../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { C } from '../CustomerBlocks.style';
+import { LeftOutlined } from '@ant-design/icons';
 
 const FaqService = () => {
+  const navigate = useNavigate();
   const [faqs, setFaqs] = useState([]); // Firebase에서 가져온 faq 데이터가 저장될 state
   const [activeKey, setActiveKey] = useState(null); // 현재 열려있는 faq 아이템의 키 값을 관리하는 state
   const { uid } = useParams();
@@ -57,15 +58,21 @@ const FaqService = () => {
   );
 
   return (
-    <C.Container>
-      <h1>{faqs.length > 0 ? faqs[0].title : ''}</h1>
+    <>
+      <C.HeaderStyle>
+        <button onClick={() => navigate(`/${userUid}`)}>
+          <LeftOutlined />
+        </button>
+        <p>{faqs.length > 0 ? faqs[0].title : ''}</p>
+      </C.HeaderStyle>
+
       <C.Collapse
         activeKey={activeKey}
         onChange={(key) => setActiveKey(key)}
         accordion
         items={items}
       />
-    </C.Container>
+    </>
   );
 };
 
