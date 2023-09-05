@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'antd';
 import { db } from '../../../../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -61,20 +60,18 @@ const FaqService = () => {
   return (
     <>
       <C.HeaderStyle>
-        <Button
-          icon={<LeftOutlined onClick={() => navigate(`/${uid}/faq`)} />}
-        />
-        <h1>{faqs.length > 0 ? faqs[0].title : ''}</h1>
+        <button onClick={() => navigate(`/${userUid}`)}>
+          <LeftOutlined />
+        </button>
+        <p>{faqs.length > 0 ? faqs[0].title : ''}</p>
       </C.HeaderStyle>
 
-      <C.Container>
-        <C.Collapse
-          activeKey={activeKey}
-          onChange={(key) => setActiveKey(key)}
-          accordion
-          items={items}
-        />
-      </C.Container>
+      <C.Collapse
+        activeKey={activeKey}
+        onChange={(key) => setActiveKey(key)}
+        accordion
+        items={items}
+      />
     </>
   );
 };

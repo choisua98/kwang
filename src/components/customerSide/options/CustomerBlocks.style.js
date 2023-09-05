@@ -7,9 +7,11 @@ export const C = {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px 0px 60px 0px;
+    margin: 20px 0px 30px 0px;
     position: relative;
+
     button {
+      background-color: transparent;
       position: absolute;
       left: 3%;
     }
@@ -23,6 +25,15 @@ export const C = {
     flex-direction: column;
     gap: 10px;
     padding: 20px;
+
+    h1 {
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
 
     ::placeholder {
       color: #999;
@@ -50,10 +61,11 @@ export const C = {
 
     p {
       font-size: 14px;
-      text-align: end;
     }
 
     label {
+      display: flex;
+      justify-content: space-between;
       font-size: 14px;
     }
 
@@ -63,11 +75,13 @@ export const C = {
   `,
 
   Collapse: styled(Collapse)`
-    text-align: center;
-    background-color: white;
+    text-align: start;
+    background-color: var(--color-primary);
+    margin: 0px 20px;
+
     p {
       font-size: 14px;
-      text-align: center;
+      text-align: start;
     }
   `,
 
