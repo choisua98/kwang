@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-export const B = {
+export const C = {
   Container: styled.div`
     button {
       margin-bottom: 15px;

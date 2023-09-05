@@ -9,7 +9,6 @@ export const H = {
   `,
   Logo: styled.img`
     // padding-top: ${(props) => props.topPadding || '0'}px;
-    width: 37px;
     height: 17px;
   `,
   Container: styled.div`
