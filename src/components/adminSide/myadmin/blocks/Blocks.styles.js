@@ -29,25 +29,26 @@ export const B = {
     & > button:first-child {
       margin-top: 0;
     }
-  `,
-  ActivButton: styled.button`
-    margin: 20px auto 0;
-    padding: 21.5px 0;
-    width: 100%;
-    border-radius: 15px;
-    background: #fff3d7;
 
-    &:hover {
-      color: #fff;
-      background: #ff7c38;
-    }
+    button {
+      margin: 15px auto 0;
+      padding: 12px 0;
+      width: 100%;
+      border-radius: 15px;
+      background: #fff3d7;
 
-    &:disabled {
-      border: 1px solid gray;
-      color: gray;
-      cursor: default;
-      background-color: rgb(255, 250, 240, 0.8);
-      border: none;
+      &:hover {
+        color: #fff;
+        background: #ff7c38;
+      }
+
+      &:disabled {
+        border: 1px solid gray;
+        color: gray;
+        cursor: default;
+        background-color: rgb(255, 250, 240, 0.8);
+        border: none;
+      }
     }
   `,
 };

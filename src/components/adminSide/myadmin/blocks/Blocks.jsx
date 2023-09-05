@@ -70,42 +70,45 @@ const Blocks = () => {
       >
         <>
           <B.ButtonsContainer>
-            <B.ActivButton
+            <button onClick={() => navigate('/admin/addlink')}>
+              링크 추가하기 ✔️
+            </button>
+            <button
               onClick={() => navigate('/admin/challenge')}
               disabled={isBlockDisabled('challenge')}
             >
               함께해요 챌린지 🔥
-            </B.ActivButton>
-            <B.ActivButton
+            </button>
+            <button
               onClick={() => navigate('/admin/mailing')}
               disabled={isBlockDisabled('mailing')}
             >
               메일링 서비스 📩
-            </B.ActivButton>
-            <B.ActivButton
+            </button>
+            <button
               onClick={() => navigate('/admin/reservation')}
               disabled={isBlockDisabled('reservation')}
             >
               예약 서비스 🗓
-            </B.ActivButton>
-            <B.ActivButton
+            </button>
+            <button
               onClick={() => navigate('/admin/faq')}
               disabled={isBlockDisabled('faq')}
             >
               자주 묻는 질문 😊
-            </B.ActivButton>
-            <B.ActivButton
+            </button>
+            <button
               onClick={() => navigate('/admin/bannerimage')}
               disabled={isBlockDisabled('bannerimage')}
             >
               배너 이미지 추가
-            </B.ActivButton>
-            <B.ActivButton
+            </button>
+            <button
               onClick={() => navigate('/admin/fanletter')}
               disabled={isBlockDisabled('fanletter')}
             >
               팬레터 보내기 💘
-            </B.ActivButton>
+            </button>
           </B.ButtonsContainer>
         </>
       </B.CustomModal>
