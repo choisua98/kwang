@@ -8,7 +8,6 @@ const AdminFaq = () => {
   // 배경 이미지
   const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
 
-  // onAuthStateChanged 사용
   useEffect(() => {
     setTheme('light');
     setBackgroundImage(null);
