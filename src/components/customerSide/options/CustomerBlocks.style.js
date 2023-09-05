@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import { Collapse } from 'antd';
 
 // adminSide options 공통 css
 export const C = {
@@ -44,6 +45,11 @@ export const C = {
     label span {
       color: red;
     }
+  `,
+
+  Collapse: styled(Collapse)`
+    margin: 15px auto 0;
+    background: #fff;
   `,
 
   ButtonArea: styled.div`

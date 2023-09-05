@@ -1,11 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Layout from '../components/common/layout/Layout';
 import Home from '../pages/kwangPage/Home';
 import Login from '../pages/kwangPage/Login';
 import Signup from '../pages/kwangPage/Signup';
 import Main from '../pages/customerPage/Main';
 import Admin from '../pages/adminPage/Admin';
-import AdminData from '../pages/adminPage/AdminData';
-import Layout from '../components/common/layout/Layout';
 import AdminProfile from '../pages/adminPage/AdminProfile';
 import AdminChallenge from '../pages/adminPage/AdminChallenge';
 import AdminMailing from '../pages/adminPage/AdminMailing';
@@ -13,6 +12,7 @@ import AdminReservation from '../pages/adminPage/AdminReservation';
 import AdminFaq from '../pages/adminPage/AdminFaq';
 import AdminBannerImage from '../pages/adminPage/AdminBannerImage';
 import AdminFanLetter from '../pages/adminPage/AdminFanLetter';
+import AdminData from '../pages/adminPage/AdminData';
 
 import CustomerChallenge from '../pages/customerPage/CustomerChallenge';
 import CustomerMailing from '../pages/customerPage/CustomerMailing';
@@ -38,7 +38,9 @@ const Router = () => {
           <Route path="/admin/faq" element={<AdminFaq />} />
           <Route path="/admin/bannerimage" element={<AdminBannerImage />} />
           <Route path="/admin/fanletter" element={<AdminFanLetter />} />
+
           <Route path="/:uid" element={<Main />} />
+
           <Route path="/:uid/challenge" element={<CustomerChallenge />} />
           <Route
             path="/:uid/challenge/verify"

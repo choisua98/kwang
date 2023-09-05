@@ -7,14 +7,12 @@ import {
   serverTimestamp,
   where,
 } from 'firebase/firestore';
-import { Button, Col, Input, Modal, Row } from 'antd';
+import { Modal } from 'antd';
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../atoms/Atom';
 import { useParams } from 'react-router-dom';
 import { db } from '../../../../firebase/firebaseConfig';
 import { C } from '../CustomerBlocks.style';
-
-const { TextArea } = Input;
 
 const FanletterService = () => {
   const { uid } = useParams();
@@ -78,51 +76,41 @@ const FanletterService = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <Row justify="left">
-        {templates.map((template) => {
-          return (
-            <div key={template.id} style={{ margin: '10px auto 0' }}>
-              <h1>{template.title}</h1>
-              <h2 style={{ margin: '10px 0', lineHeight: '16px' }}>
-                {template.description}
-              </h2>
-            </div>
-          );
-        })}
-      </Row>
-      <Row justify="left">
-        <h3 style={{ display: 'flex', width: '100%' }}>
-          TO. {nickname}에게
-          <span style={{ marginLeft: 'auto' }}>{description.length}/100자</span>
-        </h3>
-        <TextArea
-          id="description"
-          name="description"
-          value={description}
-          maxLength={100}
-          style={{
-            margin: '10px auto 0',
-            height: 120,
-            marginBottom: 24,
-          }}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="설명을 작성해 주세요"
-        />
-      </Row>
-      <Row justify="center">
-        <Button
-          type="primary"
+    <C.Container>
+      {templates.map((template) => {
+        return (
+          <div key={template.id}>
+            <h1>{template.title}</h1>
+            <h2>{template.description}</h2>
+          </div>
+        );
+      })}
+
+      <label htmlFor="description">
+        TO. {nickname}에게<span>*</span>
+        <p>{description.length}/100자</p>
+      </label>
+      <textarea
+        id="description"
+        name="description"
+        value={description}
+        maxLength={100}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="설명을 작성해 주세요"
+      />
+
+      <C.ButtonArea>
+        <C.SubmitButton
+          type="button"
           disabled={!description}
           onClick={() => {
             submitButtonClick();
             setModalVisible(true);
           }}
-          style={{ margin: '20px auto 0', width: '100%' }}
         >
           발송하기
-        </Button>
-      </Row>
+        </C.SubmitButton>
+      </C.ButtonArea>
       <Modal
         title=""
         centered
@@ -132,22 +120,16 @@ const FanletterService = () => {
         closable={false}
         width={300}
       >
-        <Row justify="center">
-          <Col span={24}>
-            <Row gutter={[5, 0]} style={{ margin: '10px 0' }}>
-              <Col span={12}>팬레터 전송이 완료 되었습니다.</Col>
-              <Button
-                type="primary"
-                onClick={() => setModalVisible(false)}
-                style={{ width: '100%' }}
-              >
-                확인
-              </Button>
-            </Row>
-          </Col>
-        </Row>
+        <p>팬레터 전송이 완료 되었습니다.</p>
+        <C.SubmitButton
+          type="button"
+          color="#313733"
+          onClick={() => setModalVisible(false)}
+        >
+          확인
+        </C.SubmitButton>
       </Modal>
-    </div>
+    </C.Container>
   );
 };
 

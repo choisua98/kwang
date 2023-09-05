@@ -3,6 +3,7 @@ import { Collapse } from 'antd';
 import { db } from '../../../../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useParams } from 'react-router-dom';
+import { C } from '../CustomerBlocks.style';
 
 const FaqService = () => {
   const [faqs, setFaqs] = useState([]); // Firebase에서 가져온 faq 데이터가 저장될 state
@@ -56,16 +57,15 @@ const FaqService = () => {
   );
 
   return (
-    <div style={{ padding: '20px' }}>
+    <C.Container>
       <h1>{faqs.length > 0 ? faqs[0].title : ''}</h1>
-      <Collapse
+      <C.Collapse
         activeKey={activeKey}
         onChange={(key) => setActiveKey(key)}
         accordion
         items={items}
-        style={{ margin: '15px auto 0', background: '#fff' }}
       />
-    </div>
+    </C.Container>
   );
 };
 
