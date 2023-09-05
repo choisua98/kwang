@@ -39,13 +39,13 @@ const Main = () => {
   }, [setTheme, userUid]);
 
   return (
-    <div>
+    <>
       <div style={{ padding: '20px' }}>
         <Profile />
         <LinkService />
         <CustomerBlocks />
       </div>
-    </div>
+    </>
   );
 };
 

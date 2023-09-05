@@ -15,9 +15,11 @@ const GoogleLogin = () => {
     await signInWithPopup(auth, provider1)
       .then((result) => {
         console.log(result.user);
+        navigate(`/admin/${result.user.uid}`);
       })
-      .catch((error) => {});
-    navigate('/admin');
+      .catch((error) => {
+        console.log(error.code);
+      });
   };
 
   return (

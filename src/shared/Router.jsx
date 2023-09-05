@@ -30,7 +30,7 @@ const Router = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/:uid" element={<Admin />} />
           <Route path="/admin/profile" element={<AdminProfile />} />
           <Route path="/admindata" element={<AdminData />} />
           <Route path="/admin/challenge" element={<AdminChallenge />} />
