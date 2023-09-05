@@ -18,39 +18,9 @@ function App() {
 
   // onAuthStateChanged 사용
   useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      console.log({ 로그인한유저: user });
-      if (user) {
-        setUser(user);
-      }
-    });
+    setTheme('light');
+    setBackgroundImage(null);
   }, []);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      console.log({ onAuthStateChanged: user });
-      if (user) {
-        // setUser(user);
-
-        // Firestore에서 사용자의 테마 정보 불러오기
-        const userDocRef = doc(db, 'users', user.uid);
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setTheme(userData.theme || 'light');
-          setBackgroundImage(userData.backgroundImage || null);
-        }
-      } else {
-        // 로그인 안 한 사용자는 기본 테마로 light 사용
-        setTheme('light');
-        // 로그아웃 상태에서 배경이미지도 초기화
-        setBackgroundImage(null);
-      }
-    });
-    // unsubscribe();
-    // cleanup 함수 등록
-    return () => unsubscribe();
-  }, [setUser, setTheme, user]);
 
   useEffect(() => {
     document.body.style.backgroundColor = theme === 'dark' ? '#333' : '#fffaf0';
