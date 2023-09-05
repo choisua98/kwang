@@ -3,6 +3,21 @@ import { Collapse } from 'antd';
 
 // adminSide options 공통 css
 export const C = {
+  HeaderStyle: styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0px 60px 0px;
+    position: relative;
+    button {
+      position: absolute;
+      left: 3%;
+    }
+    p {
+      font-size: 18px;
+    }
+  `,
+
   Container: styled.form`
     display: flex;
     flex-direction: column;
@@ -48,8 +63,12 @@ export const C = {
   `,
 
   Collapse: styled(Collapse)`
-    margin: 15px auto 0;
-    background: #fff;
+    text-align: center;
+    background-color: white;
+    p {
+      font-size: 14px;
+      text-align: center;
+    }
   `,
 
   ButtonArea: styled.div`
