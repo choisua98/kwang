@@ -25,7 +25,7 @@ const EmailLogin = () => {
         (userCredential) => {
           // 로그인 성공시
           console.log(userCredential);
-          navigate('/admin');
+          navigate(`/admin/${userCredential.user.uid}`);
         },
       );
     } catch (error) {
