@@ -40,6 +40,9 @@ const Challenge = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 사용자 UID 가져오기
+  const userUid = auth.currentUser?.uid;
+
   // 현재 블록 ID 가져오기
   const blockId = location.state ? location.state.blocksId : null;
 
@@ -144,7 +147,8 @@ const Challenge = () => {
 
       // 저장 완료 알림 후 어드민 페이지로 이동
       alert('저장 완료!');
-      navigate('/admin');
+      // navigate('/admin');
+      navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -187,7 +191,8 @@ const Challenge = () => {
 
       // 수정 완료 알림 후 어드민 페이지로 이동
       alert('수정 완료!');
-      navigate('/admin');
+      // navigate('/admin:uid');
+      navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('수정 중 오류 발생:', error.message);
     }
@@ -214,7 +219,7 @@ const Challenge = () => {
         await deleteDoc(doc(db, 'template', id));
 
         alert('삭제 완료!');
-        navigate('/admin');
+        navigate(`/admin/${userUid}`);
       }
     } catch (error) {
       console.error('삭제 중 오류 발생:', error.message);
