@@ -50,8 +50,11 @@ const CustomerBlocks = () => {
     }
   }, [userUid]);
 
-  const moveToPageButton = (block) =>
-    navigate(`/${userUid}/${block.blockKind}`);
+  const moveToPageButton = (block) => {
+    block.blockKind !== 'addlink'
+      ? navigate(`/${userUid}/${block?.blockKind}`)
+      : window.open(block.addLink, '_blank');
+  };
 
   return (
     <C.Container>

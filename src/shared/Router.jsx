@@ -20,6 +20,7 @@ import CustomerReservation from '../pages/customerPage/CustomerReservation';
 import CustomerFaq from '../pages/customerPage/CustomerFaq';
 import CustomerFanletter from '../pages/customerPage/CustomerFanletter';
 import CustomerChallengeVerify from '../pages/customerPage/CustomerChallengeVerify';
+import AddLink from '../components/adminSide/options/adminBlocks/AddLink';
 
 const Router = () => {
   return (
@@ -29,7 +30,7 @@ const Router = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/:uid" element={<Admin />} />
           <Route path="/admin/profile" element={<AdminProfile />} />
           <Route path="/admindata" element={<AdminData />} />
           <Route path="/admin/challenge" element={<AdminChallenge />} />
@@ -38,6 +39,7 @@ const Router = () => {
           <Route path="/admin/faq" element={<AdminFaq />} />
           <Route path="/admin/bannerimage" element={<AdminBannerImage />} />
           <Route path="/admin/fanletter" element={<AdminFanLetter />} />
+          <Route path="/admin/addlink" element={<AddLink />} />
 
           <Route path="/:uid" element={<Main />} />
 

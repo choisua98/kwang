@@ -15,7 +15,7 @@ import { O } from '../Blocks.styles';
 import { LeftOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 
-const FanLetter = () => {
+const AddLink = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -27,11 +27,7 @@ const FanLetter = () => {
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
   const [title, setTitle] = useState(selectedBlock?.title || '');
-  const [description, setDescription] = useState(
-    selectedBlock?.description || '',
-  );
-  const [titleCount, setTitleCount] = useState(0);
-  const [descriptionCount, setDescriptionCount] = useState(0);
+  const [addLink, setAddLink] = useState(selectedBlock?.description || '');
 
   const addButtonClick = async (e) => {
     e.preventDefault();
@@ -46,14 +42,14 @@ const FanLetter = () => {
       // Firestore에 데이터 추가
       await addDoc(collection(db, 'template'), {
         title,
-        description,
-        blockKind: 'fanletter',
+        addLink,
+        blockKind: 'addlink',
         createdAt: serverTimestamp(),
         userId: userUid,
       });
 
       alert('저장 완료!');
-      navigate(`/admin/${userUid}`);
+      navigate('/admin');
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -67,11 +63,11 @@ const FanLetter = () => {
       const docRef = doc(db, 'template', blockId);
       await updateDoc(docRef, {
         title,
-        description,
+        addLink,
       });
 
       alert('수정 완료!');
-      navigate(`/admin/${userUid}`);
+      navigate('/admin');
     } catch (error) {
       console.error('수정 중 오류 발생:', error.message);
     }
@@ -85,7 +81,7 @@ const FanLetter = () => {
         // 사용자 확인 후 삭제 작업 진행
         await deleteDoc(doc(db, 'template', id));
         alert('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+        navigate('/admin');
       } catch (error) {
         console.error('삭제 중 오류 발생:', error.message);
       }
@@ -95,49 +91,40 @@ const FanLetter = () => {
   return (
     <>
       <O.HeaderStyle>
-        <Button
-          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
-        />
+        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
         <p>설정</p>
       </O.HeaderStyle>
 
       <O.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
         <label htmlFor="title">
-          팬레터 서비스 이름<span>*</span>
+          링크 제목<span>*</span>
         </label>
-        <p>{titleCount}/20자</p>
         <input
           id="title"
           name="title"
           type="text"
-          placeholder="팬레터 보내기 💘"
+          placeholder="링크 추가하기 ✔️"
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
-            setTitleCount(e.target.value.length);
           }}
-          maxLength={20}
           autoFocus
         />
         <label htmlFor="description">
-          팬레터 설명을 작성해 주세요<span>*</span>
+          링크를 추가해 주세요<span>*</span>
         </label>
-        <p>{descriptionCount}/50자</p>
         <input
           id="description"
           name="description"
           type="text"
-          placeholder="안녕하세요 크리에이터 크왕이에요! 저에게 전하고 싶은 메시지를 남겨주세용 ㅎㅎ"
-          value={description}
+          value={addLink || 'https://'}
           onChange={(e) => {
-            setDescription(e.target.value);
-            setDescriptionCount(e.target.value.length);
+            setAddLink(e.target.value);
           }}
-          maxLength={50}
         />
 
         <O.ButtonArea>
-          <O.SubmitButton type="submit" disabled={!title || !description}>
+          <O.SubmitButton type="submit" disabled={!title || !addLink}>
             {blockId ? '수정하기' : '저장하기'}
           </O.SubmitButton>
           <O.SubmitButton
@@ -153,4 +140,4 @@ const FanLetter = () => {
   );
 };
 
-export default FanLetter;
+export default AddLink;

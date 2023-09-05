@@ -124,7 +124,7 @@ const Header = () => {
                       </H.MenuButton>
                     ) : (
                       <H.MenuButton onClick={closeMenu}>
-                        <Link to={`/admin`}>
+                        <Link to={`/admin/${userUid}`}>
                           <H.IconImage src={EditIcon} alt="editIcon" />
                           <p>편집하기</p>
                         </Link>
