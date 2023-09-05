@@ -15,11 +15,13 @@ const Data = () => {
   const userUid = auth.currentUser?.uid;
 
   const downloadButtonHandler = (value) => {
-    const valueList = data?.find((item) => item.dataKind === value);
-    const ws = XLSX.utils.json_to_sheet([valueList]);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `${value}.xlsx`);
+    const tab = Tabs.find((tab) => tab.name === value);
+    if (tab) {
+      const ws = XLSX.utils.json_to_sheet(tab.state);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+      XLSX.writeFile(wb, `${tab.label}.xlsx`);
+    }
   };
 
   useEffect(() => {
