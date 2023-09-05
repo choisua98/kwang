@@ -4,17 +4,17 @@ import { styled } from 'styled-components';
 export const O = {
   HeaderStyle: styled.div`
     display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 20px 0px 60px 0px;
     position: relative;
 
     button {
-      margin-left: 10px;
+      position: absolute;
+      left: 3%;
     }
     p {
-      position: absolute;
       font-size: 18px;
-      left: 47%;
-      top: 5px;
     }
   `,
 
@@ -78,7 +78,7 @@ export const O = {
     font-weight: 700;
     color: #fff;
     border-radius: 15px;
-    background-color: ${(props) => props.color || '#FF7C38;'};
+    background-color: ${(props) => props.color || `var(--color-accent)`};
   `,
 
   // 이미지 스타일
@@ -132,8 +132,8 @@ export const O = {
     div {
       display: grid;
       padding: 10px 0px;
-      background-color: #fff3d7;
-      border: 1px solid #ff7c38;
+      background-color: var(--color-secondary);
+      border: 1px solid var(--color-primary);
       border-radius: 10px;
       margin: 8px;
     }
