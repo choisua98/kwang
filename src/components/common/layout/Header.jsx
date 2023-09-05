@@ -16,7 +16,6 @@ const Header = () => {
   const navigate = useNavigate();
   const user = auth.currentUser;
   const userUid = auth.currentUser?.uid;
-
   const location = useLocation(); // 현재 페이지의 URL 추출
   const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
   const isLoginPage = location.pathname === '/login';
@@ -24,17 +23,13 @@ const Header = () => {
   const adminUser = userUid; // 방문자인지 크리에이터인지 확인
   const [viewNickname, setViewNickname] = useState('');
   const [viewProfileImage, setViewProfileImage] = useState(defaultProfileImage);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // 홈페이지 주소 변경 후 수정 필요!
-  const COPY_URL = `kwang-nine.vercel.app/${userUid}`;
-
-  const [open, setOpen] = useState(false);
-
-  const showDrawer = () => {
-    setOpen(true);
+  const openMenu = () => {
+    setMenuOpen(true);
   };
-  const onClose = () => {
-    setOpen(false);
+  const closeMenu = () => {
+    setMenuOpen(false);
   };
 
   // userUid로 저장된 문서가 있을 경우 프로필 정보 가져오기
@@ -68,9 +63,9 @@ const Header = () => {
   const handleCopyClipBoard = async (url) => {
     try {
       await navigator.clipboard.writeText(url);
-      alert('클립보드에 링크가 복사되었어요.');
+      alert('링크가 복사 되었습니다.');
     } catch (err) {
-      console.log(err);
+      alert('링크 복사가 실패하였습니다.');
     }
   };
 
@@ -107,13 +102,13 @@ const Header = () => {
               {/* 우측 영역 */}
               <div className="right-area">
                 <Space>
-                  <Button icon={<MenuOutlined />} onClick={showDrawer} />
+                  <Button icon={<MenuOutlined />} onClick={openMenu} />
                 </Space>
                 <Drawer
                   placement="right"
                   width={320}
-                  onClose={onClose}
-                  open={open}
+                  onClose={closeMenu}
+                  open={menuOpen}
                 >
                   <H.ProfileContainer>
                     <H.ProfileImage src={viewProfileImage} />
@@ -121,14 +116,14 @@ const Header = () => {
                   </H.ProfileContainer>
                   <H.Container>
                     {!isMyPage ? (
-                      <H.MenuButton onClick={onClose}>
+                      <H.MenuButton onClick={closeMenu}>
                         <Link to={`/${userUid}`}>
                           <H.IconImage src={HomeIcon} alt="homeIcon" />
                           <p>마이홈</p>
                         </Link>
                       </H.MenuButton>
                     ) : (
-                      <H.MenuButton onClick={onClose}>
+                      <H.MenuButton onClick={closeMenu}>
                         <Link to={`/admin`}>
                           <H.IconImage src={EditIcon} alt="editIcon" />
                           <p>편집하기</p>
@@ -136,14 +131,18 @@ const Header = () => {
                       </H.MenuButton>
                     )}
                     <H.MenuButton
-                      onClick={() => handleCopyClipBoard(`${COPY_URL}`)}
+                      onClick={() =>
+                        handleCopyClipBoard(
+                          `${process.env.REACT_APP_KWANG_URL}/${userUid}`,
+                        )
+                      }
                     >
                       <H.IconImage src={LinkIcon} alt="linkIcon" />
                       링크 공유
                     </H.MenuButton>
                   </H.Container>
                   <H.MenuContainer>
-                    <H.MenuStyle onClick={onClose}>
+                    <H.MenuStyle onClick={closeMenu}>
                       <Link to={`/admindata`}>고객관리</Link>
                     </H.MenuStyle>
                     <H.MenuStyle onClick={onLogoutButtonClickHandler}>
