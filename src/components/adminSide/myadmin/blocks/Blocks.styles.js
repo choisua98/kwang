@@ -2,6 +2,23 @@ import { styled } from 'styled-components';
 import { Modal } from 'antd';
 
 export const B = {
+  MenuFormButton: styled.div`
+    padding: 18px 0;
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    border: 1.5px solid var(--color-accent);
+    background: none;
+    text-align: center;
+
+    button {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-accent);
+      background-color: transparent;
+    }
+  `,
+
   CustomModal: styled(Modal)`
     .ant-modal-header {
       margin: 0;
@@ -11,7 +28,7 @@ export const B = {
     .ant-modal-title {
       font-size: 14px;
       line-height: 14px;
-      color: #000;
+      color: var(--color-text);
     }
     .ant-modal-close {
       top: 34px;
@@ -35,11 +52,11 @@ export const B = {
       padding: 12px 0;
       width: 100%;
       border-radius: 15px;
-      background: #fff3d7;
+      background: var(--color-secondary);
 
       &:hover {
         color: #fff;
-        background: #ff7c38;
+        background: var(--color-accent);
       }
 
       &:disabled {

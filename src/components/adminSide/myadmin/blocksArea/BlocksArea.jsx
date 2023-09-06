@@ -7,7 +7,6 @@ import { query, collection, where, orderBy, getDocs } from 'firebase/firestore';
 import { auth, db } from '../../../../firebase/firebaseConfig';
 
 // swiper
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, A11y } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
