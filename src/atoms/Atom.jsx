@@ -1,4 +1,5 @@
 import { atom } from 'jotai';
+import defaultProfileImage from '../assets/images/profile-default-image.png';
 
 // export const userAtom = atom(null); // 로그인한 사용자 정보를 담을 Atom
 export const userUidAtom = atom(null); // 크리에이터의 uid를 담는  Atom
@@ -21,3 +22,9 @@ export const reservationImageAtom = atom(null);
 
 // challenge Count Atom
 export const countAtom = atom(0);
+
+// user nickname update
+export const userNickname = atom(null);
+
+// user profile image update
+export const userProfileImage = atom(defaultProfileImage);
