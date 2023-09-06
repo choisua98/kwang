@@ -42,6 +42,7 @@ export const CS = {
   CalendarContainer: styled.div`
     .react-calendar {
       max-width: 100%;
+      width: 100%;
       background-color: #fff;
       color: #222;
       border-radius: 8px;

@@ -234,8 +234,10 @@ const BannerImage = () => {
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label>
-          배너 이미지를 추가해주세요
-          <span>*</span>
+          <p>
+            배너 이미지를 추가해주세요
+            <span>*</span>
+          </p>
         </label>
 
         <O.ImageContainer>
