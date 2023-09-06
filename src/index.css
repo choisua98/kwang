@@ -8,11 +8,6 @@
   .anticon {
   font-size: 18px;
 }
-:where(.css-17a39f8).ant-btn-default {
-  background: none;
-  border: none;
-  box-shadow: none;
-}
 
 /* 스와이퍼 */
 .swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,

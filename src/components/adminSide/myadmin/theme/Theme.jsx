@@ -143,7 +143,7 @@ const Theme = () => {
       setTheme(tempTheme);
       document.body.style.backgroundColor =
         tempTheme === 'dark' ? '#333' : '#fff';
-      document.body.style.color = tempTheme === 'dark' ? '#fff' : '#000';
+      document.body.style.color = tempTheme === 'dark' ? '#fff' : '#333';
     }
     if (tempBackgroundImage !== null) {
       setBackgroundImage(tempBackgroundImage);

@@ -69,21 +69,21 @@ const BlocksArea = () => {
             </button>
           )}
           {block.blockKind === 'bannerimage' && (
-            <Swiper
+            <B.Swiper
               modules={[Pagination, A11y]}
               pagination={{ clickable: true }}
               a11y
             >
               {block.images.map((image, index) => (
-                <SwiperSlide key={index}>
+                <B.SwiperSlide key={index}>
                   <img
                     src={image}
                     alt={`bannerimage ${index + 1}`}
                     onClick={() => moveToEditButton(block)}
                   />
-                </SwiperSlide>
+                </B.SwiperSlide>
               ))}
-            </Swiper>
+            </B.Swiper>
           )}
         </div>
       ))}
