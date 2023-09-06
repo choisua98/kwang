@@ -12,6 +12,7 @@ import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { T } from './Theme.styles';
 
 const imageUploadTime = 3000;
 const Theme = () => {
@@ -172,25 +173,12 @@ const Theme = () => {
   return (
     <>
       <Row justify="center">
-        <Button
-          type="primary"
-          onClick={() => setModalVisible(true)}
-          style={{
-            marginBottom: '15px',
-            padding: '18px 0',
-            width: '100%',
-            height: 'auto',
-            fontSize: '14px',
-            color: '#fff',
-            borderRadius: '15px',
-            background: '#FFBE51',
-          }}
-        >
+        <T.ThemeMenuButton type="basic" onClick={() => setModalVisible(true)}>
           테마 바꾸기
-        </Button>
+        </T.ThemeMenuButton>
       </Row>
       <Modal
-        title="테마 수정"
+        title={<T.ModalTitle>테마 설정</T.ModalTitle>}
         centered
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
@@ -199,51 +187,23 @@ const Theme = () => {
       >
         <Row justify="center">
           <Col span={24}>
-            <Row gutter={[5, 0]} style={{ margin: '10px 0' }}>
+            <Row gutter={[6, 0]} style={{ margin: '10px 0px -4px 0px' }}>
               <Col span={12}>
-                <button
-                  style={{
-                    width: '100%',
-                    height: '100px',
-                    border: '1px solid #000',
-                    borderRadius: '5px',
-                    background: 'black',
-                    color: '#fff',
-                  }}
-                  onClick={handleDarkModeClick}
-                >
-                  다크모드
-                </button>
+                <T.DarkModeButton onClick={handleDarkModeClick}>
+                  다크 모드
+                </T.DarkModeButton>
               </Col>
               <Col span={12}>
-                <button
-                  style={{
-                    width: '100%',
-                    height: '100px',
-                    border: '1px solid #000',
-                    borderRadius: '5px',
-                    background: '#fff',
-                    color: '#000',
-                  }}
-                  onClick={handleLightModeClick}
-                >
-                  테마 2(화이트)
-                </button>
+                <T.BasicModeButton onClick={handleLightModeClick}>
+                  기본
+                </T.BasicModeButton>
               </Col>
             </Row>
-            <Row gutter={[5, 0]} style={{ margin: '10px 0' }}>
+            <Row gutter={[6, 0]} style={{ margin: '10px 0' }}>
               <Col span={12}>
-                <button
-                  style={{
-                    width: '100%',
-                    height: '100px',
-                    border: '1px solid #000',
-                    borderRadius: '5px',
-                  }}
-                  onClick={handleCustomBackgroundClick}
-                >
+                <T.SelectImageButton onClick={handleCustomBackgroundClick}>
                   배경 이미지 선택
-                </button>
+                </T.SelectImageButton>
                 {/* 파일 업로드 */}
                 <input
                   id="image-upload"
@@ -254,20 +214,9 @@ const Theme = () => {
                 />
               </Col>
               <Col span={12}>
-                <button
-                  style={{
-                    width: '100%',
-                    height: '100px',
-                    border: '1px solid #000',
-                    borderRadius: '5px',
-                    backgroundImage: `url(${sampleImg})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                  onClick={handleSampleBackgroundClick}
-                >
+                <T.SampleImageButton onClick={handleSampleBackgroundClick}>
                   샘플 이미지
-                </button>
+                </T.SampleImageButton>
               </Col>
             </Row>
           </Col>
@@ -277,18 +226,9 @@ const Theme = () => {
             {loading ? (
               <Progress percent={Math.round(progress)} status="active" />
             ) : (
-              <button
-                style={{
-                  padding: '7px 0',
-                  width: '100%',
-                  border: '1px solid #000',
-                  borderRadius: '5px',
-                }}
-                disabled={loading}
-                onClick={handleApplyClick}
-              >
+              <T.ActivButton disabled={loading} onClick={handleApplyClick}>
                 적용하기
-              </button>
+              </T.ActivButton>
             )}
           </Col>
         </Row>

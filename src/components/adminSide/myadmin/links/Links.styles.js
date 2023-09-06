@@ -14,20 +14,25 @@ export const L = {
     width: 100%;
     & button {
       margin: 0 9px;
-      width: 100%;
-      max-width: 60px;
+      padding: 0;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background: none;
+      &:first-child {
+        margin-left: 0;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
       img {
-        max-width: 60px;
         width: 100%;
-        max-height: 60px;
+        height: 100%;
         object-fit: cover;
         border-radius: 50%;
       }
     }
   `,
-
   CustomerSideContainer: styled.div`
     margin-bottom: 20px;
   `,
