@@ -66,17 +66,17 @@ const CustomerBlocks = () => {
             </button>
           )}
           {block.blockKind === 'bannerimage' && (
-            <Swiper
+            <C.Swiper
               modules={[Pagination, A11y]}
               pagination={{ clickable: true }}
               a11y
             >
               {block.images.map((image, index) => (
-                <SwiperSlide key={index}>
+                <C.SwiperSlide key={index}>
                   <img src={image} alt={`bannerimage ${index + 1}`} />
-                </SwiperSlide>
+                </C.SwiperSlide>
               ))}
-            </Swiper>
+            </C.Swiper>
           )}
         </div>
       ))}

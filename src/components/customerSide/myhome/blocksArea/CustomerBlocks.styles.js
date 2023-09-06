@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 export const C = {
   Container: styled.div`
@@ -11,6 +12,13 @@ export const C = {
       border-radius: 15px;
       background: #ff7c38;
     }
+  `,
+
+  Swiper: styled(Swiper)`
+    margin-bottom: 11px;
+  `,
+
+  SwiperSlide: styled(SwiperSlide)`
     img {
       cursor: pointer;
       width: 100%;
@@ -18,7 +26,6 @@ export const C = {
       object-fit: cover; // 이미지가 잘리지 않도록 설정
       background-color: #d6d6d6;
       border-radius: 15px;
-      margin-bottom: 15px;
     }
   `,
 };

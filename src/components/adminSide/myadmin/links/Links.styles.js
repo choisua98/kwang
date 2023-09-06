@@ -10,15 +10,15 @@ export const L = {
   ButtonContainer: styled.div`
     margin: 0 auto;
     display: block;
-    max-width: 390px;
     width: 100%;
     & button {
-      /* padding: 0 15px; */
+      width: 33.33%;
       border-radius: 50%;
       background: none;
       img {
-        width: 60px;
-        height: 60px;
+        max-width: 60px;
+        width: 100%;
+        max-height: 60px;
         object-fit: cover;
         border-radius: 50%;
       }

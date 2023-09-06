@@ -26,7 +26,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     margin: 0 auto;
-    max-width: 390px;
+    max-width: 414px;
     width: 100%;
     min-height: 100vh;
     height: auto;

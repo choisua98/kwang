@@ -3,7 +3,6 @@ import { styled } from 'styled-components';
 export const H = {
   BodyWrapper: styled.div`
     overflow: hidden;
-    // padding: 0 20px;
     width: 100%;
     box-sizing: border-box;
     color: #333;
@@ -13,7 +12,6 @@ export const H = {
 export const L = {
   Login: styled.div`
     padding: 25px 20px;
-    height: calc(100vh - 113px);
   `,
   Sns: styled.div`
     margin-top: 17.5px;
