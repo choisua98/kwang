@@ -14,6 +14,7 @@ import {
   doc,
   orderBy,
   serverTimestamp,
+  deleteDoc,
 } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
 
@@ -159,6 +160,17 @@ const Links = () => {
     }
   };
 
+  // 선택한 링크를 삭제
+  const handleDeleteClick = async (id) => {
+    if (!window.confirm('정말로 이 링크를 삭제하시겠습니까?')) return;
+    try {
+      await deleteDoc(doc(db, 'links', id));
+      fetchLinks(); // 링크가 삭제된 후에 최신 데이터 가져오기
+    } catch (error) {
+      console.error('링크 삭제 중 오류:', error);
+    }
+  };
+
   // Firestore에서 사용자의 링크 데이터를 가져오기
   const fetchLinks = async () => {
     if (!userUid) return;
@@ -205,17 +217,23 @@ const Links = () => {
             </p>
             <L.ButtonContainer style={{ marginTop: '24px' }}>
               {linksData.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => {
-                    setModalVisible(true);
-                    setEditingLinkId(link.id); // 수정 중인 링크의 ID
-                    setUrlText(link.url); // 기존 URL 값
-                    setImageUrl(link.imageUrl); // 기존 이미지 URL 값
-                  }}
-                >
-                  <img src={link.imageUrl} alt="Link Icon" />
-                </button>
+                <div key={link.id}>
+                  <button
+                    onClick={() => {
+                      setModalVisible(true);
+                      setEditingLinkId(link.id); // 수정 중인 링크의 ID
+                      setUrlText(link.url); // 기존 URL 값
+                      setImageUrl(link.imageUrl); // 기존 이미지 URL 값
+                    }}
+                  >
+                    <img src={link.imageUrl} alt="Link Icon" />
+                  </button>
+                  <L.ButtonDelete>
+                    <button onClick={() => handleDeleteClick(link.id)}>
+                      X
+                    </button>
+                  </L.ButtonDelete>
+                </div>
               ))}
               {defaultLinks.map((_, index) => (
                 <button key={index} onClick={handleNewLinkClick}>
