@@ -45,12 +45,10 @@ export const P = {
   `,
 
   ModalTitle: styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-size: 15px;
     font-weight: 500;
     color: #312f2e;
+    margin-bottom: 20px;
   `,
 
   ModalInput: styled.input`
