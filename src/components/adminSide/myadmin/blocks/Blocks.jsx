@@ -53,7 +53,8 @@ const Blocks = () => {
             color: '#FF7C38',
             borderRadius: '15px',
             border: '1.5px solid #FF7C38',
-            background: 'none',
+            // background: 'none',
+            backgroundColor: 'white',
           }}
         >
           메뉴추가하기
