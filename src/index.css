@@ -1,8 +1,15 @@
 /* 상단 메뉴 토글 */
-:where(.css-dev-only-do-not-override-17a39f8).ant-btn-default {
+:where(.css-dev-only-do-not-override-17a39f8).ant-btn-default,
+:where(.css-17a39f8).ant-btn-default {
   background: none;
   border: none;
   box-shadow: none;
+}
+:where(.css-17a39f8).ant-btn-default:not(:disabled):not(
+    .ant-btn-disabled
+  ):hover {
+  color: rgba(0, 0, 0, 0.88);
+  border-color: none;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only
   .anticon {
