@@ -20,7 +20,7 @@ function App() {
       console.log({ 로그인한유저: user });
     });
     setTheme('light');
-    setBackgroundImage(null);
+    setBackgroundImage('');
   }, []);
 
   useEffect(() => {
