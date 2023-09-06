@@ -23,8 +23,8 @@ import { blocksAtom } from '../../../../atoms/Atom';
 import { useAtom } from 'jotai';
 import { CameraOutlined } from '@ant-design/icons';
 import { O } from '../Blocks.styles';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import { LeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
@@ -229,19 +229,32 @@ const Reservation = () => {
   return (
     <>
       <O.HeaderStyle>
-        <Button
-          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
-        />
+        <button onClick={() => navigate(`/admin/${userUid}`)}>
+          <LeftOutlined />
+        </button>
         <p>설정</p>
       </O.HeaderStyle>
+
+      <O.FormGuideStyle>
+        <h2>
+          예약 서비스 <img src={IconFormCheck} alt="폼체크아이콘" />
+        </h2>
+        <p>
+          팬, 구독자가 예약을 할 수 있는 신청 폼 입니다. 강연 등 인원수가 제한된
+          행사를 개최한다면 <span>[예약신청 폼]</span>을 활용해보세요. 고객관리
+          페이지에서 신청목록을 확인하실 수 있습니다.
+        </p>
+      </O.FormGuideStyle>
 
       <O.Container
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          예약 서비스 이름<span>*</span>
+          <p>
+            예약 서비스 이름<span>*</span>
+          </p>
+          {titleCount}/20자
         </label>
-        <p>{titleCount}/20자</p>
         <input
           id="title"
           placeholder="예약 서비스 🗓️"
@@ -255,9 +268,11 @@ const Reservation = () => {
         />
 
         <label htmlFor="description">
-          예약 상세설명<span>*</span>
+          <p>
+            예약 상세설명<span>*</span>
+          </p>
+          {descriptionCount}/80자
         </label>
-        <p>{descriptionCount}/50자</p>
         <textarea
           id="description"
           placeholder="상세 설명을 입력해주세요"
@@ -266,7 +281,7 @@ const Reservation = () => {
             setDescription(e.target.value);
             setDescriptionCount(e.target.value.length);
           }}
-          maxLength={50}
+          maxLength={80}
         />
 
         <O.ImageContainer>
@@ -320,8 +335,11 @@ const Reservation = () => {
             );
           })}
         </O.ImageContainer>
+
         <label htmlFor="number">
-          모집 인원<span>*</span>
+          <p>
+            모집 인원<span>*</span>
+          </p>
         </label>
         <input
           id="number"
@@ -334,7 +352,9 @@ const Reservation = () => {
           min={0}
         />
         <label htmlFor="datePicker">
-          시작 날짜 선택<span>*</span>
+          <p>
+            시작 날짜 선택<span>*</span>
+          </p>
         </label>
         <Space direction="vertical" size={12}>
           <DatePicker
@@ -347,7 +367,9 @@ const Reservation = () => {
           />
         </Space>
         <label htmlFor="rangePicker">
-          모집 기간 선택<span>*</span>
+          <p>
+            모집 기간 선택<span>*</span>
+          </p>
         </label>
         <Space direction="vertical" size={12}>
           <RangePicker

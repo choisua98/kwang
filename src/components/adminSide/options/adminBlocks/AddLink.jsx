@@ -16,8 +16,8 @@ import {
   themeAtom,
 } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import { LeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 
 const AddLink = () => {
   const navigate = useNavigate();
@@ -103,13 +103,24 @@ const AddLink = () => {
   return (
     <>
       <O.HeaderStyle>
-        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
+        <button onClick={() => navigate(`/admin/${userUid}`)}>
+          <LeftOutlined />
+        </button>
         <p>설정</p>
       </O.HeaderStyle>
 
+      <O.FormGuideStyle>
+        <h2>
+          링크 추가하기 <img src={IconFormCheck} alt="폼체크아이콘" />
+        </h2>
+        <p>링크를 추가하여 다양한 채널을 공유해보세요.</p>
+      </O.FormGuideStyle>
+
       <O.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
         <label htmlFor="title">
-          링크 제목<span>*</span>
+          <p>
+            링크 제목<span>*</span>
+          </p>
         </label>
         <input
           id="title"
@@ -123,7 +134,9 @@ const AddLink = () => {
           autoFocus
         />
         <label htmlFor="description">
-          링크를 추가해 주세요<span>*</span>
+          <p>
+            링크를 추가해 주세요<span>*</span>
+          </p>
         </label>
         <input
           id="description"

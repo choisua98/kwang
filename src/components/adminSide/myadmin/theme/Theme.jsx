@@ -13,7 +13,6 @@ import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { T } from './Theme.styles';
-import { styled } from 'styled-components';
 
 const imageUploadTime = 3000;
 const Theme = () => {
