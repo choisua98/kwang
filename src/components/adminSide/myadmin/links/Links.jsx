@@ -229,11 +229,11 @@ const Links = () => {
                   >
                     <img src={link.imageUrl} alt="Link Icon" />
                   </button>
-                  <L.ButtonDelete>
-                    {/* <button onClick={() => handleDeleteClick(link.id)}>
+                  {/* <L.ButtonDelete>
+                    <button onClick={() => handleDeleteClick(link.id)}>
                       X
-                    </button> */}
-                  </L.ButtonDelete>
+                    </button>
+                  </L.ButtonDelete> */}
                 </div>
               ))}
               {defaultLinks.map((_, index) => (
@@ -268,9 +268,11 @@ const Links = () => {
                 <img
                   src={imageUrl}
                   style={{
-                    margin: '0 auto',
+                    margin: '5px auto 0',
                     display: 'block',
-                    width: '100px',
+                    width: '100%',
+                    height: '100px',
+                    objectFit: 'cover',
                   }}
                   alt="Preview"
                 />
@@ -287,9 +289,13 @@ const Links = () => {
                 onClick={() => fileInputRef.current.click()}
                 style={{
                   margin: '10px auto',
+                  padding: '8px 0',
                   display: 'block',
                   width: '100%',
-                  border: '1px solid #000',
+                  fontSize: '14px',
+                  color: '#ff7c38',
+                  background: '#fff',
+                  border: '1px solid #ff7c38',
                   borderRadius: '5px',
                 }}
               >
@@ -306,26 +312,38 @@ const Links = () => {
               />
             </Col>
             <Col span={24}>
-              <button
-                style={{
-                  width: '100%',
-                  border: '1px solid #000',
-                  borderRadius: '5px',
-                }}
-                onClick={handleSaveClick}
+              <div
+                style={{ margin: '10px auto 0', display: 'flex', gap: '5px' }}
               >
-                저장하기
-              </button>
-              <button
-                style={{
-                  width: '100%',
-                  border: '1px solid #000',
-                  borderRadius: '5px',
-                }}
-                onClick={() => handleDeleteClick(editingLinkId)}
-              >
-                삭제하기
-              </button>
+                <button
+                  style={{
+                    width: '100%',
+                    padding: '10px 0',
+                    display: 'block',
+                    fontSize: '14px',
+                    color: '#fff',
+                    background: '#ff7c38',
+                    borderRadius: '5px',
+                  }}
+                  onClick={handleSaveClick}
+                >
+                  저장하기
+                </button>
+                <button
+                  style={{
+                    width: '100%',
+                    padding: '10px 0',
+                    display: 'block',
+                    fontSize: '14px',
+                    color: '#fff',
+                    background: '#313733',
+                    borderRadius: '5px',
+                  }}
+                  onClick={() => handleDeleteClick(editingLinkId)}
+                >
+                  삭제하기
+                </button>
+              </div>
             </Col>
           </Row>
         </Modal>
