@@ -169,6 +169,7 @@ const Links = () => {
     } catch (error) {
       console.error('링크 삭제 중 오류:', error);
     }
+    setModalVisible(false);
   };
 
   // Firestore에서 사용자의 링크 데이터를 가져오기
@@ -229,9 +230,9 @@ const Links = () => {
                     <img src={link.imageUrl} alt="Link Icon" />
                   </button>
                   <L.ButtonDelete>
-                    <button onClick={() => handleDeleteClick(link.id)}>
+                    {/* <button onClick={() => handleDeleteClick(link.id)}>
                       X
-                    </button>
+                    </button> */}
                   </L.ButtonDelete>
                 </div>
               ))}
@@ -314,6 +315,16 @@ const Links = () => {
                 onClick={handleSaveClick}
               >
                 저장하기
+              </button>
+              <button
+                style={{
+                  width: '100%',
+                  border: '1px solid #000',
+                  borderRadius: '5px',
+                }}
+                onClick={() => handleDeleteClick(editingLinkId)}
+              >
+                삭제하기
               </button>
             </Col>
           </Row>
