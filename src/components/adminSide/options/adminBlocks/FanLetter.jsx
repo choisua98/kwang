@@ -12,8 +12,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { blocksAtom } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import { LeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 
 const FanLetter = () => {
   const navigate = useNavigate();
@@ -95,17 +95,31 @@ const FanLetter = () => {
   return (
     <>
       <O.HeaderStyle>
-        <Button
-          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
-        />
+        <button onClick={() => navigate(`/admin/${userUid}`)}>
+          <LeftOutlined />
+        </button>
         <p>설정</p>
       </O.HeaderStyle>
 
+      <O.FormGuideStyle>
+        <h2>
+          팬레터 보내기 <img src={IconFormCheck} alt="폼체크아이콘" />
+        </h2>
+        <p>
+          팬,구독자들에게 팬레터와 같은 메세지를 받고자 하실 경우
+          <span>[팬레터 받기 폼]</span>을 이용해보세요. 팬,구독자들이 보내주신
+          메세지는 고객관리 페이지에서 모아 볼 수 있습니다.
+        </p>
+      </O.FormGuideStyle>
+
       <O.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
         <label htmlFor="title">
-          팬레터 서비스 이름<span>*</span>
+          <p>
+            팬레터 서비스 이름<span>*</span>
+          </p>
+          {titleCount}/20자
         </label>
-        <p>{titleCount}/20자</p>
+
         <input
           id="title"
           name="title"
@@ -120,10 +134,13 @@ const FanLetter = () => {
           autoFocus
         />
         <label htmlFor="description">
-          팬레터 설명을 작성해 주세요<span>*</span>
+          <p>
+            팬레터 설명을 작성해 주세요<span>*</span>
+          </p>
+          {descriptionCount}/80자
         </label>
-        <p>{descriptionCount}/50자</p>
-        <input
+
+        <textarea
           id="description"
           name="description"
           type="text"
@@ -133,7 +150,7 @@ const FanLetter = () => {
             setDescription(e.target.value);
             setDescriptionCount(e.target.value.length);
           }}
-          maxLength={50}
+          maxLength={80}
         />
 
         <O.ButtonArea>

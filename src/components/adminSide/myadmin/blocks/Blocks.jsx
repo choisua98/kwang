@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Modal, Row } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
@@ -41,28 +40,14 @@ const Blocks = () => {
 
   return (
     <>
-      <Row justify="center">
-        <Button
-          type="primary"
-          onClick={() => setModalVisible(true)}
-          style={{
-            padding: '18px 0',
-            width: '100%',
-            height: 'auto',
-            fontSize: '14px',
-            color: '#FF7C38',
-            borderRadius: '15px',
-            border: '1.5px solid #FF7C38',
-            // background: 'none',
-            backgroundColor: 'white',
-          }}
-        >
-          메뉴추가하기
-        </Button>
-      </Row>
+      <B.MenuFormButton>
+        <button type="button" onClick={() => setModalVisible(true)}>
+          메뉴(폼) 추가하기
+        </button>
+      </B.MenuFormButton>
 
       <B.CustomModal
-        title={<>메뉴 추가하기</>}
+        title={<>메뉴(폼) 추가하기</>}
         centered
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
