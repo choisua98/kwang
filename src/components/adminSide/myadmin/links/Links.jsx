@@ -14,6 +14,7 @@ import {
   doc,
   orderBy,
   serverTimestamp,
+  deleteDoc,
 } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
 
@@ -159,6 +160,18 @@ const Links = () => {
     }
   };
 
+  // 선택한 링크를 삭제
+  const handleDeleteClick = async (id) => {
+    if (!window.confirm('정말로 이 링크를 삭제하시겠습니까?')) return;
+    try {
+      await deleteDoc(doc(db, 'links', id));
+      fetchLinks(); // 링크가 삭제된 후에 최신 데이터 가져오기
+    } catch (error) {
+      console.error('링크 삭제 중 오류:', error);
+    }
+    setModalVisible(false);
+  };
+
   // Firestore에서 사용자의 링크 데이터를 가져오기
   const fetchLinks = async () => {
     if (!userUid) return;
@@ -205,17 +218,23 @@ const Links = () => {
             </p>
             <L.ButtonContainer style={{ marginTop: '24px' }}>
               {linksData.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => {
-                    setModalVisible(true);
-                    setEditingLinkId(link.id); // 수정 중인 링크의 ID
-                    setUrlText(link.url); // 기존 URL 값
-                    setImageUrl(link.imageUrl); // 기존 이미지 URL 값
-                  }}
-                >
-                  <img src={link.imageUrl} alt="Link Icon" />
-                </button>
+                <div key={link.id}>
+                  <button
+                    onClick={() => {
+                      setModalVisible(true);
+                      setEditingLinkId(link.id); // 수정 중인 링크의 ID
+                      setUrlText(link.url); // 기존 URL 값
+                      setImageUrl(link.imageUrl); // 기존 이미지 URL 값
+                    }}
+                  >
+                    <img src={link.imageUrl} alt="Link Icon" />
+                  </button>
+                  {/* <L.ButtonDelete>
+                    <button onClick={() => handleDeleteClick(link.id)}>
+                      X
+                    </button>
+                  </L.ButtonDelete> */}
+                </div>
               ))}
               {defaultLinks.map((_, index) => (
                 <button key={index} onClick={handleNewLinkClick}>
@@ -249,9 +268,11 @@ const Links = () => {
                 <img
                   src={imageUrl}
                   style={{
-                    margin: '0 auto',
+                    margin: '5px auto 0',
                     display: 'block',
-                    width: '100px',
+                    width: '100%',
+                    height: '100px',
+                    objectFit: 'cover',
                   }}
                   alt="Preview"
                 />
@@ -268,9 +289,13 @@ const Links = () => {
                 onClick={() => fileInputRef.current.click()}
                 style={{
                   margin: '10px auto',
+                  padding: '8px 0',
                   display: 'block',
                   width: '100%',
-                  border: '1px solid #000',
+                  fontSize: '14px',
+                  color: '#ff7c38',
+                  background: '#fff',
+                  border: '1px solid #ff7c38',
                   borderRadius: '5px',
                 }}
               >
@@ -287,16 +312,38 @@ const Links = () => {
               />
             </Col>
             <Col span={24}>
-              <button
-                style={{
-                  width: '100%',
-                  border: '1px solid #000',
-                  borderRadius: '5px',
-                }}
-                onClick={handleSaveClick}
+              <div
+                style={{ margin: '10px auto 0', display: 'flex', gap: '5px' }}
               >
-                저장하기
-              </button>
+                <button
+                  style={{
+                    width: '100%',
+                    padding: '10px 0',
+                    display: 'block',
+                    fontSize: '14px',
+                    color: '#fff',
+                    background: '#ff7c38',
+                    borderRadius: '5px',
+                  }}
+                  onClick={handleSaveClick}
+                >
+                  저장하기
+                </button>
+                <button
+                  style={{
+                    width: '100%',
+                    padding: '10px 0',
+                    display: 'block',
+                    fontSize: '14px',
+                    color: '#fff',
+                    background: '#313733',
+                    borderRadius: '5px',
+                  }}
+                  onClick={() => handleDeleteClick(editingLinkId)}
+                >
+                  삭제하기
+                </button>
+              </div>
             </Col>
           </Row>
         </Modal>
