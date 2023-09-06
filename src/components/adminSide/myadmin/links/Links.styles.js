@@ -9,10 +9,13 @@ export const L = {
   `,
   ButtonContainer: styled.div`
     margin: 0 auto;
-    display: block;
+    display: flex;
+    justify-content: center;
     width: 100%;
     & button {
-      width: 33.33%;
+      margin: 0 9px;
+      width: 100%;
+      max-width: 60px;
       border-radius: 50%;
       background: none;
       img {

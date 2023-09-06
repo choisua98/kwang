@@ -222,16 +222,16 @@ const Links = () => {
                   <Link />
                 </button>
               ))}
-              <p
-                style={{
-                  marginTop: '31px',
-                  fontSize: '14px',
-                  color: '#7a7a7a',
-                }}
-              >
-                나만의 프로필 링크를 추가해주세요
-              </p>
             </L.ButtonContainer>
+            <p
+              style={{
+                marginTop: '31px',
+                fontSize: '14px',
+                color: '#7a7a7a',
+              }}
+            >
+              나만의 프로필 링크를 추가해주세요
+            </p>
           </Col>
         </Row>
         <Modal
