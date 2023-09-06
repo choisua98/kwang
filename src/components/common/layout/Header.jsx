@@ -11,26 +11,11 @@ import defaultProfileImage from '../../../assets/images/profile-default-image.pn
 import HomeIcon from '../../../assets/images/common/icon/Icon-home.png';
 import LinkIcon from '../../../assets/images/common/icon/icon-link.png';
 import EditIcon from '../../../assets/images/common/icon/icon-edit.png';
+import { useAtom } from 'jotai';
+import { userNickname, userProfileImage } from '../../../atoms/Atom';
 
 const Header = () => {
-  const navigate = useNavigate();
-  const user = auth.currentUser;
   const userUid = auth.currentUser?.uid;
-  const location = useLocation(); // 현재 페이지의 URL 추출
-  const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
-  const isLoginPage = location.pathname === '/login';
-  const isHomePage = location.pathname === '/';
-  const adminUser = userUid; // 방문자인지 크리에이터인지 확인
-  const [viewNickname, setViewNickname] = useState('');
-  const [viewProfileImage, setViewProfileImage] = useState(defaultProfileImage);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const openMenu = () => {
-    setMenuOpen(true);
-  };
-  const closeMenu = () => {
-    setMenuOpen(false);
-  };
 
   // userUid로 저장된 문서가 있을 경우 프로필 정보 가져오기
   useEffect(() => {
@@ -48,11 +33,24 @@ const Header = () => {
     }
   }, [userUid]);
 
+  const navigate = useNavigate();
+  const location = useLocation(); // 현재 페이지의 URL 추출
+  const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
+  const isLoginPage = location.pathname === '/login';
+  const isHomePage = location.pathname === '/';
+  const [viewNickname, setViewNickname] = useAtom(userNickname);
+  const [viewProfileImage, setViewProfileImage] = useAtom(userProfileImage);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const openMenu = () => {
+    setMenuOpen(true);
+  };
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
   // 로그아웃 버튼클릭 핸들러 -> 로그아웃 시 홈페이지로 이동시켜 놓음
   const onLogoutButtonClickHandler = async () => {
-    if (user) {
-      console.log('유저가있습니다. 로그아웃하겠습니다.');
-    }
     await signOut(auth); //파이어베이스 로그아웃
     // setUser('');
     alert('로그아웃 되었습니다.'); //로그아웃누르면 signOut이 다 되지 않았는데 navigate 됨.
@@ -73,7 +71,7 @@ const Header = () => {
     <H.HeaderWrapper>
       <Row align="middle">
         {/* 로그아웃 상태 */}
-        {!adminUser && (
+        {!userUid && (
           <>
             <Col span={21}>
               {/* 로고 영역 */}
@@ -90,7 +88,7 @@ const Header = () => {
         )}
 
         {/* 로그인된 상태 */}
-        {adminUser && (
+        {userUid && (
           <>
             <Col span={22}>
               {/* 로고 영역 */}
