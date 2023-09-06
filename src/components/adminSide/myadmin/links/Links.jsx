@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Col, Input, Modal, Row } from 'antd';
+import { Col, Input, Row } from 'antd';
 import { L } from './Links.styles';
 import { ReactComponent as Link } from '../../../../assets/images/admin/link.svg';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
@@ -210,13 +210,9 @@ const Links = () => {
     <>
       <L.Container>
         <Row justify="center" align="middle">
-          <Col span={24} style={{ textAlign: 'center' }}>
-            <p
-              style={{ fontSize: '16px', fontWeight: '600', textAlign: 'left' }}
-            >
-              링크 추가하기
-            </p>
-            <L.ButtonContainer style={{ marginTop: '24px' }}>
+          <L.Col span={24}>
+            <h2>링크 추가하기</h2>
+            <L.ButtonContainer>
               {linksData.map((link) => (
                 <div key={link.id}>
                   <button
@@ -242,18 +238,10 @@ const Links = () => {
                 </button>
               ))}
             </L.ButtonContainer>
-            <p
-              style={{
-                marginTop: '31px',
-                fontSize: '14px',
-                color: '#7a7a7a',
-              }}
-            >
-              나만의 프로필 링크를 추가해주세요
-            </p>
-          </Col>
+            <p>나만의 프로필 링크를 추가해주세요</p>
+          </L.Col>
         </Row>
-        <Modal
+        <L.Modal
           title="링크 수정"
           centered
           open={modalVisible}
@@ -264,46 +252,20 @@ const Links = () => {
           <Row>
             <Col span={24}>
               <div>로고 이미지 / 아이콘 추가</div>
-              {imageUrl && (
-                <img
-                  src={imageUrl}
-                  style={{
-                    margin: '5px auto 0',
-                    display: 'block',
-                    width: '100%',
-                    height: '100px',
-                    objectFit: 'cover',
-                  }}
-                  alt="Preview"
-                />
-              )}
+              {imageUrl && <img src={imageUrl} alt="Preview" />}
             </Col>
             <Col span={24}>
               <input
                 type="file"
                 onChange={handleImageChange}
                 ref={fileInputRef}
-                style={{ display: 'none' }}
               />
-              <button
-                onClick={() => fileInputRef.current.click()}
-                style={{
-                  margin: '10px auto',
-                  padding: '8px 0',
-                  display: 'block',
-                  width: '100%',
-                  fontSize: '14px',
-                  color: '#ff7c38',
-                  background: '#fff',
-                  border: '1px solid #ff7c38',
-                  borderRadius: '5px',
-                }}
-              >
+              <L.MenuFormButton onClick={() => fileInputRef.current.click()}>
                 아이콘 이미지 업로드
-              </button>
+              </L.MenuFormButton>
             </Col>
             <Col span={24}>
-              <div style={{ marginBottom: '10px' }}>URL</div>
+              <p>URL</p>
               <Input.TextArea
                 placeholder="텍스트를 입력하세요"
                 value={urlText}
@@ -312,41 +274,22 @@ const Links = () => {
               />
             </Col>
             <Col span={24}>
-              <div
-                style={{ margin: '10px auto 0', display: 'flex', gap: '5px' }}
-              >
-                <button
-                  style={{
-                    width: '100%',
-                    padding: '10px 0',
-                    display: 'block',
-                    fontSize: '14px',
-                    color: '#fff',
-                    background: '#ff7c38',
-                    borderRadius: '5px',
-                  }}
-                  onClick={handleSaveClick}
-                >
+              <L.ButtonArea>
+                <L.SubmitButton onClick={handleSaveClick}>
                   저장하기
-                </button>
-                <button
+                </L.SubmitButton>
+                <L.SubmitButton
                   style={{
-                    width: '100%',
-                    padding: '10px 0',
-                    display: 'block',
-                    fontSize: '14px',
-                    color: '#fff',
                     background: '#313733',
-                    borderRadius: '5px',
                   }}
                   onClick={() => handleDeleteClick(editingLinkId)}
                 >
                   삭제하기
-                </button>
-              </div>
+                </L.SubmitButton>
+              </L.ButtonArea>
             </Col>
           </Row>
-        </Modal>
+        </L.Modal>
       </L.Container>
     </>
   );
