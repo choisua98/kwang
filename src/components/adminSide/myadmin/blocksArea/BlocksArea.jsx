@@ -125,21 +125,31 @@ const BlocksArea = () => {
             </>
           )}
           {block.blockKind === 'bannerimage' && (
-            <B.Swiper
-              modules={[Pagination, A11y]}
-              pagination={{ clickable: true }}
-              a11y
-            >
-              {block.images.map((image, index) => (
-                <B.SwiperSlide key={index}>
-                  <img
-                    src={image}
-                    alt={`bannerimage ${index + 1}`}
-                    onClick={() => moveToEditButton(block)}
-                  />
-                </B.SwiperSlide>
-              ))}
-            </B.Swiper>
+            <>
+              <B.Swiper
+                modules={[Pagination, A11y]}
+                pagination={{ clickable: true }}
+                a11y
+              >
+                {block.images.map((image, index) => (
+                  <B.SwiperSlide key={index}>
+                    <img
+                      src={image}
+                      alt={`bannerimage ${index + 1}`}
+                      onClick={() => moveToEditButton(block)}
+                    />
+                  </B.SwiperSlide>
+                ))}
+              </B.Swiper>
+              <B.ArrowContainer>
+                <p onClick={() => switchBlock(index, 'up')}>
+                  <UpOutlined />
+                </p>
+                <p onClick={() => switchBlock(index, 'down')}>
+                  <DownOutlined />
+                </p>
+              </B.ArrowContainer>
+            </>
           )}
         </div>
       ))}

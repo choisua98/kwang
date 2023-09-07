@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import React, { useEffect, useState } from 'react';
 import {
   addDoc,
   collection,
@@ -14,11 +13,7 @@ import {
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import {
-  backgroundImageAtom,
-  blocksAtom,
-  themeAtom,
-} from '../../../../atoms/Atom';
+
 import {
   backgroundImageAtom,
   blocksAtom,
@@ -49,9 +44,6 @@ const AddLink = () => {
     setTheme('light');
     setBackgroundImage(null);
   }, []);
-  const [theme, setTheme] = useAtom(themeAtom);
-  // 배경 이미지
-  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
 
   useEffect(() => {
     setTheme('light');
