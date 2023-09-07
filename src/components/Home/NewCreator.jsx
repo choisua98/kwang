@@ -37,7 +37,7 @@ const NewCreator = () => {
   }, []);
 
   return (
-    <div style={{ margin: '50px auto 62px', padding: '0 20px' }}>
+    <div style={{ margin: '28px auto 40px', padding: '0 20px' }}>
       <h1
         style={{
           fontSize: '16px',
