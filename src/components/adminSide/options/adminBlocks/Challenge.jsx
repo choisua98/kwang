@@ -330,7 +330,7 @@ const Challenge = () => {
 
           {uploadedImages.map((image, index) => {
             return (
-              <div key={index}>
+              <O.Preview key={index}>
                 <div
                   className="square-preview"
                   style={{
@@ -341,10 +341,11 @@ const Challenge = () => {
                     })`,
                   }}
                 />
-                <button type="button" onClick={() => handleRemoveImage(index)}>
-                  -
-                </button>
-              </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                />
+              </O.Preview>
             );
           })}
         </O.ImageContainer>
