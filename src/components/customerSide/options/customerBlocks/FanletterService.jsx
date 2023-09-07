@@ -10,11 +10,13 @@ import {
 import { Modal } from 'antd';
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../atoms/Atom';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { db } from '../../../../firebase/firebaseConfig';
 import { C } from '../CustomerBlocks.style';
+import { LeftOutlined } from '@ant-design/icons';
 
 const FanletterService = () => {
+  const navigate = useNavigate();
   const { uid } = useParams();
   const userUid = uid; // 사용자 UID 가져오기
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom); // 모달
@@ -76,60 +78,71 @@ const FanletterService = () => {
   };
 
   return (
-    <C.Container>
-      {templates.map((template) => {
-        return (
-          <div key={template.id}>
-            <h1>{template.title}</h1>
-            <h2>{template.description}</h2>
-          </div>
-        );
-      })}
+    <>
+      <C.HeaderStyle>
+        <button onClick={() => navigate(`/${userUid}`)}>
+          <LeftOutlined />
+        </button>
+        <p>팬레터 보내기</p>
+      </C.HeaderStyle>
 
-      <label htmlFor="description">
-        TO. {nickname}에게<span>*</span>
-        <p>{description.length}/100자</p>
-      </label>
-      <textarea
-        id="description"
-        name="description"
-        value={description}
-        maxLength={100}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="설명을 작성해 주세요"
-      />
+      <C.Container>
+        {templates.map((template) => {
+          return (
+            <div key={template.id}>
+              <h1>{template.title}</h1>
+              <h2>{template.description}</h2>
+            </div>
+          );
+        })}
 
-      <C.ButtonArea>
-        <C.SubmitButton
-          type="button"
-          disabled={!description}
-          onClick={() => {
-            submitButtonClick();
-            setModalVisible(true);
-          }}
+        <label htmlFor="description">
+          <p>
+            TO. {nickname}에게<span>*</span>
+          </p>
+          {description.length}/100자
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          value={description}
+          maxLength={100}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="설명을 작성해 주세요"
+        />
+
+        <C.ButtonArea>
+          <C.SubmitButton
+            type="button"
+            disabled={!description}
+            onClick={() => {
+              submitButtonClick();
+              setModalVisible(true);
+            }}
+          >
+            발송하기
+          </C.SubmitButton>
+        </C.ButtonArea>
+        <Modal
+          title=""
+          centered
+          open={modalVisible}
+          onCancel={() => setModalVisible(false)}
+          footer={null}
+          closable={false}
+          width={300}
         >
-          발송하기
-        </C.SubmitButton>
-      </C.ButtonArea>
-      <Modal
-        title=""
-        centered
-        open={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        footer={null}
-        closable={false}
-        width={300}
-      >
-        <p>팬레터 전송이 완료 되었습니다.</p>
-        <C.SubmitButton
-          type="button"
-          color="#313733"
-          onClick={() => setModalVisible(false)}
-        >
-          확인
-        </C.SubmitButton>
-      </Modal>
-    </C.Container>
+          <p>팬레터 전송이 완료 되었습니다.</p>
+          <C.SubmitButton
+            type="button"
+            color="#313733"
+            onClick={() => setModalVisible(false)}
+          >
+            확인
+          </C.SubmitButton>
+        </Modal>
+      </C.Container>
+    </>
   );
 };
 

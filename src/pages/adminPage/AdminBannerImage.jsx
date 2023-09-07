@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import BannerImage from '../../components/adminSide/options/adminBlocks/BannerImage/BannerImage';
 import { useAtom } from 'jotai';
 import { backgroundImageAtom, themeAtom } from '../../atoms/Atom';
 import BannerImage from '../../components/adminSide/options/adminBlocks/BannerImage';

@@ -23,6 +23,7 @@ const Intro = () => {
           alt="크왕 크리에이터 이미지"
           style={{
             margin: '22px auto 31.5px',
+            width: '100%',
           }}
         />
         <h2
@@ -87,7 +88,7 @@ const Intro = () => {
               borderRadius: '15px',
             }}
           >
-            <img src={IconLink} alt="링크 이미지" />
+            <img src={IconLink} alt="링크 이미지" style={{ width: '100%' }} />
             <p
               style={{
                 margin: '32px  0 0',
@@ -97,7 +98,7 @@ const Intro = () => {
                 color: '#000',
               }}
             >
-              타이틀 지정
+              타이틀
             </p>
             <p
               style={{
@@ -120,7 +121,7 @@ const Intro = () => {
               borderRadius: '15px',
             }}
           >
-            <img src={IconLink} alt="링크 이미지" />
+            <img src={IconLink} alt="링크 이미지" style={{ width: '100%' }} />
             <p
               style={{
                 margin: '32px  0 0',
@@ -130,7 +131,7 @@ const Intro = () => {
                 color: '#000',
               }}
             >
-              타이틀 지정
+              타이틀
             </p>
             <p
               style={{

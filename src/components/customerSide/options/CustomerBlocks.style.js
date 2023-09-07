@@ -3,11 +3,55 @@ import { Collapse } from 'antd';
 
 // adminSide options 공통 css
 export const C = {
+  HeaderStyle: styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0px 30px 0px;
+    position: relative;
+
+    button {
+      background-color: transparent;
+      position: absolute;
+      left: 3%;
+    }
+    p {
+      font-size: 18px;
+    }
+  `,
+
   Container: styled.form`
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding: 20px;
+
+    h1 {
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-size: 20px;
+      text-align: center;
+      margin: 30px 10px 10px 10px;
+    }
+    h4 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover; // 이미지가 잘리지 않도록 설정
+      background-color: #d6d6d6;
+      margin: 5px 0px;
+    }
 
     ::placeholder {
       color: #999;
@@ -35,10 +79,11 @@ export const C = {
 
     p {
       font-size: 14px;
-      text-align: end;
     }
 
     label {
+      display: flex;
+      justify-content: space-between;
       font-size: 14px;
     }
 
@@ -48,8 +93,14 @@ export const C = {
   `,
 
   Collapse: styled(Collapse)`
-    margin: 15px auto 0;
-    background: #fff;
+    text-align: start;
+    background-color: var(--color-primary);
+    margin: 0px 20px;
+
+    p {
+      font-size: 14px;
+      text-align: start;
+    }
   `,
 
   ButtonArea: styled.div`

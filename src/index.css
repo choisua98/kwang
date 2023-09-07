@@ -1,17 +1,19 @@
 /* 상단 메뉴 토글 */
-:where(.css-dev-only-do-not-override-17a39f8).ant-btn-default {
-  background: none;
-  border: none;
-  box-shadow: none;
-}
-:where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only
-  .anticon {
-  font-size: 18px;
-}
+:where(.css-dev-only-do-not-override-17a39f8).ant-btn-default,
 :where(.css-17a39f8).ant-btn-default {
   background: none;
   border: none;
   box-shadow: none;
+}
+:where(.css-17a39f8).ant-btn-default:not(:disabled):not(
+    .ant-btn-disabled
+  ):hover {
+  color: rgba(0, 0, 0, 0.88);
+  border-color: none;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only
+  .anticon {
+  font-size: 18px;
 }
 
 /* 스와이퍼 */
@@ -35,7 +37,7 @@
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
   .ant-picker-panel-container {
-  width: 350px !important;
+  width: 374px !important;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
   .ant-picker-panel-container
@@ -43,8 +45,7 @@
   display: inline-flex;
   flex-wrap: nowrap;
   direction: ltr;
-  /* max-width: 350px !important; */
-  width: 350px !important;
+  max-width: 374px !important;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
   .ant-picker-panel-container
@@ -52,11 +53,12 @@
   .ant-picker-panel {
   border-width: 0;
   width: 100% !important;
-  max-width: 350px !important;
-  min-width: 350px !important;
+  max-width: 374px !important;
+  min-width: 374px !important;
 }
 .ant-picker-date-panel {
-  max-width: 350px !important;
+  max-width: 374px !important;
+  width: 100%;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
   .ant-picker-decade-panel,
@@ -74,13 +76,18 @@
   .ant-picker-time-panel {
   display: flex;
   flex-direction: column;
-  width: 350px !important;
+  width: 374px !important;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
   .ant-picker-date-panel
   .ant-picker-content {
-  width: 310px !important;
+  width: 338px !important;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown-range {
   padding: 40px 0 0 !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker
+  .ant-picker-input
+  > input {
+  margin-top: 0;
 }

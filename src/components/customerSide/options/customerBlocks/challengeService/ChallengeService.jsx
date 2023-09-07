@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { C } from './ChallengeService.styles';
+import { CS } from './ChallengeService.styles';
+import { C } from '../../CustomerBlocks.style';
 import { useNavigate, useParams } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../../../firebase/firebaseConfig';
@@ -80,7 +81,7 @@ const ChallengeService = () => {
   };
 
   return (
-    <C.Container>
+    <CS.Container>
       {challengeData.map((data) => {
         return (
           <div key={data.id}>
@@ -110,7 +111,7 @@ const ChallengeService = () => {
         );
       })}
 
-      <C.CalendarContainer>
+      <CS.CalendarContainer>
         <Calendar
           onChange={setSelectedDate}
           value={null}
@@ -120,9 +121,13 @@ const ChallengeService = () => {
           tileDisabled={tileDisabled}
           showNeighboringMonth={false}
         />
-      </C.CalendarContainer>
-      <button onClick={handleChallengeVerification}>오늘 인증 남기기</button>
-    </C.Container>
+      </CS.CalendarContainer>
+      <C.ButtonArea>
+        <C.SubmitButton onClick={handleChallengeVerification}>
+          오늘 인증 남기기
+        </C.SubmitButton>
+      </C.ButtonArea>
+    </CS.Container>
   );
 };
 

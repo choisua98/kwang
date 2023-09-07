@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Col, Input, Modal, Row } from 'antd';
+import { Col, Input, Row } from 'antd';
 import { L } from './Links.styles';
 import { ReactComponent as Link } from '../../../../assets/images/admin/link.svg';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
@@ -14,6 +14,7 @@ import {
   doc,
   orderBy,
   serverTimestamp,
+  deleteDoc,
 } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
 
@@ -159,6 +160,18 @@ const Links = () => {
     }
   };
 
+  // 선택한 링크를 삭제
+  const handleDeleteClick = async (id) => {
+    if (!window.confirm('정말로 이 링크를 삭제하시겠습니까?')) return;
+    try {
+      await deleteDoc(doc(db, 'links', id));
+      fetchLinks(); // 링크가 삭제된 후에 최신 데이터 가져오기
+    } catch (error) {
+      console.error('링크 삭제 중 오류:', error);
+    }
+    setModalVisible(false);
+  };
+
   // Firestore에서 사용자의 링크 데이터를 가져오기
   const fetchLinks = async () => {
     if (!userUid) return;
@@ -197,44 +210,38 @@ const Links = () => {
     <>
       <L.Container>
         <Row justify="center" align="middle">
-          <Col span={24} style={{ textAlign: 'center' }}>
-            <p
-              style={{ fontSize: '16px', fontWeight: '600', textAlign: 'left' }}
-            >
-              링크 추가하기
-            </p>
-            <L.ButtonContainer style={{ marginTop: '24px' }}>
+          <L.Col span={24}>
+            <h2>링크 추가하기</h2>
+            <L.ButtonContainer>
               {linksData.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => {
-                    setModalVisible(true);
-                    setEditingLinkId(link.id); // 수정 중인 링크의 ID
-                    setUrlText(link.url); // 기존 URL 값
-                    setImageUrl(link.imageUrl); // 기존 이미지 URL 값
-                  }}
-                >
-                  <img src={link.imageUrl} alt="Link Icon" />
-                </button>
+                <div key={link.id}>
+                  <button
+                    onClick={() => {
+                      setModalVisible(true);
+                      setEditingLinkId(link.id); // 수정 중인 링크의 ID
+                      setUrlText(link.url); // 기존 URL 값
+                      setImageUrl(link.imageUrl); // 기존 이미지 URL 값
+                    }}
+                  >
+                    <img src={link.imageUrl} alt="Link Icon" />
+                  </button>
+                  {/* <L.ButtonDelete>
+                    <button onClick={() => handleDeleteClick(link.id)}>
+                      X
+                    </button>
+                  </L.ButtonDelete> */}
+                </div>
               ))}
               {defaultLinks.map((_, index) => (
                 <button key={index} onClick={handleNewLinkClick}>
                   <Link />
                 </button>
               ))}
-              <p
-                style={{
-                  marginTop: '31px',
-                  fontSize: '14px',
-                  color: '#7a7a7a',
-                }}
-              >
-                나만의 프로필 링크를 추가해주세요
-              </p>
             </L.ButtonContainer>
-          </Col>
+            <p>나만의 프로필 링크를 추가해주세요</p>
+          </L.Col>
         </Row>
-        <Modal
+        <L.Modal
           title="링크 수정"
           centered
           open={modalVisible}
@@ -245,40 +252,20 @@ const Links = () => {
           <Row>
             <Col span={24}>
               <div>로고 이미지 / 아이콘 추가</div>
-              {imageUrl && (
-                <img
-                  src={imageUrl}
-                  style={{
-                    margin: '0 auto',
-                    display: 'block',
-                    width: '100px',
-                  }}
-                  alt="Preview"
-                />
-              )}
+              {imageUrl && <img src={imageUrl} alt="Preview" />}
             </Col>
             <Col span={24}>
               <input
                 type="file"
                 onChange={handleImageChange}
                 ref={fileInputRef}
-                style={{ display: 'none' }}
               />
-              <button
-                onClick={() => fileInputRef.current.click()}
-                style={{
-                  margin: '10px auto',
-                  display: 'block',
-                  width: '100%',
-                  border: '1px solid #000',
-                  borderRadius: '5px',
-                }}
-              >
+              <L.MenuFormButton onClick={() => fileInputRef.current.click()}>
                 아이콘 이미지 업로드
-              </button>
+              </L.MenuFormButton>
             </Col>
             <Col span={24}>
-              <div style={{ marginBottom: '10px' }}>URL</div>
+              <p>URL</p>
               <Input.TextArea
                 placeholder="텍스트를 입력하세요"
                 value={urlText}
@@ -287,19 +274,22 @@ const Links = () => {
               />
             </Col>
             <Col span={24}>
-              <button
-                style={{
-                  width: '100%',
-                  border: '1px solid #000',
-                  borderRadius: '5px',
-                }}
-                onClick={handleSaveClick}
-              >
-                저장하기
-              </button>
+              <L.ButtonArea>
+                <L.SubmitButton onClick={handleSaveClick}>
+                  저장하기
+                </L.SubmitButton>
+                <L.SubmitButton
+                  style={{
+                    background: '#313733',
+                  }}
+                  onClick={() => handleDeleteClick(editingLinkId)}
+                >
+                  삭제하기
+                </L.SubmitButton>
+              </L.ButtonArea>
             </Col>
           </Row>
-        </Modal>
+        </L.Modal>
       </L.Container>
     </>
   );

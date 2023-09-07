@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useAtom } from 'jotai';
 import Router from './shared/Router';
 import { backgroundImageAtom, themeAtom } from './atoms/Atom';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from './firebase/firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
+import { auth } from './firebase/firebaseConfig';
 
 const queryClient = new QueryClient();
 
@@ -14,23 +13,19 @@ function App() {
   const [theme, setTheme] = useAtom(themeAtom);
   // 배경 이미지
   const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
-  const [user, setUser] = useState('');
 
   // onAuthStateChanged 사용
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       console.log({ 로그인한유저: user });
-      if (user) {
-        setUser(user);
-      }
     });
     setTheme('light');
-    setBackgroundImage(null);
+    setBackgroundImage('');
   }, []);
 
   useEffect(() => {
-    document.body.style.backgroundColor = theme === 'dark' ? '#333' : '#fffaf0';
-    document.body.style.color = theme === 'dark' ? '#fff' : '#313733';
+    document.body.style.backgroundColor = theme === 'dark' ? '#333' : '#fff';
+    document.body.style.color = theme === 'dark' ? '#fff' : '#333';
     // 배경 이미지가 있으면 body의 배경 이미지 적용
     if (backgroundImage) {
       document.body.style.backgroundImage = `url("${backgroundImage}")`;

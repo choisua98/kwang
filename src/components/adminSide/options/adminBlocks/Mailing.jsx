@@ -16,8 +16,8 @@ import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useAtom } from 'jotai';
 import { blocksAtom } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import { LeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 
 const Mailing = () => {
   const navigate = useNavigate();
@@ -120,18 +120,32 @@ const Mailing = () => {
   return (
     <>
       <O.HeaderStyle>
-        <Button
-          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
-        />
+        <button onClick={() => navigate(`/admin/${userUid}`)}>
+          <LeftOutlined />
+        </button>
         <p>설정</p>
       </O.HeaderStyle>
+
+      <O.FormGuideStyle>
+        <h2>
+          메일링 서비스 <img src={IconFormCheck} alt="폼체크아이콘" />
+        </h2>
+        <p>
+          팬, 구독자들에게 정기적인 이메일이나 이메일 정보를 수집하고 싶은 경우
+          <span>[메일링 신청 폼]</span>을 추가해보세요. 이름과 연락처,
+          이메일주소를 수집할 수 있고 고객관리 페이지에서 모아 볼 수 있습니다.
+        </p>
+      </O.FormGuideStyle>
+
       <O.Container
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          메일링 서비스 이름<span>*</span>
+          <p>
+            메일링 서비스 이름<span>*</span>
+          </p>
+          {titleCount}/20자
         </label>
-        <p>{titleCount}/20자</p>
         <input
           id="title"
           name="title"
@@ -146,9 +160,12 @@ const Mailing = () => {
           autoFocus
         />
         <label htmlFor="description">
-          메일링 서비스에 대한 간략한 설명<span>*</span>
+          <p>
+            메일링 서비스에 대한 간략한 설명<span>*</span>
+          </p>
+          {descriptionCount}/80자
         </label>
-        <p>{descriptionCount}/80자</p>
+
         <textarea
           id="description"
           name="description"

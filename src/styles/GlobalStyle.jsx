@@ -26,13 +26,13 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     margin: 0 auto;
-    max-width: 390px;
+    max-width: 414px;
     width: 100%;
     min-height: 100vh;
     height: auto;
     font-family: 'Pretendard-Regular'; 
-    // color: var(--color-text); 
-    // background-color: var(--color-bg); 
+    color: var(--color-text); 
+    /* background-color: var(--color-bg);  */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 50% 50%;
@@ -40,7 +40,7 @@ const GlobalStyle = createGlobalStyle`
 
   a,button {
     text-decoration: none;
-    color: #000;
+    color: var(--color-text);
     border: none;
     cursor: pointer; 
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { auth, db, storage } from '../../../../firebase/firebaseConfig';
+import { auth, db, storage } from '../../../../../firebase/firebaseConfig';
 import {
   deleteObject,
   getDownloadURL,
@@ -19,14 +19,15 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { blocksAtom } from '../../../../atoms/Atom';
+import { blocksAtom } from '../../../../../atoms/Atom';
 import { useAtom } from 'jotai';
 import { Modal } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 import imageCompression from 'browser-image-compression';
-import { O } from '../Blocks.styles';
+import { O } from '../../Blocks.styles';
+import { B } from './BannerImage.styles';
+import IconFormCheck from '../../../../../assets/images/common/icon/icon-Formcheck.png';
 import { LeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 
 const BannerImage = () => {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const BannerImage = () => {
   const [uploadedImages, setUploadedImages] = useState([]);
 
   // 최대 업로드 가능한 이미지 개수
-  const maxUploads = 4;
+  const maxUploads = 3;
 
   useEffect(() => {
     if (blockId) {
@@ -234,24 +235,33 @@ const BannerImage = () => {
   return (
     <>
       <O.HeaderStyle>
-        <Button
-          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
-        />
+        <button onClick={() => navigate(`/admin/${userUid}`)}>
+          <LeftOutlined />
+        </button>
         <p>설정</p>
       </O.HeaderStyle>
+
+      <O.FormGuideStyle>
+        <h2>
+          배너 이미지 추가 <img src={IconFormCheck} alt="폼체크아이콘" />
+        </h2>
+        <p>이미지를 추가해 나만의 커스텀 배너를 꾸며보세요!</p>
+      </O.FormGuideStyle>
 
       <O.Container
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label>
-          배너 이미지를 추가해주세요
-          <span>*</span>
+          <p>
+            배너 이미지를 추가해주세요
+            <span>*</span>
+          </p>
         </label>
 
-        <O.ImageContainer>
+        <B.ImageContainer>
           {uploadedImages.length >= maxUploads ? (
             <>
-              <div onClick={handleImageChange}>
+              <B.ImageUpload onClick={handleImageChange}>
                 <label
                   htmlFor="imageInput"
                   className={
@@ -261,7 +271,7 @@ const BannerImage = () => {
                   <CameraOutlined style={{ fontSize: '30px' }} />
                   <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
                 </label>
-              </div>
+              </B.ImageUpload>
             </>
           ) : (
             <>
@@ -280,26 +290,30 @@ const BannerImage = () => {
             </>
           )}
 
-          {uploadedImages.map((image, index) => {
-            return (
-              <div key={index}>
-                <div
-                  className="square-preview"
-                  style={{
-                    backgroundImage: `url(${
-                      typeof image === 'string'
-                        ? image
-                        : URL.createObjectURL(image)
-                    })`,
-                  }}
-                />
-                <button type="button" onClick={() => handleRemoveImage(index)}>
-                  -
-                </button>
-              </div>
-            );
-          })}
-        </O.ImageContainer>
+          <B.Preview>
+            {uploadedImages.map((image, index) => {
+              return (
+                <div key={index} style={{ position: 'relative' }}>
+                  <div
+                    className="square-preview"
+                    style={{
+                      backgroundImage: `url(${
+                        typeof image === 'string'
+                          ? image
+                          : URL.createObjectURL(image)
+                      })`,
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(index)}
+                  ></button>
+                </div>
+              );
+            })}
+          </B.Preview>
+        </B.ImageContainer>
+
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={uploadedImages.length === 0}>
             {blockId ? '수정하기' : '저장하기'}

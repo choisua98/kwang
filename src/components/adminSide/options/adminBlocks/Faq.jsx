@@ -18,8 +18,8 @@ import {
 import { useAtom } from 'jotai';
 import { blocksAtom } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
-import { LeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';
 
 const Faq = () => {
   const navigate = useNavigate();
@@ -44,6 +44,8 @@ const Faq = () => {
   const [title, handleTitleChange] = useInput(selectedBlock?.title);
   const [question, handleQuestionChange, resetQuestion] = useInput();
   const [answer, handleAnswerChange, resetAuswer] = useInput();
+
+  const [titleCount, setTitleCount] = useState(0);
 
   useEffect(() => {
     // 만약 현재 블록 ID가 존재한다면 (수정 모드일 때)
@@ -184,16 +186,30 @@ const Faq = () => {
   return (
     <>
       <O.HeaderStyle>
-        <Button
-          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
-        />
+        <button onClick={() => navigate(`/admin/${userUid}`)}>
+          <LeftOutlined />
+        </button>
         <p>설정</p>
       </O.HeaderStyle>
+
+      <O.FormGuideStyle>
+        <h2>
+          자주 묻는 질문 <img src={IconFormCheck} alt="폼체크아이콘" />
+        </h2>
+        <p>
+          팬,구독자들이 궁금해 할 만한 질문과 답변을 미리 작성할 수 있는
+          폼입니다.
+        </p>
+      </O.FormGuideStyle>
+
       <O.Container
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          자주묻는 질문 이름<span>*</span>
+          <p>
+            자주묻는 질문 이름<span>*</span>
+          </p>
+          {titleCount}/20자
         </label>
         <input
           id="title"
@@ -201,32 +217,41 @@ const Faq = () => {
           type="text"
           placeholder="자주 묻는 질문"
           value={title}
-          onChange={handleTitleChange}
+          onChange={(e) => {
+            handleTitleChange(e);
+            setTitleCount(e.target.value.length);
+          }}
+          maxLength={20}
           autoFocus
         />
         <O.FaqList>
           {faqList.map((faq) => {
             return (
               <div key={faq.faqId}>
-                <p>Q. {faq.question}</p>
+                <p>
+                  Q. {faq.question}
+                  <button
+                    type="button"
+                    onClick={
+                      blockId
+                        ? () => handleDeleteFaqButtonClick(faq.faqId)
+                        : () => handleDeleteAddedFaq(faq.faqId)
+                    }
+                  >
+                    <DeleteOutlined />
+                  </button>
+                </p>
+
                 <p>A. {faq.answer}</p>
-                <button
-                  type="button"
-                  onClick={
-                    blockId
-                      ? () => handleDeleteFaqButtonClick(faq.faqId)
-                      : () => handleDeleteAddedFaq(faq.faqId)
-                  }
-                >
-                  삭제
-                </button>
               </div>
             );
           })}
         </O.FaqList>
 
         <label htmlFor="question">
-          질문 입력<span>*</span>
+          <p>
+            질문 입력<span>*</span>
+          </p>
         </label>
         <input
           id="question"
@@ -238,7 +263,9 @@ const Faq = () => {
         />
 
         <label htmlFor="answer">
-          답변 입력<span>*</span>
+          <p>
+            답변 입력<span>*</span>
+          </p>
         </label>
         <textarea
           id="answer"
@@ -249,14 +276,15 @@ const Faq = () => {
           onChange={handleAnswerChange}
         />
 
+        <O.MenuFormButton
+          type="button"
+          disabled={!question || !answer}
+          onClick={handleAddFaqButtonClick}
+        >
+          질문 추가하기
+        </O.MenuFormButton>
+
         <O.ButtonArea>
-          <O.SubmitButton
-            type="button"
-            disabled={!question || !answer}
-            onClick={handleAddFaqButtonClick}
-          >
-            질문 추가하기
-          </O.SubmitButton>
           <O.SubmitButton
             type="submit"
             disabled={!title || faqList.length === 0}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { M } from './MailingService.styles';
+import { C } from '../CustomerBlocks.style';
 import {
   query,
   collection,
@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
 import { useNavigate, useParams } from 'react-router-dom';
+import { LeftOutlined } from '@ant-design/icons';
 
 const MailingService = () => {
   const [title, setTitle] = useState('');
@@ -73,11 +74,20 @@ const MailingService = () => {
 
   return (
     <>
+      <C.HeaderStyle>
+        <button onClick={() => navigate(`/${userUid}`)}>
+          <LeftOutlined />
+        </button>
+        <p>메일링 서비스</p>
+      </C.HeaderStyle>
+
       <div>{title}</div>
       <div>{desc}</div>
-      <M.Container>
+      <C.Container>
         <label htmlFor="name">
-          이름<span>*</span>
+          <p>
+            이름<span>*</span>
+          </p>
         </label>
         <input
           id="name"
@@ -92,7 +102,9 @@ const MailingService = () => {
         />
 
         <label htmlFor="phoneNumber">
-          연락처<span>*</span>
+          <p>
+            연락처<span>*</span>
+          </p>
         </label>
         <input
           id="phoneNumber"
@@ -107,7 +119,9 @@ const MailingService = () => {
         />
 
         <label htmlFor="email">
-          이메일<span>*</span>
+          <p>
+            이메일<span>*</span>
+          </p>
         </label>
         <input
           id="email"
@@ -120,14 +134,16 @@ const MailingService = () => {
           required
         />
 
-        <button
-          type="submit"
-          disabled={!name || !phoneNumber || !email}
-          onClick={submitButtonClick}
-        >
-          신청하기
-        </button>
-      </M.Container>
+        <C.ButtonArea>
+          <C.SubmitButton
+            type="submit"
+            disabled={!name || !phoneNumber || !email}
+            onClick={submitButtonClick}
+          >
+            신청하기
+          </C.SubmitButton>
+        </C.ButtonArea>
+      </C.Container>
     </>
   );
 };

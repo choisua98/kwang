@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-export const C = {
+export const CS = {
   Container: styled.form`
     padding: 20px;
 
@@ -42,6 +42,7 @@ export const C = {
   CalendarContainer: styled.div`
     .react-calendar {
       max-width: 100%;
+      width: 100%;
       background-color: #fff;
       color: #222;
       border-radius: 8px;

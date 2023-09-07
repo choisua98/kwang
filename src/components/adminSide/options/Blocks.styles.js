@@ -6,22 +6,52 @@ export const O = {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px 0px 60px 0px;
+    margin: 20px 0px 40px 0px;
     position: relative;
 
     button {
       position: absolute;
       left: 3%;
+      font-size: 20px;
+      background-color: transparent;
     }
+
     p {
       font-size: 18px;
+    }
+  `,
+
+  FormGuideStyle: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0px 20px;
+
+    h2 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 14px;
+      font-weight: 500;
+      color: #858585;
+      letter-spacing: 0.5px;
+    }
+
+    span {
+      color: var(--color-text);
+      font-weight: 600;
+      margin-left: 5px;
+      margin-right: 5px;
     }
   `,
 
   Container: styled.form`
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
+    margin-top: 20px;
     padding: 20px;
 
     ::placeholder {
@@ -48,13 +78,10 @@ export const O = {
       background: #fafafa;
     }
 
-    p {
-      font-size: 14px;
-      text-align: end;
-    }
-
     label {
       font-size: 14px;
+      display: flex;
+      justify-content: space-between;
     }
 
     label span {
@@ -68,6 +95,20 @@ export const O = {
     position: relative;
   `,
 
+  MenuFormButton: styled.div`
+    padding: 18px 0;
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    border: 1.5px solid var(--color-accent);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-accent);
+    background: none;
+    text-align: center;
+    margin-top: 15px;
+  `,
+
   SubmitButton: styled.button`
     display: flex;
     margin: 12px auto;
@@ -76,9 +117,17 @@ export const O = {
     width: 100%;
     font-size: 14px;
     font-weight: 700;
-    color: #fff;
+    color: var(--color-white);
     border-radius: 15px;
     background-color: ${(props) => props.color || `var(--color-accent)`};
+
+    &:disabled {
+      border: 1px solid gray;
+      color: gray;
+      cursor: default;
+      background-color: rgb(255, 250, 240, 0.8);
+      border: none;
+    }
   `,
 
   // 이미지 스타일
@@ -127,27 +176,37 @@ export const O = {
 
   // faqlist 스타일
   FaqList: styled.div`
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0px;
+    color: var(--color-text);
 
-    div {
-      display: grid;
-      padding: 10px 0px;
+    div > p:nth-child(1) {
+      height: 50px;
+      border-radius: 15px 15px 0px 0px;
       background-color: var(--color-secondary);
-      border: 1px solid var(--color-primary);
-      border-radius: 10px;
-      margin: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
-    p {
-      padding: 5px 0px;
-      text-align: center;
+    div > p:nth-child(2) {
+      height: 70px;
+      border-radius: 0px 0px 15px 15px;
+      background-color: var(--color-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     button {
-      margin-right: 0px;
-      padding: 5px;
-      margin: 5px 20px;
-      border: 2px solid #d3d3d3;
+      position: absolute;
+      right: 70px;
+      background-color: transparent;
+      border: none;
     }
   `,
 };

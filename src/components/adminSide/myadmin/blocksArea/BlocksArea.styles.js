@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 export const B = {
   Container: styled.div`
@@ -14,7 +15,9 @@ export const B = {
       width: 100%;
       font-size: 14px;
       color: var(--color-white);
+      color: var(--color-white);
       border-radius: 15px;
+      background: var(--color-accent);
       background: var(--color-accent);
     }
   `,

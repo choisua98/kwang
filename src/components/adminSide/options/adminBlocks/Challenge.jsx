@@ -23,8 +23,8 @@ import {
   uploadBytes,
 } from 'firebase/storage';
 import { O } from '../Blocks.styles';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import { LeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 
 // ant Design
 import { CameraOutlined } from '@ant-design/icons';
