@@ -6,8 +6,11 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
+  query,
   serverTimestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 import {
   deleteObject,
@@ -100,6 +103,20 @@ const Reservation = () => {
       return;
     }
 
+    // Block 정렬을 위해 숫자로 blockId 값 지정
+    const querySnapshot = await getDocs(
+      query(collection(db, 'template'), where('userId', '==', userUid)),
+    );
+    let maxNum = 0;
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.blockId && typeof data.blockId === 'number') {
+        // "id" 값이 숫자이고 "userId"가 userUid와 일치하는 경우만 처리
+        maxNum = Math.max(maxNum, data.blockId);
+      }
+    });
+    const blockId = maxNum + 1;
+
     try {
       // Firestore에 데이터 추가
       const docRef = await addDoc(collection(db, 'template'), {
@@ -111,6 +128,7 @@ const Reservation = () => {
         endDate,
         blockKind: 'reservation',
         createdAt: serverTimestamp(),
+        blockId: blockId,
         userId: userUid,
       });
 
@@ -315,6 +333,7 @@ const Reservation = () => {
               />
             </>
           )}
+
           {uploadedImages.map((image, index) => {
             return (
               <div key={index}>

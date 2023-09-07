@@ -21,6 +21,7 @@ import CustomerFaq from '../pages/customerPage/CustomerFaq';
 import CustomerFanletter from '../pages/customerPage/CustomerFanletter';
 import CustomerChallengeVerify from '../pages/customerPage/CustomerChallengeVerify';
 import AddLink from '../components/adminSide/options/adminBlocks/AddLink';
+import NotFound from '../pages/kwangPage/NotFound';
 
 const Router = () => {
   return (
@@ -40,9 +41,7 @@ const Router = () => {
           <Route path="/admin/bannerimage" element={<AdminBannerImage />} />
           <Route path="/admin/fanletter" element={<AdminFanLetter />} />
           <Route path="/admin/addlink" element={<AddLink />} />
-
           <Route path="/:uid" element={<Main />} />
-
           <Route path="/:uid/challenge" element={<CustomerChallenge />} />
           <Route
             path="/:uid/challenge/verify"
@@ -52,14 +51,7 @@ const Router = () => {
           <Route path="/:uid/reservation" element={<CustomerReservation />} />
           <Route path="/:uid/faq" element={<CustomerFaq />} />
           <Route path="/:uid/fanletter" element={<CustomerFanletter />} />
-          <Route
-            path="*"
-            element={
-              <>
-                <h3>Not Found</h3>
-              </>
-            }
-          />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
