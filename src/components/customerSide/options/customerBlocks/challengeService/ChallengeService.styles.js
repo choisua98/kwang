@@ -27,17 +27,17 @@ export const CS = {
     }
   `,
 
-  SwiperSlide: styled(SwiperSlide)`
-    margin-top: 20px;
-    width: 100%;
+  // SwiperSlide: styled(SwiperSlide)`
+  //   margin-top: 20px;
+  //   width: 100%;
 
-    img {
-      width: 100%;
-      height: 230px;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-  `,
+  //   img {
+  //     width: 100%;
+  //     height: 230px;
+  //     object-fit: cover;
+  //     border-radius: 10px;
+  //   }
+  // `,
 
   CalendarContainer: styled.div`
     .react-calendar {
