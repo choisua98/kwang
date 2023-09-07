@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import IconDelete from '../../../assets/images/common/icon/icon-delete.png';
 
 // adminSide options 공통 css
 export const O = {
@@ -174,6 +175,16 @@ export const O = {
       background-size: cover;
       background-position: center;
     }
+
+    button {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: url(${IconDelete}) no-repeat 50% 50% / cover;
+      backdrop-filter: blur(50px);
+      opacity: 0.7;
+    }
   `,
 
   // faqlist 스타일
@@ -210,5 +221,9 @@ export const O = {
       background-color: transparent;
       border: none;
     }
+  `,
+
+  Preview: styled.div`
+    position: relative;
   `,
 };

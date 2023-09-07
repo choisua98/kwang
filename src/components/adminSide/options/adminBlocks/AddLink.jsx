@@ -151,9 +151,6 @@ const AddLink = () => {
           <p>
             링크 제목<span>*</span>
           </p>
-          <p>
-            링크 제목<span>*</span>
-          </p>
         </label>
         <input
           id="title"
@@ -167,9 +164,6 @@ const AddLink = () => {
           autoFocus
         />
         <label htmlFor="description">
-          <p>
-            링크를 추가해 주세요<span>*</span>
-          </p>
           <p>
             링크를 추가해 주세요<span>*</span>
           </p>

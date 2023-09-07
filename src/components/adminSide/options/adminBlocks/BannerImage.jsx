@@ -244,8 +244,10 @@ const BannerImage = () => {
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label>
-          배너 이미지를 추가해주세요
-          <span>*</span>
+          <p>
+            배너 이미지를 추가해주세요
+            <span>*</span>
+          </p>
         </label>
 
         <O.ImageContainer>
@@ -282,7 +284,7 @@ const BannerImage = () => {
 
           {uploadedImages.map((image, index) => {
             return (
-              <div key={index}>
+              <O.Preview key={index}>
                 <div
                   className="square-preview"
                   style={{
@@ -293,10 +295,11 @@ const BannerImage = () => {
                     })`,
                   }}
                 />
-                <button type="button" onClick={() => handleRemoveImage(index)}>
-                  -
-                </button>
-              </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                />
+              </O.Preview>
             );
           })}
         </O.ImageContainer>
