@@ -3,8 +3,12 @@ import React, { useEffect } from 'react';
 import { blocksAtom } from '../../../../atoms/Atom';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
-import { C } from './CustomerBlocks.styles';
 import { Pagination, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { C } from './CustomerBlocks.styles';
+
 import { useNavigate, useParams } from 'react-router-dom';
 
 const CustomerBlocks = () => {

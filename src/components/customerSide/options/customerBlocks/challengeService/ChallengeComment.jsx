@@ -10,8 +10,10 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../../../firebase/firebaseConfig';
 import { C } from '../../CustomerBlocks.style';
-import { CC } from '../challengeService/ChallengeService.styles';
+import { CC } from './ChallengeService.styles';
 import IconAwesome from '../../../../../assets/images/customer/icon-awesome.png';
+import { useAtom } from 'jotai';
+import { modalVisibleAtom } from '../../../../../atoms/Atom';
 import { nanoid } from 'nanoid';
 import { LeftOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -31,6 +33,7 @@ const ChallengeComment = () => {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]); // 댓글 데이터 저장
   const [commentCount, setCommentCount] = useState(0);
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom); // 모달
 
   // 컴포넌트가 마운트 될 때와 selectedDate가 변경될 때 카운트를 Firestore에서 가져옴
   useEffect(() => {
@@ -42,8 +45,12 @@ const ChallengeComment = () => {
     fetchComments();
   }, [selectedDate, setCommentCount]);
 
+  const handleCommentSubmit = () => {
+    setModalVisible(true);
+  };
+
   // 댓글 추가
-  const handleSubmit = async (e) => {
+  const handleModalConfirm = async (e) => {
     e.preventDefault();
 
     // 선택된 날짜와 현재 날짜 비교
@@ -92,6 +99,7 @@ const ChallengeComment = () => {
       setPassword('');
       setComment('');
       fetchComments();
+      setModalVisible(false);
     } catch (error) {
       console.log(error.message);
     }
@@ -217,33 +225,80 @@ const ChallengeComment = () => {
         <span>{commentCount}명이 함께하고 있어요!</span>
       </CC.CountStyle>
 
-      <form onSubmit={handleSubmit}>
-        <CC.Input
-          type="text"
-          placeholder="닉네임"
-          value={nickname}
-          onChange={(e) => {
-            setNickname(e.target.value);
-          }}
-        />
-        <CC.Input
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-        />
-        <CC.CommentInput
-          type="text"
-          placeholder="댓글"
-          value={comment}
-          onChange={(e) => {
-            setComment(e.target.value);
-          }}
-        />
-        <CC.AddButton type="submit">댓글 등록하기</CC.AddButton>
-      </form>
+      <CC.CustomModal
+        title={
+          <>
+            <button onClick={() => navigate(`/${userUid}/challenge/verify`)}>
+              <LeftOutlined />
+            </button>
+            <p>댓글 등록하기</p>
+          </>
+        }
+        centered
+        open={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        footer={null}
+        closable={false}
+        width={300}
+      >
+        <CC.Container onSubmit={handleModalConfirm}>
+          <label htmlFor="nickname">
+            <p>
+              닉네임<span>*</span>
+            </p>
+          </label>
+          <input
+            id="nickname"
+            name="nickname"
+            type="text"
+            placeholder="닉네임을 입력해주세요."
+            value={nickname}
+            onChange={(e) => {
+              setNickname(e.target.value);
+            }}
+            autoFocus
+          />
+          <label htmlFor="password">
+            <p>
+              비밀번호<span>*</span>
+            </p>
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="비밀번호를 입력해주세요."
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+          <label htmlFor="password">
+            <p>
+              댓글<span>*</span>
+            </p>
+          </label>
+          <textarea
+            id="comment"
+            name="comment"
+            type="text"
+            placeholder="댓글을 입력해주세요."
+            value={comment}
+            onChange={(e) => {
+              setComment(e.target.value);
+            }}
+            maxLength={50}
+          />
+          <C.SubmitButton type="submit">확인</C.SubmitButton>
+        </CC.Container>
+      </CC.CustomModal>
+
+      <C.ButtonArea>
+        <C.SubmitButton type="button" onClick={handleCommentSubmit}>
+          댓글 등록하기
+        </C.SubmitButton>
+      </C.ButtonArea>
+
       {comments.map((commentData, index) => (
         <CC.CommentBox key={index}>
           <>
