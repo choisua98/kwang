@@ -96,6 +96,7 @@ export const O = {
   `,
 
   MenuFormButton: styled.div`
+    cursor: pointer;
     padding: 18px 0;
     width: 100%;
     height: auto;

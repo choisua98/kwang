@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { auth, db, storage } from '../../../../../firebase/firebaseConfig';
+import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import {
   deleteObject,
   getDownloadURL,
@@ -13,18 +13,20 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
+  query,
   serverTimestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore';
-import { blocksAtom } from '../../../../../atoms/Atom';
+import { blocksAtom } from '../../../../atoms/Atom';
 import { useAtom } from 'jotai';
 import { Modal } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 import imageCompression from 'browser-image-compression';
-import { O } from '../../Blocks.styles';
-import { B } from './BannerImage.styles';
-import IconFormCheck from '../../../../../assets/images/common/icon/icon-Formcheck.png';
+import { O } from '../Blocks.styles';
 import { LeftOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 const BannerImage = () => {
   const navigate = useNavigate();
@@ -46,7 +48,7 @@ const BannerImage = () => {
   const [uploadedImages, setUploadedImages] = useState([]);
 
   // 최대 업로드 가능한 이미지 개수
-  const maxUploads = 3;
+  const maxUploads = 4;
 
   useEffect(() => {
     if (blockId) {
@@ -101,12 +103,26 @@ const BannerImage = () => {
           return null;
         }
       };
+      // Block 정렬을 위해 숫자로 blockId 값 지정
+      const querySnapshot = await getDocs(
+        query(collection(db, 'template'), where('userId', '==', userUid)),
+      );
+      let maxNum = 0;
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.blockId && typeof data.blockId === 'number') {
+          // "id" 값이 숫자이고 "userId"가 userUid와 일치하는 경우만 처리
+          maxNum = Math.max(maxNum, data.blockId);
+        }
+      });
+      const blockId = maxNum + 1;
 
       // Firestore에 데이터 추가
       const docRef = await addDoc(collection(db, 'template'), {
         blockKind: 'bannerimage',
-        createdAt: serverTimestamp(),
         userId: userUid,
+        blockId: blockId,
+        createdAt: serverTimestamp(),
       });
 
       // 저장된 문서의 ID 가져오기
@@ -218,33 +234,24 @@ const BannerImage = () => {
   return (
     <>
       <O.HeaderStyle>
-        <button onClick={() => navigate(`/admin/${userUid}`)}>
-          <LeftOutlined />
-        </button>
+        <Button
+          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
+        />
         <p>설정</p>
       </O.HeaderStyle>
-
-      <O.FormGuideStyle>
-        <h2>
-          배너 이미지 추가 <img src={IconFormCheck} alt="폼체크아이콘" />
-        </h2>
-        <p>이미지를 추가해 나만의 커스텀 배너를 꾸며보세요!</p>
-      </O.FormGuideStyle>
 
       <O.Container
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label>
-          <p>
-            배너 이미지를 추가해주세요
-            <span>*</span>
-          </p>
+          배너 이미지를 추가해주세요
+          <span>*</span>
         </label>
 
-        <B.ImageContainer>
+        <O.ImageContainer>
           {uploadedImages.length >= maxUploads ? (
             <>
-              <B.ImageUpload onClick={handleImageChange}>
+              <div onClick={handleImageChange}>
                 <label
                   htmlFor="imageInput"
                   className={
@@ -254,7 +261,7 @@ const BannerImage = () => {
                   <CameraOutlined style={{ fontSize: '30px' }} />
                   <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
                 </label>
-              </B.ImageUpload>
+              </div>
             </>
           ) : (
             <>
@@ -273,30 +280,26 @@ const BannerImage = () => {
             </>
           )}
 
-          <B.Preview>
-            {uploadedImages.map((image, index) => {
-              return (
-                <div key={index} style={{ position: 'relative' }}>
-                  <div
-                    className="square-preview"
-                    style={{
-                      backgroundImage: `url(${
-                        typeof image === 'string'
-                          ? image
-                          : URL.createObjectURL(image)
-                      })`,
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveImage(index)}
-                  ></button>
-                </div>
-              );
-            })}
-          </B.Preview>
-        </B.ImageContainer>
-
+          {uploadedImages.map((image, index) => {
+            return (
+              <div key={index}>
+                <div
+                  className="square-preview"
+                  style={{
+                    backgroundImage: `url(${
+                      typeof image === 'string'
+                        ? image
+                        : URL.createObjectURL(image)
+                    })`,
+                  }}
+                />
+                <button type="button" onClick={() => handleRemoveImage(index)}>
+                  -
+                </button>
+              </div>
+            );
+          })}
+        </O.ImageContainer>
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={uploadedImages.length === 0}>
             {blockId ? '수정하기' : '저장하기'}

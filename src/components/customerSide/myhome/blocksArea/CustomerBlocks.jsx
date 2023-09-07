@@ -4,7 +4,6 @@ import { blocksAtom } from '../../../../atoms/Atom';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
 import { C } from './CustomerBlocks.styles';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, A11y } from 'swiper/modules';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -22,7 +21,7 @@ const CustomerBlocks = () => {
       const q = query(
         collection(db, 'template'),
         where('userId', '==', userUid),
-        orderBy('createdAt'),
+        orderBy('blockId'),
       );
       const querySnapshot = await getDocs(q);
 
