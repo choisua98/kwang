@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   addDoc,
   collection,
@@ -13,10 +13,14 @@ import {
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
+import {
+  backgroundImageAtom,
+  blocksAtom,
+  themeAtom,
+} from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
+// import IconFormCheck from '../../../../assets/images/common/icon/'
 import { LeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 
 const AddLink = () => {
   const navigate = useNavigate();
@@ -31,6 +35,14 @@ const AddLink = () => {
 
   const [title, setTitle] = useState(selectedBlock?.title || '');
   const [addLink, setAddLink] = useState(selectedBlock?.description || '');
+  const [theme, setTheme] = useAtom(themeAtom);
+  // 배경 이미지
+  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
+
+  useEffect(() => {
+    setTheme('light');
+    setBackgroundImage(null);
+  }, []);
 
   const addButtonClick = async (e) => {
     e.preventDefault();
@@ -67,7 +79,7 @@ const AddLink = () => {
       });
 
       alert('저장 완료!');
-      navigate('/admin');
+      navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -85,7 +97,7 @@ const AddLink = () => {
       });
 
       alert('수정 완료!');
-      navigate('/admin');
+      navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('수정 중 오류 발생:', error.message);
     }
@@ -99,7 +111,7 @@ const AddLink = () => {
         // 사용자 확인 후 삭제 작업 진행
         await deleteDoc(doc(db, 'heejintest', id));
         alert('삭제 완료!');
-        navigate('/admin');
+        navigate(`/admin/${userUid}`);
       } catch (error) {
         console.error('삭제 중 오류 발생:', error.message);
       }
@@ -109,13 +121,24 @@ const AddLink = () => {
   return (
     <>
       <O.HeaderStyle>
-        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
+        <button onClick={() => navigate(`/admin/${userUid}`)}>
+          <LeftOutlined />
+        </button>
         <p>설정</p>
       </O.HeaderStyle>
 
+      <O.FormGuideStyle>
+        <h2>
+          {/* 링크 추가하기 <img src={IconFormCheck} alt="폼체크아이콘" /> */}
+        </h2>
+        <p>링크를 추가하여 다양한 채널을 공유해보세요.</p>
+      </O.FormGuideStyle>
+
       <O.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
         <label htmlFor="title">
-          링크 제목<span>*</span>
+          <p>
+            링크 제목<span>*</span>
+          </p>
         </label>
         <input
           id="title"
@@ -129,7 +152,9 @@ const AddLink = () => {
           autoFocus
         />
         <label htmlFor="description">
-          링크를 추가해 주세요<span>*</span>
+          <p>
+            링크를 추가해 주세요<span>*</span>
+          </p>
         </label>
         <input
           id="description"

@@ -255,19 +255,33 @@ const Challenge = () => {
   return (
     <>
       <O.HeaderStyle>
-        <Button
-          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
-        />
+        <button onClick={() => navigate(`/admin/${userUid}`)}>
+          <LeftOutlined />
+        </button>
         <p>설정</p>
       </O.HeaderStyle>
+
+      <O.FormGuideStyle>
+        <h2>
+          함께해요 챌린지 <img src={IconFormCheck} alt="폼체크아이콘" />
+        </h2>
+        <p>
+          팬, 구독자들과 함께 챌린지활동을 하고 싶은 경우
+          <span>[함께 챌린지 하기 폼]</span>을 추가해보세요! 댓글기능이 있어
+          참여 하고 있는 사람들을 서로가 볼 수 있어요.
+        </p>
+      </O.FormGuideStyle>
 
       <O.Container
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          함께해요 챌린지 이름<span>*</span>
+          <p>
+            함께해요 챌린지 이름<span>*</span>
+          </p>
+          {titleCount}/20자
         </label>
-        <p>{titleCount}/20자</p>
+
         <input
           id="title"
           name="title"
@@ -336,9 +350,12 @@ const Challenge = () => {
         </O.ImageContainer>
 
         <label htmlFor="description">
-          챌린지 상세설명<span>*</span>
+          <p>
+            챌린지 상세설명<span>*</span>
+          </p>
+          {descriptionCount}/80자
         </label>
-        <p>{descriptionCount}/80자</p>
+
         <textarea
           id="description"
           name="description"
@@ -353,7 +370,9 @@ const Challenge = () => {
         />
 
         <label htmlFor="rangePicker">
-          챌린지 기간<span>*</span>
+          <p>
+            챌린지 기간<span>*</span>
+          </p>
         </label>
         <Space direction="vertical" size={12}>
           <RangePicker
