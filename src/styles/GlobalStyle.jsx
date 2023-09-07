@@ -67,6 +67,11 @@ const GlobalStyle = createGlobalStyle`
     font-size: 14px;
   }
 
+  // 테마
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn {
+    color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#333')};
+  }
+
 `;
 
 export { GlobalStyle };
