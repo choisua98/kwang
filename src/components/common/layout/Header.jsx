@@ -15,6 +15,15 @@ import { useAtom } from 'jotai';
 import { userNickname, userProfileImage } from '../../../atoms/Atom';
 
 const Header = () => {
+  const [user, setUser] = useState(null); // 로그인 상태를 저장할 상태 추가
+
+  useEffect(() => {
+    // onAuthStateChanged 이용해서 로그인 상태 감시
+    auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+  }, []);
+
   const userUid = auth.currentUser?.uid;
 
   // userUid로 저장된 문서가 있을 경우 프로필 정보 가져오기
