@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { CS } from './ChallengeService.styles';
-import { C } from '../../CustomerBlocks.style';
 import { useNavigate, useParams } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../../../firebase/firebaseConfig';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper } from 'swiper/react';
 import { A11y, Pagination } from 'swiper/modules';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { CS } from './ChallengeService.styles';
+import { C } from '../../CustomerBlocks.style';
+import { LeftOutlined } from '@ant-design/icons';
 
 const ChallengeService = () => {
   const navigate = useNavigate();
@@ -28,15 +29,10 @@ const ChallengeService = () => {
       );
       const querySnapshot = await getDocs(q);
 
-      // 가져온 데이터를 가공하여 배열에 저장
-      const initialDocuments = [];
-      querySnapshot.forEach((doc) => {
-        const data = {
-          id: doc.id,
-          ...doc.data(),
-        };
-        initialDocuments.push(data);
-      });
+      const initialDocuments = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
       // 가공된 데이터를 상태에 업데이트
       setChallengeData(initialDocuments);
@@ -53,9 +49,9 @@ const ChallengeService = () => {
   }, [userUid]);
 
   // '오늘 인증 남기기' 버튼 클릭 시 실행되는 함수
-  const handleChallengeVerification = () => {
+  const handleChallengeVerification = (title) => {
     navigate(`/${userUid}/challenge/verify`, {
-      state: { selectedDate: `${selectedDate}` },
+      state: { selectedDate: `${selectedDate}`, title: `${title}` },
     });
   };
 
@@ -81,11 +77,17 @@ const ChallengeService = () => {
   };
 
   return (
-    <CS.Container>
+    <>
       {challengeData.map((data) => {
         return (
           <div key={data.id}>
-            <h3>{data.title}</h3>
+            <C.HeaderStyle>
+              <button onClick={() => navigate(`/admin/${userUid}`)}>
+                <LeftOutlined />
+              </button>
+              <p>{data.title}</p>
+            </C.HeaderStyle>
+
             {data.blockKind === 'challenge' && (
               <Swiper
                 modules={[Pagination, A11y]}
@@ -93,41 +95,47 @@ const ChallengeService = () => {
                 a11y
               >
                 {data.images.map((image, index) => (
-                  <SwiperSlide key={index}>
+                  <CS.SwiperSlide key={index}>
                     <img src={image} alt={`reservationimage ${index + 1}`} />
-                  </SwiperSlide>
+                  </CS.SwiperSlide>
                 ))}
               </Swiper>
             )}
-            <p>{data.description}</p>
-            <p>
-              챌린지 기간 : {data.startDate} ~ {data.endDate}
-            </p>
-            <p>
-              챌린지 기간 중 날짜를 선택한 후 '오늘 인증 남기기' 버튼을 클릭하여
-              인증을 완료하세요.
-            </p>
+            <CS.Container>
+              <div>{data.description}</div>
+              <div>
+                챌린지 기간
+                <p>
+                  {data.startDate} ~ {data.endDate}
+                </p>
+              </div>
+            </CS.Container>
+
+            <CS.CalendarContainer>
+              <Calendar
+                onChange={setSelectedDate}
+                value={null}
+                prev2Label={null}
+                next2Label={null}
+                formatDay={(_, date) =>
+                  date.toLocaleString('en', { day: 'numeric' })
+                }
+                // tileDisabled={tileDisabled}
+                showNeighboringMonth={false}
+              />
+            </CS.CalendarContainer>
+
+            <C.ButtonArea>
+              <C.SubmitButton
+                onClick={() => handleChallengeVerification(data.title)}
+              >
+                오늘 인증 남기기
+              </C.SubmitButton>
+            </C.ButtonArea>
           </div>
         );
       })}
-
-      <CS.CalendarContainer>
-        <Calendar
-          onChange={setSelectedDate}
-          value={null}
-          prev2Label={null}
-          next2Label={null}
-          formatDay={(_, date) => date.toLocaleString('en', { day: 'numeric' })}
-          tileDisabled={tileDisabled}
-          showNeighboringMonth={false}
-        />
-      </CS.CalendarContainer>
-      <C.ButtonArea>
-        <C.SubmitButton onClick={handleChallengeVerification}>
-          오늘 인증 남기기
-        </C.SubmitButton>
-      </C.ButtonArea>
-    </CS.Container>
+    </>
   );
 };
 

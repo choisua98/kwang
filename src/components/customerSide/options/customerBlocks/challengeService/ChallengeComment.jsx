@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   collection,
   deleteDoc,
@@ -6,20 +8,39 @@ import {
   getDocs,
   setDoc,
 } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
-import { styled } from 'styled-components';
-import { useAtom } from 'jotai';
-import { countAtom } from '../../../../../atoms/Atom';
-import { nanoid } from 'nanoid';
-import moment from 'moment';
 import { db } from '../../../../../firebase/firebaseConfig';
+import { C } from '../../CustomerBlocks.style';
+import { CC } from '../challengeService/ChallengeService.styles';
+import IconAwesome from '../../../../../assets/images/customer/icon-awesome.png';
+import { nanoid } from 'nanoid';
+import { LeftOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
-const ChallengeComment = ({ selectedDate }) => {
+const ChallengeComment = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const title = location.state.title;
+  const selectedDate = location.state.selectedDate;
+
+  const { uid } = useParams();
+  const userUid = uid;
+
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]); // 댓글 데이터 저장
-  const [count, setCount] = useAtom(countAtom); // 댓글 추가될 때 마다 카운트 + 1
+  const [commentCount, setCommentCount] = useState(0);
+
+  // 컴포넌트가 마운트 될 때와 selectedDate가 변경될 때 카운트를 Firestore에서 가져옴
+  useEffect(() => {
+    const fetchCount = async () => {
+      const commentCount = await fetchCountFromFirestore();
+      setCommentCount(commentCount);
+    };
+    fetchCount();
+    fetchComments();
+  }, [selectedDate, setCommentCount]);
 
   // 댓글 추가
   const handleSubmit = async (e) => {
@@ -49,23 +70,22 @@ const ChallengeComment = ({ selectedDate }) => {
       const commentCollection = collection(db, 'comments');
       const commentDocRef = doc(commentCollection);
 
-      const CommentInfor = {
+      const CommentInfo = {
         nickname,
         password,
         comment,
         id: nanoid(),
-        timestamp: new Date(),
         date: moment().format('YYYY년 MM월 DD일'),
       };
 
-      await setDoc(commentDocRef, CommentInfor);
+      await setDoc(commentDocRef, CommentInfo);
       alert('댓글이 등록되었습니다.');
 
       // 선택된 날짜가 현재 날짜와 같을 때만 카운트를 업데이트
       if (moment(selectedDate).isSame(moment(), 'day')) {
-        const updatedCount = count + 1;
+        const updatedCount = commentCount + 1;
         await updateCountInFirestore(updatedCount, selectedDate);
-        setCount(updatedCount);
+        setCommentCount(updatedCount);
       }
 
       setNickname('');
@@ -105,9 +125,14 @@ const ChallengeComment = ({ selectedDate }) => {
 
         // 선택된 날짜가 현재 날짜와 같을 때만 카운트를 업데이트
         if (moment(selectedDate).isSame(moment(), 'day')) {
-          const updatedCount = count - 1;
-          await updateCountInFirestore(updatedCount, selectedDate);
-          setCount(updatedCount);
+          // 기존 댓글 수에서 1을 뺀 값을 계산
+          const updatedCount = commentCount - 1;
+
+          // 만약 업데이트된 댓글 수가 0 이하일 경우, 0으로 설정
+          const newCommentCount = updatedCount < 0 ? 0 : updatedCount;
+
+          await updateCountInFirestore(newCommentCount, selectedDate);
+          setCommentCount(newCommentCount);
         }
       } else {
         alert('비밀번호가 일치하지 않습니다.');
@@ -121,7 +146,7 @@ const ChallengeComment = ({ selectedDate }) => {
   const updateCountInFirestore = async (newCount, selectedDate) => {
     try {
       // Firestore에서 해당 날짜에 대한 댓글 수를 가져오기
-      const countDocRef = doc(db, 'counts', selectedDate);
+      const countDocRef = doc(db, 'commentCount', selectedDate);
       const countDocSnap = await getDoc(countDocRef);
       const currentCount = countDocSnap.exists()
         ? countDocSnap.data().count
@@ -140,7 +165,7 @@ const ChallengeComment = ({ selectedDate }) => {
   // 카운트를 Firestore에서 가져오는 함수
   const fetchCountFromFirestore = async () => {
     try {
-      const countDocRef = doc(db, 'counts', selectedDate);
+      const countDocRef = doc(db, 'commentCount', selectedDate);
       const countDocSnap = await getDoc(countDocRef);
       if (countDocSnap.exists()) {
         return countDocSnap.data().count;
@@ -153,16 +178,6 @@ const ChallengeComment = ({ selectedDate }) => {
     }
   };
 
-  // 컴포넌트가 마운트 될 때와 selectedDate가 변경될 때 카운트를 Firestore에서 가져옴
-  useEffect(() => {
-    const fetchCount = async () => {
-      const count = await fetchCountFromFirestore();
-      setCount(count);
-    };
-    fetchCount();
-    fetchComments();
-  }, [selectedDate, setCount]);
-
   // 댓글 데이터를 가져오는 함수
   const fetchComments = async () => {
     try {
@@ -173,14 +188,9 @@ const ChallengeComment = ({ selectedDate }) => {
       querySnapshot.forEach((doc) => {
         const commentData = doc.data();
 
-        // 댓글의 작성 날짜를 가져옴
-        const commentDate = moment(commentData.timestamp.toDate()).format(
-          'YYYY년 MM월 DD일',
-        );
-
         // 댓글 작성 날짜가 현재 날짜와 같을 때만 추가
         if (
-          moment(commentDate, 'YYYY년 MM월 DD일').isSame(
+          moment(commentData.date, 'YYYY년 MM월 DD일').isSame(
             moment(selectedDate),
             'day',
           )
@@ -197,9 +207,21 @@ const ChallengeComment = ({ selectedDate }) => {
 
   return (
     <>
-      <div>{count}명이 함께하고 있어요!</div>
+      <C.HeaderStyle>
+        <button onClick={() => navigate(`/${userUid}/challenge`)}>
+          <LeftOutlined />
+        </button>
+        <p>{title}</p>
+      </C.HeaderStyle>
+
+      <CC.CountStyle>
+        <img src={IconAwesome} alt="엄지척아이콘" />
+        <p>{moment(selectedDate.toString()).format('YYYY년 MM월 DD일,')}</p>
+        <span>{commentCount}명이 함께하고 있어요!</span>
+      </CC.CountStyle>
+
       <form onSubmit={handleSubmit}>
-        <Input
+        <CC.Input
           type="text"
           placeholder="닉네임"
           value={nickname}
@@ -207,25 +229,26 @@ const ChallengeComment = ({ selectedDate }) => {
             setNickname(e.target.value);
           }}
         />
-        <Input
-          type="text"
+        <CC.Input
+          type="password"
           placeholder="비밀번호"
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
           }}
         />
-        <CommentInput
+        <CC.CommentInput
+          type="text"
           placeholder="댓글"
           value={comment}
           onChange={(e) => {
             setComment(e.target.value);
           }}
         />
-        <AddButton type="submit">댓글 등록하기</AddButton>
+        <CC.AddButton type="submit">댓글 등록하기</CC.AddButton>
       </form>
       {comments.map((commentData, index) => (
-        <CommentBox key={index}>
+        <CC.CommentBox key={index}>
           <>
             <p>닉네임: {commentData.nickname}</p>
             <p>댓글: {commentData.comment}</p>
@@ -240,27 +263,10 @@ const ChallengeComment = ({ selectedDate }) => {
               삭제
             </button>
           </>
-        </CommentBox>
+        </CC.CommentBox>
       ))}
     </>
   );
 };
 
 export default ChallengeComment;
-
-const Input = styled.input`
-  width: 100px;
-  /* margin-bottom: 10px; */
-`;
-const CommentInput = styled.input`
-  width: 300px;
-  margin-bottom: 10px;
-`;
-
-const CommentBox = styled.div`
-  margin-bottom: 30px;
-`;
-
-const AddButton = styled.button`
-  margin-bottom: 80px;
-`;
