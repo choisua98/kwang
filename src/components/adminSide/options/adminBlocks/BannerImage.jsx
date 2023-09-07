@@ -105,7 +105,7 @@ const BannerImage = () => {
       };
       // Block 정렬을 위해 숫자로 blockId 값 지정
       const querySnapshot = await getDocs(
-        query(collection(db, 'heejintest'), where('userId', '==', userUid)),
+        query(collection(db, 'template'), where('userId', '==', userUid)),
       );
       let maxNum = 0;
       querySnapshot.forEach((doc) => {
@@ -118,7 +118,7 @@ const BannerImage = () => {
       const blockId = maxNum + 1;
 
       // Firestore에 데이터 추가
-      const docRef = await addDoc(collection(db, 'heejintest'), {
+      const docRef = await addDoc(collection(db, 'template'), {
         blockKind: 'bannerimage',
         userId: userUid,
         blockId: blockId,
@@ -165,7 +165,7 @@ const BannerImage = () => {
 
     try {
       // Firestore에 데이터 업로드
-      const docRef = doc(db, 'heejintest', blockId);
+      const docRef = doc(db, 'template', blockId);
 
       // 이미지 업로드 및 URL 저장
       const imageUrls = [];
@@ -214,7 +214,7 @@ const BannerImage = () => {
         );
 
         // 사용자 확인 후 Firestore 문서 삭제
-        await deleteDoc(doc(db, 'heejintest', id));
+        await deleteDoc(doc(db, 'template', id));
 
         alert('삭제 완료!');
         navigate(`/admin/${userUid}`);

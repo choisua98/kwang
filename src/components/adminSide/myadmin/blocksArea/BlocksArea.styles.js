@@ -5,7 +5,7 @@ export const B = {
   Container: styled.div`
     div {
       display: flex;
-      /* flex-direction: row; */
+      align-items: center;
     }
 
     // icon
@@ -13,7 +13,7 @@ export const B = {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 5px;
+      margin: 5px 0 5px 5px;
       font-size: 20px;
       -ms-transform: rotate(45deg);
       -webkit-transform: rotate(45deg);
@@ -33,8 +33,8 @@ export const B = {
   `,
 
   Swiper: styled(Swiper)`
-    padding: 21.5px 0;
-    width: 100%;
+    margin: 7.5px 0;
+    display: flex;
   `,
 
   SwiperSlide: styled(SwiperSlide)`
@@ -43,6 +43,7 @@ export const B = {
       width: 100%;
       height: 200px;
       object-fit: cover; // 이미지가 잘리지 않도록 설정
+      background-color: #d6d6d6;
       border-radius: 15px;
     }
   `,
@@ -57,14 +58,7 @@ export const B = {
 
     p {
       cursor: pointer;
-      /* border: 1px solid black; */
       padding: 5px;
     }
   `,
-
-  // RotatedPauseOutlined: styled.PauseOutlined`
-  //   -ms-transform: rotate(90deg);
-  //   -webkit-transform: rotate(90deg);
-  //   transform: rotate(90deg);
-  // `,
 };

@@ -81,7 +81,7 @@ const Faq = () => {
 
     // Block 정렬을 위해 숫자로 blockId 값 지정
     const querySnapshot = await getDocs(
-      query(collection(db, 'heejintest'), where('userId', '==', userUid)),
+      query(collection(db, 'template'), where('userId', '==', userUid)),
     );
     let maxNum = 0;
     querySnapshot.forEach((doc) => {
@@ -95,7 +95,7 @@ const Faq = () => {
 
     try {
       // Firestore에 데이터 추가
-      await addDoc(collection(db, 'heejintest'), {
+      await addDoc(collection(db, 'template'), {
         title,
         faqs: faqList,
         blockKind: 'faq',
@@ -118,7 +118,7 @@ const Faq = () => {
 
     try {
       // Firestore에 데이터 업로드
-      const docRef = doc(db, 'heejintest', blockId);
+      const docRef = doc(db, 'template', blockId);
       await updateDoc(docRef, {
         title,
         faqs: faqList,
@@ -136,7 +136,7 @@ const Faq = () => {
   const handleDeleteFaqButtonClick = async (faqId) => {
     const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
     if (shouldDelete) {
-      const docRef = doc(db, 'heejintest', blockId);
+      const docRef = doc(db, 'template', blockId);
       const docSnapshot = await getDoc(docRef);
 
       if (docSnapshot.exists()) {
@@ -174,7 +174,7 @@ const Faq = () => {
     if (shouldDelete) {
       try {
         // 사용자 확인 후 삭제 작업 진행
-        await deleteDoc(doc(db, 'heejintest', id));
+        await deleteDoc(doc(db, 'template', id));
         alert('삭제 완료!');
         navigate(`/admin/${userUid}`);
       } catch (error) {

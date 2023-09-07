@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import { B } from './BlocksArea.styles';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
@@ -35,7 +35,7 @@ const BlocksArea = () => {
     try {
       // 쿼리 실행하여 데이터 가져오기
       const q = query(
-        collection(db, 'heejintest'),
+        collection(db, 'template'),
         where('userId', '==', userUid),
         orderBy('blockId'),
       );
@@ -77,7 +77,7 @@ const BlocksArea = () => {
     // 각 블록의 blockId 업데이트
     updatedBlocks.forEach(async (block, index) => {
       try {
-        const docRef = doc(db, 'heejintest', block.id);
+        const docRef = doc(db, 'template', block.id);
         await updateDoc(docRef, {
           blockId: index,
         });
@@ -135,11 +135,7 @@ const BlocksArea = () => {
                         </div>
                       )}
                       {block.blockKind === 'bannerimage' && (
-                        <div
-                          isDragging={snapshot.isDragging}
-                          ref={magic.innerRef}
-                          {...magic.draggableProps}
-                        >
+                        <div>
                           <B.Swiper
                             modules={[Pagination, A11y]}
                             pagination={{ clickable: true }}
@@ -155,9 +151,15 @@ const BlocksArea = () => {
                               </B.SwiperSlide>
                             ))}
                           </B.Swiper>
-                          <span {...magic.dragHandleProps}>
-                            <PauseOutlined />
-                          </span>
+                          <div
+                            isDragging={snapshot.isDragging}
+                            ref={magic.innerRef}
+                            {...magic.draggableProps}
+                          >
+                            <span {...magic.dragHandleProps}>
+                              <PauseOutlined />
+                            </span>
+                          </div>
                         </div>
                       )}
                     </B.Container>
