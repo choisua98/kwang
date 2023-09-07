@@ -1,3 +1,4 @@
+import { Modal } from 'antd';
 import { styled } from 'styled-components';
 import { SwiperSlide } from 'swiper/react';
 
@@ -143,37 +144,84 @@ export const CC = {
 
     img {
       position: absolute;
-      left: 70px;
+      left: 100px;
     }
-
     p {
       position: absolute;
-      top: 195px;
-      left: 150px;
+      top: 205px;
+      left: 180px;
       font-size: 14px;
     }
-
     span {
       position: absolute;
-      top: 215px;
-      left: 150px;
+      top: 225px;
+      left: 180px;
       font-size: 17px;
     }
   `,
-  Input: styled.input`
-    width: 100px;
+
+  Container: styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 30px;
+
+    ::placeholder {
+      color: #7a7a7a;
+      padding: 5px 7px;
+    }
+
+    input {
+      padding: 16.5px 16px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 15px;
+      background: #fafafa;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      height: 120px;
+      padding: 16.5px 16px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 15px;
+      background: #fafafa;
+    }
+
+    label {
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    label span {
+      color: red;
+    }
   `,
 
-  CommentInput: styled.input`
-    width: 300px;
-    margin-bottom: 10px;
+  CustomModal: styled(Modal)`
+    border-radius: 15px;
+
+    .ant-modal-header {
+      margin: 0;
+      text-align: center;
+    }
+
+    .ant-modal-title {
+      font-size: 14px;
+      line-height: 14px;
+      color: var(--color-text);
+
+      button {
+        position: absolute;
+        left: 5%;
+        font-size: 15px;
+        color: #7a7a7a;
+        background-color: transparent;
+      }
+    }
   `,
 
-  CommentBox: styled.div`
-    /* margin-bottom: 30px; */
-  `,
-
-  AddButton: styled.button`
-    margin-bottom: 80px;
-  `,
+  CommentBox: styled.div``,
 };
