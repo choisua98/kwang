@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { B } from './BlocksArea.styles';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
@@ -13,13 +13,15 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { auth, db } from '../../../../firebase/firebaseConfig';
-import { UpOutlined, DownOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { PauseOutlined } from '@ant-design/icons';
 
 // swiper
 import { Pagination, A11y } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+
+// Drag & Drop
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const BlocksArea = () => {
   const navigate = useNavigate();
@@ -85,75 +87,88 @@ const BlocksArea = () => {
     });
   };
 
-  // up & down 버튼 클릭시 block 위치 변경
-  const switchBlock = (currentIndex, direction) => {
+  // Drag & Drop
+  const onDragEnd = (result) => {
+    // 위치 이동이 없는 경우 작동하지 않음
     if (
-      (direction === 'up' && currentIndex > 0) ||
-      (direction === 'down' && currentIndex < blocks.length - 1)
+      !result.destination ||
+      result.source.index === result.destination.index
     ) {
-      const updatedBlocks = [...blocks];
-      const targetIndex =
-        direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-
-      // 현재 블록과 대상 블록의 위치를 교환합니다.
-      [updatedBlocks[currentIndex], updatedBlocks[targetIndex]] = [
-        updatedBlocks[targetIndex],
-        updatedBlocks[currentIndex],
-      ];
-
-      updateBlock(updatedBlocks);
+      return;
     }
+
+    const updatedBlocks = [...blocks];
+    const [movedBlock] = updatedBlocks.splice(result.source.index, 1); // 이동한 블록을 추출
+    updatedBlocks.splice(result.destination.index, 0, movedBlock); // 이동한 블록을 새 위치에 삽입
+
+    setBlocks(updatedBlocks);
+    updateBlock(updatedBlocks);
   };
 
   return (
-    <B.Container>
-      {blocks.map((block, index) => (
-        <div key={block.id}>
-          {block.title && (
-            <>
-              <button onClick={() => moveToEditButton(block)}>
-                {block.title}
-              </button>
-              <B.ArrowContainer>
-                <p onClick={() => switchBlock(index, 'up')}>
-                  <UpOutlined />
-                </p>
-                <p onClick={() => switchBlock(index, 'down')}>
-                  <DownOutlined />
-                </p>
-              </B.ArrowContainer>
-            </>
+    <>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="blocks" direction="vertical">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {blocks.map((block, index) => (
+                <Draggable key={block.id} draggableId={block.id} index={index}>
+                  {(provided, magic, snapshot) => (
+                    <B.Container
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      isDragging={snapshot.isDragging}
+                    >
+                      {block.title && (
+                        <div
+                          isDragging={snapshot.isDragging}
+                          ref={magic.innerRef}
+                          {...magic.draggableProps}
+                        >
+                          <button onClick={() => moveToEditButton(block)}>
+                            {block.title}
+                          </button>
+                          <span {...magic.dragHandleProps}>
+                            <PauseOutlined />
+                          </span>
+                        </div>
+                      )}
+                      {block.blockKind === 'bannerimage' && (
+                        <div
+                          isDragging={snapshot.isDragging}
+                          ref={magic.innerRef}
+                          {...magic.draggableProps}
+                        >
+                          <B.Swiper
+                            modules={[Pagination, A11y]}
+                            pagination={{ clickable: true }}
+                            a11y
+                          >
+                            {block.images.map((image, index) => (
+                              <B.SwiperSlide key={index}>
+                                <img
+                                  src={image}
+                                  alt={`bannerimage ${index + 1}`}
+                                  onClick={() => moveToEditButton(block)}
+                                />
+                              </B.SwiperSlide>
+                            ))}
+                          </B.Swiper>
+                          <span {...magic.dragHandleProps}>
+                            <PauseOutlined />
+                          </span>
+                        </div>
+                      )}
+                    </B.Container>
+                  )}
+                </Draggable>
+              ))}
+            </div>
           )}
-          {block.blockKind === 'bannerimage' && (
-            <>
-              <B.Swiper
-                modules={[Pagination, A11y]}
-                pagination={{ clickable: true }}
-                a11y
-              >
-                {block.images.map((image, index) => (
-                  <B.SwiperSlide key={index}>
-                    <img
-                      src={image}
-                      alt={`bannerimage ${index + 1}`}
-                      onClick={() => moveToEditButton(block)}
-                    />
-                  </B.SwiperSlide>
-                ))}
-              </B.Swiper>
-              <B.ArrowContainer>
-                <p onClick={() => switchBlock(index, 'up')}>
-                  <UpOutlined />
-                </p>
-                <p onClick={() => switchBlock(index, 'down')}>
-                  <DownOutlined />
-                </p>
-              </B.ArrowContainer>
-            </>
-          )}
-        </div>
-      ))}
-    </B.Container>
+        </Droppable>
+      </DragDropContext>
+    </>
   );
 };
 export default BlocksArea;

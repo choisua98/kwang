@@ -10,6 +10,7 @@ export const B = {
     border: 1.5px solid var(--color-accent);
     background: none;
     text-align: center;
+    margin-top: 20px;
 
     button {
       font-size: 14px;

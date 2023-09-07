@@ -8,6 +8,19 @@ export const B = {
       /* flex-direction: row; */
     }
 
+    // icon
+    span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 5px;
+      font-size: 20px;
+      -ms-transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+      color: lightgray;
+    }
+
     button {
       margin: 7.5px 0;
       padding: 21.5px 0;
@@ -48,4 +61,10 @@ export const B = {
       padding: 5px;
     }
   `,
+
+  // RotatedPauseOutlined: styled.PauseOutlined`
+  //   -ms-transform: rotate(90deg);
+  //   -webkit-transform: rotate(90deg);
+  //   transform: rotate(90deg);
+  // `,
 };
