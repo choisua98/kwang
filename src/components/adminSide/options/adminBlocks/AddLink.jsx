@@ -4,12 +4,16 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
+  query,
   serverTimestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
+
 import {
   backgroundImageAtom,
   blocksAtom,
@@ -41,6 +45,11 @@ const AddLink = () => {
     setBackgroundImage(null);
   }, []);
 
+  useEffect(() => {
+    setTheme('light');
+    setBackgroundImage(null);
+  }, []);
+
   const addButtonClick = async (e) => {
     e.preventDefault();
 
@@ -50,17 +59,33 @@ const AddLink = () => {
       return;
     }
 
+    // Block 정렬을 위해 숫자로 blockId 값 지정
+    const querySnapshot = await getDocs(
+      query(collection(db, 'template'), where('userId', '==', userUid)),
+    );
+    let maxNum = 0;
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.blockId && typeof data.blockId === 'number') {
+        // "id" 값이 숫자이고 "userId"가 userUid와 일치하는 경우만 처리
+        maxNum = Math.max(maxNum, data.blockId);
+      }
+    });
+    const blockId = maxNum + 1;
+
     try {
       // Firestore에 데이터 추가
       await addDoc(collection(db, 'template'), {
         title,
         addLink,
         blockKind: 'addlink',
+        blockId: blockId,
         createdAt: serverTimestamp(),
         userId: userUid,
       });
 
       alert('저장 완료!');
+      navigate(`/admin/${userUid}`);
       navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
@@ -80,6 +105,7 @@ const AddLink = () => {
 
       alert('수정 완료!');
       navigate(`/admin/${userUid}`);
+      navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('수정 중 오류 발생:', error.message);
     }
@@ -94,6 +120,7 @@ const AddLink = () => {
         await deleteDoc(doc(db, 'template', id));
         alert('삭제 완료!');
         navigate(`/admin/${userUid}`);
+        navigate(`/admin/${userUid}`);
       } catch (error) {
         console.error('삭제 중 오류 발생:', error.message);
       }
@@ -103,6 +130,9 @@ const AddLink = () => {
   return (
     <>
       <O.HeaderStyle>
+        <button onClick={() => navigate(`/admin/${userUid}`)}>
+          <LeftOutlined />
+        </button>
         <button onClick={() => navigate(`/admin/${userUid}`)}>
           <LeftOutlined />
         </button>
@@ -121,6 +151,9 @@ const AddLink = () => {
           <p>
             링크 제목<span>*</span>
           </p>
+          <p>
+            링크 제목<span>*</span>
+          </p>
         </label>
         <input
           id="title"
@@ -134,6 +167,9 @@ const AddLink = () => {
           autoFocus
         />
         <label htmlFor="description">
+          <p>
+            링크를 추가해 주세요<span>*</span>
+          </p>
           <p>
             링크를 추가해 주세요<span>*</span>
           </p>

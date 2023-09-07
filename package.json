@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.2.5",
+    "@dnd-kit/core": "^6.0.8",
+    "@dnd-kit/sortable": "^7.0.2",
     "@tanstack/react-query": "^4.32.6",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -17,6 +19,7 @@
     "nanoid": "^4.0.2",
     "qs": "^6.11.2",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-calendar": "^4.6.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.4",

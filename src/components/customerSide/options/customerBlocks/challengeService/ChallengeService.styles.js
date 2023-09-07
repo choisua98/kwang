@@ -1,41 +1,40 @@
 import { styled } from 'styled-components';
+import { SwiperSlide } from 'swiper/react';
 
 export const CS = {
   Container: styled.form`
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px 0px;
 
-    h3 {
-      font-size: 20px;
-      text-align: center;
-      margin: 30px 10px 10px 10px;
-    }
-    h4 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover; // 이미지가 잘리지 않도록 설정
-      background-color: #d6d6d6;
-      margin: 5px 0px;
+    div {
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 0;
     }
 
     p {
-      margin: 5px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 12px;
+      padding: 16.5px 16px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 15px;
+      background: #fafafa;
     }
+  `,
 
-    button {
+  SwiperSlide: styled(SwiperSlide)`
+    margin-top: 20px;
+    width: 100%;
+
+    img {
       width: 100%;
-      padding: 15px 0px;
-      margin-top: 30px;
+      height: 230px;
+      object-fit: cover;
       border-radius: 10px;
-    }
-
-    input {
-      height: 30px;
-      margin: 10px 0px;
     }
   `,
 
@@ -88,10 +87,10 @@ export const CS = {
       border-radius: 6px;
     }
     .react-calendar__tile--now {
-      background: none;
-      border-radius: 6px;
+      background: #f8f8fa;
+      color: #ff7c38;
+      border-radius: none;
       font-weight: none;
-      color: none;
     }
 
     .react-calendar__tile--hasActive:enabled:hover,
@@ -127,5 +126,54 @@ export const CS = {
       background: #6f48eb;
       color: white;
     }
+  `,
+};
+
+export const CC = {
+  CountStyle: styled.div`
+    width: 100%;
+    height: 105px;
+    background: var(--color-secondary);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: 500;
+    margin: 40px 0px;
+
+    img {
+      position: absolute;
+      left: 70px;
+    }
+
+    p {
+      position: absolute;
+      top: 195px;
+      left: 150px;
+      font-size: 14px;
+    }
+
+    span {
+      position: absolute;
+      top: 215px;
+      left: 150px;
+      font-size: 17px;
+    }
+  `,
+  Input: styled.input`
+    width: 100px;
+  `,
+
+  CommentInput: styled.input`
+    width: 300px;
+    margin-bottom: 10px;
+  `,
+
+  CommentBox: styled.div`
+    /* margin-bottom: 30px; */
+  `,
+
+  AddButton: styled.button`
+    margin-bottom: 80px;
   `,
 };

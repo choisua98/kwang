@@ -3,7 +3,6 @@ import { Row, Col, Button, Modal } from 'antd';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import btnEditImage from '../../../../assets/images/common/btn/btn-edit.png';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import imageCompression from 'browser-image-compression';
 import { P } from './MyProfile.styles';
@@ -183,52 +182,19 @@ const MyProfile = () => {
   return (
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
-        <Col
-          span={24}
-          style={{
-            position: 'relative',
-            maxWidth: '150px',
-            maxHeight: '150px',
-            textAlign: 'center',
-          }}
-        >
-          <P.ProfileImage
-            src={updatedImage}
-            style={{ width: '150px', height: '150px' }}
-          />
-          <Button
+        <P.ProfilBox span={24}>
+          <P.ProfileImage src={updatedImage} />
+          <P.ModalOpenButton
             onClick={() => {
               setModalVisible(true);
             }}
-            style={{
-              position: 'absolute',
-              bottom: '4px',
-              right: '-5px',
-              backgroundImage: `url(${btnEditImage})`,
-              backgroundSize: 'cover',
-              borderRadius: '50%',
-              width: '35px',
-              height: '35px',
-            }}
-          ></Button>
-        </Col>
+          ></P.ModalOpenButton>
+        </P.ProfilBox>
       </Row>
       <Row justify="center" align="middle" style={{ padding: '0' }}>
         <Col>
-          <div
-            style={{ margin: '0 auto', fontSize: '16px', textAlign: 'center' }}
-          >
-            {updateNick}
-          </div>
-          <div
-            style={{
-              margin: '10px auto 0',
-              fontSize: '16px',
-              textAlign: 'center',
-            }}
-          >
-            {updateIntro}
-          </div>
+          <P.InfoBox>{updateNick}</P.InfoBox>
+          <P.InfoBox>{updateIntro}</P.InfoBox>
         </Col>
       </Row>
       <Modal
@@ -260,13 +226,13 @@ const MyProfile = () => {
             accept=" image/*"
             onChange={onChangeImgaeFile}
           />
-          <P.label style={{ marginTop: '20px' }}>닉네임</P.label>
+          <P.label style={{ marginTop: '25px' }}>닉네임</P.label>
           <P.ModalInput
             placeholder="닉네임을 작성해 주세요."
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
-          <P.label style={{ marginTop: '5px' }}>소개</P.label>
+          <P.label>소개</P.label>
 
           <P.ModalInput
             placeholder="소개를 작성해 주세요."

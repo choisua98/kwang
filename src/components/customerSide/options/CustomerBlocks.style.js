@@ -7,16 +7,19 @@ export const C = {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px 0px 30px 0px;
+    margin: 20px 0px;
     position: relative;
 
     button {
-      background-color: transparent;
       position: absolute;
-      left: 3%;
+      left: 1%;
+      font-size: 20px;
+      background-color: transparent;
     }
+
     p {
       font-size: 18px;
+      font-weight: 500;
     }
   `,
 
