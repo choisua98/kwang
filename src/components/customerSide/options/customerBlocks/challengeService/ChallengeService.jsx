@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../../../firebase/firebaseConfig';
-import { Swiper } from 'swiper/react';
 import { A11y, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { CS } from './ChallengeService.styles';
@@ -95,9 +97,9 @@ const ChallengeService = () => {
                 a11y
               >
                 {data.images.map((image, index) => (
-                  <CS.SwiperSlide key={index}>
+                  <SwiperSlide key={index} style={{ height: '230px' }}>
                     <img src={image} alt={`reservationimage ${index + 1}`} />
-                  </CS.SwiperSlide>
+                  </SwiperSlide>
                 ))}
               </Swiper>
             )}
