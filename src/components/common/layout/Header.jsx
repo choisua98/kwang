@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Row, Col, Button, Drawer, Space } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import Logo from '../../../assets/images/logo.png';
+import WhiteLogo from '../../../assets/images/logo-white.png';
 import { H } from './Header.styles';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../../firebase/firebaseConfig';
@@ -12,7 +13,7 @@ import HomeIcon from '../../../assets/images/common/icon/Icon-home.png';
 import LinkIcon from '../../../assets/images/common/icon/icon-link.png';
 import EditIcon from '../../../assets/images/common/icon/icon-edit.png';
 import { useAtom } from 'jotai';
-import { userNickname, userProfileImage } from '../../../atoms/Atom';
+import { themeAtom, userNickname, userProfileImage } from '../../../atoms/Atom';
 
 const Header = () => {
   const [user, setUser] = useState(null); // 로그인 상태를 저장할 상태 추가
@@ -25,6 +26,7 @@ const Header = () => {
   }, []);
 
   const userUid = auth.currentUser?.uid;
+  const [theme] = useAtom(themeAtom);
 
   // userUid로 저장된 문서가 있을 경우 프로필 정보 가져오기
   useEffect(() => {
@@ -85,7 +87,7 @@ const Header = () => {
             <Col span={21}>
               {/* 로고 영역 */}
               <Link to="/">
-                <H.Logo src={Logo} alt="크왕" />
+                <H.Logo src={theme === 'dark' ? WhiteLogo : Logo} alt="크왕" />
               </Link>
             </Col>
             {!isLoginPage && isHomePage && (
@@ -102,7 +104,7 @@ const Header = () => {
             <Col span={22}>
               {/* 로고 영역 */}
               <Link to="/">
-                <H.Logo src={Logo} alt="크왕" />
+                <H.Logo src={theme === 'dark' ? WhiteLogo : Logo} alt="크왕" />
               </Link>
             </Col>
             <Col span={1}>

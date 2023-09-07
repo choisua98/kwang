@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Modal, Progress, Row } from 'antd';
+import { Col, Modal, Row } from 'antd';
 import { useAtom } from 'jotai';
 import { nanoid } from 'nanoid';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
@@ -16,12 +16,10 @@ import { T } from './Theme.styles';
 
 const imageUploadTime = 3000;
 const Theme = () => {
-  // 파라미터
   // 사용자 UID 가져오기
   const userUid = auth.currentUser?.uid;
-  const [, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
+  const [theme, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
-  const [theme] = useAtom(themeAtom);
   const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
   const [tempTheme, setTempTheme] = useState(null); // 임시로 테마와 배경 이미지 URL을 저장
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null); // 배경 이미지 URL을 저장
@@ -30,7 +28,6 @@ const Theme = () => {
 
   useEffect(() => {
     let intervalId;
-
     if (loading) {
       const increment = Math.ceil(50 / (imageUploadTime / 1000));
       let currentProgress = progress;
@@ -42,7 +39,6 @@ const Theme = () => {
         );
       }, imageUploadTime / 7);
     }
-
     return () => clearInterval(intervalId);
   }, [loading]);
 
@@ -81,6 +77,7 @@ const Theme = () => {
     const imageInput = document.getElementById('image-upload'); // useRef로 변경
     imageInput.click();
     imageInput.value = null;
+    setTempTheme('light');
   };
 
   // 이미지 저장 및 변경
@@ -115,6 +112,7 @@ const Theme = () => {
 
   // 테마(샘플 이미지) 클릭 시
   const handleSampleBackgroundClick = () => {
+    setTempTheme('light');
     setTempBackgroundImage(sampleImg);
   };
 
@@ -148,7 +146,6 @@ const Theme = () => {
     }
     if (tempBackgroundImage !== null) {
       setBackgroundImage(tempBackgroundImage);
-
       if (tempBackgroundImage) {
         document.body.style.backgroundImage = `url("${tempBackgroundImage}")`;
       } else {
@@ -188,7 +185,6 @@ const Theme = () => {
         <T.Description>
           테마를 선택하신 후 적용하기 버튼을 눌러주세요.
         </T.Description>
-
         <Row justify="center">
           <Col span={24}>
             <Row gutter={[6, 0]}>
@@ -215,11 +211,14 @@ const Theme = () => {
             </Row>
           </Col>
         </Row>
-
         <Row>
           <Col span={24}>
             {loading ? (
-              <Progress percent={Math.round(progress)} status="active" />
+              <T.Progress
+                percent={Math.round(progress)}
+                status="active"
+                strokeColor={{ from: '#108ee9', to: '#87d068' }}
+              />
             ) : (
               <T.ActivButton disabled={loading} onClick={handleApplyClick}>
                 적용하기

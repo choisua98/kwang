@@ -84,10 +84,11 @@ export const L = {
 
   MenuFormButton: styled.button`
     margin: 10px auto;
-    padding: 8px 0;
+    padding: 17px 0;
     display: block;
     width: 100%;
     font-size: 14px;
+    line-height: 14px;
     color: #ff7c38;
     background: #fff;
     border: 1px solid #ff7c38;
@@ -105,6 +106,7 @@ export const L = {
     padding: 10px 0;
     display: block;
     font-size: 14px;
+    line-height: 30px;
     color: #fff;
     background: #ff7c38;
     border-radius: 5px;

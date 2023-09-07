@@ -5,6 +5,7 @@ import Router from './shared/Router';
 import { backgroundImageAtom, themeAtom } from './atoms/Atom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase/firebaseConfig';
+import { GlobalStyle } from './styles/GlobalStyle';
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <GlobalStyle theme={theme} />
       <Router />
     </QueryClientProvider>
   );

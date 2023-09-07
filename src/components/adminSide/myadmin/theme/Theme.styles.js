@@ -1,5 +1,6 @@
 import { Button } from 'antd';
 import { styled } from 'styled-components';
+import { Progress as AntProgress } from 'antd';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
 import darkIcon from '../../../../assets/images/common/icon/icon-dark.png';
 import basicIcon from '../../../../assets/images/common/icon/icon-light.png';
@@ -104,5 +105,8 @@ export const T = {
     font-weight: 500;
     color: #858585;
     letter-spacing: 0.5px;
+  `,
+  Progress: styled(AntProgress)`
+    margin: 10px 0;
   `,
 };
