@@ -183,41 +183,31 @@ const Theme = () => {
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
-        width={300}
+        width={350}
       >
         <Row justify="center">
           <Col span={24}>
-            <Row gutter={[6, 0]} style={{ margin: '10px 0px -4px 0px' }}>
-              <Col span={12}>
-                <T.DarkModeButton onClick={handleDarkModeClick}>
-                  다크 모드
-                </T.DarkModeButton>
-              </Col>
-              <Col span={12}>
-                <T.BasicModeButton onClick={handleLightModeClick}>
-                  기본
-                </T.BasicModeButton>
-              </Col>
-            </Row>
-            <Row gutter={[6, 0]} style={{ margin: '10px 0' }}>
-              <Col span={12}>
-                <T.SelectImageButton onClick={handleCustomBackgroundClick}>
-                  배경 이미지 선택
-                </T.SelectImageButton>
-                {/* 파일 업로드 */}
-                <input
-                  id="image-upload"
-                  type="file"
-                  accept=".jpg,.jpeg,.png"
-                  style={{ display: 'none' }}
-                  onChange={onImageChange}
-                />
-              </Col>
-              <Col span={12}>
-                <T.SampleImageButton onClick={handleSampleBackgroundClick}>
-                  샘플 이미지
-                </T.SampleImageButton>
-              </Col>
+            <Row gutter={[6, 0]}>
+              <T.DarkModeButton onClick={handleDarkModeClick}>
+                다크 모드
+              </T.DarkModeButton>
+              <T.BasicModeButton onClick={handleLightModeClick}>
+                라이트 모드
+              </T.BasicModeButton>
+              <T.SelectImageButton onClick={handleCustomBackgroundClick}>
+                배경 이미지 선택
+              </T.SelectImageButton>
+              {/* 파일 업로드 */}
+              <input
+                id="image-upload"
+                type="file"
+                accept=".jpg,.jpeg,.png"
+                style={{ display: 'none' }}
+                onChange={onImageChange}
+              />
+              <T.SampleImageButton onClick={handleSampleBackgroundClick}>
+                샘플 이미지
+              </T.SampleImageButton>
             </Row>
           </Col>
         </Row>
