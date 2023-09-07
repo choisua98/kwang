@@ -16,7 +16,6 @@ import { T } from './Theme.styles';
 
 const imageUploadTime = 3000;
 const Theme = () => {
-  // 파라미터
   // 사용자 UID 가져오기
   const userUid = auth.currentUser?.uid;
   const [, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
@@ -221,7 +220,11 @@ const Theme = () => {
         <Row>
           <Col span={24}>
             {loading ? (
-              <Progress percent={Math.round(progress)} status="active" />
+              <T.Progress
+                percent={Math.round(progress)}
+                status="active"
+                strokeColor={{ from: '#108ee9', to: '#87d068' }}
+              />
             ) : (
               <T.ActivButton disabled={loading} onClick={handleApplyClick}>
                 적용하기
