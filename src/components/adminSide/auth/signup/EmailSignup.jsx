@@ -5,7 +5,6 @@ import {
   fetchSignInMethodsForEmail,
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { Button } from 'antd';
 import { E } from './EmailSignup.styles';
 
 const EmailSignup = () => {
@@ -13,9 +12,6 @@ const EmailSignup = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
-
-  // 사용자 UID 가져오기
-  const userUid = auth.currentUser?.uid;
 
   // 이메일 중복확인 버튼클릭 핸들러
   const onDuplicateCheckButtonClickHandler = async () => {
@@ -134,26 +130,9 @@ const EmailSignup = () => {
             }}
           />
         </E.PasswordDiv>
-        <Button
-          type="submit"
-          onClick={onSignupButtonClickHandler}
-          style={{
-            position: 'absolute',
-            bottom: '38px',
-            margin: '0 auto',
-            display: 'block',
-            width: '100%',
-            height: '60px',
-            fontSize: '14px',
-            fontWeight: '700',
-            textDecoration: 'underline',
-            color: '#fff',
-            borderRadius: '15px',
-            background: '#FFBE51',
-          }}
-        >
+        <E.SignupButton type="submit" onClick={onSignupButtonClickHandler}>
           회원가입하기
-        </Button>
+        </E.SignupButton>
       </E.FormContainer>
     </>
   );

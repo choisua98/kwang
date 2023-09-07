@@ -1,29 +1,50 @@
 import { styled } from 'styled-components';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
+import { Button, Col } from 'antd';
+import btnEditImage from '../../../../assets/images/common/btn/btn-edit.png';
 
 export const P = {
+  InfoBox: styled.div`
+    margin-bottom: 10px;
+    font-size: 16px;
+    text-align: center;
+  `,
+
+  ProfilBox: styled(Col)`
+    position: relative;
+    max-width: 150px;
+    max-height: 150px;
+    text-align: center;
+  `,
+
+  ModalOpenButton: styled(Button)`
+    position: absolute;
+    bottom: 4px;
+    right: -5px;
+    background-image: url(${btnEditImage});
+    background-size: cover;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+  `,
+
   ProfileContainer: styled.div`
     display: flex;
     flex-direction: column;
     gap: 13px;
   `,
 
-  // ProfileInput: styled.input`
-  //   width: 96%;
-  //   height: 25px;
-  // `,
-
   ProfileImage: styled.img`
-    width: 140px;
-    height: 140px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
     background-image: url(${defaultProfileImage});
     border-radius: 100%;
   `,
 
   PreviewImage: styled.img`
-    width: 140px;
-    height: 140px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
     background-image: url(${defaultProfileImage});
     border-radius: 100%;
@@ -62,6 +83,7 @@ export const P = {
   label: styled.div`
     font-size: 14px;
     margin-bottom: -8px;
+    margin-top: 5px;
   `,
 
   FileUploadButton: styled.input`
