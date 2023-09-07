@@ -2,21 +2,21 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
 
-:root {
-  --color-bg: #FFFAF0;
-  --color-text: #313733;
-  --color-accent: #FF7C38;
-  --color-white: #FFFFFF;
-  --color-primary: #FFBE51;
-  --color-secondary: #FFF3D7;
-}
+  :root {
+    --color-bg: #FFFAF0;
+    --color-text: #313733;
+    --color-accent: #FF7C38;
+    --color-white: #FFFFFF;
+    --color-primary: #FFBE51;
+    --color-secondary: #FFF3D7;
+  }
 
   /* Pretendard-Regular 전체 폰트 적용 */
   @font-face {
-      font-family: 'Pretendard-Regular';
-      src: url('//cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-      font-weight: 400;
-      font-style: normal;
+    font-family: 'Pretendard-Regular';
+    src: url('//cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
   } 
 
   /* Roboto 폰트 적용 */
