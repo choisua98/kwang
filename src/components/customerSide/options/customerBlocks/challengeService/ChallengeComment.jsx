@@ -142,21 +142,18 @@ const ChallengeComment = () => {
     }
   };
 
-  // 카운트 값을 Firestore에 업데이트하는 함수
+  // Firestore에 count 업데이트하는 함수
   const updateCountInFirestore = async (newCount, selectedDate) => {
     try {
       // Firestore에서 해당 날짜에 대한 댓글 수를 가져오기
-      const countDocRef = doc(db, 'commentCount', selectedDate);
+      const countDocRef = doc(db, 'commentCounts', selectedDate);
       const countDocSnap = await getDoc(countDocRef);
-      const currentCount = countDocSnap.exists()
-        ? countDocSnap.data().count
-        : 0;
 
-      // 현재 댓글 수와 새로운 카운트 값을 더하여 업데이트
-      const updatedCount = currentCount + newCount;
-
-      // Firestore에 업데이트된 카운트 값을 저장
-      await setDoc(countDocRef, { count: updatedCount });
+      if (countDocSnap.exists()) {
+        await setDoc(countDocRef, { count: newCount });
+      } else {
+        await setDoc(countDocRef, { count: newCount });
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -165,7 +162,7 @@ const ChallengeComment = () => {
   // 카운트를 Firestore에서 가져오는 함수
   const fetchCountFromFirestore = async () => {
     try {
-      const countDocRef = doc(db, 'commentCount', selectedDate);
+      const countDocRef = doc(db, 'commentCounts', selectedDate);
       const countDocSnap = await getDoc(countDocRef);
       if (countDocSnap.exists()) {
         return countDocSnap.data().count;
