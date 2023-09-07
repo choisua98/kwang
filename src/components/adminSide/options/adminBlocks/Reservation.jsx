@@ -6,8 +6,11 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
+  query,
   serverTimestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 import {
   deleteObject,
@@ -100,9 +103,23 @@ const Reservation = () => {
       return;
     }
 
+    // Block 정렬을 위해 숫자로 blockId 값 지정
+    const querySnapshot = await getDocs(
+      query(collection(db, 'heejintest'), where('userId', '==', userUid)),
+    );
+    let maxNum = 0;
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.blockId && typeof data.blockId === 'number') {
+        // "id" 값이 숫자이고 "userId"가 userUid와 일치하는 경우만 처리
+        maxNum = Math.max(maxNum, data.blockId);
+      }
+    });
+    const blockId = maxNum + 1;
+
     try {
       // Firestore에 데이터 추가
-      const docRef = await addDoc(collection(db, 'template'), {
+      const docRef = await addDoc(collection(db, 'heejintest'), {
         title,
         description,
         numberOfPeople,
@@ -111,6 +128,7 @@ const Reservation = () => {
         endDate,
         blockKind: 'reservation',
         createdAt: serverTimestamp(),
+        blockId: blockId,
         userId: userUid,
       });
 
@@ -147,7 +165,7 @@ const Reservation = () => {
     e.preventDefault();
     try {
       // Firestore에 데이터 업로드
-      const docRef = doc(db, 'template', blockId);
+      const docRef = doc(db, 'heejintest', blockId);
       await updateDoc(docRef, {
         title,
         description,
@@ -209,7 +227,7 @@ const Reservation = () => {
         );
 
         // 사용자 확인 후 Firestore 문서 삭제
-        await deleteDoc(doc(db, 'template', id));
+        await deleteDoc(doc(db, 'heejintest', id));
 
         alert('삭제 완료!');
         navigate(`/admin/${userUid}`);
@@ -300,6 +318,7 @@ const Reservation = () => {
               />
             </>
           )}
+
           {uploadedImages.map((image, index) => {
             return (
               <div key={index}>

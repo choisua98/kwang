@@ -9,8 +9,11 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
+  query,
   serverTimestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 import { useAtom } from 'jotai';
 import { blocksAtom } from '../../../../atoms/Atom';
@@ -74,12 +77,27 @@ const Faq = () => {
       return;
     }
 
+    // Block 정렬을 위해 숫자로 blockId 값 지정
+    const querySnapshot = await getDocs(
+      query(collection(db, 'heejintest'), where('userId', '==', userUid)),
+    );
+    let maxNum = 0;
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.blockId && typeof data.blockId === 'number') {
+        // "id" 값이 숫자이고 "userId"가 userUid와 일치하는 경우만 처리
+        maxNum = Math.max(maxNum, data.blockId);
+      }
+    });
+    const blockId = maxNum + 1;
+
     try {
       // Firestore에 데이터 추가
-      await addDoc(collection(db, 'template'), {
+      await addDoc(collection(db, 'heejintest'), {
         title,
         faqs: faqList,
         blockKind: 'faq',
+        blockId: blockId,
         createdAt: serverTimestamp(),
         userId: userUid,
       });
@@ -98,7 +116,7 @@ const Faq = () => {
 
     try {
       // Firestore에 데이터 업로드
-      const docRef = doc(db, 'template', blockId);
+      const docRef = doc(db, 'heejintest', blockId);
       await updateDoc(docRef, {
         title,
         faqs: faqList,
@@ -116,7 +134,7 @@ const Faq = () => {
   const handleDeleteFaqButtonClick = async (faqId) => {
     const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
     if (shouldDelete) {
-      const docRef = doc(db, 'template', blockId);
+      const docRef = doc(db, 'heejintest', blockId);
       const docSnapshot = await getDoc(docRef);
 
       if (docSnapshot.exists()) {
@@ -154,7 +172,7 @@ const Faq = () => {
     if (shouldDelete) {
       try {
         // 사용자 확인 후 삭제 작업 진행
-        await deleteDoc(doc(db, 'template', id));
+        await deleteDoc(doc(db, 'heejintest', id));
         alert('삭제 완료!');
         navigate(`/admin/${userUid}`);
       } catch (error) {
