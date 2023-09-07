@@ -185,6 +185,10 @@ const Theme = () => {
         footer={null}
         width={350}
       >
+        <T.Description>
+          테마를 선택하신 후 적용하기 버튼을 눌러주세요.
+        </T.Description>
+
         <Row justify="center">
           <Col span={24}>
             <Row gutter={[6, 0]}>
@@ -211,6 +215,7 @@ const Theme = () => {
             </Row>
           </Col>
         </Row>
+
         <Row>
           <Col span={24}>
             {loading ? (
