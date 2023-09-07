@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import { styled } from 'styled-components';
 
 export const E = {
@@ -51,5 +52,20 @@ export const E = {
       border-radius: 15px;
       background: #fafafa;
     }
+  `,
+
+  SignupButton: styled(Button)`
+    position: absolute;
+    bottom: 38px;
+    margin: 0 auto;
+    display: block;
+    width: 100%;
+    height: 60px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: underline;
+    color: #fff;
+    border-radius: 15px;
+    background: #ffbe51;
   `,
 };
