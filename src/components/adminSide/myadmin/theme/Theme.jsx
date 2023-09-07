@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Modal, Progress, Row } from 'antd';
+import { Col, Modal, Progress, Row } from 'antd';
 import { useAtom } from 'jotai';
 import { nanoid } from 'nanoid';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
@@ -81,6 +81,7 @@ const Theme = () => {
     const imageInput = document.getElementById('image-upload'); // useRef로 변경
     imageInput.click();
     imageInput.value = null;
+    setTempTheme('light');
   };
 
   // 이미지 저장 및 변경
@@ -115,6 +116,7 @@ const Theme = () => {
 
   // 테마(샘플 이미지) 클릭 시
   const handleSampleBackgroundClick = () => {
+    setTempTheme('light');
     setTempBackgroundImage(sampleImg);
   };
 
