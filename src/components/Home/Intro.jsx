@@ -30,6 +30,7 @@ const Intro = () => {
             marginTop: '20px',
             width: '129px',
             height: '43px',
+            fontFamily: 'Pretendard-Regular',
             fontSize: '14px',
             fontWeight: '600',
             color: '#FF7A16',

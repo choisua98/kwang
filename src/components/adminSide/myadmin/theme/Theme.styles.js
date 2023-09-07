@@ -14,7 +14,7 @@ export const T = {
     margin-bottom: 15px;
   `,
   ActivButton: styled.button`
-    margin: 100px auto 0;
+    margin: 80px auto 0;
     padding: 21.5px 0;
     width: 100%;
     border-radius: 15px;
@@ -97,5 +97,12 @@ export const T = {
     // background-image: url(${defaultIcon});
     // background-repeat: no-repeat;
     // background-position: 92% 50%;
+  `,
+  Description: styled.p`
+    /* margin-top: 20px; */
+    font-size: 14px;
+    font-weight: 500;
+    color: #858585;
+    letter-spacing: 0.5px;
   `,
 };

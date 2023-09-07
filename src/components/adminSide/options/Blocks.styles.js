@@ -35,6 +35,7 @@ export const O = {
     p {
       font-size: 14px;
       font-weight: 500;
+      line-height: 18px;
       color: #858585;
       letter-spacing: 0.5px;
     }
