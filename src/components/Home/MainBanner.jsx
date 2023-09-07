@@ -26,7 +26,7 @@ const MainBanner = () => {
           disableOnInteraction: false,
         }}
         loop={true} // 무한 반복 활성화
-        style={{ margin: '20px auto 0', width: '100%' }}
+        style={{ margin: '25px auto 0', width: '100%' }}
       >
         <SwiperSlide>
           <Link to="#">

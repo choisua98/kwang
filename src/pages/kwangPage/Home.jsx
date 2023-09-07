@@ -19,8 +19,8 @@ const Home = () => {
   return (
     <H.BodyWrapper>
       <MainBanner />
-      <Intro />
       <NewCreator />
+      <Intro />
     </H.BodyWrapper>
   );
 };
