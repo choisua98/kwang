@@ -124,21 +124,21 @@ const Header = () => {
                     <H.NickName>{viewNickname}</H.NickName>
                   </H.ProfileContainer>
                   <H.Container>
-                    {!isMyPage ? (
-                      <H.MenuButton onClick={closeMenu}>
-                        <Link to={`/${userUid}`}>
-                          <H.IconImage src={HomeIcon} alt="homeIcon" />
-                          <p>마이홈</p>
-                        </Link>
-                      </H.MenuButton>
-                    ) : (
-                      <H.MenuButton onClick={closeMenu}>
-                        <Link to={`/admin/${userUid}`}>
-                          <H.IconImage src={EditIcon} alt="editIcon" />
-                          <p>편집하기</p>
-                        </Link>
-                      </H.MenuButton>
-                    )}
+                    {/* {!isMyPage ? ( */}
+                    <H.MenuButton onClick={closeMenu}>
+                      <Link to={`/${userUid}`}>
+                        <H.IconImage src={HomeIcon} alt="homeIcon" />
+                        <p>마이홈</p>
+                      </Link>
+                    </H.MenuButton>
+                    {/* ) : ( */}
+                    <H.MenuButton onClick={closeMenu}>
+                      <Link to={`/admin/${userUid}`}>
+                        <H.IconImage src={EditIcon} alt="editIcon" />
+                        <p>편집하기</p>
+                      </Link>
+                    </H.MenuButton>
+                    {/* )} */}
                     <H.MenuButton
                       onClick={() =>
                         handleCopyClipBoard(
