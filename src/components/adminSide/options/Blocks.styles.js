@@ -196,6 +196,7 @@ export const O = {
     color: var(--color-text);
 
     div > p:nth-child(1) {
+      position: relative;
       height: 50px;
       border-radius: 15px 15px 0px 0px;
       background-color: var(--color-secondary);
@@ -217,7 +218,8 @@ export const O = {
 
     button {
       position: absolute;
-      right: 70px;
+      right: 15px;
+      color: var(--color-accent);
       background-color: transparent;
       border: none;
     }

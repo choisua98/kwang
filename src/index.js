@@ -8,12 +8,12 @@ import { Provider as JotaiProvider } from 'jotai';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <JotaiProvider>
-      <Reset />
-      <App />
-    </JotaiProvider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <JotaiProvider>
+    <Reset />
+    <App />
+  </JotaiProvider>,
+  // </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

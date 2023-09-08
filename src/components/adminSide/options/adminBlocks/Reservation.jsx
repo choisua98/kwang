@@ -373,7 +373,7 @@ const Reservation = () => {
         />
         <label htmlFor="datePicker">
           <p>
-            시작 날짜 선택<span>*</span>
+            행사 날짜 선택<span>*</span>
           </p>
         </label>
         <Space direction="vertical" size={12}>

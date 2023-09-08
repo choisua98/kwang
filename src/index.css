@@ -57,6 +57,7 @@
 }
 .ant-picker-date-panel {
   max-width: 350px !important;
+  width: 100% !important;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
   .ant-picker-decade-panel,
@@ -83,4 +84,32 @@
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown-range {
   padding: 40px 0 0 !important;
+}
+
+:where(.css-17a39f8).ant-picker-dropdown,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-decade-panel,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-quarter-panel,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-month-panel,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-week-panel,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-date-panel,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-time-panel {
+  max-width: 374px !important;
+  width: 100% !important;
+}
+
+:where(.css-17a39f8).ant-picker-dropdown
+  .ant-picker-panel-container
+  .ant-picker-panel {
+  width: 100% !important;
+}
+
+:where(.css-17a39f8).ant-picker-dropdown
+  .ant-picker-date-panel
+  .ant-picker-content {
+  width: 100% !important;
+}
+
+.datePickerPopup .ant-picker-panel {
+  width: 100% !important;
 }
