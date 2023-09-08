@@ -4,6 +4,7 @@ import { blocksAtom } from '../../../../atoms/Atom';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
 import { Pagination, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -69,17 +70,17 @@ const CustomerBlocks = () => {
             </button>
           )}
           {block.blockKind === 'bannerimage' && (
-            <C.Swiper
+            <Swiper
               modules={[Pagination, A11y]}
               pagination={{ clickable: true }}
               a11y
             >
               {block.images.map((image, index) => (
-                <C.SwiperSlide key={index}>
+                <SwiperSlide key={index}>
                   <img src={image} alt={`bannerimage ${index + 1}`} />
-                </C.SwiperSlide>
+                </SwiperSlide>
               ))}
-            </C.Swiper>
+            </Swiper>
           )}
         </div>
       ))}

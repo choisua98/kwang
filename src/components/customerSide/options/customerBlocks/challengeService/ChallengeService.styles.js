@@ -1,6 +1,5 @@
 import { Modal } from 'antd';
 import { styled } from 'styled-components';
-import { SwiperSlide } from 'swiper/react';
 
 export const CS = {
   Container: styled.form`
@@ -27,17 +26,17 @@ export const CS = {
     }
   `,
 
-  // SwiperSlide: styled(SwiperSlide)`
-  //   margin-top: 20px;
-  //   width: 100%;
+  ImageContainer: styled.div`
+    margin-top: 20px;
+    width: 100%;
 
-  //   img {
-  //     width: 100%;
-  //     height: 230px;
-  //     object-fit: cover;
-  //     border-radius: 10px;
-  //   }
-  // `,
+    img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+  `,
 
   CalendarContainer: styled.div`
     .react-calendar {
@@ -144,18 +143,18 @@ export const CC = {
 
     img {
       position: absolute;
-      left: 100px;
+      left: 70px;
     }
     p {
       position: absolute;
       top: 205px;
-      left: 180px;
+      left: 150px;
       font-size: 14px;
     }
     span {
       position: absolute;
       top: 225px;
-      left: 180px;
+      left: 150px;
       font-size: 17px;
     }
   `,
@@ -223,5 +222,35 @@ export const CC = {
     }
   `,
 
-  CommentBox: styled.div``,
+  CommentsContainer: styled.div`
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 30px;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 20px;
+    }
+
+    p {
+      padding: 16.5px 16px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 15px;
+      background: #fafafa;
+    }
+
+    input {
+      padding: 16.5px 16px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 15px;
+      background: #fafafa;
+    }
+
+    button {
+      background: transparent;
+    }
+  `,
 };

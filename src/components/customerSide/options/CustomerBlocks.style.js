@@ -51,8 +51,7 @@ export const C = {
     img {
       width: 100%;
       height: 200px;
-      object-fit: cover; // 이미지가 잘리지 않도록 설정
-      background-color: #d6d6d6;
+      object-fit: cover;
       margin: 5px 0px;
     }
 
@@ -123,5 +122,13 @@ export const C = {
     color: #fff;
     border-radius: 15px;
     background-color: ${(props) => props.color || '#FF7C38;'};
+
+    &:disabled {
+      border: 1px solid gray;
+      color: gray;
+      cursor: default;
+      background-color: rgb(255, 250, 240, 0.8);
+      border: none;
+    }
   `,
 };

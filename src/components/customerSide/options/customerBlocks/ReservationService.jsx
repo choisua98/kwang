@@ -79,30 +79,30 @@ const ReservationService = () => {
 
   return (
     <>
-      <C.HeaderStyle>
-        <button onClick={() => navigate(`/${userUid}`)}>
-          <LeftOutlined />
-        </button>
-        <p>예약 서비스</p>
-      </C.HeaderStyle>
+      {reservationData.map((data) => (
+        <div key={data.id}>
+          <C.HeaderStyle>
+            <button onClick={() => navigate(`/${userUid}`)}>
+              <LeftOutlined />
+            </button>
+            <p>{data.title}</p>
+          </C.HeaderStyle>
 
-      <C.Container>
-        {reservationData.map((data) => (
-          <div key={data.id}>
-            <h3>{data.title}</h3>
-            <br />
+          <C.Container>
             {data.blockKind === 'reservation' && (
-              <Swiper
-                modules={[Pagination, A11y]}
-                pagination={{ clickable: true }}
-                a11y
-              >
-                {data.images.map((image, index) => (
-                  <SwiperSlide key={index}>
-                    <img src={image} alt={`reservationimage ${index + 1}`} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              <div>
+                <Swiper
+                  modules={[Pagination, A11y]}
+                  pagination={{ clickable: true }}
+                  a11y
+                >
+                  {data.images.map((image, index) => (
+                    <SwiperSlide key={index}>
+                      <img src={image} alt={`reservationimage ${index + 1}`} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
             )}
             <br />
             <p>일시 : {data.pickDate} </p>
@@ -112,8 +112,11 @@ const ReservationService = () => {
             <p>모집인원 : {data.numberOfPeople} 명</p>
             <br />
             <p>{data.description}</p>
-          </div>
-        ))}
+          </C.Container>
+        </div>
+      ))}
+
+      <C.Container>
         <h3>신청 방법</h3>
         <h4>하단의 신청 폼을 작성해 주세요.</h4>
         <label htmlFor="name">
@@ -140,17 +143,17 @@ const ReservationService = () => {
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
-
-        <C.ButtonArea>
-          <C.SubmitButton
-            type="submit"
-            disabled={!name || !phoneNumber}
-            onClick={submitButtonClick}
-          >
-            신청하기
-          </C.SubmitButton>
-        </C.ButtonArea>
       </C.Container>
+
+      <C.ButtonArea>
+        <C.SubmitButton
+          type="submit"
+          disabled={!name || !phoneNumber}
+          onClick={submitButtonClick}
+        >
+          신청하기
+        </C.SubmitButton>
+      </C.ButtonArea>
     </>
   );
 };
