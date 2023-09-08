@@ -15,7 +15,7 @@ import IconAwesome from '../../../../../assets/images/customer/icon-awesome.png'
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../../atoms/Atom';
 import { nanoid } from 'nanoid';
-import { LeftOutlined } from '@ant-design/icons';
+import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 const ChallengeComment = () => {
@@ -33,17 +33,18 @@ const ChallengeComment = () => {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]); // 댓글 데이터 저장
   const [commentCount, setCommentCount] = useState(0);
+  const [count, setCount] = useState(0);
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom); // 모달
 
   // 컴포넌트가 마운트 될 때와 selectedDate가 변경될 때 카운트를 Firestore에서 가져옴
   useEffect(() => {
     const fetchCount = async () => {
-      const commentCount = await fetchCountFromFirestore();
-      setCommentCount(commentCount);
+      const count = await fetchCountFromFirestore();
+      setCount(count);
     };
     fetchCount();
     fetchComments();
-  }, [selectedDate, setCommentCount]);
+  }, [selectedDate, setCount]);
 
   const handleCommentSubmit = () => {
     setModalVisible(true);
@@ -90,9 +91,9 @@ const ChallengeComment = () => {
 
       // 선택된 날짜가 현재 날짜와 같을 때만 카운트를 업데이트
       if (moment(selectedDate).isSame(moment(), 'day')) {
-        const updatedCount = commentCount + 1;
+        const updatedCount = count + 1;
         await updateCountInFirestore(updatedCount, selectedDate);
-        setCommentCount(updatedCount);
+        setCount(updatedCount);
       }
 
       setNickname('');
@@ -134,13 +135,13 @@ const ChallengeComment = () => {
         // 선택된 날짜가 현재 날짜와 같을 때만 카운트를 업데이트
         if (moment(selectedDate).isSame(moment(), 'day')) {
           // 기존 댓글 수에서 1을 뺀 값을 계산
-          const updatedCount = commentCount - 1;
+          const updatedCount = count - 1;
 
           // 만약 업데이트된 댓글 수가 0 이하일 경우, 0으로 설정
           const newCommentCount = updatedCount < 0 ? 0 : updatedCount;
 
           await updateCountInFirestore(newCommentCount, selectedDate);
-          setCommentCount(newCommentCount);
+          setCount(newCommentCount);
         }
       } else {
         alert('비밀번호가 일치하지 않습니다.');
@@ -222,13 +223,13 @@ const ChallengeComment = () => {
       <CC.CountStyle>
         <img src={IconAwesome} alt="엄지척아이콘" />
         <p>{moment(selectedDate.toString()).format('YYYY년 MM월 DD일,')}</p>
-        <span>{commentCount}명이 함께하고 있어요!</span>
+        <span>{count}명이 함께하고 있어요!</span>
       </CC.CountStyle>
 
       <CC.CustomModal
         title={
           <>
-            <button onClick={() => navigate(`/${userUid}/challenge/verify`)}>
+            <button onClick={() => setModalVisible(false)}>
               <LeftOutlined />
             </button>
             <p>댓글 등록하기</p>
@@ -277,6 +278,7 @@ const ChallengeComment = () => {
             <p>
               댓글<span>*</span>
             </p>
+            {commentCount}/50자
           </label>
           <textarea
             id="comment"
@@ -286,37 +288,45 @@ const ChallengeComment = () => {
             value={comment}
             onChange={(e) => {
               setComment(e.target.value);
+              setCommentCount(e.target.value.length);
             }}
             maxLength={50}
           />
-          <C.SubmitButton type="submit">확인</C.SubmitButton>
+          <C.SubmitButton
+            type="submit"
+            disabled={!nickname || !password || !comment}
+          >
+            확인
+          </C.SubmitButton>
         </CC.Container>
       </CC.CustomModal>
+
+      {comments.map((commentData, index) => (
+        <div key={index}>
+          <CC.CommentsContainer>
+            <div>
+              {commentData.nickname}
+              <button
+                onClick={() => {
+                  const password = prompt('비밀번호를 입력하세요.');
+                  if (password !== null) {
+                    handleDeleteButton(commentData.id, password);
+                  }
+                }}
+              >
+                <DeleteOutlined />
+              </button>
+            </div>
+            <p>{commentData.comment}</p>
+          </CC.CommentsContainer>
+        </div>
+      ))}
 
       <C.ButtonArea>
         <C.SubmitButton type="button" onClick={handleCommentSubmit}>
           댓글 등록하기
         </C.SubmitButton>
       </C.ButtonArea>
-
-      {comments.map((commentData, index) => (
-        <CC.CommentBox key={index}>
-          <>
-            <p>닉네임: {commentData.nickname}</p>
-            <p>댓글: {commentData.comment}</p>
-            <button
-              onClick={() => {
-                const password = prompt('비밀번호를 입력하세요.');
-                if (password !== null) {
-                  handleDeleteButton(commentData.id, password);
-                }
-              }}
-            >
-              삭제
-            </button>
-          </>
-        </CC.CommentBox>
-      ))}
     </>
   );
 };

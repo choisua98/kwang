@@ -17,6 +17,7 @@ import { PauseOutlined } from '@ant-design/icons';
 
 // swiper
 import { Pagination, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -135,22 +136,22 @@ const BlocksArea = () => {
                         </div>
                       )}
                       {block.blockKind === 'bannerimage' && (
-                        <div>
-                          <B.Swiper
+                        <B.ImageContainer>
+                          <Swiper
                             modules={[Pagination, A11y]}
                             pagination={{ clickable: true }}
                             a11y
                           >
                             {block.images.map((image, index) => (
-                              <B.SwiperSlide key={index}>
+                              <SwiperSlide key={index}>
                                 <img
                                   src={image}
                                   alt={`bannerimage ${index + 1}`}
                                   onClick={() => moveToEditButton(block)}
                                 />
-                              </B.SwiperSlide>
+                              </SwiperSlide>
                             ))}
-                          </B.Swiper>
+                          </Swiper>
                           <div
                             isDragging={snapshot.isDragging}
                             ref={magic.innerRef}
@@ -160,7 +161,7 @@ const BlocksArea = () => {
                               <PauseOutlined />
                             </span>
                           </div>
-                        </div>
+                        </B.ImageContainer>
                       )}
                     </B.Container>
                   )}

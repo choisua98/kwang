@@ -91,17 +91,19 @@ const ChallengeService = () => {
             </C.HeaderStyle>
 
             {data.blockKind === 'challenge' && (
-              <Swiper
-                modules={[Pagination, A11y]}
-                pagination={{ clickable: true }}
-                a11y
-              >
-                {data.images.map((image, index) => (
-                  <SwiperSlide key={index} style={{ height: '230px' }}>
-                    <img src={image} alt={`reservationimage ${index + 1}`} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              <CS.ImageContainer>
+                <Swiper
+                  modules={[Pagination, A11y]}
+                  pagination={{ clickable: true }}
+                  a11y
+                >
+                  {data.images.map((image, index) => (
+                    <SwiperSlide key={index}>
+                      <img src={image} alt={`reservationimage ${index + 1}`} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </CS.ImageContainer>
             )}
             <CS.Container>
               <div>{data.description}</div>
@@ -122,7 +124,7 @@ const ChallengeService = () => {
                 formatDay={(_, date) =>
                   date.toLocaleString('en', { day: 'numeric' })
                 }
-                // tileDisabled={tileDisabled}
+                tileDisabled={tileDisabled}
                 showNeighboringMonth={false}
               />
             </CS.CalendarContainer>

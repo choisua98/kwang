@@ -268,7 +268,7 @@ const Links = () => {
               <p>URL</p>
               <Input.TextArea
                 placeholder="텍스트를 입력하세요"
-                value={urlText}
+                value={urlText || 'https://'}
                 onChange={handleUrlChange}
                 autoSize={{ minRows: 3, maxRows: 6 }}
               />

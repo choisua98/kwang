@@ -78,10 +78,9 @@ const MailingService = () => {
         <button onClick={() => navigate(`/${userUid}`)}>
           <LeftOutlined />
         </button>
-        <p>메일링 서비스</p>
+        <p>{title}</p>
       </C.HeaderStyle>
 
-      <div>{title}</div>
       <div>{desc}</div>
       <C.Container>
         <label htmlFor="name">
