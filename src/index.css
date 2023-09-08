@@ -22,7 +22,7 @@
 }
 
 /* 달력(RangePicker) */
-:where(
+/* :where(
     .css-dev-only-do-not-override-17a39f8
   ).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft
   .ant-picker-range-arrow {
@@ -43,7 +43,6 @@
   display: inline-flex;
   flex-wrap: nowrap;
   direction: ltr;
-  /* max-width: 350px !important; */
   width: 350px !important;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
@@ -113,4 +112,4 @@
   .ant-picker-panel-container
   .ant-picker-panels {
   display: block !important;
-}
+} */
