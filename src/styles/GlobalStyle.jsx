@@ -164,6 +164,9 @@ const GlobalStyle = createGlobalStyle`
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown-range {
   padding: 40px 0 0 !important;
 }
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
+  display: grid !important;
+}
   
   // 테마 (다크)
   :where(.css-17a39f8).ant-btn,
