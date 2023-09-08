@@ -133,7 +133,7 @@ const Header = () => {
                       </H.MenuButton>
                     ) : (
                       <H.MenuButton onClick={closeMenu}>
-                        <Link to={`https://kwang-nine.vercel.app/${userUid}`}>
+                        <Link to={`/admin/${userUid}`}>
                           <H.IconImage src={EditIcon} alt="editIcon" />
                           <p>편집하기</p>
                         </Link>
