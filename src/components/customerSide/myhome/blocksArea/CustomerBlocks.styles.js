@@ -24,6 +24,6 @@ export const C = {
     }
   `,
   SwiperWrap: styled.div`
-    margin-bottom: 10px;
+    margin: 10px 0;
   `,
 };
