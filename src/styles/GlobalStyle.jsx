@@ -167,7 +167,7 @@ const GlobalStyle = createGlobalStyle`
   :where(.css-dev-only-do-not-override-17a39f8).ant-picker
     .ant-picker-input
     > input {
-    margin-top: 0;
+    margin-top: 0 !important;
   }
   
   // 테마 (다크)
