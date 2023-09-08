@@ -21,11 +21,11 @@ function App() {
     onAuthStateChanged(auth, async (user) => {
       console.log({ 로그인한유저: user });
     });
-    setTheme('light');
-    setBackgroundImage('');
+    // setTheme('light');
+    // setBackgroundImage('');
   }, []);
 
-  // 변경: 커스텀 훅 사용
+  // 테마
   useTheme(theme, backgroundImage);
 
   return (
