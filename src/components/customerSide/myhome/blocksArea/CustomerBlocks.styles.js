@@ -23,4 +23,7 @@ export const C = {
       border-radius: 15px;
     }
   `,
+  SwiperWrap: styled.div`
+    margin-bottom: 10px;
+  `,
 };
