@@ -103,74 +103,6 @@ const GlobalStyle = createGlobalStyle`
   
   /* 달력(RangePicker) */
   :where(
-      .css-dev-only-do-not-override-17a39f8
-    ).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft
-    .ant-picker-range-arrow {
-    display: none;
-  }
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-header
-    > button {
-    visibility: initial !important;
-  }
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-panel-container {
-    width: 374px !important;
-  }
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-panel-container
-    .ant-picker-panels {
-    display: inline-flex;
-    flex-wrap: nowrap;
-    direction: ltr;
-    max-width: 374px !important;
-  }
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-panel-container
-    .ant-picker-panels:last-child
-    .ant-picker-panel {
-    border-width: 0;
-    width: 100% !important;
-    max-width: 374px !important;
-    min-width: 374px !important;
-  }
-  .ant-picker-date-panel {
-    max-width: 374px !important;
-    width: 100%;
-  }
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-decade-panel,
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-year-panel,
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-quarter-panel,
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-month-panel,
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-week-panel,
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-date-panel,
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-time-panel {
-    display: flex;
-    flex-direction: column;
-    width: 374px !important;
-  }
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-    .ant-picker-date-panel
-    .ant-picker-content {
-    width: 338px !important;
-  }
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown-range {
-    padding: 40px 0 0 !important;
-  }
-  :where(.css-dev-only-do-not-override-17a39f8).ant-picker
-    .ant-picker-input
-    > input {
-    margin-top: 0 !important;
-  }
-
-  :where(
     .css-dev-only-do-not-override-17a39f8
   ).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft
   .ant-picker-range-arrow {
@@ -191,6 +123,7 @@ const GlobalStyle = createGlobalStyle`
   display: inline-flex;
   flex-wrap: nowrap;
   direction: ltr;
+  /* max-width: 350px !important; */
   width: 350px !important;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
@@ -204,7 +137,6 @@ const GlobalStyle = createGlobalStyle`
 }
 .ant-picker-date-panel {
   max-width: 350px !important;
-  width: 100% !important;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
   .ant-picker-decade-panel,
@@ -232,36 +164,6 @@ const GlobalStyle = createGlobalStyle`
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown-range {
   padding: 40px 0 0 !important;
 }
-:where(.css-17a39f8).ant-picker-dropdown,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-decade-panel,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-quarter-panel,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-month-panel,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-week-panel,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-date-panel,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-time-panel {
-  max-width: 374px !important;
-  width: 100% !important;
-}
-:where(.css-17a39f8).ant-picker-dropdown
-  .ant-picker-panel-container
-  .ant-picker-panel {
-  width: 100% !important;
-}
-:where(.css-17a39f8).ant-picker-dropdown
-  .ant-picker-date-panel
-  .ant-picker-content {
-  width: 100% !important;
-}
-.datePickerPopup .ant-picker-panel {
-  width: 100% !important;
-}
-:where(.css-17a39f8).ant-picker-dropdown
-  .ant-picker-panel-container
-  .ant-picker-panels {
-  display: block !important;
-}
-
   
   // 테마 (다크)
   :where(.css-17a39f8).ant-btn,
