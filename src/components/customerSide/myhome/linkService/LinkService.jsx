@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../../../../firebase/firebaseConfig';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { Col, Row } from 'antd';
 import { L } from '../../../adminSide/myadmin/links/Links.styles';
 
@@ -13,7 +13,11 @@ const LinkService = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const q = query(collection(db, 'links'), where('uid', '==', uid));
+        const q = query(
+          collection(db, 'links'),
+          where('uid', '==', uid),
+          orderBy('createdAt'),
+        );
         const querySnapshot = await getDocs(q);
 
         const newDataArray = []; // 3개의 문서 데이터를 임시로 담을 배열
