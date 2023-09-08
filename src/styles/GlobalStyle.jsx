@@ -89,7 +89,7 @@ const GlobalStyle = createGlobalStyle`
     ):focus-visible {
     outline: none;
   }
-
+  :where(.css-17a39f8).ant-drawer .ant-drawer-body,
   :where(.css-dev-only-do-not-override-17a39f8).ant-drawer .ant-drawer-body {
     padding: 0;
   }
