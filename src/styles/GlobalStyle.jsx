@@ -67,9 +67,112 @@ const GlobalStyle = createGlobalStyle`
     font-size: 14px;
   }
 
-  // 테마
+  /* 상단 메뉴 토글 */
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn-default,
+  :where(.css-17a39f8).ant-btn-default {
+    background: none;
+    border: none;
+    box-shadow: none;
+  }
+  :where(.css-17a39f8).ant-btn-default:not(:disabled):not(
+      .ant-btn-disabled
+    ):hover {
+    color: rgba(0, 0, 0, 0.88);
+    border-color: none;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only
+    .anticon {
+    font-size: 18px;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn:not(
+      :disabled
+    ):focus-visible {
+    outline: none;
+  }
+  
+  /* 스와이퍼 */
+  .swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
+  .swiper-pagination-horizontal.swiper-pagination-bullets
+    .swiper-pagination-bullet {
+    background: #ffbe51;
+  }
+  
+  /* 달력(RangePicker) */
+  :where(
+      .css-dev-only-do-not-override-17a39f8
+    ).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft
+    .ant-picker-range-arrow {
+    display: none;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-header
+    > button {
+    visibility: initial !important;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-panel-container {
+    width: 374px !important;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-panel-container
+    .ant-picker-panels {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    direction: ltr;
+    max-width: 374px !important;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-panel-container
+    .ant-picker-panels:last-child
+    .ant-picker-panel {
+    border-width: 0;
+    width: 100% !important;
+    max-width: 374px !important;
+    min-width: 374px !important;
+  }
+  .ant-picker-date-panel {
+    max-width: 374px !important;
+    width: 100%;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-decade-panel,
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-year-panel,
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-quarter-panel,
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-month-panel,
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-week-panel,
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-date-panel,
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-time-panel {
+    display: flex;
+    flex-direction: column;
+    width: 374px !important;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-date-panel
+    .ant-picker-content {
+    width: 338px !important;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown-range {
+    padding: 40px 0 0 !important;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker
+    .ant-picker-input
+    > input {
+    margin-top: 0;
+  }
+  
+  // 테마 (다크)
+  :where(.css-17a39f8).ant-btn,
   :where(.css-dev-only-do-not-override-17a39f8).ant-btn {
     color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#333')};
+  }
+  .iYoiyo h2 {
+    color: ${({ theme }) => (theme === 'dark' ? '#333' : '#333')};
   }
 
 `;
