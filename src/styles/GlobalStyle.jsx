@@ -70,7 +70,7 @@ const GlobalStyle = createGlobalStyle`
   /* 상단 메뉴 토글 */
   :where(.css-dev-only-do-not-override-17a39f8).ant-btn-default,
   :where(.css-17a39f8).ant-btn-default {
-    background: none;
+    // background: none;
     border: none;
     box-shadow: none;
   }
