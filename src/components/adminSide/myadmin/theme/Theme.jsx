@@ -14,7 +14,7 @@ import imageCompression from 'browser-image-compression';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { T } from './Theme.styles';
 
-const imageUploadTime = 3000;
+const IMAGE_UPLOAD_TIME = 3000;
 const Theme = () => {
   // 사용자 UID 가져오기
   const userUid = auth.currentUser?.uid;
@@ -29,7 +29,7 @@ const Theme = () => {
   useEffect(() => {
     let intervalId;
     if (loading) {
-      const increment = Math.ceil(50 / (imageUploadTime / 1000));
+      const increment = Math.ceil(50 / (IMAGE_UPLOAD_TIME / 1000));
       let currentProgress = progress;
 
       intervalId = setInterval(() => {
@@ -37,7 +37,7 @@ const Theme = () => {
         setProgress((prevProgress) =>
           prevProgress < 100 ? prevProgress + increment : prevProgress,
         );
-      }, imageUploadTime / 7);
+      }, IMAGE_UPLOAD_TIME / 7);
     }
     return () => clearInterval(intervalId);
   }, [loading]);
@@ -86,7 +86,7 @@ const Theme = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, imageUploadTime);
+    }, IMAGE_UPLOAD_TIME);
 
     const file = e.target.files[0];
 
