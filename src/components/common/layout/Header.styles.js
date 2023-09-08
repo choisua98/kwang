@@ -15,16 +15,14 @@ export const H = {
     display: flex;
     height: 80px;
     padding: 20px;
-    background-color: #fffaf0;
     justify-content: space-between;
   `,
 
   MenuButton: styled.button`
     display: grid;
     align-items: center;
-    height: 100px;
     width: 100px;
-    padding: 20px;
+    padding: 10px;
     background-color: #fffaf0;
 
     p {
@@ -36,7 +34,7 @@ export const H = {
     display: grid;
     justify-content: left;
     /* background-color: orange; */
-    margin: 20px 0;
+    margin: 20px;
   `,
 
   MenuStyle: styled.p`
@@ -54,7 +52,7 @@ export const H = {
 
   ProfileContainer: styled.div`
     display: flex;
-    margin-bottom: 30px;
+    padding: 30px 20px 20px;
     align-items: center;
     margin-left: 15px;
   `,
