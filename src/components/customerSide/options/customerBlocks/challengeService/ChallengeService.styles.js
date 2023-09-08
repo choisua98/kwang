@@ -131,30 +131,33 @@ export const CS = {
 
 export const CC = {
   CountStyle: styled.div`
+    position: relative;
     width: 100%;
     height: 105px;
     background: var(--color-secondary);
     border-radius: 15px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     font-weight: 500;
     margin: 40px 0px;
+    box-sizing: border-box;
 
     img {
       position: absolute;
-      left: 70px;
+      left: 20px;
     }
     p {
       position: absolute;
-      top: 205px;
-      left: 150px;
+      top: 31px;
+      left: 101px;
       font-size: 14px;
     }
     span {
       position: absolute;
-      top: 225px;
-      left: 150px;
+      top: 56px;
+      left: 101px;
       font-size: 17px;
     }
   `,
