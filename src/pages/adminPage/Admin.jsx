@@ -9,6 +9,8 @@ import { useAtom } from 'jotai';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
+import { styled } from 'styled-components';
+import { A } from './Admin.styles';
 
 const Admin = () => {
   // 테마 상태
@@ -41,13 +43,13 @@ const Admin = () => {
   }, [setTheme, userUid]);
 
   return (
-    <div style={{ padding: '20px 20px 74px' }}>
+    <A.Container>
       <Theme />
       <MyProfile />
       <Links />
       <BlocksArea />
       <Blocks />
-    </div>
+    </A.Container>
   );
 };
 
