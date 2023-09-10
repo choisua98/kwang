@@ -1,7 +1,6 @@
 import { Button } from 'antd';
 import { styled } from 'styled-components';
 import { Progress as AntProgress } from 'antd';
-import sampleImg from '../../../../assets/images/admin/sample.jpg';
 import darkIcon from '../../../../assets/images/common/icon/icon-dark.png';
 import basicIcon from '../../../../assets/images/common/icon/icon-light.png';
 import selectIcon from '../../../../assets/images/common/icon/icon-photo.png';
@@ -22,6 +21,21 @@ export const T = {
     color: white;
     background: #ff7c38;
   `,
+  ButtonRow: styled.div`
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  `,
+  ButtonColumn: styled.div`
+    width: 47%;
+    div > p {
+      margin-top: 10px;
+      font-size: 14px;
+      text-align: center;
+      line-height: 14px;
+      color: #000;
+    }
+  `,
   ThemeMenuButton: styled(Button)`
     margin-bottom: 15px;
     padding: 18px 0;
@@ -32,65 +46,72 @@ export const T = {
     border-radius: 15px;
     background: #ffbe51;
   `,
-
+  // 다크 모드
   DarkModeButton: styled.button`
     margin-top: 18px;
-    padding: 0 24px 0 22px;
     width: 100%;
     height: 160px;
     font-size: 14px;
     text-align: left;
     line-height: 60px;
     color: #fff;
-    background-color: #fff;
-    background-image: url(${darkIcon});
-    background-size: contain;
-    background-repeat: no-repeat;
+    border: solid transparent;
+    background: #fff url(${darkIcon}) no-repeat center / cover;
+    &:focus,
+    &:active {
+      border: solid #ff7c38;
+      border-radius: 15px;
+    }
   `,
-
+  // 라이트 모드
   BasicModeButton: styled.button`
     margin-top: 18px;
-    padding: 0 24px 0 22px;
     width: 100%;
     height: 160px;
     line-height: 60px;
     font-size: 14px;
     text-align: left;
-    background-color: #fff;
-    background-image: url(${basicIcon});
-    background-size: contain;
-    background-repeat: no-repeat;
     color: #000;
+    border: solid transparent;
+    background: #fff url(${basicIcon}) no-repeat center / cover;
+    &:focus,
+    &:active {
+      border: solid #ff7c38;
+      border-radius: 15px;
+    }
   `,
-
+  // 이미지 업로드
   SelectImageButton: styled.button`
     margin-top: 20px;
-    padding: 0 24px 0 22px;
     width: 100%;
     height: 160px;
     font-size: 14px;
     text-align: left;
     line-height: 60px;
-    background-color: #fff;
-    background-image: url(${selectIcon});
-    background-size: contain;
-    background-repeat: no-repeat;
+    border: solid transparent;
+    background: #fff url(${selectIcon}) no-repeat center / cover;
+    &:focus,
+    &:active {
+      border: solid #ff7c38;
+      border-radius: 15px;
+    }
   `,
-
+  // 기본 설정
   SampleImageButton: styled.button`
     margin-top: 20px;
-    padding: 0 24px 0 22px;
     width: 100%;
     height: 160px;
     font-size: 14px;
     text-align: left;
-    background-color: #fff;
-    background-image: url(${defaultIcon});
-    background-size: contain;
-    background-repeat: no-repeat;
+    border: solid transparent;
+    background: #fff url(${defaultIcon}) no-repeat center / cover;
+    &:focus,
+    &:active {
+      border: solid #ff7c38;
+      border-radius: 15px;
+    }
   `,
   Description: styled.p`
-    /* margin-top: 20px; */
     font-size: 14px;
     font-weight: 500;
     color: #858585;
