@@ -48,15 +48,6 @@ const FaqService = () => {
     fetchData();
   }, [userUid]);
 
-  // faqs 배열 내부의 모든 FAQ 항목을 평탄화하여 반환하여 Collapse에 전달
-  const items = faqs.flatMap((faq) =>
-    faq.faqs.map((innerFaq) => ({
-      key: innerFaq.faqId, // faq의 ID
-      label: innerFaq.question, // faq의 질문
-      children: <p>{innerFaq.answer}</p>, // faq의 답변
-    })),
-  );
-
   return (
     <>
       <C.HeaderStyle>
@@ -66,12 +57,20 @@ const FaqService = () => {
         <p>{faqs.length > 0 ? faqs[0].title : ''}</p>
       </C.HeaderStyle>
 
-      <C.Collapse
-        activeKey={activeKey}
-        onChange={(key) => setActiveKey(key)}
-        accordion
-        items={items}
-      />
+      {faqs.map((faq) => (
+        <C.Collapse
+          key={faq.id}
+          activeKey={activeKey}
+          onChange={(key) => setActiveKey(key)}
+          expandIconPosition="end"
+        >
+          {faq.faqs.map((innerFaq) => (
+            <C.Collapse.Panel key={innerFaq.faqId} header={innerFaq.question}>
+              <p>{innerFaq.answer}</p>
+            </C.Collapse.Panel>
+          ))}
+        </C.Collapse>
+      ))}
     </>
   );
 };

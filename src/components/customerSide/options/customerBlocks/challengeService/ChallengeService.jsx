@@ -84,7 +84,7 @@ const ChallengeService = () => {
         return (
           <div key={data.id}>
             <C.HeaderStyle>
-              <button onClick={() => navigate(`/admin/${userUid}`)}>
+              <button onClick={() => navigate(`/${userUid}`)}>
                 <LeftOutlined />
               </button>
               <p>{data.title}</p>
