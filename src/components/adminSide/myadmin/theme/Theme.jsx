@@ -203,7 +203,7 @@ const Theme = () => {
                   ></T.SelectImageButton>
                   <p>이미지 업로드</p>
                   {/* 파일 업로드 */}
-                  <input
+                  <T.HiddenInput
                     id="image-upload"
                     type="file"
                     accept=".jpg,.jpeg,.png"
