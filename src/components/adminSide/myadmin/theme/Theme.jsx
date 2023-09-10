@@ -188,26 +188,50 @@ const Theme = () => {
         <Row justify="center">
           <Col span={24}>
             <Row gutter={[6, 0]}>
-              <T.DarkModeButton onClick={handleDarkModeClick}>
-                다크 모드
-              </T.DarkModeButton>
-              <T.BasicModeButton onClick={handleLightModeClick}>
-                라이트 모드
-              </T.BasicModeButton>
-              <T.SelectImageButton onClick={handleCustomBackgroundClick}>
-                배경 이미지 선택
-              </T.SelectImageButton>
-              {/* 파일 업로드 */}
-              <input
-                id="image-upload"
-                type="file"
-                accept=".jpg,.jpeg,.png"
-                style={{ display: 'none' }}
-                onChange={onImageChange}
-              />
-              <T.SampleImageButton onClick={handleSampleBackgroundClick}>
-                샘플 이미지
-              </T.SampleImageButton>
+              <Col span={12}>
+                <div>
+                  <T.DarkModeButton
+                    onClick={handleDarkModeClick}
+                  ></T.DarkModeButton>
+                  <p style={{ padding: '0 24px 0 16px', textAlign: 'center' }}>
+                    다크 모드
+                  </p>
+                </div>
+                <div>
+                  <T.SelectImageButton
+                    onClick={handleCustomBackgroundClick}
+                  ></T.SelectImageButton>
+                  <p style={{ padding: '0 24px 0 16px', textAlign: 'center' }}>
+                    이미지 업로드
+                  </p>
+                  {/* 파일 업로드 */}
+                  <input
+                    id="image-upload"
+                    type="file"
+                    accept=".jpg,.jpeg,.png"
+                    style={{ display: 'none' }}
+                    onChange={onImageChange}
+                  />
+                </div>
+              </Col>
+              <Col span={12}>
+                <div>
+                  <T.BasicModeButton
+                    onClick={handleLightModeClick}
+                  ></T.BasicModeButton>
+                  <p style={{ padding: '0 24px 0 16px', textAlign: 'center' }}>
+                    라이트 모드
+                  </p>
+                </div>
+                <div>
+                  <T.SampleImageButton
+                    onClick={handleSampleBackgroundClick}
+                  ></T.SampleImageButton>
+                  <p style={{ padding: '0 24px 0 16px', textAlign: 'center' }}>
+                    기본 설정
+                  </p>
+                </div>
+              </Col>
             </Row>
           </Col>
         </Row>

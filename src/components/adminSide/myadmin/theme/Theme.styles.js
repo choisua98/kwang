@@ -37,33 +37,27 @@ export const T = {
     margin-top: 18px;
     padding: 0 24px 0 22px;
     width: 100%;
-    height: 60px;
+    height: 160px;
     font-size: 14px;
     text-align: left;
     line-height: 60px;
-    border: 1px solid #f4791c;
-    border-radius: 15px;
-    background: #000;
     color: #fff;
-    // background-image: url(${darkIcon});
-    // background-repeat: no-repeat;
-    // background-position: 90% 50%;
+    background-color: #fff;
+    background-image: url(${darkIcon});
+    background-repeat: no-repeat;
   `,
 
   BasicModeButton: styled.button`
-    margin-top: 20px;
+    margin-top: 18px;
     padding: 0 24px 0 22px;
     width: 100%;
-    height: 60px;
+    height: 160px;
     line-height: 60px;
     font-size: 14px;
     text-align: left;
-    border: 1px solid #f4791c;
-    border-radius: 15px;
-    background: #fff;
-    // background-image: url(${basicIcon});
-    // background-repeat: no-repeat;
-    // background-position: 90% 50%;
+    background-color: #fff;
+    background-image: url(${basicIcon});
+    background-repeat: no-repeat;
     color: #000;
   `,
 
@@ -71,33 +65,25 @@ export const T = {
     margin-top: 20px;
     padding: 0 24px 0 22px;
     width: 100%;
-    height: 60px;
+    height: 160px;
     font-size: 14px;
     text-align: left;
     line-height: 60px;
-    border: 1px solid #f4791c;
-    border-radius: 15px;
-    background: #d3d3d3;
+    background-color: #fff;
     background-image: url(${selectIcon});
     background-repeat: no-repeat;
-    background-position: 43% 50%;
   `,
 
   SampleImageButton: styled.button`
     margin-top: 20px;
     padding: 0 24px 0 22px;
     width: 100%;
-    height: 60px;
+    height: 160px;
     font-size: 14px;
     text-align: left;
-    border: 1px solid #f4791c;
-    border-radius: 15px;
-    background-image: url(${sampleImg});
-    background-size: cover;
-    background-position: center;
-    // background-image: url(${defaultIcon});
-    // background-repeat: no-repeat;
-    // background-position: 92% 50%;
+    background-color: #fff;
+    background-image: url(${defaultIcon});
+    background-repeat: no-repeat;
   `,
   Description: styled.p`
     /* margin-top: 20px; */
