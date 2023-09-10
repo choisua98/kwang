@@ -4,11 +4,11 @@ import IconDelete from '../../../assets/images/common/icon/icon-delete.png';
 // adminSide options 공통 css
 export const O = {
   HeaderStyle: styled.div`
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 20px 0px 40px 0px;
-    position: relative;
 
     button {
       position: absolute;
@@ -26,7 +26,7 @@ export const O = {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin: 0px 20px;
+    margin: 20px;
 
     h2 {
       font-size: 16px;
@@ -53,7 +53,6 @@ export const O = {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-top: 20px;
     padding: 20px;
 
     ::placeholder {
@@ -62,8 +61,8 @@ export const O = {
     }
 
     input {
-      margin-top: 12px;
       padding: 16.5px 16px;
+      margin-bottom: 20px;
       box-sizing: border-box;
       border: none;
       border-radius: 15px;
@@ -72,7 +71,6 @@ export const O = {
 
     textarea {
       height: 120px;
-      margin-top: 12px;
       padding: 16.5px 16px;
       box-sizing: border-box;
       border: none;
@@ -80,14 +78,14 @@ export const O = {
       background: #fafafa;
     }
 
-    label {
+    p {
       font-size: 14px;
-      display: flex;
-      justify-content: space-between;
     }
 
-    label span {
-      color: red;
+    label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
     }
   `,
 
@@ -144,8 +142,8 @@ export const O = {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 60px;
-      height: 60px;
+      width: 65px;
+      height: 65px;
       border-radius: 5px;
       background: #fafafa;
       cursor: pointer;
@@ -169,8 +167,8 @@ export const O = {
     }
 
     .square-preview {
-      width: 60px;
-      height: 60px;
+      width: 65px;
+      height: 65px;
       border-radius: 5px;
       background-size: cover;
       background-position: center;
