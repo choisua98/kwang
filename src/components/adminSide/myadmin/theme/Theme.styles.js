@@ -111,6 +111,9 @@ export const T = {
       border-radius: 15px;
     }
   `,
+  HiddenInput: styled.input`
+    display: none;
+  `,
   Description: styled.p`
     font-size: 14px;
     font-weight: 500;
