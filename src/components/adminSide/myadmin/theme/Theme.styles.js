@@ -44,6 +44,7 @@ export const T = {
     color: #fff;
     background-color: #fff;
     background-image: url(${darkIcon});
+    background-size: contain;
     background-repeat: no-repeat;
   `,
 
@@ -57,6 +58,7 @@ export const T = {
     text-align: left;
     background-color: #fff;
     background-image: url(${basicIcon});
+    background-size: contain;
     background-repeat: no-repeat;
     color: #000;
   `,
@@ -71,6 +73,7 @@ export const T = {
     line-height: 60px;
     background-color: #fff;
     background-image: url(${selectIcon});
+    background-size: contain;
     background-repeat: no-repeat;
   `,
 
@@ -83,6 +86,7 @@ export const T = {
     text-align: left;
     background-color: #fff;
     background-image: url(${defaultIcon});
+    background-size: contain;
     background-repeat: no-repeat;
   `,
   Description: styled.p`
