@@ -68,6 +68,7 @@ const KakaoLogin = () => {
             };
             checkEmailExists().then((res) => {
               alert('로그인 되었습니다.');
+              window.location.reload();
               navigate(`/admin/${auth.currentUser.uid}`);
             });
           },
