@@ -57,6 +57,8 @@ const KakaoLogin = () => {
                     .then((userCredential) => {
                       console.log(`회원가입유저${userCredential}`);
                       console.log('회원가입성공. 이메일로 로그인완료.');
+                      navigate(`/admin/${auth.currentUser.uid}`);
+                      alert('로그인 되었습니다.');
                     })
                     .catch((error) => {
                       console.error(error);
