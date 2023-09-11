@@ -87,6 +87,10 @@ export const O = {
       justify-content: space-between;
       font-size: 14px;
     }
+
+    span {
+      color: red;
+    }
   `,
 
   ButtonArea: styled.div`
