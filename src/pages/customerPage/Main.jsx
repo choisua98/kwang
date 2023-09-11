@@ -1,42 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Profile from '../../components/customerSide/myhome/profile/Profile';
 import LinkService from '../../components/customerSide/myhome/linkService/LinkService';
 import { useParams } from 'react-router-dom';
 import CustomerBlocks from '../../components/customerSide/myhome/blocksArea/CustomerBlocks';
-import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAtom } from 'jotai';
 import { backgroundImageAtom, themeAtom } from '../../atoms/Atom';
+import { useFetchTheme } from '../../hooks/useTheme';
 
 const Main = () => {
-  // 테마 상태
-  const [theme, setTheme] = useAtom(themeAtom);
-  // 배경 이미지
-  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
+  const [theme, setTheme] = useAtom(themeAtom); // 테마 상태
+  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom); // 배경 이미지
   const { uid } = useParams();
   const userUid = uid;
 
-  useEffect(() => {
-    const unsubscribe = async (userUid) => {
-      if (userUid) {
-        // Firestore에서 사용자의 테마 정보 불러오기
-        try {
-          const userDocRef = doc(db, 'users', userUid);
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setTheme(userData.theme || 'light');
-            setBackgroundImage(userData.backgroundImage || null);
-          }
-        } catch (error) {
-          console.error('데이터 가져오기 오류:', error);
-        }
-      }
-    };
-    unsubscribe(userUid);
-    // cleanup 함수 등록
-    return () => unsubscribe();
-  }, [setTheme, userUid]);
+  useFetchTheme(db, userUid, setTheme, setBackgroundImage);
 
   return (
     <>
