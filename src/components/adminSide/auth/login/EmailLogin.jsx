@@ -22,15 +22,15 @@ const EmailLogin = () => {
         alert('비밀번호를 입력해주세요.');
         return;
       }
-      await signInWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
-          // 로그인 성공시
-          console.log(userCredential);
-          navigate(`/admin/${userCredential.user.uid}`);
-        },
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
       );
+      // 로그인 성공시
+      alert('로그인 되었습니다.');
+      navigate(`/admin/${userCredential.user.uid}`);
     } catch (error) {
-      console.log(error.code);
       alert(getErrorMessage(error.code));
     }
   };
