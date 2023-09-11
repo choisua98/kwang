@@ -16,6 +16,7 @@ import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../../atoms/Atom';
 import { nanoid } from 'nanoid';
 import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';
+import IconModalConfirm from '../../../../../assets/images/common/icon/icon-modalConfirm.png';
 import moment from 'moment';
 
 const ChallengeComment = () => {
@@ -34,7 +35,8 @@ const ChallengeComment = () => {
   const [comments, setComments] = useState([]); // 댓글 데이터 저장
   const [commentCount, setCommentCount] = useState(0);
   const [count, setCount] = useState(0);
-  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom); // 모달
+  const [modalVisibleA, setModalVisibleA] = useAtom(modalVisibleAtom);
+  const [modalVisibleB, setModalVisibleB] = useState(false);
 
   // 컴포넌트가 마운트 될 때와 selectedDate가 변경될 때 카운트를 Firestore에서 가져옴
   useEffect(() => {
@@ -47,7 +49,7 @@ const ChallengeComment = () => {
   }, [selectedDate, setCount]);
 
   const handleCommentSubmit = () => {
-    setModalVisible(true);
+    setModalVisibleA(true);
   };
 
   // 댓글 추가
@@ -87,7 +89,6 @@ const ChallengeComment = () => {
       };
 
       await setDoc(commentDocRef, CommentInfo);
-      alert('댓글이 등록되었습니다.');
 
       // 선택된 날짜가 현재 날짜와 같을 때만 카운트를 업데이트
       if (moment(selectedDate).isSame(moment(), 'day')) {
@@ -100,7 +101,7 @@ const ChallengeComment = () => {
       setPassword('');
       setComment('');
       fetchComments();
-      setModalVisible(false);
+      setModalVisibleB(true);
     } catch (error) {
       console.log(error.message);
     }
@@ -229,18 +230,18 @@ const ChallengeComment = () => {
       <CC.CustomModal
         title={
           <>
-            <button onClick={() => setModalVisible(false)}>
+            <button onClick={() => setModalVisibleA(false)}>
               <LeftOutlined />
             </button>
             <p>댓글 등록하기</p>
           </>
         }
         centered
-        open={modalVisible}
-        onCancel={() => setModalVisible(false)}
+        open={modalVisibleA}
+        onCancel={() => setModalVisibleA(false)}
         footer={null}
         closable={false}
-        width={300}
+        width={330}
       >
         <CC.Container onSubmit={handleModalConfirm}>
           <label htmlFor="nickname">
@@ -299,6 +300,34 @@ const ChallengeComment = () => {
             확인
           </C.SubmitButton>
         </CC.Container>
+
+        <C.Modal
+          title=""
+          centered
+          open={modalVisibleB}
+          onCancel={() => {
+            setModalVisibleB(false);
+            navigate(0);
+          }}
+          footer={null}
+          closable={false}
+          width={330}
+        >
+          <div>
+            <img src={IconModalConfirm} alt="발송완료아이콘" />
+            <h1>등록완료!</h1>
+            <p>댓글이 등록되었습니다.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setModalVisibleB(false);
+              navigate(0);
+            }}
+          >
+            닫기
+          </button>
+        </C.Modal>
       </CC.CustomModal>
 
       {comments.map((commentData, index) => (

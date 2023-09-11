@@ -70,6 +70,7 @@ const FaqService = () => {
         activeKey={activeKey}
         onChange={(key) => setActiveKey(key)}
         accordion
+        expandIconPosition="end"
         items={items}
       />
     </>

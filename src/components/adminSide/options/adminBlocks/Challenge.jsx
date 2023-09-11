@@ -64,6 +64,8 @@ const Challenge = () => {
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
 
+  const [isFieldValid, setIsFieldValid] = useState(false);
+
   // 선택한 날짜 정보를 저장할 상태 변수들
   const [startDate, setStartDate] = useState(
     selectedBlock ? selectedBlock?.startDate : '',
@@ -276,10 +278,8 @@ const Challenge = () => {
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          <p>
-            함께해요 챌린지 이름<span>*</span>
-          </p>
-          {titleCount}/20자
+          함께해요 챌린지 이름
+          <p>{titleCount}/20자</p>
         </label>
 
         <input
@@ -291,10 +291,12 @@ const Challenge = () => {
           onChange={(e) => {
             handleTitleChange(e);
             setTitleCount(e.target.value.length);
+            setIsFieldValid(e.target.value === '');
           }}
           maxLength={20}
           autoFocus
         />
+        {isFieldValid && <span>필수입력 항목입니다.</span>}
 
         <O.ImageContainer>
           {uploadedImages.length >= maxUploads ? (
@@ -351,10 +353,8 @@ const Challenge = () => {
         </O.ImageContainer>
 
         <label htmlFor="description">
-          <p>
-            챌린지 상세설명<span>*</span>
-          </p>
-          {descriptionCount}/80자
+          챌린지 상세설명
+          <p>{descriptionCount}/80자</p>
         </label>
 
         <textarea
@@ -370,11 +370,7 @@ const Challenge = () => {
           maxLength={80}
         />
 
-        <label htmlFor="rangePicker">
-          <p>
-            챌린지 기간<span>*</span>
-          </p>
-        </label>
+        <label htmlFor="rangePicker">챌린지 기간</label>
         <Space direction="vertical" size={12}>
           <RangePicker
             id="rangePicker"

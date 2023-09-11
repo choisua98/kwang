@@ -36,7 +36,16 @@ const AddLink = () => {
 
   const [title, setTitle] = useState(selectedBlock?.title || '');
   const [addLink, setAddLink] = useState(selectedBlock?.description || '');
+  const [isTitleEmpty, setIsTitleEmpty] = useState(false);
+  const [isAddLinkEmpty, setIsAddLinkEmpty] = useState(false);
+  const [titleCount, setTitleCount] = useState(0);
+
+  // URL 유효성 검사 정규 표현식
+  const urlRegex =
+    /^(ftp|http|https):\/\/[A-Za-z0-9.-]+(:[0-9]+)?(\/[A-Za-z0-9-._~:/?#[\]@!$&'()*+,;=]+)*$/;
+
   const [theme, setTheme] = useAtom(themeAtom);
+
   // 배경 이미지
   const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
 
@@ -86,7 +95,6 @@ const AddLink = () => {
 
       alert('저장 완료!');
       navigate(`/admin/${userUid}`);
-      navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -105,7 +113,6 @@ const AddLink = () => {
 
       alert('수정 완료!');
       navigate(`/admin/${userUid}`);
-      navigate(`/admin/${userUid}`);
     } catch (error) {
       console.error('수정 중 오류 발생:', error.message);
     }
@@ -120,7 +127,6 @@ const AddLink = () => {
         await deleteDoc(doc(db, 'template', id));
         alert('삭제 완료!');
         navigate(`/admin/${userUid}`);
-        navigate(`/admin/${userUid}`);
       } catch (error) {
         console.error('삭제 중 오류 발생:', error.message);
       }
@@ -130,9 +136,6 @@ const AddLink = () => {
   return (
     <>
       <O.HeaderStyle>
-        <button onClick={() => navigate(`/admin/${userUid}`)}>
-          <LeftOutlined />
-        </button>
         <button onClick={() => navigate(`/admin/${userUid}`)}>
           <LeftOutlined />
         </button>
@@ -148,9 +151,7 @@ const AddLink = () => {
 
       <O.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
         <label htmlFor="title">
-          <p>
-            링크 제목<span>*</span>
-          </p>
+          링크 제목<p>{titleCount}/20자</p>
         </label>
         <input
           id="title"
@@ -160,23 +161,31 @@ const AddLink = () => {
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
+            setIsTitleEmpty(e.target.value === '');
+            setTitleCount(e.target.value.length);
           }}
           autoFocus
         />
-        <label htmlFor="description">
-          <p>
-            링크를 추가해 주세요<span>*</span>
-          </p>
-        </label>
+        {isTitleEmpty && <p style={{ color: 'red' }}>필수입력 항목입니다.</p>}
+        <label htmlFor="description">링크를 추가해 주세요</label>
         <input
           id="description"
           name="description"
           type="text"
           value={addLink || 'https://'}
           onChange={(e) => {
-            setAddLink(e.target.value);
+            const inputValue = e.target.value;
+            setAddLink(inputValue);
+            if (inputValue === '' || !urlRegex.test(inputValue)) {
+              setIsAddLinkEmpty(true);
+            } else {
+              setIsAddLinkEmpty(false);
+            }
           }}
         />
+        {isAddLinkEmpty && (
+          <p style={{ color: 'red' }}>유효하지 않은 주소입니다.</p>
+        )}
 
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={!title || !addLink}>

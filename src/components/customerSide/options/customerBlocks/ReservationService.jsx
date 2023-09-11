@@ -8,17 +8,21 @@ import {
 } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { db } from '../../../../firebase/firebaseConfig';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { modalVisibleAtom } from '../../../../atoms/Atom';
 import { Pagination, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { C } from '../CustomerBlocks.style';
-import { useNavigate, useParams } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 
 const ReservationService = () => {
   const navigate = useNavigate();
   const [reservationData, setReservationData] = useState([]);
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
 
   const { uid } = useParams();
   const userUid = uid;
@@ -70,8 +74,7 @@ const ReservationService = () => {
         userId: userUid,
       });
 
-      alert('신청 완료!');
-      navigate(-1);
+      setModalVisible(true);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -117,12 +120,8 @@ const ReservationService = () => {
       ))}
 
       <C.Container>
-        <h3>신청 방법</h3>
-        <h4>하단의 신청 폼을 작성해 주세요.</h4>
         <label htmlFor="name">
-          <p>
-            이름<span>*</span>
-          </p>
+          <p>이름</p>
         </label>
         <input
           id="name"
@@ -130,11 +129,11 @@ const ReservationService = () => {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          placeholder="이름을 입력해주세요."
+          autoFocus
         />
         <label htmlFor="phoneNumber">
-          <p>
-            연락처<span>*</span>
-          </p>
+          <p>연락처</p>
         </label>
         <input
           id="phoneNumber"
@@ -142,6 +141,7 @@ const ReservationService = () => {
           type="tel"
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
+          placeholder="010-1234-5678"
         />
       </C.Container>
 
@@ -154,6 +154,34 @@ const ReservationService = () => {
           신청하기
         </C.SubmitButton>
       </C.ButtonArea>
+
+      <C.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="발송완료아이콘" />
+          <h1>신청완료!</h1>
+          <p>예약서비스 신청이 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </C.Modal>
     </>
   );
 };

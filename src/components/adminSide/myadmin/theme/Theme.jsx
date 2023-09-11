@@ -157,11 +157,11 @@ const Theme = () => {
 
   useEffect(() => {
     if (modalVisible) {
-      // 모달이 열릴 때 현재 설정된 테마와 배경 이미지를 임시 변수에 저장합니다.
+      // 모달이 열릴 때 현재 설정된 테마와 배경 이미지를 임시 변수에 저장한다.
       setTempTheme(theme);
       setTempBackgroundImage(backgroundImage);
     } else {
-      // 모달이 닫힐 때 임시 변수에 저장된 값을 원래 상태로 되돌립니다.
+      // 모달이 닫힐 때 임시 변수에 저장된 값을 원래 상태로 되돌린다.
       setTempTheme(null);
       setTempBackgroundImage(null);
     }
@@ -187,28 +187,48 @@ const Theme = () => {
         </T.Description>
         <Row justify="center">
           <Col span={24}>
-            <Row gutter={[6, 0]}>
-              <T.DarkModeButton onClick={handleDarkModeClick}>
-                다크 모드
-              </T.DarkModeButton>
-              <T.BasicModeButton onClick={handleLightModeClick}>
-                라이트 모드
-              </T.BasicModeButton>
-              <T.SelectImageButton onClick={handleCustomBackgroundClick}>
-                배경 이미지 선택
-              </T.SelectImageButton>
-              {/* 파일 업로드 */}
-              <input
-                id="image-upload"
-                type="file"
-                accept=".jpg,.jpeg,.png"
-                style={{ display: 'none' }}
-                onChange={onImageChange}
-              />
-              <T.SampleImageButton onClick={handleSampleBackgroundClick}>
-                샘플 이미지
-              </T.SampleImageButton>
-            </Row>
+            <T.ButtonRow>
+              <T.ButtonColumn>
+                {/* 다크 모드 */}
+                <div>
+                  <T.DarkModeButton
+                    onClick={handleDarkModeClick}
+                  ></T.DarkModeButton>
+                  <p>다크 모드</p>
+                </div>
+                {/* 이미지 업로드 */}
+                <div>
+                  <T.SelectImageButton
+                    onClick={handleCustomBackgroundClick}
+                  ></T.SelectImageButton>
+                  <p>이미지 업로드</p>
+                  {/* 파일 업로드 */}
+                  <T.HiddenInput
+                    id="image-upload"
+                    type="file"
+                    accept=".jpg,.jpeg,.png"
+                    style={{ display: 'none' }}
+                    onChange={onImageChange}
+                  />
+                </div>
+              </T.ButtonColumn>
+              <T.ButtonColumn>
+                {/* 라이트 모드 */}
+                <div>
+                  <T.BasicModeButton
+                    onClick={handleLightModeClick}
+                  ></T.BasicModeButton>
+                  <p>라이트 모드</p>
+                </div>
+                {/* 기본 설정 */}
+                <div>
+                  <T.SampleImageButton
+                    onClick={handleSampleBackgroundClick}
+                  ></T.SampleImageButton>
+                  <p>기본 설정</p>
+                </div>
+              </T.ButtonColumn>
+            </T.ButtonRow>
           </Col>
         </Row>
         <Row>

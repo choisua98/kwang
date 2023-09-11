@@ -25,6 +25,7 @@ import { Modal } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 import imageCompression from 'browser-image-compression';
 import { O } from '../Blocks.styles';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import { LeftOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 
@@ -240,15 +241,17 @@ const BannerImage = () => {
         <p>설정</p>
       </O.HeaderStyle>
 
+      <O.FormGuideStyle>
+        <h2>
+          배너 이미지 추가 <img src={IconFormCheck} alt="폼체크아이콘" />
+        </h2>
+        <p>이미지를 추가해 나만의 커스텀 배너를 꾸며보세요!</p>
+      </O.FormGuideStyle>
+
       <O.Container
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
-        <label>
-          <p>
-            배너 이미지를 추가해주세요
-            <span>*</span>
-          </p>
-        </label>
+        <label>배너 이미지를 추가해주세요.</label>
 
         <O.ImageContainer>
           {uploadedImages.length >= maxUploads ? (
@@ -303,6 +306,7 @@ const BannerImage = () => {
             );
           })}
         </O.ImageContainer>
+
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={uploadedImages.length === 0}>
             {blockId ? '수정하기' : '저장하기'}
