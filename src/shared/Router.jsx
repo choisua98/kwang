@@ -5,7 +5,6 @@ import Login from '../pages/kwangPage/Login';
 import Signup from '../pages/kwangPage/Signup';
 import Main from '../pages/customerPage/Main';
 import Admin from '../pages/adminPage/Admin';
-import AdminProfile from '../pages/adminPage/AdminProfile';
 import AdminChallenge from '../pages/adminPage/AdminChallenge';
 import AdminMailing from '../pages/adminPage/AdminMailing';
 import AdminReservation from '../pages/adminPage/AdminReservation';
@@ -32,7 +31,6 @@ const Router = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/admin/:uid" element={<Admin />} />
-          <Route path="/admin/profile" element={<AdminProfile />} />
           <Route path="/admindata" element={<AdminData />} />
           <Route path="/admin/challenge" element={<AdminChallenge />} />
           <Route path="/admin/mailing" element={<AdminMailing />} />

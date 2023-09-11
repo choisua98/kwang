@@ -18,30 +18,14 @@ const Login = () => {
         <GoogleLogin />
         <KakaoLogin />
       </L.Sns>
-      <div
-        style={{
-          margin: '37.5px auto 10px',
-          fontSize: '16px',
-          textAlign: 'center',
-        }}
-      >
-        아직 크왕 회원이 아니신가요?
-      </div>
-      <button
+      <L.AlignBox>아직 크왕 회원이 아니신가요?</L.AlignBox>
+      <L.SignupMoveButton
         onClick={() => {
           navigate('/signup');
         }}
-        style={{
-          margin: '0 auto',
-          display: 'block',
-          fontSize: '14px',
-          textDecoration: 'underline',
-          color: '#a1a1a1',
-          background: 'none',
-        }}
       >
         회원가입 바로가기
-      </button>
+      </L.SignupMoveButton>
     </L.Login>
   );
 };
