@@ -67,6 +67,7 @@ const KakaoLogin = () => {
               }
             };
             checkEmailExists().then((res) => {
+              alert('로그인 되었습니다.');
               navigate(`/admin/${auth.currentUser.uid}`);
             });
           },
@@ -76,7 +77,7 @@ const KakaoLogin = () => {
         });
       },
       fail(error) {
-        console.log(error);
+        alert('로그인 중 에러 발생:', error.code);
       },
     });
   };
