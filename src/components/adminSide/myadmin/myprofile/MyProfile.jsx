@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Modal } from 'antd';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
@@ -30,6 +30,10 @@ const MyProfile = () => {
   const [previewImage, setPreviewImage] = useState(defaultProfileImage);
   const [selectedImage, setSelectedImage] = useState(null);
   const [updatedImage, setUpdatedImage] = useState(defaultProfileImage);
+  const [countNickname, setCountNickname] = useState('');
+  const [countIntro, setCountIntro] = useState('');
+
+  const fileInputRef = useRef(); // 이미지 업로드 파일 입력 필드
 
   // 이메일에서 "@" 앞에 있는 부분을 닉네임으로 사용
   const CREATE_NICKNAME = (email) => {
@@ -173,6 +177,15 @@ const MyProfile = () => {
     }
   };
 
+  const handleNicknameChange = (e) => {
+    setNickname(e.target.value);
+    setCountNickname(e.target.value.length);
+  };
+
+  const handleIntroductionChange = (e) => {
+    setIntroduction(e.target.value);
+    setCountIntro(e.target.value.length);
+  };
   return (
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
@@ -215,20 +228,37 @@ const MyProfile = () => {
           <P.ProfileImageBox>
             <P.PreviewImage src={previewImage} alt="이미지 미리보기" />
           </P.ProfileImageBox>
-          <input type="file" accept=" image/*" onChange={onChangeImageFile} />
-          <P.label style={{ marginTop: '25px' }}>닉네임</P.label>
+          <input
+            type="file"
+            accept=" image/*"
+            onChange={onChangeImageFile}
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+          />
+          <P.UploadButton onClick={() => fileInputRef.current.click()}>
+            프로필 이미지 업로드
+          </P.UploadButton>
+          <P.InfoContainer>
+            <p>닉네임</p>
+            <P.GuidText>{countNickname}/10자</P.GuidText>
+          </P.InfoContainer>
           <P.ModalInput
             placeholder="닉네임을 작성해 주세요."
             value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            onChange={handleNicknameChange}
+            maxLength={10}
+            autoFocus
           />
-          <P.label>소개</P.label>
-
+          <P.InfoContainer>
+            <p>소개</p>
+            <P.GuidText>{countIntro}/25자</P.GuidText>
+          </P.InfoContainer>
           <P.ModalInput
             placeholder="소개를 작성해 주세요."
             value={introduction}
-            onChange={(e) => setIntroduction(e.target.value)}
+            onChange={handleIntroductionChange}
             style={{ marginBottom: '20px' }}
+            maxLength={25}
           />
         </P.ProfileContainer>
       </Modal>
