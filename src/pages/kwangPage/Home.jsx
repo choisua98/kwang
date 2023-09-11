@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { H } from './kwangPage.styles';
 import MainBanner from '../../components/Home/MainBanner';
 import Intro from '../../components/Home/Intro';
 import NewCreator from '../../components/Home/NewCreator';
-import { backgroundImageAtom, themeAtom } from '../../atoms/Atom';
-import { useAtom } from 'jotai';
+import { useTheme, useThemeReset } from '../../hooks/useTheme';
 
 const Home = () => {
-  const [theme, setTheme] = useAtom(themeAtom);
-  // 배경 이미지
-  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
-
-  useEffect(() => {
-    setTheme('light');
-    setBackgroundImage(null);
-  }, []);
+  const [theme, backgroundImage] = useThemeReset();
+  useTheme(theme, backgroundImage);
 
   return (
     <H.BodyWrapper>

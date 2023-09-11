@@ -76,7 +76,9 @@ const Data = () => {
   return (
     <>
       <D.HeaderStyle>
-        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
+        <Button
+          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
+        />
         <p>고객 정보 페이지</p>
       </D.HeaderStyle>
       <D.Tabs
