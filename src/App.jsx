@@ -21,8 +21,6 @@ function App() {
     onAuthStateChanged(auth, async (user) => {
       console.log({ 로그인한유저: user });
     });
-    // setTheme('light');
-    // setBackgroundImage('');
   }, []);
 
   // 테마
