@@ -2,44 +2,179 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
 
-  /* :root {
-    --color-bg: #FBFBFB;
-    --color-text: #160E0E;
-    --color-accent: #C12D2D;
-    --color-white: #FEFEFE;
-    --color-primary: #D1CFCF
-  } */
+  :root {
+    --color-bg: #FFFAF0;
+    --color-text: #313733;
+    --color-accent: #FF7C38;
+    --color-white: #FFFFFF;
+    --color-primary: #FFBE51;
+    --color-secondary: #FFF3D7;
+  }
 
-  /* 전체 폰트 적용 */
+  /* Pretendard-Regular 전체 폰트 적용 */
   @font-face {
-      font-family: 'Pretendard-Regular';
-      src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-      font-weight: 400;
-      font-style: normal;
+    font-family: 'Pretendard-Regular';
+    src: url('//cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
   } 
+
+  /* Roboto 폰트 적용 */
+  @font-face {
+    font-family: 'Roboto';
+    src:url('//fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2') format('woff2');
+  }
+
+  *,html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, menu, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, main, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    font-family: 'Pretendard-Regular';
+  }
 
   html {
     background: #fff;
+    touch-action: pan-x pan-y;
   }
 
   body {
     margin: 0 auto;
-    max-width: 390px;
+    max-width: 414px;
     width: 100%;
-    height: 100vh;
-    font-family: 'Pretendard-Regular'; 
+    min-height: 100vh;
+    height: auto;
     color: var(--color-text); 
-    /* background-color: var(--color-bg); */
+    /* background-color: var(--color-bg);  */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 50% 50%;
   }
 
   a,button {
-    color: #000;
     text-decoration: none;
+    color: var(--color-text);
     border: none;
     cursor: pointer; 
+  }
+
+  input {
+    width: 100%;
+    font-size: 14px;
+  }
+  
+  input::placeholder {
+    color: #D3D3D3;
+  }
+
+  textarea {
+    font-size: 14px;
+  }
+
+  /* 상단 메뉴 토글 */
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn-default,
+  :where(.css-17a39f8).ant-btn-default {
+    // background: none;
+    border: none;
+    box-shadow: none;
+  }
+  :where(.css-17a39f8).ant-btn-default:not(:disabled):not(
+      .ant-btn-disabled
+    ):hover {
+    color: rgba(0, 0, 0, 0.88);
+    border-color: none;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only
+    .anticon {
+    font-size: 18px;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn:not(
+      :disabled
+    ):focus-visible {
+    outline: none;
+  }
+  :where(.css-17a39f8).ant-drawer .ant-drawer-body,
+  :where(.css-dev-only-do-not-override-17a39f8).ant-drawer .ant-drawer-body {
+    padding: 0;
+  }
+  
+  /* 스와이퍼 */
+  .swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
+  .swiper-pagination-horizontal.swiper-pagination-bullets
+    .swiper-pagination-bullet {
+    background: #ffbe51;
+  }
+  
+  /* 달력(RangePicker) */
+  :where(
+    .css-dev-only-do-not-override-17a39f8
+  ).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft
+  .ant-picker-range-arrow {
+  display: none;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-header
+  > button {
+  visibility: initial !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-panel-container {
+  width: 350px !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-panel-container
+  .ant-picker-panels {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  direction: ltr;
+  /* max-width: 350px !important; */
+  width: 350px !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-panel-container
+  .ant-picker-panels:last-child
+  .ant-picker-panel {
+  border-width: 0;
+  width: 100% !important;
+  max-width: 350px !important;
+  min-width: 350px !important;
+}
+.ant-picker-date-panel {
+  max-width: 350px !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-decade-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-year-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-quarter-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-month-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-week-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-date-panel,
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-time-panel {
+  display: flex;
+  flex-direction: column;
+  width: 350px !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+  .ant-picker-date-panel
+  .ant-picker-content {
+  width: 310px !important;
+}
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown-range {
+  padding: 40px 0 0 !important;
+}
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
+  display: grid !important;
+}
+  
+  // 테마 (다크)
+  :where(.css-17a39f8).ant-btn,
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn {
+    color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#333')};
+  }
+  .iYoiyo h2 {
+    color: ${({ theme }) => (theme === 'dark' ? '#333' : '#333')};
   }
 
 `;

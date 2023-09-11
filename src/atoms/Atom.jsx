@@ -1,6 +1,5 @@
 import { atom } from 'jotai';
-
-export const userAtom = atom(null); // 사용자 정보를 담을 Atom
+import defaultProfileImage from '../assets/images/profile-default-image.png';
 
 // 모달, 테마, 배경 이미지 atoms 생성
 export const modalVisibleAtom = atom(false);
@@ -13,8 +12,8 @@ export const blockId = atom(null);
 // firebase blocks 정보
 export const blocksAtom = atom([]);
 
-// bannerImage
-export const bannerImageAtom = atom(null);
+// user nickname update
+export const userNickname = atom(null);
 
-// reservation Image
-export const reservationImageAtom = atom(null);
+// user profile image update
+export const userProfileImage = atom(defaultProfileImage);

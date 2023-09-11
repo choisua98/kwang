@@ -5,6 +5,7 @@ import {
   fetchSignInMethodsForEmail,
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { E } from './EmailSignup.styles';
 
 const EmailSignup = () => {
   const [email, setEmail] = useState('');
@@ -13,9 +14,18 @@ const EmailSignup = () => {
   const navigate = useNavigate();
 
   // 이메일 중복확인 버튼클릭 핸들러
+  const isEmailValid = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailRegex.test(email);
+  };
+
   const onDuplicateCheckButtonClickHandler = async () => {
     if (!email) {
       alert('이메일을 입력해주세요.');
+      return;
+    }
+    if (!isEmailValid(email)) {
+      alert('올바른 이메일 형식이 아닙니다.');
       return;
     }
     try {
@@ -26,35 +36,33 @@ const EmailSignup = () => {
         alert('사용 가능한 이메일입니다.');
       }
     } catch (error) {
-      console.error('에러 발생:', error);
+      alert('에러 발생:', error);
     }
   };
   // 회원가입 버튼클릭 핸들러
   const onSignupButtonClickHandler = async (e) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      alert('이메일과 비밀번호를 입력해주세요.');
+      return;
+    }
+
     try {
-      if (!email) {
-        alert('이메일을 입력해주세요.');
-        return;
-      }
-      if (!password) {
-        alert('비밀번호를 입력해주세요.');
-        return;
-      }
       if (password === confirmPassword) {
-        await createUserWithEmailAndPassword(auth, email, password).then(
-          (userCredential) => {
-            // 회원가입 성공시
-            console.log(userCredential);
-            alert('회원가입에 성공하셨습니다.');
-            navigate('/admin');
-          },
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password,
         );
+        alert('회원가입에 성공하셨습니다.');
+        navigate(`/admin/${userCredential.user.uid}`);
       } else {
         alert(getErrorMessage('auth/wrong-password'));
       }
     } catch (error) {
       alert(getErrorMessage(error.code));
+    } finally {
       setEmail('');
       setPassword('');
       setConfirmPassword('');
@@ -63,7 +71,6 @@ const EmailSignup = () => {
   // 에러 코드에 따른 유효성 검사
   const getErrorMessage = (errorCode) => {
     switch (errorCode) {
-      case 'auth/user-not-found':
       case 'auth/missing-email':
         return '잘못된 이메일입니다.';
       case 'auth/missing-password':
@@ -86,26 +93,28 @@ const EmailSignup = () => {
   };
 
   return (
-    <div>
-      <div>signup page</div>
-      <form>
-        <div>
+    <>
+      <E.FormContainer style={{ position: 'relative', height: '100%' }}>
+        <label>아이디(이메일)</label>
+        <E.EmailDiv>
           <input
             type="email"
             value={email}
             name="email"
-            placeholder="이메일"
+            placeholder="이메일 주소"
             required
             autoFocus
             onChange={(e) => {
               setEmail(e.target.value);
             }}
-          ></input>{' '}
+          />
           <button type="button" onClick={onDuplicateCheckButtonClickHandler}>
-            이메일중복확인
+            중복확인
           </button>
-        </div>
-        <div>
+        </E.EmailDiv>
+
+        <E.PasswordDiv>
+          <label>비밀번호</label>
           <input
             type="password"
             value={password}
@@ -115,9 +124,7 @@ const EmailSignup = () => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-          ></input>
-        </div>
-        <div>
+          />
           <input
             type="password"
             value={confirmPassword}
@@ -127,13 +134,13 @@ const EmailSignup = () => {
             onChange={(e) => {
               setConfirmPassword(e.target.value);
             }}
-          ></input>
-        </div>
-        <button type="submit" onClick={onSignupButtonClickHandler}>
+          />
+        </E.PasswordDiv>
+        <E.SignupButton type="submit" onClick={onSignupButtonClickHandler}>
           회원가입하기
-        </button>
-      </form>
-    </div>
+        </E.SignupButton>
+      </E.FormContainer>
+    </>
   );
 };
 

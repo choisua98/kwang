@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { E } from './EmailLogin.styles';
 
 const EmailLogin = () => {
   const [email, setEmail] = useState('');
@@ -21,15 +22,15 @@ const EmailLogin = () => {
         alert('비밀번호를 입력해주세요.');
         return;
       }
-      await signInWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
-          // 로그인 성공시
-          console.log(userCredential);
-          navigate('/admin');
-        },
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
       );
+      // 로그인 성공시
+      alert('로그인 되었습니다.');
+      navigate(`/admin/${userCredential.user.uid}`);
     } catch (error) {
-      console.log(error.code);
       alert(getErrorMessage(error.code));
     }
   };
@@ -52,11 +53,15 @@ const EmailLogin = () => {
     }
   };
   return (
-    <div>
-      <div>login page</div>
+    <>
+      <E.Title style={{ fontSize: '20px', lineHeight: '26px' }}>
+        <b>크리에이터를 위한</b>
+        <br />단 하나의 링크, 크왕
+      </E.Title>
+      <E.Image src="https://picsum.photos/350/100" alt="배너 이미지" />
       <form>
         <div>
-          <input
+          <E.EmailInput
             type="email"
             value={email}
             name="email"
@@ -65,10 +70,10 @@ const EmailLogin = () => {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
-          ></input>
+          />
         </div>
         <div>
-          <input
+          <E.EmailInput
             type="password"
             value={password}
             name="password"
@@ -77,22 +82,23 @@ const EmailLogin = () => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-          ></input>
+            style={{ marginTop: '15px' }}
+          />
         </div>
-        <button type="submit" onClick={onLoginButtonClickHandler}>
+        <E.LoginMoveButton type="submit" onClick={onLoginButtonClickHandler}>
           로그인
-        </button>
-        <br />
-        <button
+        </E.LoginMoveButton>
+        <E.GridBox>SNS 계정으로 로그인</E.GridBox>
+        {/* Login.jsx로 회원가입 버튼 이동 */}
+        {/* <button
           onClick={() => {
             navigate('/signup');
           }}
         >
           회원가입
-        </button>
-        <br />
+        </button> */}
       </form>
-    </div>
+    </>
   );
 };
 

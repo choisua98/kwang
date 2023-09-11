@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Col, Modal, Row } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Col, Modal, Row } from 'antd';
 import { useAtom } from 'jotai';
 import { nanoid } from 'nanoid';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
@@ -12,23 +12,40 @@ import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { T } from './Theme.styles';
 
+const IMAGE_UPLOAD_TIME = 3000;
 const Theme = () => {
   // 사용자 UID 가져오기
   const userUid = auth.currentUser?.uid;
-
-  const [, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
+  const [theme, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
-  const [, setBackgroundImage] = useAtom(backgroundImageAtom);
+  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
+  const [tempTheme, setTempTheme] = useState(null); // 임시로 테마와 배경 이미지 URL을 저장
+  const [tempBackgroundImage, setTempBackgroundImage] = useState(null); // 배경 이미지 URL을 저장
+  const [loading, setLoading] = useState(false); // 이미지 업로드 진행상태 저장
+  const [progress, setProgress] = useState(0); // 프로그래스바 0 ~ 100% 진행률 업데이트
 
-  // 임시로 테마와 배경 이미지 URL을 저장
-  const [tempTheme, setTempTheme] = useState(null);
-  const [tempBackgroundImage, setTempBackgroundImage] = useState(null);
+  useEffect(() => {
+    let intervalId;
+    if (loading) {
+      const increment = Math.ceil(50 / (IMAGE_UPLOAD_TIME / 1000));
+      let currentProgress = progress;
+
+      intervalId = setInterval(() => {
+        currentProgress += increment;
+        setProgress((prevProgress) =>
+          prevProgress < 100 ? prevProgress + increment : prevProgress,
+        );
+      }, IMAGE_UPLOAD_TIME / 7);
+    }
+    return () => clearInterval(intervalId);
+  }, [loading]);
 
   // 업로드 할 배경 이미지 압축 옵션 설정
   const options = {
-    maxSizeMB: 0.5,
-    maxWidthOrHeight: 300,
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1000,
     useWebWorker: true,
   };
 
@@ -45,30 +62,37 @@ const Theme = () => {
 
   // 테마(다크) 클릭 시
   const handleDarkModeClick = () => {
-    setTempBackgroundImage('');
     setTempTheme('dark');
-    // setTempBackgroundImage('url_of_black_image'); // 검은색 이미지 URL로 변경
+    setTempBackgroundImage('');
   };
 
   // 테마(라이트) 클릭 시
   const handleLightModeClick = () => {
-    setTempBackgroundImage('');
     setTempTheme('light');
+    setTempBackgroundImage('');
   };
 
   // 테마(배경 이미지 업로드)시 input
   const handleCustomBackgroundClick = () => {
-    // setTempTheme('');
-    document.getElementById('image-upload').click();
+    const imageInput = document.getElementById('image-upload'); // useRef로 변경
+    imageInput.click();
+    imageInput.value = null;
+    setTempTheme('light');
   };
 
   // 이미지 저장 및 변경
-  const onImageChange = async (event) => {
-    const file = event.target.files[0];
+  const onImageChange = async (e) => {
+    // 이미지 업로드 시간 추가
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, IMAGE_UPLOAD_TIME);
+
+    const file = e.target.files[0];
 
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = (e) => {
         setTempBackgroundImage(reader.result);
       };
       reader.readAsDataURL(file);
@@ -88,15 +112,14 @@ const Theme = () => {
 
   // 테마(샘플 이미지) 클릭 시
   const handleSampleBackgroundClick = () => {
+    setTempTheme('light');
     setTempBackgroundImage(sampleImg);
   };
 
   // 배경 적용하기
   const handleApplyClick = async () => {
-    // console.log(backgroundImage);
-    // console.log(tempTheme);
-    // console.log(tempBackgroundImage);
-
+    setLoading(false); // 로딩 상태 초기화
+    setProgress(0); // 진행률 초기화
     // Firestore에 사용자의 테마 및 배경 이미지 정보 저장
     if (userUid) {
       const userDocRef = doc(db, 'users', userUid);
@@ -119,7 +142,7 @@ const Theme = () => {
       setTheme(tempTheme);
       document.body.style.backgroundColor =
         tempTheme === 'dark' ? '#333' : '#fff';
-      document.body.style.color = tempTheme === 'dark' ? '#fff' : '#000';
+      document.body.style.color = tempTheme === 'dark' ? '#fff' : '#333';
     }
     if (tempBackgroundImage !== null) {
       setBackgroundImage(tempBackgroundImage);
@@ -132,112 +155,95 @@ const Theme = () => {
     setModalVisible(false);
   };
 
+  useEffect(() => {
+    if (modalVisible) {
+      // 모달이 열릴 때 현재 설정된 테마와 배경 이미지를 임시 변수에 저장한다.
+      setTempTheme(theme);
+      setTempBackgroundImage(backgroundImage);
+    } else {
+      // 모달이 닫힐 때 임시 변수에 저장된 값을 원래 상태로 되돌린다.
+      setTempTheme(null);
+      setTempBackgroundImage(null);
+    }
+  }, [modalVisible]);
+
   return (
     <>
       <Row justify="center">
-        <Button
-          type="primary"
-          onClick={() => setModalVisible(true)}
-          style={{ width: '100%' }}
-        >
+        <T.ThemeMenuButton type="basic" onClick={() => setModalVisible(true)}>
           테마 바꾸기
-        </Button>
+        </T.ThemeMenuButton>
       </Row>
       <Modal
-        title="테마 수정"
+        title={<T.ModalTitle>테마 설정</T.ModalTitle>}
         centered
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
-        width={300}
+        width={350}
       >
+        <T.Description>
+          테마를 선택하신 후 적용하기 버튼을 눌러주세요.
+        </T.Description>
         <Row justify="center">
           <Col span={24}>
-            <Row gutter={[5, 0]} style={{ margin: '10px 0' }}>
-              <Col span={12}>
-                <button
-                  style={{
-                    width: '100%',
-                    height: '100px',
-                    border: '1px solid #000',
-                    borderRadius: '5px',
-                    background: 'black',
-                    color: '#fff',
-                  }}
-                  onClick={handleDarkModeClick}
-                >
-                  다크모드
-                </button>
-              </Col>
-              <Col span={12}>
-                <button
-                  style={{
-                    width: '100%',
-                    height: '100px',
-                    border: '1px solid #000',
-                    borderRadius: '5px',
-                    background: '#fff',
-                    color: '#000',
-                  }}
-                  onClick={handleLightModeClick}
-                >
-                  테마 2(화이트)
-                </button>
-              </Col>
-            </Row>
-            <Row gutter={[5, 0]} style={{ margin: '10px 0' }}>
-              <Col span={12}>
-                <button
-                  style={{
-                    width: '100%',
-                    height: '100px',
-                    border: '1px solid #000',
-                    borderRadius: '5px',
-                  }}
-                  onClick={handleCustomBackgroundClick}
-                >
-                  배경 이미지 선택
-                </button>
-                {/* 파일 업로드 */}
-                <input
-                  id="image-upload"
-                  type="file"
-                  accept=".jpg,.jpeg,.png"
-                  style={{ display: 'none' }}
-                  onChange={onImageChange}
-                />
-              </Col>
-              <Col span={12}>
-                <button
-                  style={{
-                    width: '100%',
-                    height: '100px',
-                    border: '1px solid #000',
-                    borderRadius: '5px',
-                    backgroundImage: `url(${sampleImg})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                  onClick={handleSampleBackgroundClick}
-                >
-                  샘플 이미지
-                </button>
-              </Col>
-            </Row>
+            <T.ButtonRow>
+              <T.ButtonColumn>
+                {/* 다크 모드 */}
+                <div>
+                  <T.DarkModeButton
+                    onClick={handleDarkModeClick}
+                  ></T.DarkModeButton>
+                  <p>다크 모드</p>
+                </div>
+                {/* 이미지 업로드 */}
+                <div>
+                  <T.SelectImageButton
+                    onClick={handleCustomBackgroundClick}
+                  ></T.SelectImageButton>
+                  <p>이미지 업로드</p>
+                  {/* 파일 업로드 */}
+                  <T.HiddenInput
+                    id="image-upload"
+                    type="file"
+                    accept=".jpg,.jpeg,.png"
+                    style={{ display: 'none' }}
+                    onChange={onImageChange}
+                  />
+                </div>
+              </T.ButtonColumn>
+              <T.ButtonColumn>
+                {/* 라이트 모드 */}
+                <div>
+                  <T.BasicModeButton
+                    onClick={handleLightModeClick}
+                  ></T.BasicModeButton>
+                  <p>라이트 모드</p>
+                </div>
+                {/* 기본 설정 */}
+                <div>
+                  <T.SampleImageButton
+                    onClick={handleSampleBackgroundClick}
+                  ></T.SampleImageButton>
+                  <p>기본 설정</p>
+                </div>
+              </T.ButtonColumn>
+            </T.ButtonRow>
           </Col>
         </Row>
         <Row>
           <Col span={24}>
-            <button
-              style={{
-                width: '100%',
-                border: '1px solid #000',
-                borderRadius: '5px',
-              }}
-              onClick={handleApplyClick}
-            >
-              적용하기
-            </button>
+            {loading ? (
+              <T.Progress
+                percent={Math.round(progress)}
+                status="active"
+                strokeColor={{ from: '#108ee9', to: '#87d068' }}
+              />
+            ) : (
+              <T.ActivButton disabled={loading} onClick={handleApplyClick}>
+                적용하기
+              </T.ActivButton>
+            )}
           </Col>
         </Row>
       </Modal>

@@ -4,20 +4,16 @@ import { Reset } from 'styled-reset';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { GlobalStyle } from './styles/GlobalStyle';
 import { Provider as JotaiProvider } from 'jotai';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
-  <>
+  <JotaiProvider>
     <Reset />
-    <GlobalStyle />
-    <JotaiProvider>
-      <App />
-    </JotaiProvider>
-  </>,
-  // </React.StrictMode>
+    <App />
+  </JotaiProvider>,
+  // </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

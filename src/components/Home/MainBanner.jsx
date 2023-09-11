@@ -1,41 +1,53 @@
 import React from 'react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { Link } from 'react-router-dom';
+import {
+  Navigation,
+  Pagination,
+  Scrollbar,
+  A11y,
+  Autoplay,
+} from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { M } from './MainBanner.styles';
-import { ReactComponent as PromoBanner } from '../../assets/images/customer/home/banner/promo/promo-banner-1.svg';
+import PromoBanner1 from '../../assets/images/customer/home/banner/promo/promo-banner-1.png';
+import PromoBanner2 from '../../assets/images/customer/home/banner/promo/promo-banner-2.png';
 
 const MainBanner = () => {
   return (
-    <>
+    <div style={{ padding: '0 20px' }}>
       <Swiper
-        modules={[Navigation, Pagination, Scrollbar, A11y]}
-        spaceBetween={50}
-        slidesPerView={1}
-        // navigation
-        // pagination={{ clickable: true }}
-        // scrollbar={{ draggable: true }}
-        onSwiper={(swiper) => {
-          // console.log(swiper);
+        modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
+        pagination={{ clickable: true }}
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false,
         }}
-        onSlideChange={() => {
-          // console.log('slide change')
-        }}
-        style={{ margin: '20px auto 0', width: '100%', height: '100px' }}
+        loop={true} // 무한 반복 활성화
+        style={{ margin: '25px auto 0', width: '100%' }}
       >
         <SwiperSlide>
-          <PromoBanner alt="Promo Banner 1" />
+          <Link to="#">
+            <img
+              src={PromoBanner1}
+              alt="Promo Banner 1"
+              style={{ width: '100%' }}
+            />
+          </Link>
         </SwiperSlide>
         <SwiperSlide>
-          <PromoBanner alt="Promo Banner 2" />
+          <Link to="#">
+            <img
+              src={PromoBanner2}
+              alt="Promo Banner 2"
+              style={{ width: '100%' }}
+            />
+          </Link>
         </SwiperSlide>
-        <SwiperSlide>Slide 3</SwiperSlide>
-        <SwiperSlide>Slide 4</SwiperSlide>
-        <SwiperSlide>Slide 5</SwiperSlide>
       </Swiper>
-    </>
+    </div>
   );
 };
 

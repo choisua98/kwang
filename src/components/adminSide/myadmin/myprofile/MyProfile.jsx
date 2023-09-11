@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Modal } from 'antd';
-import { db, storage } from '../../../../firebase/firebaseConfig';
+import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import { nanoid } from 'nanoid';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import imageCompression from 'browser-image-compression';
-import { themeAtom, userAtom } from '../../../../atoms/Atom';
 import { P } from './MyProfile.styles';
-import { useAtom } from 'jotai';
 import {
   ref,
   uploadBytes,
@@ -15,112 +13,128 @@ import {
   deleteObject,
   listAll,
 } from 'firebase/storage';
+import { useAtom } from 'jotai';
+import { userNickname, userProfileImage } from '../../../../atoms/Atom';
 
 const MyProfile = () => {
-  const user = useAtom(userAtom);
-  const userEmail = user[0]?.email;
-  const userUID = user[0]?.uid;
-  const [theme] = useAtom(themeAtom);
+  const user = auth.currentUser;
+  // const userEmail = auth.currentUser?.email;
+  const userUid = auth.currentUser?.uid;
 
+  useEffect(() => {
+    if (user) {
+      const uplodeUserNickname = async () => {
+        const usersCollection = collection(db, 'users');
+        const userUid = user.uid;
+
+        // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
+        const extractNickname = (email) => {
+          const parts = email?.split('@');
+          if (parts?.length > 0) {
+            return parts[0];
+          }
+          return '';
+        };
+
+        // 사용자 이메일, 닉네임 먼저 업데이트
+        const userInfo = {
+          email: user.email,
+          nickname: extractNickname(user.email),
+          uid: userUid,
+        };
+
+        // 문서가 존재하는지 확인
+        const userDocRef = doc(usersCollection, userUid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (!userDoc.exists()) {
+          // 문서가 없는 경우 문서 생성 후 업데이트
+          await setDoc(userDocRef, userInfo);
+          setAtomNickname(userInfo.nickname);
+        }
+
+        // 화면 다시 그리기
+        const fetchProfileInfo = async () => {
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setNickname(userData.nickname || '');
+            setUpdateNick(userData.nickname || '');
+            setIntroduction(userData.introduction || '');
+            setUpdateIntro(userData.introduction || '');
+            setUpdatedImage(userData?.profileImageURL || defaultProfileImage);
+            setPreviewImage(userData?.profileImageURL || defaultProfileImage);
+          }
+        };
+        fetchProfileInfo();
+      };
+
+      uplodeUserNickname();
+    }
+  }, [user]);
+
+  const [, setAtomNickname] = useAtom(userNickname);
+  const [, setAtomPropileImage] = useAtom(userProfileImage);
   const [modalVisible, setModalVisible] = useState(false);
   const [nickname, setNickname] = useState('');
   const [updateNick, setUpdateNick] = useState('');
   const [introduction, setIntroduction] = useState('');
   const [updateIntro, setUpdateIntro] = useState('');
-
-  // 이메일에서 "@" 앞에 있는 부분을 추출하여 닉네임으로 사용
-  const extractNickname = (email) => {
-    const parts = email?.split('@');
-    if (parts?.length > 0) {
-      return parts[0];
-    }
-    return '';
-  };
-
-  useEffect(() => {
-    if (userEmail) {
-      const extractedNickname = extractNickname(userEmail);
-      setNickname(extractedNickname);
-      setUpdateNick(extractedNickname);
-      localStorage.setItem('userNickname', extractedNickname); // 첫 로그인 시 로컬 스토리지에 저장
-    }
-  }, [userEmail]);
-
-  useEffect(() => {
-    const storedNickname = localStorage.getItem('userNickname');
-    if (storedNickname) {
-      setNickname(storedNickname);
-      setUpdateNick(storedNickname);
-    }
-  }, []);
-
   const [previewImage, setPreviewImage] = useState(defaultProfileImage);
   const [selectedImage, setSelectedImage] = useState(null);
   const [updatedImage, setUpdatedImage] = useState(defaultProfileImage);
 
-  // userUID로 저장된 문서가 있을 경우 프로필 정보 가져오기
-  useEffect(() => {
-    if (userUID) {
-      const userDocRef = doc(db, 'users', userUID);
-      const fetchProfileInfo = async () => {
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setNickname(userData.nickname || '');
-          setUpdateNick(userData.nickname || '');
-          setIntroduction(userData.introduction || '');
-          setUpdateIntro(userData.introduction || '');
-          setUpdatedImage(userData?.profileImageURL || defaultProfileImage);
-          setPreviewImage(userData?.profileImageURL || defaultProfileImage);
-        }
-      };
-      fetchProfileInfo();
-    }
-  }, [userUID]);
-
   // 프로필 이미지 업데이트 함수
   const handleImageUpdate = async () => {
     try {
-      // 기존 userUID 폴더의 이미지 전체 삭제
-      const userImagesRef = ref(storage, `profileImages/${userUID}`);
-      const userImagesList = await listAll(userImagesRef);
+      if (!selectedImage) {
+        return updatedImage === defaultProfileImage
+          ? defaultProfileImage
+          : updatedImage;
+      } else {
+        // 기존 userUID 폴더의 이미지 전체 삭제
+        const userImagesRef = ref(storage, `profileImages/${userUid}`);
+        const userImagesList = await listAll(userImagesRef);
 
-      // userImagesList.items 배열에 있는 모든 이미지 삭제
-      await Promise.all(
-        userImagesList.items.map(async (item) => {
-          await deleteObject(item);
-        }),
-      );
+        // userImagesList.items 배열에 있는 모든 이미지 삭제
+        await Promise.all(
+          userImagesList.items.map(async (item) => {
+            await deleteObject(item);
+          }),
+        );
 
-      const options = {
-        maxSizeMB: 0.5,
-        maxWidthOrHeight: 300,
-        useWebWorker: true,
-      };
+        // 이미지 압축 함수
+        const compressImage = async (imageFile) => {
+          const options = {
+            maxSizeMB: 0.5,
+            maxWidthOrHeight: 300,
+            useWebWorker: true,
+          };
+          try {
+            const compressedFile = await imageCompression(imageFile, options);
+            return compressedFile;
+          } catch (error) {
+            console.error('이미지 압축 실패', error);
+            return null;
+          }
+        };
 
-      // 이미지 압축 함수
-      const compressedImage = async (imageFile) => {
-        try {
-          const compressedFile = await imageCompression(imageFile, options);
-          return compressedFile;
-        } catch (error) {
-          console.error('이미지 압축 실패', error);
-          return null;
+        // 압축한 프로필 이미지 Firebase에 업로드
+        if (selectedImage) {
+          const compressedFile = await compressImage(selectedImage);
+          if (compressedFile) {
+            const imageRef = ref(
+              storage,
+              `profileImages/${userUid}/${nanoid()}`,
+            );
+            await uploadBytes(imageRef, compressedFile); // 압축된 이미지 업로드
+            const imageURL = await getDownloadURL(imageRef);
+            setUpdatedImage(imageURL);
+            return imageURL;
+          }
         }
-      };
-
-      // 압축한 프로필 이미지 Firebase에 업로드
-      if (selectedImage) {
-        const compressedFile = await compressedImage(selectedImage);
-        if (compressedFile) {
-          const imageRef = ref(storage, `profileImages/${userUID}/${nanoid()}`);
-          await uploadBytes(imageRef, compressedFile); // 압축된 이미지 업로드
-          const imageURL = await getDownloadURL(imageRef);
-          setUpdatedImage(imageURL);
-          return imageURL;
-        }
+        return null;
       }
-      return null;
     } catch (error) {
       console.error('프로필 이미지 업데이트 실패', error);
       return null;
@@ -131,14 +145,12 @@ const MyProfile = () => {
   const handleProfileUpdate = async () => {
     try {
       const usersCollection = collection(db, 'users');
-      const userDocRef = doc(usersCollection, userUID);
+      const userDocRef = doc(usersCollection, userUid);
 
       // 사용자 정보 업데이트
       const userInfo = {
-        email: userEmail,
         nickname: nickname,
         introduction: introduction,
-        theme: theme,
       };
 
       // 프로필 이미지 업데이트 및 이미지 URL 업데이트
@@ -147,20 +159,11 @@ const MyProfile = () => {
         userInfo.profileImageURL = imageURL;
       }
 
-      // 문서가 존재하는지 확인
-      const userDoc = await getDoc(userDocRef);
-
-      if (userDoc.exists()) {
-        // 문서가 있는 경우 업데이트
-        await updateDoc(userDocRef, userInfo);
-      } else {
-        // 문서가 없는 경우 문서 생성 후 업데이트
-        await setDoc(userDocRef, userInfo);
-      }
-
+      await updateDoc(userDocRef, userInfo);
       setUpdateNick(nickname);
       setUpdateIntro(introduction);
-      console.log('업데이트 함수 속 닉네임', nickname);
+      setAtomNickname(nickname);
+      setAtomPropileImage(imageURL);
 
       setModalVisible(false); // 모달 닫기
     } catch (error) {
@@ -173,29 +176,29 @@ const MyProfile = () => {
     if (file) {
       setSelectedImage(file);
       setPreviewImage(URL.createObjectURL(file));
-      // setUpdatedImage(defaultProfileImage); // 이미지 변경 시 갱신
     }
   };
 
   return (
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
-        <Col span={24} style={{ textAlign: 'center' }}>
-          {/* <Profile /> */}
+        <P.ProfilBox span={24}>
           <P.ProfileImage src={updatedImage} />
-          <div style={{ margin: '20px 0 10px' }}>{updateNick}</div>
-          <div style={{ margin: '20px 0' }}>{updateIntro}</div>
-          <Button
+          <P.ModalOpenButton
             onClick={() => {
               setModalVisible(true);
             }}
-          >
-            내 정보 수정하기
-          </Button>
+          ></P.ModalOpenButton>
+        </P.ProfilBox>
+      </Row>
+      <Row justify="center" align="middle" style={{ padding: '0' }}>
+        <Col>
+          <P.InfoBox>{updateNick}</P.InfoBox>
+          <P.InfoBox>{updateIntro}</P.InfoBox>
         </Col>
       </Row>
       <Modal
-        title="내 정보 수정하기"
+        title={<P.ModalTitle>내 정보 수정하기</P.ModalTitle>}
         centered
         open={modalVisible}
         onCancel={() => {
@@ -203,30 +206,35 @@ const MyProfile = () => {
         }}
         width={300}
         footer={
-          <Button
+          <P.ActivButton
             key="upload"
             type="primary"
             onClick={handleProfileUpdate}
-            style={{ width: '100%' }}
           >
             저장하기
-          </Button>
+          </P.ActivButton>
         }
       >
         {/* 모달 내용 */}
         <P.ProfileContainer>
           {/* 프로필 이미지 미리보기 */}
-          <P.PreviewImage src={previewImage} alt="이미지 미리보기" />
-          <input type="file" accept=" image/*" onChange={onChangeImgaeFile} />
-          <div style={{ marginTop: '20px' }}>닉네임</div>
-          <P.ProfileInput
-            placeholder="변경하실 닉네임을 작성해주세요."
+          <P.ProfileImageBox>
+            <P.PreviewImage src={previewImage} alt="이미지 미리보기" />
+          </P.ProfileImageBox>
+          <P.FileUploadButton
+            type="file"
+            accept=" image/*"
+            onChange={onChangeImgaeFile}
+          />
+          <P.label style={{ marginTop: '25px' }}>닉네임</P.label>
+          <P.ModalInput
+            placeholder="닉네임을 작성해 주세요."
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
-          <div style={{ marginTop: '5px' }}>소개</div>
+          <P.label>소개</P.label>
 
-          <P.ProfileInput
+          <P.ModalInput
             placeholder="소개를 작성해 주세요."
             value={introduction}
             onChange={(e) => setIntroduction(e.target.value)}

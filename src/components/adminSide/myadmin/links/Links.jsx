@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Col, Input, Modal, Row } from 'antd';
+import { Col, Input, Row } from 'antd';
 import { L } from './Links.styles';
 import { ReactComponent as Link } from '../../../../assets/images/admin/link.svg';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
@@ -14,7 +14,9 @@ import {
   doc,
   orderBy,
   serverTimestamp,
+  deleteDoc,
 } from 'firebase/firestore';
+import imageCompression from 'browser-image-compression';
 
 const Links = () => {
   const userUid = auth.currentUser?.uid; // 현재 로그인한 사용자 UID 가져오기
@@ -39,34 +41,79 @@ const Links = () => {
     setImageUrl(URL.createObjectURL(e.target.files[0]));
   };
 
-  // 선택된 이미지 파일을  Firebase Storage에 업로드하고 다운로드 URL을 가져옴
+  // 모달 닫기 핸들러
+  const handleModalClose = () => {
+    setModalVisible(false);
+    setImageUrl(null); // 모달이 닫힐 때 imageUrl를 null로 설정
+  };
+
+  // 이미지 압축 옵션
+  const options = {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 300,
+    useWebWorker: true,
+  };
+
+  const compressImage = async (imageFile) => {
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      return compressedFile;
+    } catch (error) {
+      console.error('이미지 압축 실패', error);
+      return null;
+    }
+  };
+
+  // 새 링크 버튼 클릭 시
+  const handleNewLinkClick = () => {
+    setModalVisible(true); // 모달 창
+    setEditingLinkId(null); // 편집 중인 링크 ID를 null로 설정(새 링크 생성)
+    setUrlText(''); // URL 입력 필드 제거
+    setImageUrl(null); // 기존 선택된 이미지 초기화
+  };
+
+  // 선택된 이미지 파일을 Firebase Storage에 업로드하고 다운로드 URL을 가져옴
   const uploadImage = async () => {
     if (!imageFile) return;
     setUploadingImage(true);
-    // 업로드 할 파일 생성
-    let storageRef = ref(storage, 'linkImages/' + imageFile.name);
-    // 파일 업로드 스냅샷 가져오기
-    let taskSnapshot;
-    try {
-      taskSnapshot = await uploadBytesResumable(storageRef, imageFile);
-    } catch (error) {
-      console.error(error);
+
+    // 새 이미지 파일이 선택되면 압축하고 그 결과를 사용
+    let fileToUpload = imageFile;
+    const compressedFile = await compressImage(imageFile);
+    if (compressedFile) {
+      fileToUpload = compressedFile;
+      let storageRef = ref(storage, 'linkImages/' + fileToUpload.name); // 업로드 할 파일 생성
+      let taskSnapshot; // 파일 업로드 스냅샷 가져오기
+      try {
+        taskSnapshot = await uploadBytesResumable(storageRef, fileToUpload);
+      } catch (error) {
+        console.error(error);
+      }
+      let downloadURL = await getDownloadURL(taskSnapshot.ref); // 다운로드 URL 가져오기
+      setUploadingImage(false);
+      return downloadURL;
+    } else {
+      console.error('이미지 압축 실패');
+      setUploadingImage(false);
+      return;
     }
-    // 다운로드 URL 가져오기
-    let downloadURL = await getDownloadURL(taskSnapshot.ref);
-    setUploadingImage(false);
-    return downloadURL;
   };
 
   // 저장 버튼(링크 데이터를 Firestore에 저장 및 업데이트)
   const handleSaveClick = async () => {
     // urlText가 비어있거나 이미지가 업로드 중이면 종료
     if (!urlText || uploadingImage) return;
+
+    // 이미지 파일과 URL 둘 다 비어있는 경우, 경고 메시지 표시 후 종료
+    if (!imageFile && !imageUrl) {
+      alert('이미지와 URL 모두 입력해주세요.');
+      return;
+    }
+
     // URL 유효성 검사
     const urlRegExp =
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
     if (!urlRegExp.test(urlText)) {
-      // console.error('잘못된 URL 형식입니다.');
       alert('잘못된 URL 형식입니다.(https://kwang.com) 형식으로 입력해주세요');
       return;
     }
@@ -97,27 +144,32 @@ const Links = () => {
           imageUrl: imageUrlToSave,
           createdAt: serverTimestamp(),
         });
-        // 새롭게 생성된 문서 ID 설정
-        setEditingLinkId(docRef.id);
-        // 기본 링크 버튼 하나 삭제
-        if (defaultLinks.length > 0) setDefaultLinks(defaultLinks.slice(1));
+        setEditingLinkId(docRef.id); // 새롭게 생성된 문서 ID 설정
+        if (defaultLinks.length > 0) setDefaultLinks(defaultLinks.slice(1)); // 기본 링크 버튼 하나 삭제
       }
       setModalVisible(false);
-      // 입력 필드 초기화
-      setUrlText('');
+      setUrlText(''); // 입력 필드 초기화
       setImageFile(null);
-      // URL 초기화
-      setImageUrl(null);
-      // 파일 입력 필드 초기화
-      fileInputRef.current.value = '';
-      // 링크 저장 후 최신 데이터 가져오기
-      fetchLinks();
-      // 수정 중인 링크 ID 초기화
-      setEditingLinkId(null);
+      setImageUrl(null); // URL 초기화
+      fileInputRef.current.value = ''; // 파일 입력 필드 초기화ㄴ
+      fetchLinks(); // 링크 저장 후 최신 데이터 가져오기
+      setEditingLinkId(null); // 수정 중인 링크 ID 초기화
     } catch (error) {
       console.error('업데이트 중 오류:', error);
       return;
     }
+  };
+
+  // 선택한 링크를 삭제
+  const handleDeleteClick = async (id) => {
+    if (!window.confirm('정말로 이 링크를 삭제하시겠습니까?')) return;
+    try {
+      await deleteDoc(doc(db, 'links', id));
+      fetchLinks(); // 링크가 삭제된 후에 최신 데이터 가져오기
+    } catch (error) {
+      console.error('링크 삭제 중 오류:', error);
+    }
+    setModalVisible(false);
   };
 
   // Firestore에서 사용자의 링크 데이터를 가져오기
@@ -134,27 +186,17 @@ const Links = () => {
       ...doc.data(),
       timestamp: doc.data().createdAt?.seconds,
     }));
-    // console.log(newLinksData);
-    // timestamp를 기준으로 오름차순 정렬
-    let sortedLinksData = [...newLinksData];
+    let sortedLinksData = [...newLinksData]; // timestamp를 기준으로 오름차순 정렬
     // 비교하는 값들을 출력
     sortedLinksData.sort((a, b) => {
-      // console.log(a.timestamp);
-      // console.log(b.timestamp);
       return a.timestamp - b.timestamp;
     });
-    // console.log(sortedLinksData);
-    // console.log(newLinksData);
     setDefaultLinks(
       Array(3 - newLinksData.length)
         .fill()
         .map((_, i) => i),
     );
-    // setLinksData(newLinksData);
-    // 정렬된 데이터를 setLinksData 저장
-    setLinksData(sortedLinksData);
-    // console.log(sortedLinksData);
-    // console.log(linksData);
+    setLinksData(sortedLinksData); // 정렬된 데이터를 setLinksData 저장
   };
 
   // 컴포넌트가 마운트되거나 userUid가 변경되면 fetchLink 링크 데이터를 가져옴
@@ -162,59 +204,55 @@ const Links = () => {
     fetchLinks();
   }, [userUid]);
 
-  useEffect(() => {
-    // console.log(linksData);
-  }, [linksData]);
+  useEffect(() => {}, [linksData]);
+
   return (
     <>
       <L.Container>
-        <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
-          <Col span={24} style={{ textAlign: 'center' }}>
-            <p>링크와 원하는 메뉴를 추가해주세요</p>
-            <L.ButtonContainer style={{ marginTop: '20px' }}>
+        <Row justify="center" align="middle">
+          <L.Col span={24}>
+            <h2>링크 추가하기</h2>
+            <L.ButtonContainer>
               {linksData.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => {
-                    setModalVisible(true);
-                    setEditingLinkId(link.id); // 수정 중인 링크의 ID
-                    setUrlText(link.url); // 기존 URL 값
-                    setImageUrl(link.imageUrl); // 기존 이미지 URL 값
-                  }}
-                >
-                  <img src={link.imageUrl} alt="Link Icon" />
-                </button>
+                <div key={link.id}>
+                  <button
+                    onClick={() => {
+                      setModalVisible(true);
+                      setEditingLinkId(link.id); // 수정 중인 링크의 ID
+                      setUrlText(link.url); // 기존 URL 값
+                      setImageUrl(link.imageUrl); // 기존 이미지 URL 값
+                    }}
+                  >
+                    <img src={link.imageUrl} alt="Link Icon" />
+                  </button>
+                  {/* <L.ButtonDelete>
+                    <button onClick={() => handleDeleteClick(link.id)}>
+                      X
+                    </button>
+                  </L.ButtonDelete> */}
+                </div>
               ))}
               {defaultLinks.map((_, index) => (
-                <button key={index} onClick={() => setModalVisible(true)}>
+                <button key={index} onClick={handleNewLinkClick}>
                   <Link />
                 </button>
               ))}
             </L.ButtonContainer>
-          </Col>
+            <p>나만의 프로필 링크를 추가해주세요</p>
+          </L.Col>
         </Row>
-        <Modal
+        <L.Modal
           title="링크 수정"
           centered
           open={modalVisible}
-          onCancel={() => setModalVisible(false)}
+          onCancel={handleModalClose}
           footer={null}
           width={300}
         >
           <Row>
             <Col span={24}>
               <div>로고 이미지 / 아이콘 추가</div>
-              {imageUrl && (
-                <img
-                  src={imageUrl}
-                  style={{
-                    margin: '0 auto',
-                    display: 'block',
-                    width: '100px',
-                  }}
-                  alt="Preview"
-                />
-              )}
+              {imageUrl && <img src={imageUrl} alt="Preview" />}
             </Col>
             <Col span={24}>
               <input
@@ -222,30 +260,36 @@ const Links = () => {
                 onChange={handleImageChange}
                 ref={fileInputRef}
               />
+              <L.MenuFormButton onClick={() => fileInputRef.current.click()}>
+                아이콘 이미지 업로드
+              </L.MenuFormButton>
             </Col>
-            <Col span={24} style={{ marginTop: '10px' }}>
-              <div style={{ marginBottom: '10px' }}>URL</div>
+            <Col span={24}>
+              <p>URL</p>
               <Input.TextArea
                 placeholder="텍스트를 입력하세요"
-                value={urlText}
+                value={urlText || 'https://'}
                 onChange={handleUrlChange}
                 autoSize={{ minRows: 3, maxRows: 6 }}
               />
             </Col>
             <Col span={24}>
-              <button
-                style={{
-                  width: '100%',
-                  border: '1px solid #000',
-                  borderRadius: '5px',
-                }}
-                onClick={handleSaveClick}
-              >
-                저장하기
-              </button>
+              <L.ButtonArea>
+                <L.SubmitButton onClick={handleSaveClick}>
+                  저장하기
+                </L.SubmitButton>
+                <L.SubmitButton
+                  style={{
+                    background: '#313733',
+                  }}
+                  onClick={() => handleDeleteClick(editingLinkId)}
+                >
+                  삭제하기
+                </L.SubmitButton>
+              </L.ButtonArea>
             </Col>
           </Row>
-        </Modal>
+        </L.Modal>
       </L.Container>
     </>
   );
