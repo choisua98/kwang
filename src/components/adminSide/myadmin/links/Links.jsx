@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Col, Input, Row } from 'antd';
+import { Col, Input, Row, message } from 'antd';
 import { L } from './Links.styles';
 import { ReactComponent as Link } from '../../../../assets/images/admin/link.svg';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
@@ -59,7 +59,8 @@ const Links = () => {
       const compressedFile = await imageCompression(imageFile, options);
       return compressedFile;
     } catch (error) {
-      console.error('이미지 압축 실패', error);
+      // console.log('이미지 압축 실패', error);
+      message.error('데이터 가져오기 오류가 발생했습니다.');
       return null;
     }
   };
