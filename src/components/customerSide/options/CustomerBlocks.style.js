@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { Collapse } from 'antd';
+import { Collapse, Modal } from 'antd';
 
 // adminSide options 공통 css
 export const C = {
@@ -35,17 +35,23 @@ export const C = {
     }
 
     h2 {
-      margin-bottom: 20px;
+      font-size: 14px;
     }
 
     h3 {
-      font-size: 20px;
-      text-align: center;
-      margin: 30px 10px 10px 10px;
-    }
-    h4 {
-      text-align: center;
-      margin-bottom: 30px;
+      width: 137px;
+      height: 30px;
+      border-radius: 15px;
+      border: 1.5px solid var(--color-accent);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-accent);
+      background: none;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
     }
 
     img {
@@ -53,15 +59,16 @@ export const C = {
       height: 200px;
       object-fit: cover;
       margin: 5px 0px;
+      border-radius: 15px;
     }
 
     ::placeholder {
       color: #999;
       padding: 5px 7px;
+      font-size: 14px;
     }
 
     input {
-      margin-top: 12px;
       padding: 16.5px 16px;
       box-sizing: border-box;
       border: none;
@@ -71,7 +78,6 @@ export const C = {
 
     textarea {
       height: 120px;
-      margin-top: 12px;
       padding: 16.5px 16px;
       box-sizing: border-box;
       border: none;
@@ -87,21 +93,17 @@ export const C = {
       display: flex;
       justify-content: space-between;
       font-size: 14px;
-    }
-
-    label span {
-      color: red;
+      margin-top: 30px;
     }
   `,
 
   Collapse: styled(Collapse)`
-    text-align: start;
+    text-align: center;
     background-color: var(--color-primary);
-    margin: 0px 20px;
+    margin: 40px 20px;
 
-    p {
-      font-size: 14px;
-      text-align: start;
+    .ant-collapse-content-box {
+      padding: 30px 45px !important;
     }
   `,
 
@@ -129,6 +131,45 @@ export const C = {
       cursor: default;
       background-color: rgb(255, 250, 240, 0.8);
       border: none;
+    }
+  `,
+
+  Modal: styled(Modal)`
+    &.ant-modal .ant-modal-content {
+      border-radius: 15px;
+      padding: 40px 44px 0px 44px;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-weight: 500;
+    }
+
+    img {
+      padding-bottom: 15px;
+    }
+
+    h1 {
+      font-size: 22px;
+      padding-bottom: 15px;
+    }
+
+    P {
+      font-size: 14px;
+      color: #787878;
+      padding-bottom: 60px;
+    }
+
+    button {
+      width: 330px;
+      height: 60px;
+      font-size: 18px;
+      color: var(--color-white);
+      background-color: var(--color-text);
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
     }
   `,
 };
