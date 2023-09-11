@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Modal } from 'antd';
+import { Row, Col, Modal, message } from 'antd';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
@@ -130,7 +130,7 @@ const MyProfile = () => {
           : updatedImage;
       }
     } catch (error) {
-      alert(
+      message.error(
         '프로필 이미지를 업데이트 하는 데 실패했습니다. 네트워크 상태를 확인해 주시고 다시 시도해주세요.',
       );
       return null;
@@ -163,7 +163,7 @@ const MyProfile = () => {
 
       setModalVisible(false); // 모달 닫기
     } catch (error) {
-      alert(
+      message.error(
         '프로필을 업데이트 하는 데 실패했습니다. 네트워크 상태를 확인해 주시고 다시 시도해주세요.',
       );
     }
