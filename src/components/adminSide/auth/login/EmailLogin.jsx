@@ -89,14 +89,6 @@ const EmailLogin = () => {
           로그인
         </E.LoginMoveButton>
         <E.GridBox>SNS 계정으로 로그인</E.GridBox>
-        {/* Login.jsx로 회원가입 버튼 이동 */}
-        {/* <button
-          onClick={() => {
-            navigate('/signup');
-          }}
-        >
-          회원가입
-        </button> */}
       </form>
     </>
   );
