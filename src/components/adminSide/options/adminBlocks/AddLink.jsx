@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   addDoc,
   collection,
@@ -13,15 +13,11 @@ import {
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
-
-import {
-  backgroundImageAtom,
-  blocksAtom,
-  themeAtom,
-} from '../../../../atoms/Atom';
+import { blocksAtom } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import { LeftOutlined } from '@ant-design/icons';
+import { useTheme, useThemeReset } from '../../../../hooks/useTheme';
 
 const AddLink = () => {
   const navigate = useNavigate();
@@ -44,20 +40,9 @@ const AddLink = () => {
   const urlRegex =
     /^(ftp|http|https):\/\/[A-Za-z0-9.-]+(:[0-9]+)?(\/[A-Za-z0-9-._~:/?#[\]@!$&'()*+,;=]+)*$/;
 
-  const [theme, setTheme] = useAtom(themeAtom);
-
-  // 배경 이미지
-  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
-
-  useEffect(() => {
-    setTheme('light');
-    setBackgroundImage(null);
-  }, []);
-
-  useEffect(() => {
-    setTheme('light');
-    setBackgroundImage(null);
-  }, []);
+  // 테마
+  const [theme, backgroundImage] = useThemeReset();
+  useTheme(theme, backgroundImage);
 
   const addButtonClick = async (e) => {
     e.preventDefault();
