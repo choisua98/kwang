@@ -1,6 +1,9 @@
+import { useAtom } from 'jotai';
 import { useEffect } from 'react';
+import { backgroundImageAtom, themeAtom } from '../atoms/Atom';
 
-const useTheme = (theme, backgroundImage) => {
+// 테마 기본 설정
+export const useTheme = (theme, backgroundImage) => {
   useEffect(() => {
     document.body.style.backgroundColor = theme === 'dark' ? '#333' : '#fff';
     document.body.style.color = theme === 'dark' ? '#fff' : '#333';
@@ -13,4 +16,15 @@ const useTheme = (theme, backgroundImage) => {
   }, [theme, backgroundImage]);
 };
 
-export default useTheme;
+// 테마 초기화
+export const useThemeReset = () => {
+  const [theme, setTheme] = useAtom(themeAtom);
+  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
+
+  useEffect(() => {
+    setTheme('light');
+    setBackgroundImage(null);
+  }, []);
+
+  return [theme, backgroundImage];
+};
