@@ -12,14 +12,13 @@ const GoogleLogin = () => {
   // --구글 로그인버튼 클릭시--
   const onGoogleLoginButtonClickHandler = async (e) => {
     e.preventDefault();
-    await signInWithPopup(auth, provider1)
-      .then((result) => {
-        console.log(result.user);
-        navigate(`/admin/${result.user.uid}`);
-      })
-      .catch((error) => {
-        console.log(error.code);
-      });
+    try {
+      const result = await signInWithPopup(auth, provider1);
+      alert('로그인 되었습니다.');
+      navigate(`/admin/${result.user.uid}`);
+    } catch (error) {
+      alert('로그인 중 에러 발생:', error.code);
+    }
   };
 
   return (
