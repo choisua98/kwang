@@ -6,15 +6,13 @@ import { backgroundImageAtom, themeAtom } from './atoms/Atom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase/firebaseConfig';
 import { GlobalStyle } from './styles/GlobalStyle';
-import useTheme from './hooks/useTheme';
+import { useTheme } from './hooks/useTheme';
 
 const queryClient = new QueryClient();
 
 function App() {
-  // 테마 상태
-  const [theme, setTheme] = useAtom(themeAtom);
-  // 배경 이미지
-  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
+  const [theme, setTheme] = useAtom(themeAtom); // 테마 상태
+  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom); // 배경 이미지
 
   // onAuthStateChanged 사용
   useEffect(() => {
@@ -23,8 +21,7 @@ function App() {
     });
   }, []);
 
-  // 테마
-  useTheme(theme, backgroundImage);
+  useTheme(theme, backgroundImage); // 테마
 
   return (
     <QueryClientProvider client={queryClient}>

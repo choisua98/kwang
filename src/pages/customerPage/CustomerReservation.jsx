@@ -1,17 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReservationService from '../../components/customerSide/options/customerBlocks/ReservationService';
-import { useAtom } from 'jotai';
-import { backgroundImageAtom, themeAtom } from '../../atoms/Atom';
+import { useTheme, useThemeReset } from '../../hooks/useTheme';
 
 const CustomerReservation = () => {
-  const [theme, setTheme] = useAtom(themeAtom);
-  // 배경 이미지
-  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
-
-  useEffect(() => {
-    setTheme('light');
-    setBackgroundImage(null);
-  }, []);
+  const [theme, backgroundImage] = useThemeReset();
+  useTheme(theme, backgroundImage);
 
   return <ReservationService />;
 };
