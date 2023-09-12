@@ -171,7 +171,9 @@ const GlobalStyle = createGlobalStyle`
 }
 
 
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker .ant-picker-input >input:placeholder-shown {
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker .ant-picker-input >input:placeholder-shown,
+:where(.css-17a39f8).ant-picker .ant-picker-input >input,
+.cHPDDZ input {
   margin-bottom: 0;
 }
   
