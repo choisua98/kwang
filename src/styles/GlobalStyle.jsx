@@ -228,15 +228,22 @@ const GlobalStyle = createGlobalStyle`
   width: 48px;
 }
 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel {
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-month-panel {
   width: 93%;
 }
 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel .ant-picker-cell .ant-picker-cell-inner {
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel .ant-picker-cell .ant-picker-cell-inner,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-month-panel .ant-picker-cell .ant-picker-cell-inner {
   line-height: 52px;
 }
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel .ant-picker-cell::before {
+
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel .ant-picker-cell::before, {
   top: 50%;
+}
+
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end) .ant-picker-cell-inner {
+  background: none;
 }
 
   
