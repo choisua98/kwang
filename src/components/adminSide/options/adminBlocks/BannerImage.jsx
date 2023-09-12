@@ -28,11 +28,9 @@ import {
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
-
 import { Modal, message, Button } from 'antd';
-import { CameraOutlined } from '@ant-design/icons';
+import { CameraOutlined, LeftOutlined } from '@ant-design/icons';
 import imageCompression from 'browser-image-compression';
-import { LeftOutlined } from '@ant-design/icons';
 
 const BannerImage = () => {
   const navigate = useNavigate();
