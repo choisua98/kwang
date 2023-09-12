@@ -10,11 +10,10 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../../../firebase/firebaseConfig';
 import { C } from '../../CustomerBlocks.style';
-import { CC } from './ChallengeService.styles';
+import { CC, CS } from './ChallengeService.styles';
 import IconAwesome from '../../../../../assets/images/customer/icon-awesome.png';
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../../atoms/Atom';
-import { nanoid } from 'nanoid';
 import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';
 import IconModalConfirm from '../../../../../assets/images/common/icon/icon-modalConfirm.png';
 import moment from 'moment';
@@ -34,10 +33,11 @@ const ChallengeComment = () => {
   const [password, setPassword] = useState('');
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]); // 댓글 데이터 저장
+  const [nicknameCount, setNicknameCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const [count, setCount] = useState(0);
   const [modalVisibleA, setModalVisibleA] = useAtom(modalVisibleAtom);
-  const [modalVisibleB, setModalVisibleB] = useState(false);
+  // const [modalVisibleB, setModalVisibleB] = useState(false);
 
   // 컴포넌트가 마운트 될 때와 selectedDate가 변경될 때 카운트를 Firestore에서 가져옴
   useEffect(() => {
@@ -54,7 +54,7 @@ const ChallengeComment = () => {
   };
 
   // 댓글 추가
-  const handleModalConfirm = async (e) => {
+  const handleUpdateButtom = async (e) => {
     e.preventDefault();
 
     // 선택된 날짜와 현재 날짜 비교
@@ -84,8 +84,7 @@ const ChallengeComment = () => {
         nickname,
         password,
         comment,
-        id: nanoid(),
-        date: moment().format('YYYY년 MM월 DD일'),
+        date: moment().format('YYYY년 MM월 DD일 hh:mm:ss A'),
       };
 
       await setDoc(commentDocRef, CommentInfo);
@@ -101,7 +100,10 @@ const ChallengeComment = () => {
       setPassword('');
       setComment('');
       fetchComments();
-      setModalVisibleB(true);
+      // setModalVisibleB(true);
+      message.success('댓글이 성공적으로 작성되었습니다.');
+      setModalVisibleA(false);
+      // navigate(0);
     } catch (error) {
       message.error(error.message);
     }
@@ -206,6 +208,14 @@ const ChallengeComment = () => {
         }
       });
 
+      // commentList를 시간 기준으로 정렬
+      commentList.sort((a, b) => {
+        return (
+          moment(b.date, 'YYYY년 MM월 DD일 hh:mm:ss A') -
+          moment(a.date, 'YYYY년 MM월 DD일 hh:mm:ss A')
+        );
+      });
+
       setComments(commentList);
     } catch (error) {
       message.error(error.message);
@@ -213,7 +223,7 @@ const ChallengeComment = () => {
   };
 
   return (
-    <>
+    <CS.GridContainer>
       <C.HeaderStyle>
         <button onClick={() => navigate(`/${userUid}/challenge`)}>
           <LeftOutlined />
@@ -226,6 +236,12 @@ const ChallengeComment = () => {
         <p>{moment(selectedDate.toString()).format('YYYY년 MM월 DD일,')}</p>
         <span>{count}명이 함께하고 있어요!</span>
       </CC.CountStyle>
+
+      <CC.CommentButton type="button" onClick={handleCommentSubmit}>
+        댓글 등록하기
+      </CC.CommentButton>
+
+      <C.Divider />
 
       <CC.CustomModal
         title={
@@ -243,11 +259,12 @@ const ChallengeComment = () => {
         closable={false}
         width={330}
       >
-        <CC.Container onSubmit={handleModalConfirm}>
+        <CC.Container onSubmit={handleUpdateButtom}>
           <label htmlFor="nickname">
             <p>
               닉네임<span>*</span>
             </p>
+            {nicknameCount}/10자
           </label>
           <input
             id="nickname"
@@ -257,7 +274,9 @@ const ChallengeComment = () => {
             value={nickname}
             onChange={(e) => {
               setNickname(e.target.value);
+              setNicknameCount(e.target.value.length);
             }}
+            maxLength={10}
             autoFocus
           />
           <label htmlFor="password">
@@ -301,7 +320,7 @@ const ChallengeComment = () => {
           </C.SubmitButton>
         </CC.Container>
 
-        <C.Modal
+        {/* <C.Modal
           title=""
           centered
           open={modalVisibleB}
@@ -327,14 +346,28 @@ const ChallengeComment = () => {
           >
             닫기
           </button>
-        </C.Modal>
+        </C.Modal> */}
       </CC.CustomModal>
 
       {comments.map((commentData, index) => (
         <div key={index}>
           <CC.CommentsContainer>
-            <div>
-              {commentData.nickname}
+            <CC.GridBox>
+              <div>
+                <label>{commentData.nickname}</label>
+                <label
+                  style={{
+                    color: 'lightgray',
+                    fontSize: '13px',
+                    paddingLeft: '10px',
+                  }}
+                >
+                  {moment(
+                    commentData.date,
+                    'YYYY년 MM월 DD일 hh:mm:ss A',
+                  ).format('hh:mm:ss A')}
+                </label>
+              </div>
               <button
                 onClick={() => {
                   const password = prompt('비밀번호를 입력하세요.');
@@ -345,18 +378,12 @@ const ChallengeComment = () => {
               >
                 <DeleteOutlined />
               </button>
-            </div>
+            </CC.GridBox>
             <p>{commentData.comment}</p>
           </CC.CommentsContainer>
         </div>
       ))}
-
-      <C.ButtonArea>
-        <C.SubmitButton type="button" onClick={handleCommentSubmit}>
-          댓글 등록하기
-        </C.SubmitButton>
-      </C.ButtonArea>
-    </>
+    </CS.GridContainer>
   );
 };
 

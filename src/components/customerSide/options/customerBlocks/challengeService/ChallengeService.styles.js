@@ -2,6 +2,10 @@ import { Modal } from 'antd';
 import { styled } from 'styled-components';
 
 export const CS = {
+  GridContainer: styled.div`
+    padding: 0px 20px 20px 20px;
+  `,
+
   Container: styled.form`
     display: flex;
     flex-direction: column;
@@ -230,12 +234,6 @@ export const CC = {
     font-weight: 500;
     margin-bottom: 30px;
 
-    div {
-      display: flex;
-      justify-content: space-between;
-      margin: 10px 20px;
-    }
-
     p {
       padding: 16.5px 16px;
       box-sizing: border-box;
@@ -255,5 +253,32 @@ export const CC = {
     button {
       background: transparent;
     }
+  `,
+
+  CommentButton: styled.button`
+    display: flex;
+    margin: -20px 0px 30px 0px;
+    padding: 20px 0px;
+    justify-content: center;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 15px;
+    background-color: ${(props) => props.color || '#FF7C38;'};
+
+    &:disabled {
+      border: 1px solid gray;
+      color: gray;
+      cursor: default;
+      background-color: rgb(255, 250, 240, 0.8);
+      border: none;
+    }
+  `,
+
+  GridBox: styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 10px;
   `,
 };

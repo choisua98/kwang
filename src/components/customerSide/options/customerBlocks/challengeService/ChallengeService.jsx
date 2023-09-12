@@ -83,7 +83,7 @@ const ChallengeService = () => {
     <>
       {challengeData.map((data) => {
         return (
-          <div key={data.id}>
+          <CS.GridContainer key={data.id}>
             <C.HeaderStyle>
               <button onClick={() => navigate(`/${userUid}`)}>
                 <LeftOutlined />
@@ -125,7 +125,7 @@ const ChallengeService = () => {
                 formatDay={(_, date) =>
                   date.toLocaleString('en', { day: 'numeric' })
                 }
-                tileDisabled={tileDisabled}
+                // tileDisabled={tileDisabled}
                 showNeighboringMonth={false}
               />
             </CS.CalendarContainer>
@@ -137,7 +137,7 @@ const ChallengeService = () => {
                 오늘 인증 남기기
               </C.SubmitButton>
             </C.ButtonArea>
-          </div>
+          </CS.GridContainer>
         );
       })}
     </>
