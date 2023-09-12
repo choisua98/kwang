@@ -2,6 +2,8 @@ import { styled } from 'styled-components';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import { Button, Col } from 'antd';
 import btnEditImage from '../../../../assets/images/common/btn/btn-edit.png';
+import btnEditImageDark from '../../../../assets/images/common/btn/btn-edit-dark.png';
+import btnEditImageLight from '../../../../assets/images/common/btn/btn-edit-light.png';
 
 export const P = {
   InfoBox: styled.div`
@@ -22,6 +24,10 @@ export const P = {
     bottom: 4px;
     right: -5px;
     background-image: url(${btnEditImage});
+    /*
+    background-image: url(${({ theme }) =>
+      theme === 'dark' ? btnEditImageDark : btnEditImageLight});
+      */
     background-size: cover;
     border-radius: 50%;
     width: 35px;
@@ -103,7 +109,9 @@ export const P = {
     color: #312f2e;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
 
     &:focus {
       outline: none;

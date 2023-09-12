@@ -1,4 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
+import btnEditImageLight from '../assets/images/common/btn/btn-edit-light.png';
+import btnEditImageDark from '../assets/images/common/btn/btn-edit-dark.png';
 
 const GlobalStyle = createGlobalStyle`
 
@@ -169,13 +171,94 @@ const GlobalStyle = createGlobalStyle`
 }
   
   // 테마 (다크)
-  :where(.css-17a39f8).ant-btn,
-  :where(.css-dev-only-do-not-override-17a39f8).ant-btn {
+
+  // 상단 토글 메뉴
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only {
     color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#333')};
   }
-  .iYoiyo h2 {
-    color: ${({ theme }) => (theme === 'dark' ? '#333' : '#333')};
+
+  // 테마 바꾸기 버튼
+  .ant-btn.csujge {
+    color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#000')};
+    background: ${({ theme }) => (theme === 'dark' ? '#2E2E2E' : '#fff')};
   }
+
+  // 프로필
+  .cyTRO {
+    background-image: url(${({ theme }) =>
+      theme === 'dark' ? btnEditImageDark : btnEditImageLight});
+  }
+
+  // 링크
+  .iHnBgB {
+    color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#2E2E2E')};
+    background: ${({ theme }) => (theme === 'dark' ? '#2E2E2E' : '#fff')};
+    p {
+      color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#2E2E2E')};
+    }
+  }
+
+  // // 블록
+  // .iGiRYI button {
+  //   color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#2E2E2E')};
+  //   background: ${({ theme }) => (theme === 'dark' ? '#2E2E2E' : '#fff')};
+  // }
+
+  .iGiRYI button {
+    ${({ theme }) =>
+      theme === 'dark' && {
+        color: '#fff',
+        background: '#2E2E2E',
+      }}
+    ${({ theme }) =>
+      theme === 'light' && {
+        color: '#2E2E2E',
+        background: '#fff',
+      }}
+    ${({ theme }) =>
+      theme !== 'dark' &&
+      theme !== 'light' && {
+        color: 'blue',
+        background: 'red',
+      }}
+  }
+  
+
+  .bypPBO {
+    border:${({ theme }) =>
+      theme === 'dark' ? '1.5px solid #2E2E2E;' : '1px solid #fff'};
+      button {
+        color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#2E2E2E')};
+      }
+  }
+
+  // 모달 내 블록
+  .iQLRop button {
+    color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#2E2E2E')};
+    background: ${({ theme }) => (theme === 'dark' ? '#2E2E2E' : '#fff')};
+    &:disabled {
+      color: ${({ theme }) => (theme === 'dark' ? '#000' : '#fff')};
+      background: ${({ theme }) => (theme === 'dark' ? '#fff' : '#2E2E2E')};
+    }
+  }
+
+
+
+  // :where(.css-17a39f8).ant-btn,
+  // :where(.css-dev-only-do-not-override-17a39f8).ant-btn {
+  //   color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#333')};
+  // }
+  // .iYoiyo h2 {
+  //   color: ${({ theme }) => (theme === 'dark' ? '#333' : '#333')};
+  // }
+  // .csujge {
+  //   background: ${({ theme }) => (theme === 'dark' ? 'red' : '#333')};
+  // }
+  // :where(.css-17a39f8).ant-btn, :where(.css-dev-only-do-not-override-17a39f8).ant-btn {
+  //   background: ${({ theme }) => (theme === 'dark' ? '#333' : '#333')};
+  // }
+
+
 
 `;
 
