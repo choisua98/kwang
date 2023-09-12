@@ -188,7 +188,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   // 상단 토글 메뉴
-  :where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only {
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only,
+  :where(.css-17a39f8).ant-btn.ant-btn-icon-only {
     ${({ theme }) =>
       theme === 'dark' && {
         color: '#fff',
@@ -223,6 +224,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   // 프로필
+  :where(.css-17a39f8).ant-col-24.eGWLkn,
   .gWHfwT {
   ${({ theme }) =>
     theme === 'dark' &&
@@ -238,6 +240,7 @@ const GlobalStyle = createGlobalStyle`
     `border: none;
   `}
   }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn-default, :where(.css-17a39f8).ant-btn-default.cqSNy,
   .eVBSlO {
     ${({ theme }) =>
       theme === 'dark' &&
