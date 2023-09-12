@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { N } from './Home.styles';
 import kwangProfileImage from '../../assets/images/Kwang-background-white.png';
 import defaultProfileImage from '../../assets/images/profile-default-image.png';
+import { message } from 'antd';
 
 const NewCreator = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const NewCreator = () => {
         setUsersData(usersArray);
       })
       .catch((error) => {
-        console.error('문서를 가져오지 못하는 오류: ', error);
+        message.error('문서를 가져오지 못하는 오류: ', error);
       });
   }, []);
 

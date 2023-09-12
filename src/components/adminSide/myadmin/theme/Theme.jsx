@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Col, Modal, Row } from 'antd';
+import { Col, Modal, Row, message } from 'antd';
 import { useAtom } from 'jotai';
 import { nanoid } from 'nanoid';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
@@ -56,7 +56,7 @@ const Theme = () => {
       const compressedFile = await imageCompression(imageFile, options);
       return compressedFile;
     } catch (error) {
-      console.error('이미지 압축 실패', error);
+      message.error('이미지 압축 실패', error);
       return null;
     }
   };

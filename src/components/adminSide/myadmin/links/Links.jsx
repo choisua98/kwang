@@ -59,8 +59,7 @@ const Links = () => {
       const compressedFile = await imageCompression(imageFile, options);
       return compressedFile;
     } catch (error) {
-      // console.log('이미지 압축 실패', error);
-      message.error('데이터 가져오기 오류가 발생했습니다.');
+      console.error('이미지 압축 실패', error);
       return null;
     }
   };
@@ -88,13 +87,13 @@ const Links = () => {
       try {
         taskSnapshot = await uploadBytesResumable(storageRef, fileToUpload);
       } catch (error) {
-        console.error(error);
+        message.error(error);
       }
       let downloadURL = await getDownloadURL(taskSnapshot.ref); // 다운로드 URL 가져오기
       setUploadingImage(false);
       return downloadURL;
     } else {
-      console.error('이미지 압축 실패');
+      message.error('이미지 압축 실패');
       setUploadingImage(false);
       return;
     }
@@ -107,7 +106,7 @@ const Links = () => {
 
     // 이미지 파일과 URL 둘 다 비어있는 경우, 경고 메시지 표시 후 종료
     if (!imageFile && !imageUrl) {
-      alert('이미지와 URL 모두 입력해주세요.');
+      message.error('이미지와 URL 모두 입력해주세요.');
       return;
     }
 
@@ -115,7 +114,9 @@ const Links = () => {
     const urlRegExp =
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
     if (!urlRegExp.test(urlText)) {
-      alert('잘못된 URL 형식입니다.(https://kwang.com) 형식으로 입력해주세요');
+      message.error(
+        '잘못된 URL 형식입니다.(https://kwang.com) 형식으로 입력해주세요',
+      );
       return;
     }
     // 기존 이미지 URL을 기본값으로 사용
@@ -125,7 +126,7 @@ const Links = () => {
       try {
         imageUrlToSave = await uploadImage();
       } catch (error) {
-        console.error('업로드 중인 이미지 오류: ', error);
+        message.error('업로드 중인 이미지 오류: ', error);
         return;
       }
     }
@@ -168,7 +169,7 @@ const Links = () => {
       await deleteDoc(doc(db, 'links', id));
       fetchLinks(); // 링크가 삭제된 후에 최신 데이터 가져오기
     } catch (error) {
-      console.error('링크 삭제 중 오류:', error);
+      message.error('링크 삭제 중 오류:', error);
     }
     setModalVisible(false);
   };

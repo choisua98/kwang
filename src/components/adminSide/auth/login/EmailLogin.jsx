@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { E } from './EmailLogin.styles';
+import { message } from 'antd';
 
 const EmailLogin = () => {
   const [email, setEmail] = useState('');
@@ -15,11 +16,11 @@ const EmailLogin = () => {
     e.preventDefault();
     try {
       if (!email) {
-        alert('이메일을 입력해주세요.');
+        message.error('이메일을 입력해주세요.');
         return;
       }
       if (!password) {
-        alert('비밀번호를 입력해주세요.');
+        message.error('비밀번호를 입력해주세요.');
         return;
       }
       const userCredential = await signInWithEmailAndPassword(
@@ -28,10 +29,10 @@ const EmailLogin = () => {
         password,
       );
       // 로그인 성공시
-      alert('로그인 되었습니다.');
+      message.success('로그인 되었습니다.');
       navigate(`/admin/${userCredential.user.uid}`);
     } catch (error) {
-      alert(getErrorMessage(error.code));
+      message.error(getErrorMessage(error.code));
     }
   };
 

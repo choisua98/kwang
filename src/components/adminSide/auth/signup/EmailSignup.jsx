@@ -6,6 +6,7 @@ import {
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { E } from './EmailSignup.styles';
+import { message } from 'antd';
 
 const EmailSignup = () => {
   const [email, setEmail] = useState('');
@@ -21,22 +22,22 @@ const EmailSignup = () => {
 
   const onDuplicateCheckButtonClickHandler = async () => {
     if (!email) {
-      alert('이메일을 입력해주세요.');
+      message.error('이메일을 입력해주세요.');
       return;
     }
     if (!isEmailValid(email)) {
-      alert('올바른 이메일 형식이 아닙니다.');
+      message.error('올바른 이메일 형식이 아닙니다.');
       return;
     }
     try {
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
       if (signInMethods.length > 0) {
-        alert('이미 사용 중인 이메일입니다.');
+        message.error('이미 사용 중인 이메일입니다.');
       } else {
-        alert('사용 가능한 이메일입니다.');
+        message.error('사용 가능한 이메일입니다.');
       }
     } catch (error) {
-      alert('에러 발생:', error);
+      message.error('에러 발생:', error);
     }
   };
   // 회원가입 버튼클릭 핸들러
@@ -44,7 +45,7 @@ const EmailSignup = () => {
     e.preventDefault();
 
     if (!email || !password) {
-      alert('이메일과 비밀번호를 입력해주세요.');
+      message.error('이메일과 비밀번호를 입력해주세요.');
       return;
     }
 
@@ -55,13 +56,13 @@ const EmailSignup = () => {
           email,
           password,
         );
-        alert('회원가입에 성공하셨습니다.');
+        message.success('회원가입에 성공하셨습니다.');
         navigate(`/admin/${userCredential.user.uid}`);
       } else {
-        alert(getErrorMessage('auth/wrong-password'));
+        message.error(getErrorMessage('auth/wrong-password'));
       }
     } catch (error) {
-      alert(getErrorMessage(error.code));
+      message.error(getErrorMessage(error.code));
     } finally {
       setEmail('');
       setPassword('');

@@ -55,7 +55,7 @@ const MyProfile = () => {
       const compressedFile = await imageCompression(imageFile, options);
       return compressedFile;
     } catch (error) {
-      console.error('이미지 압축 실패', error);
+      message.error('이미지 압축 실패', error);
       return null;
     }
   };
