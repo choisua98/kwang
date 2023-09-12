@@ -100,11 +100,13 @@ export const C = {
 
   Collapse: styled(Collapse)`
     text-align: center;
-    background-color: var(--color-primary);
+    background-color: var(--color-secondary);
     margin: 40px 20px;
-
     .ant-collapse-content-box {
       padding: 30px 45px !important;
+    }
+    .ant-collapse-content {
+      background: var(--color-bg);
     }
   `,
 
