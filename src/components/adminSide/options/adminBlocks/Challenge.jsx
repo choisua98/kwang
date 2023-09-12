@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useInput from '../../../../hooks/useInput';
 import { useAtom } from 'jotai';
-import { blocksAtom, modalVisibleAtom } from '../../../../atoms/Atom';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+} from '../../../../atoms/Atom';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import {
   addDoc,
@@ -57,6 +61,9 @@ const Challenge = () => {
   const selectedBlock = blocks.find((block) => block.id === blockId);
 
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
 
   const [title, handleTitleChange] = useInput(selectedBlock?.title);
   const [description, handleDescriptionChange] = useInput(
@@ -233,8 +240,7 @@ const Challenge = () => {
         // 사용자 확인 후 Firestore 문서 삭제
         await deleteDoc(doc(db, 'template', id));
 
-        alert('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+        setDeleteModalVisible(true);
       }
     } catch (error) {
       console.error('삭제 중 오류 발생:', error.message);
@@ -428,6 +434,34 @@ const Challenge = () => {
           type="button"
           onClick={() => {
             setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
             navigate(-1);
           }}
         >

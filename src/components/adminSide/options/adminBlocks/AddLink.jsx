@@ -13,9 +13,14 @@ import {
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+} from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { LeftOutlined } from '@ant-design/icons';
 import { useTheme, useThemeReset } from '../../../../hooks/useTheme';
 
@@ -29,6 +34,11 @@ const AddLink = () => {
   const blockId = location.state ? location.state.blocksId : null;
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
+
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
 
   const [title, setTitle] = useState(selectedBlock?.title || '');
   const [addLink, setAddLink] = useState(selectedBlock?.description || '');
@@ -78,8 +88,7 @@ const AddLink = () => {
         userId: userUid,
       });
 
-      alert('저장 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -96,8 +105,7 @@ const AddLink = () => {
         addLink,
       });
 
-      alert('수정 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
       console.error('수정 중 오류 발생:', error.message);
     }
@@ -110,8 +118,8 @@ const AddLink = () => {
       try {
         // 사용자 확인 후 삭제 작업 진행
         await deleteDoc(doc(db, 'template', id));
-        alert('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+
+        setDeleteModalVisible(true);
       } catch (error) {
         console.error('삭제 중 오류 발생:', error.message);
       }
@@ -188,6 +196,62 @@ const AddLink = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };

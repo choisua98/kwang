@@ -14,9 +14,14 @@ import {
 } from 'firebase/firestore';
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+} from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { LeftOutlined } from '@ant-design/icons';
 
 const Mailing = () => {
@@ -32,6 +37,11 @@ const Mailing = () => {
   // 전역 상태에서 블록 정보 가져오기
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
+
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
 
   // 제목과 설명에 대한 상태 및 상태 변경 함수 설정
   const [title, handleTitleChange] = useInput(selectedBlock?.title);
@@ -79,9 +89,8 @@ const Mailing = () => {
         createdAt: serverTimestamp(),
         userId: userUid,
       });
-      // 저장 완료 알림 후 어드민 페이지로 이동
-      alert('저장 완료!');
-      navigate(`/admin/${userUid}`);
+
+      setModalVisible(true);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -97,9 +106,8 @@ const Mailing = () => {
         title,
         description,
       });
-      // 수정 완료 알림 후 어드민 페이지로 이동
-      alert('수정 완료!');
-      navigate(`/admin/${userUid}`);
+
+      setModalVisible(true);
     } catch (error) {
       console.error('수정 중 오류 발생:', error.message);
     }
@@ -112,8 +120,8 @@ const Mailing = () => {
       try {
         // 사용자 확인 후 삭제 작업 진행
         await deleteDoc(doc(db, 'template', id));
-        alert('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+
+        setDeleteModalVisible(true);
       } catch (error) {
         console.error('삭제 중 오류 발생:', error.message);
       }
@@ -199,6 +207,62 @@ const Mailing = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };

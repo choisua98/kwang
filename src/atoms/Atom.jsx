@@ -1,8 +1,11 @@
 import { atom } from 'jotai';
 import defaultProfileImage from '../assets/images/profile-default-image.png';
 
-// 모달, 테마, 배경 이미지 atoms 생성
+// 모달 atoms 생성
 export const modalVisibleAtom = atom(false);
+export const deleteModalVisibleAtom = atom(false);
+
+// 테마, 배경 이미지 atoms 생성
 export const themeAtom = atom('light');
 export const backgroundImageAtom = atom(null);
 
@@ -17,6 +20,3 @@ export const userNickname = atom(null);
 
 // user profile image update
 export const userProfileImage = atom(defaultProfileImage);
-
-// 현재 모달에서 수행 중인 작업을 나타내는 상태 atom
-export const currentActionAtom = atom(null);

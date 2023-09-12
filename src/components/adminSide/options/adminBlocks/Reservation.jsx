@@ -22,7 +22,7 @@ import {
 import { useAtom } from 'jotai';
 import {
   blocksAtom,
-  currentActionAtom,
+  deleteModalVisibleAtom,
   modalVisibleAtom,
 } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
@@ -33,13 +33,14 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Modal, Space } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 import { LeftOutlined } from '@ant-design/icons';
-
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
+
 // 오늘 이전의 날짜는 선택 불가능하도록 설정하는 함수
 const disabledDate = (current) => {
   return current && current < dayjs().endOf('day');
 };
+
 const Reservation = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,8 +49,10 @@ const Reservation = () => {
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
-  const [currentAction, setCurrentAction] = useAtom(currentActionAtom);
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
 
   const [title, setTitle] = useState(selectedBlock?.title || '');
   const [description, setDescription] = useState(
@@ -235,8 +238,7 @@ const Reservation = () => {
         // 사용자 확인 후 Firestore 문서 삭제
         await deleteDoc(doc(db, 'template', id));
 
-        alert('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+        setDeleteModalVisible(true);
       }
     } catch (error) {
       console.error('삭제 중 오류 발생:', error.message);
@@ -445,14 +447,42 @@ const Reservation = () => {
         width={330}
       >
         <div>
-          <img src={IconModalConfirm} alt="발송완료아이콘" />
-          <h1>신청완료!</h1>
-          <p>예약서비스 신청이 완료되었습니다.</p>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
         </div>
         <button
           type="button"
           onClick={() => {
             setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
             navigate(-1);
           }}
         >

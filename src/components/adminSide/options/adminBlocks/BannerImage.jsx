@@ -19,13 +19,18 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { blocksAtom } from '../../../../atoms/Atom';
 import { useAtom } from 'jotai';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+} from '../../../../atoms/Atom';
+import { O } from '../Blocks.styles';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { Modal } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 import imageCompression from 'browser-image-compression';
-import { O } from '../Blocks.styles';
-import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import { LeftOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 
@@ -44,6 +49,11 @@ const BannerImage = () => {
 
   // blocks 배열에서 선택된 블록 찾기
   const selectedBlock = blocks.find((block) => block.id === blockId);
+
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
 
   // 실제로 업로드한 이미지 정보를 저장하는 배열
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -152,9 +162,7 @@ const BannerImage = () => {
         images: imageUrls,
       });
 
-      // 저장 완료 알림 후 어드민 페이지로 이동
-      alert('저장 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
       console.error('저장 중 오류 발생:', error.message);
     }
@@ -189,9 +197,7 @@ const BannerImage = () => {
         images: imageUrls,
       });
 
-      // 수정 완료 알림 후 어드민 페이지로 이동
-      alert('수정 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
       console.error('수정 중 오류 발생:', error.message);
     }
@@ -217,8 +223,7 @@ const BannerImage = () => {
         // 사용자 확인 후 Firestore 문서 삭제
         await deleteDoc(doc(db, 'template', id));
 
-        alert('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+        setDeleteModalVisible(true);
       }
     } catch (error) {
       console.error('삭제 중 오류 발생:', error.message);
@@ -320,6 +325,62 @@ const BannerImage = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };
