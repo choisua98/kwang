@@ -90,53 +90,57 @@ const ChallengeService = () => {
               </button>
               <p>{data.title}</p>
             </C.HeaderStyle>
+            <CS.Layout>
+              {data.blockKind === 'challenge' && (
+                <CS.ImageContainer>
+                  <Swiper
+                    modules={[Pagination, A11y]}
+                    pagination={{ clickable: true }}
+                    a11y
+                  >
+                    {data.images.map((image, index) => (
+                      <SwiperSlide key={index}>
+                        <img
+                          src={image}
+                          alt={`reservationimage ${index + 1}`}
+                        />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </CS.ImageContainer>
+              )}
+              <CS.Container>
+                <div>{data.description}</div>
+                <div>
+                  챌린지 기간
+                  <p>
+                    {data.startDate} ~ {data.endDate}
+                  </p>
+                </div>
+              </CS.Container>
 
-            {data.blockKind === 'challenge' && (
-              <CS.ImageContainer>
-                <Swiper
-                  modules={[Pagination, A11y]}
-                  pagination={{ clickable: true }}
-                  a11y
+              <CS.CalendarContainer>
+                <Calendar
+                  onChange={setSelectedDate}
+                  value={null}
+                  prev2Label={null}
+                  next2Label={null}
+                  formatDay={(_, date) =>
+                    date.toLocaleString('en', { day: 'numeric' })
+                  }
+                  tileDisabled={tileDisabled}
+                  showNeighboringMonth={false}
+                />
+              </CS.CalendarContainer>
+
+              <C.ButtonArea>
+                <C.SubmitButton
+                  onClick={() => handleChallengeVerification(data.title)}
                 >
-                  {data.images.map((image, index) => (
-                    <SwiperSlide key={index}>
-                      <img src={image} alt={`reservationimage ${index + 1}`} />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </CS.ImageContainer>
-            )}
-            <CS.Container>
-              <div>{data.description}</div>
-              <div>
-                챌린지 기간
-                <p>
-                  {data.startDate} ~ {data.endDate}
-                </p>
-              </div>
-            </CS.Container>
-
-            <CS.CalendarContainer>
-              <Calendar
-                onChange={setSelectedDate}
-                value={null}
-                prev2Label={null}
-                next2Label={null}
-                formatDay={(_, date) =>
-                  date.toLocaleString('en', { day: 'numeric' })
-                }
-                tileDisabled={tileDisabled}
-                showNeighboringMonth={false}
-              />
-            </CS.CalendarContainer>
-
-            <C.ButtonArea>
-              <C.SubmitButton
-                onClick={() => handleChallengeVerification(data.title)}
-              >
-                오늘 인증 남기기
-              </C.SubmitButton>
-            </C.ButtonArea>
+                  오늘 인증 남기기
+                </C.SubmitButton>
+              </C.ButtonArea>
+            </CS.Layout>
           </div>
         );
       })}
