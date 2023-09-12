@@ -21,7 +21,7 @@ import {
 } from 'firebase/firestore';
 import { blocksAtom } from '../../../../atoms/Atom';
 import { useAtom } from 'jotai';
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 import imageCompression from 'browser-image-compression';
 import { O } from '../Blocks.styles';
@@ -81,7 +81,9 @@ const BannerImage = () => {
     e.preventDefault();
 
     if (!userUid) {
-      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      message.error(
+        '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+      );
       navigate('/login');
       return;
     }
@@ -100,7 +102,7 @@ const BannerImage = () => {
           const compressedFile = await imageCompression(imageFile, options);
           return compressedFile;
         } catch (error) {
-          console.error('이미지 압축 실패', error);
+          message.error('이미지 압축 실패', error);
           return null;
         }
       };
@@ -153,10 +155,10 @@ const BannerImage = () => {
       });
 
       // 저장 완료 알림 후 어드민 페이지로 이동
-      alert('저장 완료!');
+      message.success('저장 완료!');
       navigate(`/admin/${userUid}`);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
@@ -190,10 +192,10 @@ const BannerImage = () => {
       });
 
       // 수정 완료 알림 후 어드민 페이지로 이동
-      alert('수정 완료!');
+      message.success('수정 완료!');
       navigate(`/admin/${userUid}`);
     } catch (error) {
-      console.error('수정 중 오류 발생:', error.message);
+      message.error('수정 중 오류 발생:', error.message);
     }
   };
 
@@ -217,11 +219,11 @@ const BannerImage = () => {
         // 사용자 확인 후 Firestore 문서 삭제
         await deleteDoc(doc(db, 'template', id));
 
-        alert('삭제 완료!');
+        message.success('삭제 완료!');
         navigate(`/admin/${userUid}`);
       }
     } catch (error) {
-      console.error('삭제 중 오류 발생:', error.message);
+      message.error('삭제 중 오류 발생:', error.message);
     }
   };
 

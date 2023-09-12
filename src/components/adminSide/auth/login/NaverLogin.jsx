@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 const { naver } = window;
 
@@ -68,10 +69,10 @@ const NaverLogin = () => {
 
         try {
           await checkEmailExists();
-          alert('로그인 되었습니다.');
+          message.success('로그인 되었습니다.');
           navigate(`/admin/${auth.currentUser.uid}`);
         } catch (error) {
-          alert('로그인 중 에러 발생:', error.code);
+          message.error('로그인 중 에러 발생:', error.code);
         }
       }
     });

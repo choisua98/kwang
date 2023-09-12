@@ -20,6 +20,7 @@ import { blocksAtom } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';
+import { message } from 'antd';
 
 const Faq = () => {
   const navigate = useNavigate();
@@ -74,7 +75,9 @@ const Faq = () => {
     e.preventDefault();
 
     if (!userUid) {
-      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      message.error(
+        '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+      );
       navigate('/login');
       return;
     }
@@ -105,10 +108,10 @@ const Faq = () => {
       });
 
       // 저장 완료 알림 후 어드민 페이지로 이동
-      alert('저장 완료!');
+      message.success('저장 완료!');
       navigate(`/admin/${userUid}`);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
@@ -125,10 +128,10 @@ const Faq = () => {
       });
 
       // 수정 완료 알림 후 어드민 페이지로 이동
-      alert('수정 완료!');
+      message.success('수정 완료!');
       navigate(`/admin/${userUid}`);
     } catch (error) {
-      console.error('수정 중 오류 발생:', error.message);
+      message.error('수정 중 오류 발생:', error.message);
     }
   };
 
@@ -155,7 +158,7 @@ const Faq = () => {
         setFaqList(updatedFaqList);
       }
     } else {
-      console.error('문서가 존재하지 않습니다.');
+      message.error('문서가 존재하지 않습니다.');
     }
   };
 
@@ -175,10 +178,10 @@ const Faq = () => {
       try {
         // 사용자 확인 후 삭제 작업 진행
         await deleteDoc(doc(db, 'template', id));
-        alert('삭제 완료!');
+        message.success('삭제 완료!');
         navigate(`/admin/${userUid}`);
       } catch (error) {
-        console.error('삭제 중 오류 발생:', error.message);
+        message.error('삭제 중 오류 발생:', error.message);
       }
     }
   };

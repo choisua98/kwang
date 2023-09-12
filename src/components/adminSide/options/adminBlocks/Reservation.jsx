@@ -21,7 +21,7 @@ import {
 } from 'firebase/storage';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { DatePicker, Modal, Space } from 'antd';
+import { DatePicker, Modal, Space, message } from 'antd';
 import { blocksAtom } from '../../../../atoms/Atom';
 import { useAtom } from 'jotai';
 import { CameraOutlined } from '@ant-design/icons';
@@ -98,7 +98,9 @@ const Reservation = () => {
     e.preventDefault();
 
     if (!userUid) {
-      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      message.error(
+        '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+      );
       navigate('/login');
       return;
     }
@@ -153,10 +155,10 @@ const Reservation = () => {
       });
 
       // 저장 완료 알림 후 어드민 페이지로 이동
-      alert('저장 완료!');
+      message.success('저장 완료!');
       navigate(`/admin/${userUid}`);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
@@ -194,10 +196,10 @@ const Reservation = () => {
         images: imageUrls,
       });
       // 수정 완료 알림 후 어드민 페이지로 이동
-      alert('수정 완료!');
+      message.success('수정 완료!');
       navigate(`/admin/${userUid}`);
     } catch (error) {
-      console.error('수정 중 오류 발생:', error.message);
+      message.error('수정 중 오류 발생:', error.message);
     }
   };
 
@@ -229,11 +231,11 @@ const Reservation = () => {
         // 사용자 확인 후 Firestore 문서 삭제
         await deleteDoc(doc(db, 'template', id));
 
-        alert('삭제 완료!');
+        message.success('삭제 완료!');
         navigate(`/admin/${userUid}`);
       }
     } catch (error) {
-      console.error('삭제 중 오류 발생:', error.message);
+      message.error('삭제 중 오류 발생:', error.message);
     }
   };
 

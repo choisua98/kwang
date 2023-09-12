@@ -18,6 +18,7 @@ import { nanoid } from 'nanoid';
 import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';
 import IconModalConfirm from '../../../../../assets/images/common/icon/icon-modalConfirm.png';
 import moment from 'moment';
+import { message } from 'antd';
 
 const ChallengeComment = () => {
   const navigate = useNavigate();
@@ -58,8 +59,7 @@ const ChallengeComment = () => {
 
     // 선택된 날짜와 현재 날짜 비교
     if (!moment(selectedDate).isSame(moment(), 'day')) {
-      alert('댓글은 현재 날짜에만 작성할 수 있습니다.');
-
+      message.error('댓글은 현재 날짜에만 작성할 수 있습니다.');
       setNickname('');
       setPassword('');
       setComment('');
@@ -67,12 +67,12 @@ const ChallengeComment = () => {
     }
 
     if (!nickname || !password || !comment) {
-      alert('모두 입력해 주세요.');
+      message.error('모두 입력해 주세요.');
       return;
     }
 
     if (password.length < 4) {
-      alert('비밀번호는 최소 4자리 이상이어야 합니다.');
+      message.error('비밀번호는 최소 4자리 이상이어야 합니다.');
       return;
     }
 
@@ -103,7 +103,7 @@ const ChallengeComment = () => {
       fetchComments();
       setModalVisibleB(true);
     } catch (error) {
-      console.log(error.message);
+      message.error(error.message);
     }
   };
 
@@ -129,7 +129,7 @@ const ChallengeComment = () => {
       });
 
       if (passwordMatched) {
-        alert('댓글이 삭제되었습니다.');
+        message.success('댓글이 삭제되었습니다.');
 
         fetchComments(); // 댓글 목록을 다시 불러옴
 
@@ -145,10 +145,10 @@ const ChallengeComment = () => {
           setCount(newCommentCount);
         }
       } else {
-        alert('비밀번호가 일치하지 않습니다.');
+        message.error('비밀번호가 일치하지 않습니다.');
       }
     } catch (error) {
-      console.log(error.message);
+      message.error(error.message);
     }
   };
 
@@ -165,7 +165,7 @@ const ChallengeComment = () => {
         await setDoc(countDocRef, { count: newCount });
       }
     } catch (error) {
-      console.log(error.message);
+      message.error(error.message);
     }
   };
 
@@ -180,7 +180,7 @@ const ChallengeComment = () => {
         return 0; // 기본값 설정
       }
     } catch (error) {
-      console.log(error.message);
+      message.error(error.message);
       return 0;
     }
   };
@@ -208,7 +208,7 @@ const ChallengeComment = () => {
 
       setComments(commentList);
     } catch (error) {
-      console.log(error.message);
+      message.error(error.message);
     }
   };
 

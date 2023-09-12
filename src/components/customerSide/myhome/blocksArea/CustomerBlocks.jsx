@@ -11,6 +11,7 @@ import 'swiper/css/pagination';
 import { C } from './CustomerBlocks.styles';
 
 import { useNavigate, useParams } from 'react-router-dom';
+import { message } from 'antd';
 
 const CustomerBlocks = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const CustomerBlocks = () => {
       // 가공된 데이터를 상태에 업데이트
       setBlocks(initialDocuments);
     } catch (error) {
-      console.error('데이터 가져오기 오류:', error);
+      message.error('데이터 가져오기 오류:', error);
     }
   };
 
