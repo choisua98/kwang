@@ -9,11 +9,12 @@ export const O = {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px 0px 40px 0px;
+    margin: 20px 20px 40px;
 
     button {
       position: absolute;
-      left: 10px;
+      left: 0px;
+      padding: 0;
       font-size: 20px;
       background-color: transparent;
     }
