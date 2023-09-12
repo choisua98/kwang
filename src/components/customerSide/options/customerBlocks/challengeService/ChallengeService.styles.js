@@ -26,6 +26,10 @@ export const CS = {
     }
   `,
 
+  Layout: styled.div`
+    padding: 0 20px;
+  `,
+
   ImageContainer: styled.div`
     margin-top: 20px;
     width: 100%;
@@ -40,6 +44,7 @@ export const CS = {
 
   CalendarContainer: styled.div`
     .react-calendar {
+      overflow: hidden;
       max-width: 100%;
       width: 100%;
       background-color: #fff;
