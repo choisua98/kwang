@@ -224,7 +224,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   // 프로필
-  :where(.css-17a39f8).ant-col-24.eGWLkn,
+  :where(.css-17a39f8).ant-col-24.eGWLkn > img,
   .gWHfwT {
   ${({ theme }) =>
     theme === 'dark' &&
