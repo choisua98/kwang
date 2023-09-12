@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useInput from '../../../../hooks/useInput';
 import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+} from '../../../../atoms/Atom';
 import { auth, db, storage } from '../../../../firebase/firebaseConfig';
 import {
   addDoc,
@@ -24,6 +28,7 @@ import {
 } from 'firebase/storage';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { LeftOutlined } from '@ant-design/icons';
 
 // ant Design
@@ -55,6 +60,11 @@ const Challenge = () => {
   // blocks 배열에서 선택된 블록 찾기
   const selectedBlock = blocks.find((block) => block.id === blockId);
 
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
+
   const [title, handleTitleChange] = useInput(selectedBlock?.title);
   const [description, handleDescriptionChange] = useInput(
     selectedBlock?.description,
@@ -64,7 +74,8 @@ const Challenge = () => {
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
 
-  const [isFieldValid, setIsFieldValid] = useState(false);
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isDescriptionValid, setIsDescriptionValid] = useState(false);
 
   // 선택한 날짜 정보를 저장할 상태 변수들
   const [startDate, setStartDate] = useState(
@@ -164,9 +175,7 @@ const Challenge = () => {
         images: imageUrls,
       });
 
-      // 저장 완료 알림 후 어드민 페이지로 이동
-      message.success('저장 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
@@ -207,9 +216,7 @@ const Challenge = () => {
         images: imageUrls,
       });
 
-      // 수정 완료 알림 후 어드민 페이지로 이동
-      message.success('수정 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
@@ -235,8 +242,7 @@ const Challenge = () => {
         // 사용자 확인 후 Firestore 문서 삭제
         await deleteDoc(doc(db, 'template', id));
 
-        message.success('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+        setDeleteModalVisible(true);
       }
     } catch (error) {
       message.error('삭제 중 오류 발생:', error.message);
@@ -283,22 +289,23 @@ const Challenge = () => {
           함께해요 챌린지 이름
           <p>{titleCount}/20자</p>
         </label>
-
-        <input
-          id="title"
-          name="title"
-          type="text"
-          placeholder="함께해요 챌린지 🔥"
-          value={title}
-          onChange={(e) => {
-            handleTitleChange(e);
-            setTitleCount(e.target.value.length);
-            setIsFieldValid(e.target.value === '');
-          }}
-          maxLength={20}
-          autoFocus
-        />
-        {isFieldValid && <span>필수입력 항목입니다.</span>}
+        <div className="input-container">
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="함께해요 챌린지 🔥"
+            value={title}
+            onChange={(e) => {
+              handleTitleChange(e);
+              setIsTitleValid(e.target.value === '');
+              setTitleCount(e.target.value.length);
+            }}
+            maxLength={20}
+            autoFocus
+          />
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
         <O.ImageContainer>
           {uploadedImages.length >= maxUploads ? (
@@ -358,19 +365,22 @@ const Challenge = () => {
           챌린지 상세설명
           <p>{descriptionCount}/80자</p>
         </label>
-
-        <textarea
-          id="description"
-          name="description"
-          type="text"
-          placeholder="상세 설명을 입력해주세요."
-          value={description}
-          onChange={(e) => {
-            handleDescriptionChange(e);
-            setDescriptionCount(e.target.value.length);
-          }}
-          maxLength={80}
-        />
+        <div className="input-container">
+          <textarea
+            id="description"
+            name="description"
+            type="text"
+            placeholder="상세 설명을 입력해주세요."
+            value={description}
+            onChange={(e) => {
+              handleDescriptionChange(e);
+              setIsDescriptionValid(e.target.value === '');
+              setDescriptionCount(e.target.value.length);
+            }}
+            maxLength={80}
+          />
+          {isDescriptionValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
         <label htmlFor="rangePicker">챌린지 기간</label>
         <Space direction="vertical" size={12}>
@@ -385,6 +395,7 @@ const Challenge = () => {
             ]}
             onChange={periodPickInput}
           />
+          {!startDate || !endDate ? <span>필수 입력 항목입니다.</span> : null}
         </Space>
 
         <O.ButtonArea>
@@ -403,6 +414,62 @@ const Challenge = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };

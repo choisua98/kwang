@@ -13,9 +13,14 @@ import {
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+} from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { LeftOutlined } from '@ant-design/icons';
 import { useTheme, useThemeReset } from '../../../../hooks/useTheme';
 import { message } from 'antd';
@@ -31,10 +36,15 @@ const AddLink = () => {
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
+
   const [title, setTitle] = useState(selectedBlock?.title || '');
   const [addLink, setAddLink] = useState(selectedBlock?.description || '');
-  const [isTitleEmpty, setIsTitleEmpty] = useState(false);
-  const [isAddLinkEmpty, setIsAddLinkEmpty] = useState(false);
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isAddLinkValid, setIsAddLinkValid] = useState(false);
   const [titleCount, setTitleCount] = useState(0);
 
   // URL 유효성 검사 정규 표현식
@@ -80,8 +90,8 @@ const AddLink = () => {
         createdAt: serverTimestamp(),
         userId: userUid,
       });
-      message.success('저장 완료!');
-      navigate(`/admin/${userUid}`);
+
+      setModalVisible(true);
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
@@ -97,8 +107,8 @@ const AddLink = () => {
         title,
         addLink,
       });
-      message.success('수정 완료!');
-      navigate(`/admin/${userUid}`);
+
+      setModalVisible(true);
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
@@ -111,8 +121,8 @@ const AddLink = () => {
       try {
         // 사용자 확인 후 삭제 작업 진행
         await deleteDoc(doc(db, 'template', id));
-        message.success('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+
+        setDeleteModalVisible(true);
       } catch (error) {
         message.error('삭제 중 오류 발생:', error.message);
       }
@@ -139,39 +149,42 @@ const AddLink = () => {
         <label htmlFor="title">
           링크 제목<p>{titleCount}/20자</p>
         </label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          placeholder="링크 추가하기 ✔️"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            setIsTitleEmpty(e.target.value === '');
-            setTitleCount(e.target.value.length);
-          }}
-          autoFocus
-        />
-        {isTitleEmpty && <p style={{ color: 'red' }}>필수입력 항목입니다.</p>}
+        <div className="input-container">
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="링크 추가하기 ✔️"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setIsTitleValid(e.target.value === '');
+              setTitleCount(e.target.value.length);
+            }}
+            autoFocus
+          />
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
+        </div>
+
         <label htmlFor="description">링크를 추가해 주세요</label>
-        <input
-          id="description"
-          name="description"
-          type="text"
-          value={addLink || 'https://'}
-          onChange={(e) => {
-            const inputValue = e.target.value;
-            setAddLink(inputValue);
-            if (inputValue === '' || !urlRegex.test(inputValue)) {
-              setIsAddLinkEmpty(true);
-            } else {
-              setIsAddLinkEmpty(false);
-            }
-          }}
-        />
-        {isAddLinkEmpty && (
-          <p style={{ color: 'red' }}>유효하지 않은 주소입니다.</p>
-        )}
+        <div className="input-container">
+          <input
+            id="description"
+            name="description"
+            type="text"
+            value={addLink || 'https://'}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              setAddLink(inputValue);
+              if (inputValue === '' || !urlRegex.test(inputValue)) {
+                setIsAddLinkValid(true);
+              } else {
+                setIsAddLinkValid(false);
+              }
+            }}
+          />
+          {isAddLinkValid && <span>유효하지 않은 주소입니다.</span>}
+        </div>
 
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={!title || !addLink}>
@@ -186,6 +199,62 @@ const AddLink = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };

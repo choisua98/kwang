@@ -16,9 +16,14 @@ import {
   where,
 } from 'firebase/firestore';
 import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+} from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 
@@ -41,12 +46,21 @@ const Faq = () => {
   // blocks 배열에서 선택된 블록 찾기
   const selectedBlock = blocks.find((block) => block.id === blockId);
 
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
+
   // 질문과 답변에 대한 상태 및 상태 변경 함수 설정
   const [title, handleTitleChange] = useInput(selectedBlock?.title);
   const [question, handleQuestionChange, resetQuestion] = useInput();
   const [answer, handleAnswerChange, resetAuswer] = useInput();
 
   const [titleCount, setTitleCount] = useState(0);
+
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isQuestionValid, setIsQuestionValid] = useState(false);
+  const [isAnswerValid, setIsAnswerValid] = useState(false);
 
   useEffect(() => {
     // 만약 현재 블록 ID가 존재한다면 (수정 모드일 때)
@@ -107,9 +121,7 @@ const Faq = () => {
         userId: userUid,
       });
 
-      // 저장 완료 알림 후 어드민 페이지로 이동
-      message.success('저장 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
@@ -127,9 +139,7 @@ const Faq = () => {
         faqs: faqList,
       });
 
-      // 수정 완료 알림 후 어드민 페이지로 이동
-      message.success('수정 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
@@ -178,8 +188,8 @@ const Faq = () => {
       try {
         // 사용자 확인 후 삭제 작업 진행
         await deleteDoc(doc(db, 'template', id));
-        message.success('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+
+        setDeleteModalVisible(true);
       } catch (error) {
         message.error('삭제 중 오류 발생:', error.message);
       }
@@ -209,24 +219,27 @@ const Faq = () => {
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          <p>
-            자주묻는 질문 이름<span>*</span>
-          </p>
-          {titleCount}/20자
+          자주묻는 질문 이름
+          <p>{titleCount}/20자</p>
         </label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          placeholder="자주 묻는 질문"
-          value={title}
-          onChange={(e) => {
-            handleTitleChange(e);
-            setTitleCount(e.target.value.length);
-          }}
-          maxLength={20}
-          autoFocus
-        />
+        <div className="input-container">
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="자주 묻는 질문 😊"
+            value={title}
+            onChange={(e) => {
+              handleTitleChange(e);
+              setIsTitleValid(e.target.value === '');
+              setTitleCount(e.target.value.length);
+            }}
+            maxLength={20}
+            autoFocus
+          />
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
+        </div>
+
         <O.FaqList>
           {faqList.map((faq) => {
             return (
@@ -251,33 +264,37 @@ const Faq = () => {
           })}
         </O.FaqList>
 
-        <label htmlFor="question">
-          <p>
-            질문 입력<span>*</span>
-          </p>
-        </label>
-        <input
-          id="question"
-          name="question"
-          type="text"
-          placeholder="질문을 입력해 주세요"
-          value={question}
-          onChange={handleQuestionChange}
-        />
+        <label htmlFor="question">질문 입력</label>
+        <div className="input-container">
+          <input
+            id="question"
+            name="question"
+            type="text"
+            placeholder="질문을 입력해 주세요."
+            value={question}
+            onChange={(e) => {
+              handleQuestionChange(e);
+              setIsQuestionValid(e.target.value === '');
+            }}
+          />
+          {isQuestionValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
-        <label htmlFor="answer">
-          <p>
-            답변 입력<span>*</span>
-          </p>
-        </label>
-        <textarea
-          id="answer"
-          name="answer"
-          type="text"
-          placeholder="답변을 작성해 주세요"
-          value={answer}
-          onChange={handleAnswerChange}
-        />
+        <label htmlFor="answer">답변 입력</label>
+        <div className="input-container">
+          <textarea
+            id="answer"
+            name="answer"
+            type="text"
+            placeholder="답변을 입력해 주세요."
+            value={answer}
+            onChange={(e) => {
+              handleAnswerChange(e);
+              setIsAnswerValid(e.target.value === '');
+            }}
+          />
+          {isAnswerValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
         <O.MenuFormButton
           type="button"
@@ -303,6 +320,62 @@ const Faq = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };

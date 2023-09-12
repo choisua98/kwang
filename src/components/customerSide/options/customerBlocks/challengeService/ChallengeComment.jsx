@@ -314,7 +314,7 @@ const ChallengeComment = () => {
           width={330}
         >
           <div>
-            <img src={IconModalConfirm} alt="발송완료아이콘" />
+            <img src={IconModalConfirm} alt="완료아이콘" />
             <h1>등록완료!</h1>
             <p>댓글이 등록되었습니다.</p>
           </div>

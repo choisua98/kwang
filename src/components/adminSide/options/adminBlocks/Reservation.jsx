@@ -19,22 +19,28 @@ import {
   ref,
   uploadBytes,
 } from 'firebase/storage';
+import { useAtom } from 'jotai';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+} from '../../../../atoms/Atom';
+import { O } from '../Blocks.styles';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Modal, Space, message } from 'antd';
-import { blocksAtom } from '../../../../atoms/Atom';
-import { useAtom } from 'jotai';
 import { CameraOutlined } from '@ant-design/icons';
-import { O } from '../Blocks.styles';
-import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import { LeftOutlined } from '@ant-design/icons';
-
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
+
 // 오늘 이전의 날짜는 선택 불가능하도록 설정하는 함수
 const disabledDate = (current) => {
   return current && current < dayjs().endOf('day');
 };
+
 const Reservation = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,12 +49,18 @@ const Reservation = () => {
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
+
   const [title, setTitle] = useState(selectedBlock?.title || '');
   const [description, setDescription] = useState(
     selectedBlock?.description || '',
   );
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
+
   const [numberOfPeople, setNumberOfPeople] = useState(
     selectedBlock?.numberOfPeople || '',
   );
@@ -154,9 +166,7 @@ const Reservation = () => {
         images: imageUrls,
       });
 
-      // 저장 완료 알림 후 어드민 페이지로 이동
-      message.success('저장 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
@@ -195,9 +205,8 @@ const Reservation = () => {
       await updateDoc(docRef, {
         images: imageUrls,
       });
-      // 수정 완료 알림 후 어드민 페이지로 이동
-      message.success('수정 완료!');
-      navigate(`/admin/${userUid}`);
+
+      setModalVisible(true);
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
@@ -231,8 +240,7 @@ const Reservation = () => {
         // 사용자 확인 후 Firestore 문서 삭제
         await deleteDoc(doc(db, 'template', id));
 
-        message.success('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+        setDeleteModalVisible(true);
       }
     } catch (error) {
       message.error('삭제 중 오류 발생:', error.message);
@@ -270,39 +278,23 @@ const Reservation = () => {
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          <p>
-            예약 서비스 이름<span>*</span>
-          </p>
-          {titleCount}/20자
+          예약 서비스 이름
+          <p>{titleCount}/20자</p>
         </label>
-        <input
-          id="title"
-          placeholder="예약 서비스 🗓️"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            setTitleCount(e.target.value.length);
-          }}
-          maxLength={20}
-          autoFocus
-        />
-
-        <label htmlFor="description">
-          <p>
-            예약 상세설명<span>*</span>
-          </p>
-          {descriptionCount}/80자
-        </label>
-        <textarea
-          id="description"
-          placeholder="상세 설명을 입력해주세요"
-          value={description}
-          onChange={(e) => {
-            setDescription(e.target.value);
-            setDescriptionCount(e.target.value.length);
-          }}
-          maxLength={80}
-        />
+        <div className="input-container">
+          <input
+            id="title"
+            placeholder="예약 서비스 🗓️"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setTitleCount(e.target.value.length);
+            }}
+            maxLength={20}
+            autoFocus
+          />
+          {!title ? <span>필수 입력 항목입니다.</span> : null}
+        </div>
 
         <O.ImageContainer>
           {uploadedImages.length >= maxUploads ? (
@@ -358,41 +350,53 @@ const Reservation = () => {
           })}
         </O.ImageContainer>
 
-        <label htmlFor="number">
-          <p>
-            모집 인원<span>*</span>
-          </p>
+        <label htmlFor="description">
+          예약 상세설명
+          <p>{descriptionCount}/80자</p>
         </label>
-        <input
-          id="number"
-          type="number"
-          placeholder={'모집 인원을 선택해주세요'}
-          value={numberOfPeople}
-          onChange={(e) => {
-            setNumberOfPeople(e.target.value);
-          }}
-          min={0}
-        />
-        <label htmlFor="datePicker">
-          <p>
-            행사 날짜 선택<span>*</span>
-          </p>
-        </label>
+        <div className="input-container">
+          <textarea
+            id="description"
+            placeholder="상세 설명을 입력해 주세요."
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+              setDescriptionCount(e.target.value.length);
+            }}
+            maxLength={80}
+          />
+          {!description ? <span>필수 입력 항목입니다.</span> : null}
+        </div>
+
+        <label htmlFor="number">모집 인원</label>
+        <div className="input-container">
+          <input
+            id="number"
+            type="number"
+            placeholder={'모집 인원을 선택해주세요'}
+            value={numberOfPeople}
+            onChange={(e) => {
+              setNumberOfPeople(e.target.value);
+            }}
+            min={0}
+          />
+          {!numberOfPeople ? <span>필수 입력 항목입니다.</span> : null}
+        </div>
+
+        <label htmlFor="datePicker">행사 날짜</label>
         <Space direction="vertical" size={12}>
           <DatePicker
             id="datePicker"
-            value={blockId ? dayjs(pickDate) : undefined}
+            value={pickDate ? dayjs(pickDate) : undefined}
             disabledDate={disabledDate}
             onChange={datePickInput}
             style={{ width: '100%' }}
             popupClassName="datePickerPopup"
           />
+          {!pickDate ? <span>필수 입력 항목입니다.</span> : null}
         </Space>
-        <label htmlFor="rangePicker">
-          <p>
-            모집 기간 선택<span>*</span>
-          </p>
-        </label>
+
+        <label htmlFor="rangePicker">모집 기간</label>
         <Space direction="vertical" size={12}>
           <RangePicker
             id="rangePicker"
@@ -405,6 +409,7 @@ const Reservation = () => {
             style={{ width: '100%' }}
             popupClassName="periodPickerPopup"
           />
+          {!startDate || !endDate ? <span>필수 입력 항목입니다.</span> : null}
         </Space>
 
         <O.ButtonArea>
@@ -430,6 +435,62 @@ const Reservation = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };

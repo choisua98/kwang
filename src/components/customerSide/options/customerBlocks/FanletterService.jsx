@@ -134,7 +134,7 @@ const FanletterService = () => {
               width={330}
             >
               <div>
-                <img src={IconModalConfirm} alt="발송완료아이콘" />
+                <img src={IconModalConfirm} alt="완료아이콘" />
                 <h1>발송완료!</h1>
                 <p>펜레터가 발송되었습니다.</p>
               </div>

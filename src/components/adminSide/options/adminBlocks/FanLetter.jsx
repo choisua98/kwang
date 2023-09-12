@@ -13,9 +13,14 @@ import {
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+} from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { LeftOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 
@@ -30,12 +35,21 @@ const FanLetter = () => {
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
+
   const [title, setTitle] = useState(selectedBlock?.title || '');
   const [description, setDescription] = useState(
     selectedBlock?.description || '',
   );
+
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
+
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isDescriptionValid, setIsDescriptionValid] = useState(false);
 
   const addButtonClick = async (e) => {
     e.preventDefault();
@@ -72,8 +86,7 @@ const FanLetter = () => {
         userId: userUid,
       });
 
-      message.success('저장 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
@@ -90,8 +103,7 @@ const FanLetter = () => {
         description,
       });
 
-      message.success('수정 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
@@ -104,8 +116,8 @@ const FanLetter = () => {
       try {
         // 사용자 확인 후 삭제 작업 진행
         await deleteDoc(doc(db, 'template', id));
-        message.success('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+
+        setDeleteModalVisible(true);
       } catch (error) {
         message.error('삭제 중 오류 발생:', error.message);
       }
@@ -134,44 +146,47 @@ const FanLetter = () => {
 
       <O.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
         <label htmlFor="title">
-          <p>
-            팬레터 서비스 이름<span>*</span>
-          </p>
-          {titleCount}/20자
+          팬레터 서비스 이름
+          <p>{titleCount}/20자</p>
         </label>
+        <div className="input-container">
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="팬레터 보내기 💘"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setIsTitleValid(e.target.value === '');
+              setTitleCount(e.target.value.length);
+            }}
+            maxLength={20}
+            autoFocus
+          />
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
-        <input
-          id="title"
-          name="title"
-          type="text"
-          placeholder="팬레터 보내기 💘"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            setTitleCount(e.target.value.length);
-          }}
-          maxLength={20}
-          autoFocus
-        />
         <label htmlFor="description">
-          <p>
-            팬레터 설명을 작성해 주세요<span>*</span>
-          </p>
-          {descriptionCount}/80자
+          팬레터 설명을 작성해 주세요
+          <p>{descriptionCount}/80자</p>
         </label>
-
-        <textarea
-          id="description"
-          name="description"
-          type="text"
-          placeholder="안녕하세요 크리에이터 크왕이에요! 저에게 전하고 싶은 메시지를 남겨주세용 ㅎㅎ"
-          value={description}
-          onChange={(e) => {
-            setDescription(e.target.value);
-            setDescriptionCount(e.target.value.length);
-          }}
-          maxLength={80}
-        />
+        <div className="input-container">
+          <textarea
+            id="description"
+            name="description"
+            type="text"
+            placeholder="안녕하세요 크리에이터 크왕이에요! 저에게 전하고 싶은 메시지를 남겨주세용 ㅎㅎ"
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+              setIsDescriptionValid(e.target.value === '');
+              setDescriptionCount(e.target.value.length);
+            }}
+            maxLength={80}
+          />
+          {isDescriptionValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={!title || !description}>
@@ -186,6 +201,62 @@ const FanLetter = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };

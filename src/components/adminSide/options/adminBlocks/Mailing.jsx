@@ -14,9 +14,14 @@ import {
 } from 'firebase/firestore';
 import { auth, db } from '../../../../firebase/firebaseConfig';
 import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+} from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { LeftOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 
@@ -34,6 +39,11 @@ const Mailing = () => {
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
+
   // 제목과 설명에 대한 상태 및 상태 변경 함수 설정
   const [title, handleTitleChange] = useInput(selectedBlock?.title);
   const [description, handleDescriptionChange] = useInput(
@@ -43,6 +53,9 @@ const Mailing = () => {
   // 제목과 설명의 글자 수를 추적하는 상태
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
+
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isDescriptionValid, setIsDescriptionValid] = useState(false);
 
   // "저장하기" 버튼 클릭 시 실행되는 함수
   const handleAddButtonClick = async (e) => {
@@ -79,9 +92,8 @@ const Mailing = () => {
         createdAt: serverTimestamp(),
         userId: userUid,
       });
-      // 저장 완료 알림 후 어드민 페이지로 이동
-      message.success('저장 완료!');
-      navigate(`/admin/${userUid}`);
+
+      setModalVisible(true);
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
@@ -97,9 +109,8 @@ const Mailing = () => {
         title,
         description,
       });
-      // 수정 완료 알림 후 어드민 페이지로 이동
-      message.success('수정 완료!');
-      navigate(`/admin/${userUid}`);
+
+      setModalVisible(true);
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
@@ -112,8 +123,8 @@ const Mailing = () => {
       try {
         // 사용자 확인 후 삭제 작업 진행
         await deleteDoc(doc(db, 'template', id));
-        message.success('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+
+        setDeleteModalVisible(true);
       } catch (error) {
         message.error('삭제 중 오류 발생:', error.message);
       }
@@ -144,43 +155,48 @@ const Mailing = () => {
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          <p>
-            메일링 서비스 이름<span>*</span>
-          </p>
-          {titleCount}/20자
+          메일링 서비스 이름
+          <p>{titleCount}/20자</p>
         </label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          placeholder="메일링 서비스 📩"
-          value={title}
-          onChange={(e) => {
-            handleTitleChange(e);
-            setTitleCount(e.target.value.length);
-          }}
-          maxLength={20}
-          autoFocus
-        />
-        <label htmlFor="description">
-          <p>
-            메일링 서비스에 대한 간략한 설명<span>*</span>
-          </p>
-          {descriptionCount}/80자
-        </label>
+        <div className="input-container">
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="메일링 서비스 📩"
+            value={title}
+            onChange={(e) => {
+              handleTitleChange(e);
+              setIsTitleValid(e.target.value === '');
+              setTitleCount(e.target.value.length);
+            }}
+            maxLength={20}
+            autoFocus
+          />
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
-        <textarea
-          id="description"
-          name="description"
-          type="text"
-          placeholder="메일링 서비스에 대해 간단히 설명해주세요."
-          value={description}
-          onChange={(e) => {
-            handleDescriptionChange(e);
-            setDescriptionCount(e.target.value.length);
-          }}
-          maxLength={80}
-        />
+        <label htmlFor="description">
+          메일링 서비스 상세설명
+          <p>{descriptionCount}/80자</p>
+        </label>
+        <div className="input-container">
+          <textarea
+            id="description"
+            name="description"
+            type="text"
+            placeholder="상세 설명을 입력해 주세요."
+            value={description}
+            onChange={(e) => {
+              handleDescriptionChange(e);
+              setIsDescriptionValid(e.target.value === '');
+              setDescriptionCount(e.target.value.length);
+            }}
+            maxLength={80}
+          />
+          {isDescriptionValid && <span>필수입력 항목입니다.</span>}
+        </div>
+
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={!title || !description}>
             {blockId ? '수정하기' : '저장하기'}
@@ -194,6 +210,62 @@ const Mailing = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };
