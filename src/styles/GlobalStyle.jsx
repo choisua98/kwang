@@ -253,7 +253,8 @@ const GlobalStyle = createGlobalStyle`
 :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner, 
 :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end) .ant-picker-cell-inner,
 :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-in-range::before,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-disabled::before {
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-disabled::before,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before {
   background: none !important;
 }
 

@@ -12,7 +12,7 @@ export const C = {
 
     button {
       position: absolute;
-      left: 20px;
+      left: 10px;
       font-size: 20px;
       background-color: transparent;
     }
