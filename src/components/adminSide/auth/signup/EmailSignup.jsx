@@ -34,7 +34,7 @@ const EmailSignup = () => {
       if (signInMethods.length > 0) {
         message.error('이미 사용 중인 이메일입니다.');
       } else {
-        message.error('사용 가능한 이메일입니다.');
+        message.success('사용 가능한 이메일입니다.');
       }
     } catch (error) {
       message.error('에러 발생:', error);

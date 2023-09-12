@@ -30,7 +30,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   html {
-    background: #fff;
+    background: lightgray;
     touch-action: pan-x pan-y;
   }
 
