@@ -107,6 +107,13 @@ export const C = {
     }
   `,
 
+  Divider: styled.div`
+    height: 10px;
+    width: 100%;
+    background-color: #fafafa;
+    margin-bottom: 40px;
+  `,
+
   ButtonArea: styled.div`
     display: gird;
     margin: 50px 0px 40px 0px;
