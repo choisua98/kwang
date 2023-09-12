@@ -242,7 +242,7 @@ const GlobalStyle = createGlobalStyle`
 //   line-height: 52px;
 // }
 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-content td {
+.ant-picker-year-panel .ant-picker-content td {
   top: 13px;
 }
 
@@ -250,9 +250,11 @@ const GlobalStyle = createGlobalStyle`
   top: 50%;
 }
 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end) .ant-picker-cell-inner,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-in-range::before {
-  background: none;
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner, 
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end) .ant-picker-cell-inner,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-in-range::before,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-disabled::before {
+  background: none !important;
 }
 
   
