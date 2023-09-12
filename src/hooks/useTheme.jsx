@@ -7,7 +7,7 @@ import { message } from 'antd';
 // 테마 기본 설정
 export const useTheme = (theme, backgroundImage) => {
   useEffect(() => {
-    document.body.style.backgroundColor = theme === 'dark' ? '#333' : '#F4F3F6';
+    document.body.style.backgroundColor = theme === 'dark' ? '#333' : '#fff';
     document.body.style.color = theme === 'dark' ? '#fff' : '#333';
 
     if (backgroundImage) {
