@@ -233,6 +233,7 @@ const GlobalStyle = createGlobalStyle`
   ${({ theme }) =>
     theme === 'light' &&
     `border: 1px solid #ddd;
+     border-radius: 50%;   
   `}
   ${({ theme }) =>
     theme !== 'dark' &&
