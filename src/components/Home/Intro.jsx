@@ -29,7 +29,6 @@ const Intro = () => {
     }
   };
   return (
-
     <I.Container>
       <img src={IntroBanner} alt="" />
       <I.Footer>
@@ -44,9 +43,11 @@ const Intro = () => {
             }
           }}
         >
-          {getButtonText()}</button>
+          {getButtonText()}
+        </button>
         <address>Copyright 2023. READERS CLUB. All rights reserved.</address>
       </I.Footer>
+    </I.Container>
   );
 };
 
