@@ -64,7 +64,6 @@ const Header = () => {
   const onLogoutButtonClickHandler = async () => {
     await signOut(auth); //파이어베이스 로그아웃
     // setUser('');
-    // alert('로그아웃 되었습니다.');
     navigate('/');
     //로그아웃누르면 signOut이 다 되지 않았는데 navigate 됨
     //자동으로 네이버 로그인이 되어버리는 현상 때문에 새로고침.
