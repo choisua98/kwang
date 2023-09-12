@@ -13,7 +13,7 @@ export const O = {
 
     button {
       position: absolute;
-      left: 3%;
+      left: 10px;
       font-size: 20px;
       background-color: transparent;
     }
