@@ -221,139 +221,140 @@ const ChallengeComment = () => {
   };
 
   return (
-    <CS.GridContainer>
+    <>
       <C.HeaderStyle>
         <button onClick={() => navigate(`/${userUid}/challenge`)}>
           <LeftOutlined />
         </button>
         <p>{title}</p>
       </C.HeaderStyle>
+      <CS.GridContainer>
+        <CC.CountStyle>
+          <img src={IconAwesome} alt="엄지척아이콘" />
+          <p>{moment(selectedDate.toString()).format('YYYY년 MM월 DD일,')}</p>
+          <span>{count}명이 함께하고 있어요!</span>
+        </CC.CountStyle>
 
-      <CC.CountStyle>
-        <img src={IconAwesome} alt="엄지척아이콘" />
-        <p>{moment(selectedDate.toString()).format('YYYY년 MM월 DD일,')}</p>
-        <span>{count}명이 함께하고 있어요!</span>
-      </CC.CountStyle>
+        <CC.CommentButton type="button" onClick={handleCommentSubmit}>
+          댓글 등록하기
+        </CC.CommentButton>
 
-      <CC.CommentButton type="button" onClick={handleCommentSubmit}>
-        댓글 등록하기
-      </CC.CommentButton>
+        <C.Divider />
 
-      <C.Divider />
+        <CC.CustomModal
+          title={
+            <>
+              <button onClick={() => setModalVisibleA(false)}>
+                <LeftOutlined />
+              </button>
+              <p>댓글 등록하기</p>
+            </>
+          }
+          centered
+          open={modalVisibleA}
+          onCancel={() => setModalVisibleA(false)}
+          footer={null}
+          closable={false}
+          width={330}
+        >
+          <CC.Container onSubmit={handleUpdateButtom}>
+            <label htmlFor="nickname">
+              <p>
+                닉네임<span>*</span>
+              </p>
+              {nicknameCount}/10자
+            </label>
+            <input
+              id="nickname"
+              name="nickname"
+              type="text"
+              placeholder="닉네임을 입력해주세요."
+              value={nickname}
+              onChange={(e) => {
+                setNickname(e.target.value);
+                setNicknameCount(e.target.value.length);
+              }}
+              maxLength={10}
+              autoFocus
+            />
+            <label htmlFor="password">
+              <p>
+                비밀번호<span>*</span>
+              </p>
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="비밀번호를 입력해주세요."
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+            <label htmlFor="password">
+              <p>
+                댓글<span>*</span>
+              </p>
+              {commentCount}/50자
+            </label>
+            <textarea
+              id="comment"
+              name="comment"
+              type="text"
+              placeholder="댓글을 입력해주세요."
+              value={comment}
+              onChange={(e) => {
+                setComment(e.target.value);
+                setCommentCount(e.target.value.length);
+              }}
+              maxLength={50}
+            />
+            <C.SubmitButton
+              type="submit"
+              disabled={!nickname || !password || !comment}
+            >
+              확인
+            </C.SubmitButton>
+          </CC.Container>
+        </CC.CustomModal>
 
-      <CC.CustomModal
-        title={
-          <>
-            <button onClick={() => setModalVisibleA(false)}>
-              <LeftOutlined />
-            </button>
-            <p>댓글 등록하기</p>
-          </>
-        }
-        centered
-        open={modalVisibleA}
-        onCancel={() => setModalVisibleA(false)}
-        footer={null}
-        closable={false}
-        width={330}
-      >
-        <CC.Container onSubmit={handleUpdateButtom}>
-          <label htmlFor="nickname">
-            <p>
-              닉네임<span>*</span>
-            </p>
-            {nicknameCount}/10자
-          </label>
-          <input
-            id="nickname"
-            name="nickname"
-            type="text"
-            placeholder="닉네임을 입력해주세요."
-            value={nickname}
-            onChange={(e) => {
-              setNickname(e.target.value);
-              setNicknameCount(e.target.value.length);
-            }}
-            maxLength={10}
-            autoFocus
-          />
-          <label htmlFor="password">
-            <p>
-              비밀번호<span>*</span>
-            </p>
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="비밀번호를 입력해주세요."
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <label htmlFor="password">
-            <p>
-              댓글<span>*</span>
-            </p>
-            {commentCount}/50자
-          </label>
-          <textarea
-            id="comment"
-            name="comment"
-            type="text"
-            placeholder="댓글을 입력해주세요."
-            value={comment}
-            onChange={(e) => {
-              setComment(e.target.value);
-              setCommentCount(e.target.value.length);
-            }}
-            maxLength={50}
-          />
-          <C.SubmitButton
-            type="submit"
-            disabled={!nickname || !password || !comment}
-          >
-            확인
-          </C.SubmitButton>
-        </CC.Container>
-      </CC.CustomModal>
-
-      {comments.map((commentData, index) => (
-        <div key={index}>
-          <CC.CommentsContainer>
-            <CC.GridBox>
-              <div>
-                <label>{commentData.nickname}</label>
-                <label
-                  style={{
-                    color: 'lightgray',
-                    fontSize: '13px',
-                    paddingLeft: '10px',
+        {comments.map((commentData, index) => (
+          <div key={index}>
+            <CC.CommentsContainer>
+              <CC.GridBox>
+                <div>
+                  <label>{commentData.nickname}</label>
+                  <label
+                    style={{
+                      color: 'lightgray',
+                      fontSize: '13px',
+                      paddingLeft: '10px',
+                    }}
+                  >
+                    {moment(
+                      commentData.date,
+                      'YYYY년 MM월 DD일 hh:mm:ss A',
+                    ).format('hh:mm:ss A')}
+                  </label>
+                </div>
+                <button
+                  onClick={() => {
+                    const password = prompt('비밀번호를 입력하세요.');
+                    if (password !== null) {
+                      handleDeleteButton(commentData.id, password);
+                    }
                   }}
                 >
-                  {moment(
-                    commentData.date,
-                    'YYYY년 MM월 DD일 hh:mm:ss A',
-                  ).format('hh:mm:ss A')}
-                </label>
-              </div>
-              <button
-                onClick={() => {
-                  const password = prompt('비밀번호를 입력하세요.');
-                  if (password !== null) {
-                    handleDeleteButton(commentData.id, password);
-                  }
-                }}
-              >
-                <DeleteOutlined />
-              </button>
-            </CC.GridBox>
-            <p>{commentData.comment}</p>
-          </CC.CommentsContainer>
-        </div>
-      ))}
-    </CS.GridContainer>
+                  <DeleteOutlined />
+                </button>
+              </CC.GridBox>
+              <p>{commentData.comment}</p>
+            </CC.CommentsContainer>
+          </div>
+        ))}
+      </CS.GridContainer>
+    </>
   );
 };
 

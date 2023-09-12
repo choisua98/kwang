@@ -3,7 +3,7 @@ import { db } from '../../../../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { C } from '../CustomerBlocks.style';
-import { LeftOutlined } from '@ant-design/icons';
+import { DownOutlined, LeftOutlined, UpOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 
 const FaqService = () => {
@@ -73,6 +73,9 @@ const FaqService = () => {
         accordion
         expandIconPosition="end"
         items={items}
+        expandIcon={({ isActive }) =>
+          isActive ? <UpOutlined /> : <DownOutlined />
+        }
       />
     </>
   );
