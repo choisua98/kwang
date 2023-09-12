@@ -28,15 +28,15 @@ const MainBanner = () => {
           <Link to="#">
             <img
               src={PromoBanner1}
-              alt="크리에이터를 위한 단 하나의 링크, 크왕! 1"
+              alt="크리에이터를 위한 단 하나의 링크, 크왕!"
             />
           </Link>
         </SwiperSlide>
         <SwiperSlide>
-          <Link to="#">
+          <Link to="/login">
             <img
               src={PromoBanner2}
-              alt="크리에이터를 위한 단 하나의 링크, 크왕! 2"
+              alt="누구나 크리에이터가 되는 시대! 멀티링크 서비스, 크왕 나만의 링크 만들기"
             />
           </Link>
         </SwiperSlide>
