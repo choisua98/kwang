@@ -15,7 +15,6 @@ import IconAwesome from '../../../../../assets/images/customer/icon-awesome.png'
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../../atoms/Atom';
 import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';
-import IconModalConfirm from '../../../../../assets/images/common/icon/icon-modalConfirm.png';
 import moment from 'moment';
 import { message } from 'antd';
 
@@ -37,7 +36,6 @@ const ChallengeComment = () => {
   const [commentCount, setCommentCount] = useState(0);
   const [count, setCount] = useState(0);
   const [modalVisibleA, setModalVisibleA] = useAtom(modalVisibleAtom);
-  // const [modalVisibleB, setModalVisibleB] = useState(false);
 
   // 컴포넌트가 마운트 될 때와 selectedDate가 변경될 때 카운트를 Firestore에서 가져옴
   useEffect(() => {
@@ -100,8 +98,8 @@ const ChallengeComment = () => {
       setPassword('');
       setComment('');
       fetchComments();
-      // setModalVisibleB(true);
-      message.success('댓글이 성공적으로 작성되었습니다.');
+
+      message.success('댓글이 작성되었습니다.');
       setModalVisibleA(false);
       // navigate(0);
     } catch (error) {
@@ -319,34 +317,6 @@ const ChallengeComment = () => {
             확인
           </C.SubmitButton>
         </CC.Container>
-
-        {/* <C.Modal
-          title=""
-          centered
-          open={modalVisibleB}
-          onCancel={() => {
-            setModalVisibleB(false);
-            navigate(0);
-          }}
-          footer={null}
-          closable={false}
-          width={330}
-        >
-          <div>
-            <img src={IconModalConfirm} alt="완료아이콘" />
-            <h1>등록완료!</h1>
-            <p>댓글이 등록되었습니다.</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setModalVisibleB(false);
-              navigate(0);
-            }}
-          >
-            닫기
-          </button>
-        </C.Modal> */}
       </CC.CustomModal>
 
       {comments.map((commentData, index) => (
