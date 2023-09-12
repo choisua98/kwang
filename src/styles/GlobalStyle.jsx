@@ -1,4 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
+import btnEditImageLight from '../assets/images/common/btn/btn-edit-light.png';
+import btnEditImageDark from '../assets/images/common/btn/btn-edit-dark.png';
 
 const GlobalStyle = createGlobalStyle`
 
@@ -168,15 +170,204 @@ const GlobalStyle = createGlobalStyle`
   display: grid !important;
 }
   
-  // 테마 (다크)
-  :where(.css-17a39f8).ant-btn,
-  :where(.css-dev-only-do-not-override-17a39f8).ant-btn {
-    color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#333')};
-  }
-  .iYoiyo h2 {
-    color: ${({ theme }) => (theme === 'dark' ? '#333' : '#333')};
+  // 테마
+  .eicwgS {
+    ${({ theme }) =>
+      theme === 'dark' && {
+        background: '#333',
+      }}
+  ${({ theme }) =>
+    theme === 'light' && {
+      background: 'none',
+    }}
+  ${({ theme }) =>
+    theme !== 'dark' &&
+    theme !== 'light' && {
+      background: '#FFFAF0',
+    }}
   }
 
+  // 상단 토글 메뉴
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only,
+  :where(.css-17a39f8).ant-btn.ant-btn-icon-only {
+    ${({ theme }) =>
+      theme === 'dark' && {
+        color: '#fff',
+      }}
+    ${({ theme }) =>
+      theme === 'light' && {
+        color: '#404040',
+      }}
+    ${({ theme }) =>
+      theme !== 'dark' &&
+      theme !== 'light' && {
+        color: '#404040',
+      }}
+  }
+
+  // 테마 바꾸기 버튼
+  .ant-btn.csujge {
+    ${({ theme }) =>
+      theme === 'dark' && {
+        background: '#2E2E2E',
+      }}
+    ${({ theme }) =>
+      theme === 'light' && {
+        color: '#000',
+        background: '#DFDDE5',
+      }}
+    ${({ theme }) =>
+      theme !== 'dark' &&
+      theme !== 'light' && {
+        color: '#fff',
+      }}
+  }
+
+  // 프로필
+  :where(.css-17a39f8).ant-col-24.eGWLkn > img,
+  .gWHfwT {
+  ${({ theme }) =>
+    theme === 'dark' &&
+    `border: none;
+  `}
+  ${({ theme }) =>
+    theme === 'light' &&
+    `border: 1px solid #ddd;
+     border-radius: 50%;   
+  `}
+  ${({ theme }) =>
+    theme !== 'dark' &&
+    theme !== 'light' &&
+    `border: none;
+  `}
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-btn-default, :where(.css-17a39f8).ant-btn-default.cqSNy,
+  .eVBSlO {
+    ${({ theme }) =>
+      theme === 'dark' &&
+      `background-image: url(${btnEditImageDark});
+    `}
+    ${({ theme }) =>
+      theme === 'light' &&
+      `background-image: url(${btnEditImageLight});
+    `}
+    ${({ theme }) =>
+      theme !== 'dark' &&
+      theme !== 'light' &&
+      `
+      // color: '#fff';
+    `}
+  }
+
+  // 링크
+  .iHnBgB {
+    ${({ theme }) =>
+      theme === 'dark' &&
+      `
+      color: #fff;
+      background: #2E2E2E;
+      p {
+        color: #fff;
+      }
+    `}
+    ${({ theme }) =>
+      theme === 'light' &&
+      `
+      color: #000;
+      background: #fff;
+      p {
+        color: #000;
+      }
+    `}
+    ${({ theme }) =>
+      theme !== 'dark' &&
+      theme !== 'light' &&
+      `
+       color: '#fff';
+       p {
+         color: '#fff';
+       }
+     `}
+  }
+
+  // 블록
+  .iGiRYI button {
+    ${({ theme }) =>
+      theme === 'dark' && {
+        color: '#fff',
+        background: '#2E2E2E',
+      }}
+    ${({ theme }) =>
+      theme === 'light' && {
+        color: '#2E2E2E',
+        background: '#DFDDE5',
+      }}
+    ${({ theme }) =>
+      theme !== 'dark' &&
+      theme !== 'light' && {
+        color: '#fff',
+        background: '#FF7A16',
+      }}
+  }
+  .bypPBO {
+    ${({ theme }) =>
+      theme === 'dark' &&
+      `
+      border: 1.5px solid #2E2E2E;
+      button {
+        color: #fff;
+      }
+    `}
+    ${({ theme }) =>
+      theme === 'light' &&
+      `
+      border: 1.5px solid #DFDDE5;
+      button {
+        color: #2E2E2E;
+      }
+    `}
+    ${({ theme }) =>
+      theme !== 'dark' &&
+      theme !== 'light' &&
+      `
+      border: 1.5px solid #FF7A16;
+      button {
+         color: #FF7A16;
+       }
+     `}
+  }
+
+  // 모달 내 블록
+  .iQLRop button {
+    ${({ theme }) =>
+      theme === 'dark' &&
+      `
+      color: #fff;
+      background: #2E2E2E;
+      &:disabled {
+        color: #000;
+        background: #fff;
+      }
+    `}
+    ${({ theme }) =>
+      theme === 'light' &&
+      `
+      color: #2E2E2E;
+      background: #DFDDE5;
+      &:disabled {
+        color: #000;
+        background: #FFFF;
+      }
+    `}
+    ${({ theme }) =>
+      theme !== 'dark' &&
+      theme !== 'light' &&
+      `    
+      button {
+         color: #FF7A16;
+       }
+     `}
+  }
 `;
 
 export { GlobalStyle };

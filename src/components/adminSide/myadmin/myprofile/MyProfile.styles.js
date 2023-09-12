@@ -103,7 +103,9 @@ export const P = {
     color: #312f2e;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
 
     &:focus {
       outline: none;
