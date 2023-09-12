@@ -178,7 +178,7 @@ const GlobalStyle = createGlobalStyle`
       }}
   ${({ theme }) =>
     theme === 'light' && {
-      background: '#F4F3F6',
+      background: 'none',
     }}
   ${({ theme }) =>
     theme !== 'dark' &&
@@ -213,7 +213,7 @@ const GlobalStyle = createGlobalStyle`
     ${({ theme }) =>
       theme === 'light' && {
         color: '#000',
-        background: '#fff',
+        background: '#DFDDE5',
       }}
     ${({ theme }) =>
       theme !== 'dark' &&
@@ -223,6 +223,21 @@ const GlobalStyle = createGlobalStyle`
   }
 
   // 프로필
+  .gWHfwT {
+  ${({ theme }) =>
+    theme === 'dark' &&
+    `border: none;
+  `}
+  ${({ theme }) =>
+    theme === 'light' &&
+    `border: 1px solid #ddd;
+  `}
+  ${({ theme }) =>
+    theme !== 'dark' &&
+    theme !== 'light' &&
+    `border: none;
+  `}
+  }
   .eVBSlO {
     ${({ theme }) =>
       theme === 'dark' &&
@@ -247,7 +262,6 @@ const GlobalStyle = createGlobalStyle`
       `
       color: #fff;
       background: #2E2E2E;
-  
       p {
         color: #fff;
       }
@@ -257,7 +271,6 @@ const GlobalStyle = createGlobalStyle`
       `
       color: #000;
       background: #fff;
-  
       p {
         color: #000;
       }
@@ -267,7 +280,6 @@ const GlobalStyle = createGlobalStyle`
       theme !== 'light' &&
       `
        color: '#fff';
-  
        p {
          color: '#fff';
        }
@@ -284,7 +296,7 @@ const GlobalStyle = createGlobalStyle`
     ${({ theme }) =>
       theme === 'light' && {
         color: '#2E2E2E',
-        background: '#fff',
+        background: '#DFDDE5',
       }}
     ${({ theme }) =>
       theme !== 'dark' &&
@@ -293,15 +305,6 @@ const GlobalStyle = createGlobalStyle`
         background: '#FF7A16',
       }}
   }
-  
-  .bypPBO {
-    border:${({ theme }) =>
-      theme === 'dark' ? '1.5px solid #2E2E2E;' : '1px solid #fff'};
-      button {
-        color: ${({ theme }) => (theme === 'dark' ? '#fff' : '#2E2E2E')};
-      }
-  }
-
   .bypPBO {
     ${({ theme }) =>
       theme === 'dark' &&
@@ -314,8 +317,7 @@ const GlobalStyle = createGlobalStyle`
     ${({ theme }) =>
       theme === 'light' &&
       `
-      border: 1.5px solid #fff;
-  
+      border: 1.5px solid #DFDDE5;
       button {
         color: #2E2E2E;
       }
@@ -325,7 +327,6 @@ const GlobalStyle = createGlobalStyle`
       theme !== 'light' &&
       `
       border: 1.5px solid #FF7A16;
-    
       button {
          color: #FF7A16;
        }
@@ -363,7 +364,6 @@ const GlobalStyle = createGlobalStyle`
        }
      `}
   }
-
 `;
 
 export { GlobalStyle };
