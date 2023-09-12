@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import { Modal } from 'antd';
 import IconDelete from '../../../assets/images/common/icon/icon-delete.png';
 
 // adminSide options 공통 css
@@ -60,9 +61,13 @@ export const O = {
       padding: 5px 7px;
     }
 
+    .input-container {
+      margin-bottom: 20px;
+    }
+
     input {
       padding: 16.5px 16px;
-      margin-bottom: 20px;
+      margin-bottom: 8px;
       box-sizing: border-box;
       border: none;
       border-radius: 15px;
@@ -70,8 +75,10 @@ export const O = {
     }
 
     textarea {
+      width: 100%;
       height: 120px;
       padding: 16.5px 16px;
+      margin-bottom: 8px;
       box-sizing: border-box;
       border: none;
       border-radius: 15px;
@@ -90,6 +97,7 @@ export const O = {
 
     span {
       color: red;
+      font-size: 12px;
     }
   `,
 
@@ -225,9 +233,52 @@ export const O = {
       background-color: transparent;
       border: none;
     }
+
+    p {
+      padding: 0px 20px;
+    }
   `,
 
   Preview: styled.div`
     position: relative;
+  `,
+
+  Modal: styled(Modal)`
+    &.ant-modal .ant-modal-content {
+      border-radius: 15px;
+      padding: 40px 44px 0px 44px;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-weight: 500;
+    }
+
+    img {
+      padding-bottom: 15px;
+    }
+
+    h1 {
+      font-size: 22px;
+      padding-bottom: 15px;
+    }
+
+    P {
+      font-size: 14px;
+      color: #787878;
+      padding-bottom: 60px;
+    }
+
+    button {
+      width: 330px;
+      height: 60px;
+      font-size: 18px;
+      color: var(--color-white);
+      background-color: var(--color-text);
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+    }
   `,
 };

@@ -168,7 +168,7 @@ const ReservationService = () => {
         width={330}
       >
         <div>
-          <img src={IconModalConfirm} alt="발송완료아이콘" />
+          <img src={IconModalConfirm} alt="완료아이콘" />
           <h1>신청완료!</h1>
           <p>예약서비스 신청이 완료되었습니다.</p>
         </div>

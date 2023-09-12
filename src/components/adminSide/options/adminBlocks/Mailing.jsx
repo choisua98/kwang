@@ -43,6 +43,9 @@ const Mailing = () => {
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
 
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isDescriptionValid, setIsDescriptionValid] = useState(false);
+
   // "저장하기" 버튼 클릭 시 실행되는 함수
   const handleAddButtonClick = async (e) => {
     e.preventDefault();
@@ -141,43 +144,48 @@ const Mailing = () => {
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          <p>
-            메일링 서비스 이름<span>*</span>
-          </p>
-          {titleCount}/20자
+          메일링 서비스 이름
+          <p>{titleCount}/20자</p>
         </label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          placeholder="메일링 서비스 📩"
-          value={title}
-          onChange={(e) => {
-            handleTitleChange(e);
-            setTitleCount(e.target.value.length);
-          }}
-          maxLength={20}
-          autoFocus
-        />
-        <label htmlFor="description">
-          <p>
-            메일링 서비스에 대한 간략한 설명<span>*</span>
-          </p>
-          {descriptionCount}/80자
-        </label>
+        <div className="input-container">
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="메일링 서비스 📩"
+            value={title}
+            onChange={(e) => {
+              handleTitleChange(e);
+              setIsTitleValid(e.target.value === '');
+              setTitleCount(e.target.value.length);
+            }}
+            maxLength={20}
+            autoFocus
+          />
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
-        <textarea
-          id="description"
-          name="description"
-          type="text"
-          placeholder="메일링 서비스에 대해 간단히 설명해주세요."
-          value={description}
-          onChange={(e) => {
-            handleDescriptionChange(e);
-            setDescriptionCount(e.target.value.length);
-          }}
-          maxLength={80}
-        />
+        <label htmlFor="description">
+          메일링 서비스 상세설명
+          <p>{descriptionCount}/80자</p>
+        </label>
+        <div className="input-container">
+          <textarea
+            id="description"
+            name="description"
+            type="text"
+            placeholder="상세 설명을 입력해 주세요."
+            value={description}
+            onChange={(e) => {
+              handleDescriptionChange(e);
+              setIsDescriptionValid(e.target.value === '');
+              setDescriptionCount(e.target.value.length);
+            }}
+            maxLength={80}
+          />
+          {isDescriptionValid && <span>필수입력 항목입니다.</span>}
+        </div>
+
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={!title || !description}>
             {blockId ? '수정하기' : '저장하기'}

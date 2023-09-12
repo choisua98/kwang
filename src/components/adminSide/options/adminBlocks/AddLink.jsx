@@ -36,8 +36,8 @@ const AddLink = () => {
 
   const [title, setTitle] = useState(selectedBlock?.title || '');
   const [addLink, setAddLink] = useState(selectedBlock?.description || '');
-  const [isTitleEmpty, setIsTitleEmpty] = useState(false);
-  const [isAddLinkEmpty, setIsAddLinkEmpty] = useState(false);
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isAddLinkValid, setIsAddLinkValid] = useState(false);
   const [titleCount, setTitleCount] = useState(0);
 
   // URL 유효성 검사 정규 표현식
@@ -153,39 +153,42 @@ const AddLink = () => {
         <label htmlFor="title">
           링크 제목<p>{titleCount}/20자</p>
         </label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          placeholder="링크 추가하기 ✔️"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            setIsTitleEmpty(e.target.value === '');
-            setTitleCount(e.target.value.length);
-          }}
-          autoFocus
-        />
-        {isTitleEmpty && <p style={{ color: 'red' }}>필수입력 항목입니다.</p>}
+        <div className="input-container">
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="링크 추가하기 ✔️"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setIsTitleValid(e.target.value === '');
+              setTitleCount(e.target.value.length);
+            }}
+            autoFocus
+          />
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
+        </div>
+
         <label htmlFor="description">링크를 추가해 주세요</label>
-        <input
-          id="description"
-          name="description"
-          type="text"
-          value={addLink || 'https://'}
-          onChange={(e) => {
-            const inputValue = e.target.value;
-            setAddLink(inputValue);
-            if (inputValue === '' || !urlRegex.test(inputValue)) {
-              setIsAddLinkEmpty(true);
-            } else {
-              setIsAddLinkEmpty(false);
-            }
-          }}
-        />
-        {isAddLinkEmpty && (
-          <p style={{ color: 'red' }}>유효하지 않은 주소입니다.</p>
-        )}
+        <div className="input-container">
+          <input
+            id="description"
+            name="description"
+            type="text"
+            value={addLink || 'https://'}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              setAddLink(inputValue);
+              if (inputValue === '' || !urlRegex.test(inputValue)) {
+                setIsAddLinkValid(true);
+              } else {
+                setIsAddLinkValid(false);
+              }
+            }}
+          />
+          {isAddLinkValid && <span>유효하지 않은 주소입니다.</span>}
+        </div>
 
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={!title || !addLink}>

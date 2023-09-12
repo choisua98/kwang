@@ -47,6 +47,10 @@ const Faq = () => {
 
   const [titleCount, setTitleCount] = useState(0);
 
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isQuestionValid, setIsQuestionValid] = useState(false);
+  const [isAnswerValid, setIsAnswerValid] = useState(false);
+
   useEffect(() => {
     // 만약 현재 블록 ID가 존재한다면 (수정 모드일 때)
     if (blockId) {
@@ -206,24 +210,27 @@ const Faq = () => {
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          <p>
-            자주묻는 질문 이름<span>*</span>
-          </p>
-          {titleCount}/20자
+          자주묻는 질문 이름
+          <p>{titleCount}/20자</p>
         </label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          placeholder="자주 묻는 질문"
-          value={title}
-          onChange={(e) => {
-            handleTitleChange(e);
-            setTitleCount(e.target.value.length);
-          }}
-          maxLength={20}
-          autoFocus
-        />
+        <div className="input-container">
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="자주 묻는 질문 😊"
+            value={title}
+            onChange={(e) => {
+              handleTitleChange(e);
+              setIsTitleValid(e.target.value === '');
+              setTitleCount(e.target.value.length);
+            }}
+            maxLength={20}
+            autoFocus
+          />
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
+        </div>
+
         <O.FaqList>
           {faqList.map((faq) => {
             return (
@@ -248,33 +255,37 @@ const Faq = () => {
           })}
         </O.FaqList>
 
-        <label htmlFor="question">
-          <p>
-            질문 입력<span>*</span>
-          </p>
-        </label>
-        <input
-          id="question"
-          name="question"
-          type="text"
-          placeholder="질문을 입력해 주세요"
-          value={question}
-          onChange={handleQuestionChange}
-        />
+        <label htmlFor="question">질문 입력</label>
+        <div className="input-container">
+          <input
+            id="question"
+            name="question"
+            type="text"
+            placeholder="질문을 입력해 주세요."
+            value={question}
+            onChange={(e) => {
+              handleQuestionChange(e);
+              setIsQuestionValid(e.target.value === '');
+            }}
+          />
+          {isQuestionValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
-        <label htmlFor="answer">
-          <p>
-            답변 입력<span>*</span>
-          </p>
-        </label>
-        <textarea
-          id="answer"
-          name="answer"
-          type="text"
-          placeholder="답변을 작성해 주세요"
-          value={answer}
-          onChange={handleAnswerChange}
-        />
+        <label htmlFor="answer">답변 입력</label>
+        <div className="input-container">
+          <textarea
+            id="answer"
+            name="answer"
+            type="text"
+            placeholder="답변을 입력해 주세요."
+            value={answer}
+            onChange={(e) => {
+              handleAnswerChange(e);
+              setIsAnswerValid(e.target.value === '');
+            }}
+          />
+          {isAnswerValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
         <O.MenuFormButton
           type="button"
