@@ -7,6 +7,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { E } from './EmailSignup.styles';
 import { message } from 'antd';
+import { ERR_CODE } from '../ERR_CODE';
 
 const EmailSignup = () => {
   const [email, setEmail] = useState('');
@@ -59,37 +60,14 @@ const EmailSignup = () => {
         message.success('회원가입에 성공하셨습니다.');
         navigate(`/admin/${userCredential.user.uid}`);
       } else {
-        message.error(getErrorMessage('auth/wrong-password'));
+        message.error(ERR_CODE['auth/wrong-password']);
       }
     } catch (error) {
-      message.error(getErrorMessage(error.code));
+      message.error(ERR_CODE[error.code]);
     } finally {
       setEmail('');
       setPassword('');
       setConfirmPassword('');
-    }
-  };
-  // 에러 코드에 따른 유효성 검사
-  const getErrorMessage = (errorCode) => {
-    switch (errorCode) {
-      case 'auth/missing-email':
-        return '잘못된 이메일입니다.';
-      case 'auth/missing-password':
-        return '잘못된 비밀번호입니다.';
-      case 'auth/wrong-password':
-        return '비밀번호가 일치하지 않습니다.';
-      case 'auth/email-already-in-use':
-        return '이미 사용 중인 이메일입니다.';
-      case 'auth/weak-password':
-        return '비밀번호는 6글자 이상이어야 합니다.';
-      case 'auth/network-request-failed':
-        return '네트워크 연결에 실패 하였습니다.';
-      case 'auth/invalid-email':
-        return '잘못된 이메일 형식입니다.';
-      case 'auth/internal-error':
-        return '잘못된 요청입니다.';
-      default:
-        return '회원가입에 실패하셨습니다.';
     }
   };
 
