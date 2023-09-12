@@ -42,7 +42,6 @@ const Data = () => {
 
           setData(data);
         } catch (error) {
-          // alert('데이터 가져오기 오류가 발생했습니다.');
           console.error('데이터 가져오기 오류:', error);
           message.error('데이터 가져오기 오류가 발생했습니다.');
         }

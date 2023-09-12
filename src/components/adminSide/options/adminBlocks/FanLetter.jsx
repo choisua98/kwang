@@ -22,6 +22,7 @@ import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { LeftOutlined } from '@ant-design/icons';
+import { message } from 'antd';
 
 const FanLetter = () => {
   const navigate = useNavigate();
@@ -54,7 +55,9 @@ const FanLetter = () => {
     e.preventDefault();
 
     if (!userUid) {
-      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      message.error(
+        '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+      );
       navigate('/login');
       return;
     }
@@ -85,7 +88,7 @@ const FanLetter = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
@@ -102,7 +105,7 @@ const FanLetter = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('수정 중 오류 발생:', error.message);
+      message.error('수정 중 오류 발생:', error.message);
     }
   };
 
@@ -116,7 +119,7 @@ const FanLetter = () => {
 
         setDeleteModalVisible(true);
       } catch (error) {
-        console.error('삭제 중 오류 발생:', error.message);
+        message.error('삭제 중 오류 발생:', error.message);
       }
     }
   };

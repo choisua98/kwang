@@ -16,6 +16,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { C } from '../CustomerBlocks.style';
 import { LeftOutlined } from '@ant-design/icons';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
+import { message } from 'antd';
 
 const ReservationService = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const ReservationService = () => {
       // 가공된 데이터를 상태에 업데이트
       setReservationData(initialDocuments);
     } catch (error) {
-      console.error('데이터 가져오기 오류:', error);
+      message.error('데이터 가져오기 오류:', error);
     }
   };
 
@@ -76,7 +77,7 @@ const ReservationService = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 

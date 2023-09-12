@@ -4,6 +4,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { C } from '../CustomerBlocks.style';
 import { LeftOutlined } from '@ant-design/icons';
+import { message } from 'antd';
 
 const FaqService = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const FaqService = () => {
           setFaqs(fetchedFaqs);
         }
       } catch (error) {
-        console.error('데이터를 가져오는 동안 오류 발생:', error);
+        message.error('데이터를 가져오는 동안 오류 발생:', error);
       }
     };
 

@@ -11,6 +11,7 @@ import 'react-calendar/dist/Calendar.css';
 import { CS } from './ChallengeService.styles';
 import { C } from '../../CustomerBlocks.style';
 import { LeftOutlined } from '@ant-design/icons';
+import { message } from 'antd';
 
 const ChallengeService = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const ChallengeService = () => {
       // 가공된 데이터를 상태에 업데이트
       setChallengeData(initialDocuments);
     } catch (error) {
-      console.error('데이터 가져오기 오류:', error);
+      message.error('데이터 가져오기 오류:', error);
     }
   };
 

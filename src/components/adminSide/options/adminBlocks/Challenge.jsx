@@ -35,7 +35,7 @@ import { LeftOutlined } from '@ant-design/icons';
 import { CameraOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { DatePicker, Modal, Space } from 'antd';
+import { DatePicker, Modal, Space, message } from 'antd';
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
 
@@ -121,7 +121,9 @@ const Challenge = () => {
     e.preventDefault();
 
     if (!userUid) {
-      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      message.error(
+        '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+      );
       navigate('/login');
       return;
     }
@@ -175,7 +177,7 @@ const Challenge = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
@@ -216,7 +218,7 @@ const Challenge = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('수정 중 오류 발생:', error.message);
+      message.error('수정 중 오류 발생:', error.message);
     }
   };
 
@@ -243,7 +245,7 @@ const Challenge = () => {
         setDeleteModalVisible(true);
       }
     } catch (error) {
-      console.error('삭제 중 오류 발생:', error.message);
+      message.error('삭제 중 오류 발생:', error.message);
     }
   };
 

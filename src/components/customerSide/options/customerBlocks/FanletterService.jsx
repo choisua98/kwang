@@ -14,6 +14,7 @@ import { db } from '../../../../firebase/firebaseConfig';
 import { C } from '../CustomerBlocks.style';
 import { LeftOutlined } from '@ant-design/icons';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
+import { message } from 'antd';
 
 const FanletterService = () => {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ const FanletterService = () => {
       });
       setModalVisible(true);
     } catch (error) {
-      console.error('팬레터 데이터 추가 오류: ', error);
+      message.error('팬레터 데이터 추가 오류: ', error);
     }
   };
 

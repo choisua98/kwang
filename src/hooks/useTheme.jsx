@@ -2,6 +2,7 @@ import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { backgroundImageAtom, themeAtom } from '../atoms/Atom';
 import { doc, getDoc } from 'firebase/firestore';
+import { message } from 'antd';
 
 // 테마 기본 설정
 export const useTheme = (theme, backgroundImage) => {
@@ -45,7 +46,7 @@ export const useFetchTheme = (db, userUid, setTheme, setBackgroundImage) => {
             setBackgroundImage(userData.backgroundImage || null);
           }
         } catch (error) {
-          console.error('데이터 가져오기 오류:', error);
+          message.error('데이터 가져오기 오류:', error);
         }
       }
     };

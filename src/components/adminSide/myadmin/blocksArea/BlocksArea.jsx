@@ -23,6 +23,7 @@ import 'swiper/css/pagination';
 
 // Drag & Drop
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { message } from 'antd';
 
 const BlocksArea = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const BlocksArea = () => {
       // 가공된 데이터를 상태에 업데이트
       setBlocks(initialDocuments);
     } catch (error) {
-      console.error('데이터 가져오기 오류:', error);
+      message.error('데이터 가져오기 오류:', error);
     }
   };
 

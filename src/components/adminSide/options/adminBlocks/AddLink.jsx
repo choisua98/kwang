@@ -23,6 +23,7 @@ import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { LeftOutlined } from '@ant-design/icons';
 import { useTheme, useThemeReset } from '../../../../hooks/useTheme';
+import { message } from 'antd';
 
 const AddLink = () => {
   const navigate = useNavigate();
@@ -58,7 +59,9 @@ const AddLink = () => {
     e.preventDefault();
 
     if (!userUid) {
-      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      message.error(
+        '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+      );
       navigate('/login');
       return;
     }
@@ -90,7 +93,7 @@ const AddLink = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
@@ -107,7 +110,7 @@ const AddLink = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('수정 중 오류 발생:', error.message);
+      message.error('수정 중 오류 발생:', error.message);
     }
   };
 
@@ -121,7 +124,7 @@ const AddLink = () => {
 
         setDeleteModalVisible(true);
       } catch (error) {
-        console.error('삭제 중 오류 발생:', error.message);
+        message.error('삭제 중 오류 발생:', error.message);
       }
     }
   };

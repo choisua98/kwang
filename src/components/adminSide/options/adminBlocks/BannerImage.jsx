@@ -28,11 +28,11 @@ import {
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
-import { Modal } from 'antd';
+
+import { Modal, message, Button } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 import imageCompression from 'browser-image-compression';
 import { LeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 
 const BannerImage = () => {
   const navigate = useNavigate();
@@ -91,7 +91,9 @@ const BannerImage = () => {
     e.preventDefault();
 
     if (!userUid) {
-      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      message.error(
+        '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+      );
       navigate('/login');
       return;
     }
@@ -110,7 +112,7 @@ const BannerImage = () => {
           const compressedFile = await imageCompression(imageFile, options);
           return compressedFile;
         } catch (error) {
-          console.error('이미지 압축 실패', error);
+          message.error('이미지 압축 실패', error);
           return null;
         }
       };
@@ -164,7 +166,7 @@ const BannerImage = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
@@ -199,7 +201,7 @@ const BannerImage = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('수정 중 오류 발생:', error.message);
+      message.error('수정 중 오류 발생:', error.message);
     }
   };
 
@@ -226,7 +228,7 @@ const BannerImage = () => {
         setDeleteModalVisible(true);
       }
     } catch (error) {
-      console.error('삭제 중 오류 발생:', error.message);
+      message.error('삭제 중 오류 발생:', error.message);
     }
   };
 

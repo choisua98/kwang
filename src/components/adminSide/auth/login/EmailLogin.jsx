@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { E } from './EmailLogin.styles';
+import { message } from 'antd';
+import { ERR_CODE } from '../ERR_CODE';
 
 const EmailLogin = () => {
   const [email, setEmail] = useState('');
@@ -15,11 +17,11 @@ const EmailLogin = () => {
     e.preventDefault();
     try {
       if (!email) {
-        alert('이메일을 입력해주세요.');
+        message.error('이메일을 입력해주세요.');
         return;
       }
       if (!password) {
-        alert('비밀번호를 입력해주세요.');
+        message.error('비밀번호를 입력해주세요.');
         return;
       }
       const userCredential = await signInWithEmailAndPassword(
@@ -28,30 +30,13 @@ const EmailLogin = () => {
         password,
       );
       // 로그인 성공시
-      alert('로그인 되었습니다.');
+      message.success('로그인 되었습니다.');
       navigate(`/admin/${userCredential.user.uid}`);
     } catch (error) {
-      alert(getErrorMessage(error.code));
+      message.error(ERR_CODE[error.code]);
     }
   };
 
-  // 에러 코드에 따른 유효성 검사
-  const getErrorMessage = (errorCode) => {
-    switch (errorCode) {
-      case 'auth/user-not-found':
-        return '가입되지 않은 이메일입니다.';
-      case 'auth/wrong-password':
-        return '잘못된 비밀번호입니다.';
-      case 'auth/network-request-failed':
-        return '네트워크 연결에 실패 하였습니다.';
-      case 'auth/invalid-email':
-        return '잘못된 이메일 형식입니다.';
-      case 'auth/internal-error':
-        return '잘못된 요청입니다.';
-      default:
-        return '로그인에 실패하셨습니다.';
-    }
-  };
   return (
     <>
       <E.Title style={{ fontSize: '20px', lineHeight: '26px' }}>

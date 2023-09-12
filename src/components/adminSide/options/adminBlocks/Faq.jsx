@@ -25,6 +25,7 @@ import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';
+import { message } from 'antd';
 
 const Faq = () => {
   const navigate = useNavigate();
@@ -88,7 +89,9 @@ const Faq = () => {
     e.preventDefault();
 
     if (!userUid) {
-      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      message.error(
+        '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+      );
       navigate('/login');
       return;
     }
@@ -120,7 +123,7 @@ const Faq = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
@@ -138,7 +141,7 @@ const Faq = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('수정 중 오류 발생:', error.message);
+      message.error('수정 중 오류 발생:', error.message);
     }
   };
 
@@ -165,7 +168,7 @@ const Faq = () => {
         setFaqList(updatedFaqList);
       }
     } else {
-      console.error('문서가 존재하지 않습니다.');
+      message.error('문서가 존재하지 않습니다.');
     }
   };
 
@@ -188,7 +191,7 @@ const Faq = () => {
 
         setDeleteModalVisible(true);
       } catch (error) {
-        console.error('삭제 중 오류 발생:', error.message);
+        message.error('삭제 중 오류 발생:', error.message);
       }
     }
   };

@@ -15,6 +15,7 @@ import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../atoms/Atom';
 import { LeftOutlined } from '@ant-design/icons';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
+import { message } from 'antd';
 
 const MailingService = () => {
   const [title, setTitle] = useState('');
@@ -49,7 +50,7 @@ const MailingService = () => {
             setDesc(data?.description);
           }
         } catch (error) {
-          console.error('데이터 가져오기 오류:', error);
+          message.error('데이터 가져오기 오류:', error);
         }
       }
     };
@@ -70,7 +71,7 @@ const MailingService = () => {
 
       setModalVisible(true);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
