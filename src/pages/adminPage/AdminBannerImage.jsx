@@ -1,17 +1,11 @@
-import React, { useEffect } from 'react';
-import { useAtom } from 'jotai';
-import { backgroundImageAtom, themeAtom } from '../../atoms/Atom';
+import React from 'react';
 import BannerImage from '../../components/adminSide/options/adminBlocks/BannerImage';
+import { useThemeReset } from '../../hooks/useTheme';
+import { useTheme } from 'styled-components';
 
 const AdminBannerImage = () => {
-  const [theme, setTheme] = useAtom(themeAtom);
-  // 배경 이미지
-  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
-
-  useEffect(() => {
-    setTheme('light');
-    setBackgroundImage(null);
-  }, []);
+  const [theme, backgroundImage] = useThemeReset();
+  useTheme(theme, backgroundImage);
 
   return <BannerImage />;
 };

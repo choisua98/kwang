@@ -13,7 +13,7 @@ const KakaoLogin = () => {
   const auth = getAuth();
 
   const kakaoLogin = async () => {
-    const jsKey = '16378892d0b6ab1d19429225f98cc97a';
+    const jsKey = process.env.REACT_APP_KAKAO_JSKEY;
     const Kakao = window.Kakao;
     if (Kakao && !Kakao.isInitialized()) {
       Kakao.init(jsKey);
@@ -43,7 +43,6 @@ const KakaoLogin = () => {
                       kakaoAccount.email,
                       kakaoAccount.email, //비번으로 쓸값이 없음
                     );
-                    // console.log(userCredential);
                     console.log('이메일로 로그인성공.');
                   } catch (error) {
                     console.error(error);
@@ -58,6 +57,8 @@ const KakaoLogin = () => {
                     .then((userCredential) => {
                       console.log(`회원가입유저${userCredential}`);
                       console.log('회원가입성공. 이메일로 로그인완료.');
+                      navigate(`/admin/${auth.currentUser.uid}`);
+                      alert('로그인 되었습니다.');
                     })
                     .catch((error) => {
                       console.error(error);
@@ -69,6 +70,7 @@ const KakaoLogin = () => {
             };
             checkEmailExists().then((res) => {
               navigate(`/admin/${auth.currentUser.uid}`);
+              alert('로그인 되었습니다.');
             });
           },
           fail(error) {
@@ -77,7 +79,7 @@ const KakaoLogin = () => {
         });
       },
       fail(error) {
-        console.log(error);
+        alert('로그인 중 에러 발생:', error.code);
       },
     });
   };

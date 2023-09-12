@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Col, Modal, Row } from 'antd';
 import { useAtom } from 'jotai';
 import { nanoid } from 'nanoid';
@@ -25,6 +25,7 @@ const Theme = () => {
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null); // 배경 이미지 URL을 저장
   const [loading, setLoading] = useState(false); // 이미지 업로드 진행상태 저장
   const [progress, setProgress] = useState(0); // 프로그래스바 0 ~ 100% 진행률 업데이트
+  const imageInputRef = useRef(null); // 배경 이미지 업로드시 input
 
   useEffect(() => {
     let intervalId;
@@ -74,9 +75,11 @@ const Theme = () => {
 
   // 테마(배경 이미지 업로드)시 input
   const handleCustomBackgroundClick = () => {
-    const imageInput = document.getElementById('image-upload'); // useRef로 변경
-    imageInput.click();
-    imageInput.value = null;
+    const imageInput = imageInputRef.current;
+    if (imageInput) {
+      imageInput.click();
+      imageInput.value = null;
+    }
     setTempTheme('light');
   };
 
@@ -204,7 +207,7 @@ const Theme = () => {
                   <p>이미지 업로드</p>
                   {/* 파일 업로드 */}
                   <T.HiddenInput
-                    id="image-upload"
+                    ref={imageInputRef}
                     type="file"
                     accept=".jpg,.jpeg,.png"
                     style={{ display: 'none' }}

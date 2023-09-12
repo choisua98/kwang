@@ -71,6 +71,7 @@ const NewCreator = () => {
           >
             <img
               src={
+                !user.profileImageURL ||
                 user.profileImageURL === defaultProfileImage
                   ? kwangProfileImage
                   : user.profileImageURL
