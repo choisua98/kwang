@@ -72,7 +72,7 @@ const GlobalStyle = createGlobalStyle`
   /* 상단 메뉴 토글 */
   :where(.css-dev-only-do-not-override-17a39f8).ant-btn-default,
   :where(.css-17a39f8).ant-btn-default {
-    // background: none;
+    background: none;
     border: none;
     box-shadow: none;
   }
@@ -168,6 +168,11 @@ const GlobalStyle = createGlobalStyle`
 }
 :where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
   display: grid !important;
+}
+
+
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker .ant-picker-input >input:placeholder-shown {
+  margin-bottom: 0;
 }
   
   // 테마
