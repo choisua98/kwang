@@ -115,7 +115,7 @@ const Theme = () => {
 
   // 테마(샘플 이미지) 클릭 시
   const handleSampleBackgroundClick = () => {
-    setTempTheme('light');
+    setTempTheme('default');
     setTempBackgroundImage(sampleImg);
   };
 
