@@ -107,7 +107,8 @@ const GlobalStyle = createGlobalStyle`
   :where(
     .css-dev-only-do-not-override-17a39f8
   ).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft
-  .ant-picker-range-arrow {
+  .ant-picker-range-arrow,
+  :where(.css-17a39f8).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft .ant-picker-range-arrow {
   display: none;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
