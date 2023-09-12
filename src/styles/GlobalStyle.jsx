@@ -241,7 +241,7 @@ const GlobalStyle = createGlobalStyle`
     `border: none;
   `}
   }
-  :where(.css-dev-only-do-not-override-17a39f8).ant-btn-default, :where(.css-17a39f8).ant-btn-default.cqSNy,
+  :where(.css-17a39f8).ant-btn-default.cqSNy,
   .eVBSlO {
     ${({ theme }) =>
       theme === 'dark' &&
