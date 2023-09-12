@@ -190,15 +190,25 @@ const GlobalStyle = createGlobalStyle`
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels,
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels:last-child .ant-picker-panel {
   max-width: 374px !important;
-  min-width: 374px !important;
+  // min-width: 374px !important;
+  min-width: fit-content !important;
   width: 100% !important;
+}
+
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  max-width: 200px !important;
+  width: 100% !important;
+  direction: ltr;
 }
 
 :where(.css-17a39f8).ant-picker-dropdown .ant-picker-date-panel {
   width: 100% !important;
 }
 
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-decade-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-year-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-quarter-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-month-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-week-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-date-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-time-panel {
+:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-decade-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-year-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-quarter-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-month-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-week-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-date-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-time-panel,
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
   max-width: 374px !important;
   width: 100% !important;
 }
