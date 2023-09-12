@@ -107,12 +107,14 @@ const GlobalStyle = createGlobalStyle`
   :where(
     .css-dev-only-do-not-override-17a39f8
   ).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft
-  .ant-picker-range-arrow {
+  .ant-picker-range-arrow,
+  :where(.css-17a39f8).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft .ant-picker-range-arrow {
   display: none;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
   .ant-picker-header
-  > button {
+  > button,
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-header >button {
   visibility: initial !important;
 }
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
@@ -205,6 +207,11 @@ const GlobalStyle = createGlobalStyle`
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-date-panels {
   width: 100% !important;
 }
+
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panel .ant-picker-content, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panel table {
+  width: 100% !important;
+}
+
 
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-date-panel .ant-picker-content th {
   width: 48px;
