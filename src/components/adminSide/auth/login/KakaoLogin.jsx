@@ -7,6 +7,7 @@ import {
 import KakaoIcon from '../../../../assets/images/kakao.png';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 const KakaoLogin = () => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const KakaoLogin = () => {
                       console.log(`회원가입유저${userCredential}`);
                       console.log('회원가입성공. 이메일로 로그인완료.');
                       navigate(`/admin/${auth.currentUser.uid}`);
-                      alert('로그인 되었습니다.');
+                      message.success('로그인 되었습니다.');
                     })
                     .catch((error) => {
                       console.error(error);
@@ -70,7 +71,7 @@ const KakaoLogin = () => {
             };
             checkEmailExists().then((res) => {
               navigate(`/admin/${auth.currentUser.uid}`);
-              alert('로그인 되었습니다.');
+              message.success('로그인 되었습니다.');
             });
           },
           fail(error) {
@@ -79,7 +80,7 @@ const KakaoLogin = () => {
         });
       },
       fail(error) {
-        alert('로그인 중 에러 발생:', error.code);
+        message.error('로그인 중 에러 발생:', error.code);
       },
     });
   };

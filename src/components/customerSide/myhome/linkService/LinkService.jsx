@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../../../../firebase/firebaseConfig';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
-import { Col, Row } from 'antd';
+import { Col, Row, message } from 'antd';
 import { L } from '../../../adminSide/myadmin/links/Links.styles';
 
 const LinkService = () => {
@@ -29,7 +29,7 @@ const LinkService = () => {
           setLinkDataArray(newDataArray); // 추출된 문서 데이터를 한 번에 업데이트
         });
       } catch (error) {
-        console.error('에러 발생:', error);
+        message.error('에러 발생:', error);
       }
     };
 

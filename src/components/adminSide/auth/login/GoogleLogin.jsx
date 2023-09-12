@@ -3,6 +3,7 @@ import GoogleIcon from '../../../../assets/images/google.png';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import 'firebase/firestore';
 import { Link, useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 const GoogleLogin = () => {
   const navigate = useNavigate();
@@ -14,10 +15,10 @@ const GoogleLogin = () => {
     e.preventDefault();
     try {
       const result = await signInWithPopup(auth, provider1);
-      alert('로그인 되었습니다.');
+      message.success('로그인 되었습니다.');
       navigate(`/admin/${result.user.uid}`);
     } catch (error) {
-      alert('로그인 중 에러 발생:', error.code);
+      message.error('로그인 중 에러 발생:', error.code);
     }
   };
 

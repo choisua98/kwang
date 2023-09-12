@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Row, Col, Button, Drawer, Space } from 'antd';
+import { Row, Col, Button, Drawer, Space, message } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import Logo from '../../../assets/images/logo.png';
 import WhiteLogo from '../../../assets/images/logo-white.png';
@@ -64,19 +64,22 @@ const Header = () => {
   const onLogoutButtonClickHandler = async () => {
     await signOut(auth); //파이어베이스 로그아웃
     // setUser('');
-    alert('로그아웃 되었습니다.');
+    // alert('로그아웃 되었습니다.');
     navigate('/');
     //로그아웃누르면 signOut이 다 되지 않았는데 navigate 됨
     //자동으로 네이버 로그인이 되어버리는 현상 때문에 새로고침.
-    window.location.reload();
+    message.success('로그아웃 되었습니다.');
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   const handleCopyClipBoard = async (url) => {
     try {
       await navigator.clipboard.writeText(url);
-      alert('링크가 복사 되었습니다.');
+      message.success('링크가 복사 되었습니다.');
     } catch (err) {
-      alert('링크 복사가 실패하였습니다.');
+      message.error('링크 복사가 실패하였습니다.');
     }
   };
 
