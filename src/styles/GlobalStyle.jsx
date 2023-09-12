@@ -166,15 +166,30 @@ const GlobalStyle = createGlobalStyle`
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown-range {
   padding: 40px 0 0 !important;
 }
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
-  display: grid !important;
-}
+// :where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
+//   display: grid !important;
+// }
 
 
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker .ant-picker-input >input:placeholder-shown,
+
 :where(.css-17a39f8).ant-picker .ant-picker-input >input,
 .cHPDDZ input {
   margin-bottom: 0;
+}
+
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container {
+  max-width: 374px;
+  width: 100%;
+}
+
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels:last-child .ant-picker-panel {
+  width: 100% !important;
+  max-width: 374px !important;
+  min-width: 374px !important;
+}
+
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-date-panel {
+  width: 100% !important;
 }
   
   // 테마
