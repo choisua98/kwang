@@ -227,6 +227,18 @@ const GlobalStyle = createGlobalStyle`
 :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-date-panel .ant-picker-content th {
   width: 48px;
 }
+
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel {
+  width: 93%;
+}
+
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel .ant-picker-cell .ant-picker-cell-inner {
+  line-height: 52px;
+}
+:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel .ant-picker-cell::before {
+  top: 50%;
+}
+
   
   // 테마
   .eicwgS {
