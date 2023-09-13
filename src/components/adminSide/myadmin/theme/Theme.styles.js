@@ -123,4 +123,18 @@ export const T = {
   Progress: styled(AntProgress)`
     margin: 10px 0;
   `,
+
+  ButtonContainer: styled.div`
+    p {
+      margin: 30px 0 10px 0;
+    }
+    button {
+      background-color: white;
+    }
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  `,
 };

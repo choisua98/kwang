@@ -115,4 +115,21 @@ export const L = {
   CustomerSideContainer: styled.div`
     margin-bottom: 20px;
   `,
+
+  IconContainer: styled.div`
+    display: flex;
+    flex-wrap: wrap;
+
+    button {
+      background-color: white;
+    }
+
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 100%;
+      background-size: cover;
+      cursor: pointer;
+    }
+  `,
 };
