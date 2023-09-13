@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 import btnEditImageLight from '../assets/images/common/btn/btn-edit-light.png';
 import btnEditImageDark from '../assets/images/common/btn/btn-edit-dark.png';
+import btnEditImageDefault from '../assets/images/common/btn/btn-edit.png';
 
 const GlobalStyle = createGlobalStyle`
 
@@ -317,8 +318,7 @@ const GlobalStyle = createGlobalStyle`
     ${({ theme }) =>
       theme !== 'dark' &&
       theme !== 'light' &&
-      `
-      // color: '#fff';
+      `background-image: url(${btnEditImageDefault});
     `}
   }
 
