@@ -8,10 +8,14 @@ import KakaoIcon from '../../../../assets/images/kakao.png';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
+import { useAtomValue } from 'jotai';
+import { userAtom } from '../../../../atoms/Atom';
 
 const KakaoLogin = () => {
   const navigate = useNavigate();
   const auth = getAuth();
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   const kakaoLogin = async () => {
     const jsKey = process.env.REACT_APP_KAKAO_JSKEY;
@@ -58,7 +62,7 @@ const KakaoLogin = () => {
                     .then((userCredential) => {
                       console.log(`회원가입유저${userCredential}`);
                       console.log('회원가입성공. 이메일로 로그인완료.');
-                      navigate(`/admin/${auth.currentUser.uid}`);
+                      navigate(`/admin/${userUid}`);
                       message.success('로그인 되었습니다.');
                     })
                     .catch((error) => {
@@ -70,7 +74,7 @@ const KakaoLogin = () => {
               }
             };
             checkEmailExists().then((res) => {
-              navigate(`/admin/${auth.currentUser.uid}`);
+              navigate(`/admin/${userUid}`);
               message.success('로그인 되었습니다.');
             });
           },

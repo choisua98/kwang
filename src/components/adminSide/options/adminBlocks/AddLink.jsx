@@ -10,13 +10,14 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { auth, db } from '../../../../firebase/firebaseConfig';
+import { db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import {
   blocksAtom,
   deleteModalVisibleAtom,
   modalVisibleAtom,
+  userAtom,
 } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
@@ -29,8 +30,8 @@ const AddLink = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 유저의 UID 가져오기
-  const userUid = auth.currentUser?.uid;
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   const blockId = location.state ? location.state.blocksId : null;
   const [blocks] = useAtom(blocksAtom);

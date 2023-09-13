@@ -12,20 +12,18 @@ import defaultProfileImage from '../../../assets/images/profile-default-image.pn
 import HomeIcon from '../../../assets/images/common/icon/Icon-home.png';
 import LinkIcon from '../../../assets/images/common/icon/icon-link.png';
 import EditIcon from '../../../assets/images/common/icon/icon-edit.png';
-import { useAtom } from 'jotai';
-import { themeAtom, userNickname, userProfileImage } from '../../../atoms/Atom';
+import { useAtom, useAtomValue } from 'jotai';
+import {
+  themeAtom,
+  userAtom,
+  userNickname,
+  userProfileImage,
+} from '../../../atoms/Atom';
 
 const Header = () => {
-  const [user, setUser] = useState(null); // 로그인 상태를 저장할 상태 추가
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
-  useEffect(() => {
-    // onAuthStateChanged 이용해서 로그인 상태 감시
-    auth.onAuthStateChanged((user) => {
-      setUser(user);
-    });
-  }, []);
-
-  const userUid = auth.currentUser?.uid;
   const [theme] = useAtom(themeAtom);
 
   // userUid로 저장된 문서가 있을 경우 프로필 정보 가져오기
@@ -46,7 +44,7 @@ const Header = () => {
 
   const navigate = useNavigate();
   const location = useLocation(); // 현재 페이지의 URL 추출
-  const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
+  // const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
   const isLoginPage = location.pathname === '/login';
   const isHomePage = location.pathname === '/';
   const [viewNickname, setViewNickname] = useAtom(userNickname);

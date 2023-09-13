@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { I } from './Home.styles';
 import IntroBanner from '../../assets/images/customer/home/banner/intro/intro-banner.png';
-import { auth } from '../../firebase/firebaseConfig';
+import { useAtomValue } from 'jotai';
+import { userAtom } from '../../atoms/Atom';
 const Intro = () => {
   const navigate = useNavigate();
-  const user = auth.currentUser;
+
+  const user = useAtomValue(userAtom);
   const userUid = user?.uid;
+
   const [isAuthenticated, setIsAuthenticated] = useState(false); // 로그인 상태를 저장할 상태 변수
   // Firebase 인증 상태가 변경될 때마다 호출되는 이벤트 핸들러 등록
   useEffect(() => {

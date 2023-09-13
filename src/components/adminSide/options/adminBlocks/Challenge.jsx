@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useInput from '../../../../hooks/useInput';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import {
   blocksAtom,
   deleteModalVisibleAtom,
   modalVisibleAtom,
+  userAtom,
 } from '../../../../atoms/Atom';
-import { auth, db, storage } from '../../../../firebase/firebaseConfig';
+import { db, storage } from '../../../../firebase/firebaseConfig';
 import {
   addDoc,
   collection,
@@ -48,8 +49,8 @@ const Challenge = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 사용자 UID 가져오기
-  const userUid = auth.currentUser?.uid;
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   // 현재 블록 ID 가져오기
   const blockId = location.state ? location.state.blocksId : null;

@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { useAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import Router from './shared/Router';
-import { backgroundImageAtom, themeAtom } from './atoms/Atom';
+import { backgroundImageAtom, themeAtom, userAtom } from './atoms/Atom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase/firebaseConfig';
 import { GlobalStyle } from './styles/GlobalStyle';
@@ -11,13 +11,15 @@ import { useTheme } from './hooks/useTheme';
 const queryClient = new QueryClient();
 
 function App() {
-  const [theme, setTheme] = useAtom(themeAtom); // 테마 상태
-  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom); // 배경 이미지
+  const setUser = useSetAtom(userAtom);
+  const theme = useAtomValue(themeAtom);
+  const backgroundImage = useAtomValue(backgroundImageAtom);
 
   // onAuthStateChanged 사용
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       console.log({ 로그인한유저: user });
+      setUser(user);
     });
   }, []);
 

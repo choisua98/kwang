@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { auth, db, storage } from '../../../../firebase/firebaseConfig';
+import { db, storage } from '../../../../firebase/firebaseConfig';
 import {
   addDoc,
   collection,
@@ -19,11 +19,12 @@ import {
   ref,
   uploadBytes,
 } from 'firebase/storage';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import {
   blocksAtom,
   deleteModalVisibleAtom,
   modalVisibleAtom,
+  userAtom,
 } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
@@ -44,7 +45,10 @@ const disabledDate = (current) => {
 const Reservation = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const userUid = auth.currentUser?.uid;
+
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
+
   const blockId = location.state ? location.state.blocksId : null;
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';

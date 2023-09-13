@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Col, Modal, Row, message } from 'antd';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { nanoid } from 'nanoid';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
 import {
   backgroundImageAtom,
   modalVisibleAtom,
   themeAtom,
+  userAtom,
 } from '../../../../atoms/Atom';
-import { auth, db, storage } from '../../../../firebase/firebaseConfig';
+import { db, storage } from '../../../../firebase/firebaseConfig';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -16,8 +17,9 @@ import { T } from './Theme.styles';
 
 const IMAGE_UPLOAD_TIME = 3000;
 const Theme = () => {
-  // 사용자 UID 가져오기
-  const userUid = auth.currentUser?.uid;
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
+
   const [theme, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
   const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);

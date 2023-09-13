@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, db } from '../../../../firebase/firebaseConfig';
+import { db } from '../../../../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { B } from './Blocks.styles';
+import { userAtom } from '../../../../atoms/Atom';
+import { useAtomValue } from 'jotai';
 
 const Blocks = () => {
   const navigate = useNavigate();
   const [modalVisible, setModalVisible] = useState(false);
-  const userUid = auth.currentUser?.uid;
   const [disableBlocks, setDisableBlocks] = useState([]);
+
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   useEffect(() => {
     const fetchData = async () => {

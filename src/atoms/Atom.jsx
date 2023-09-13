@@ -1,11 +1,14 @@
 import { atom } from 'jotai';
 import defaultProfileImage from '../assets/images/profile-default-image.png';
 
-// 모달 atoms 생성
+// user 데이터를 담는 atom
+export const userAtom = atom(null);
+
+// 모달 atoms
 export const modalVisibleAtom = atom(false);
 export const deleteModalVisibleAtom = atom(false);
 
-// 테마, 배경 이미지 atoms 생성
+// 테마, 배경 이미지 atoms
 export const themeAtom = atom('light');
 export const backgroundImageAtom = atom(null);
 

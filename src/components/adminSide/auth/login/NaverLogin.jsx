@@ -7,6 +7,8 @@ import {
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
+import { useAtomValue } from 'jotai';
+import { userAtom } from '../../../../atoms/Atom';
 
 const { naver } = window;
 
@@ -23,6 +25,9 @@ export const naverLogin = new naver.LoginWithNaverId({
 
 const NaverLogin = () => {
   const auth = getAuth();
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
+
   const navigate = useNavigate();
 
   const initializeNaverLogin = () => {
@@ -70,7 +75,7 @@ const NaverLogin = () => {
         try {
           await checkEmailExists();
           message.success('로그인 되었습니다.');
-          navigate(`/admin/${auth.currentUser.uid}`);
+          navigate(`/admin/${userUid}`);
         } catch (error) {
           message.error('로그인 중 에러 발생:', error.code);
         }
