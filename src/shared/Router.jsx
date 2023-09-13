@@ -5,7 +5,6 @@ import Login from '../pages/kwangPage/Login';
 import Signup from '../pages/kwangPage/Signup';
 import Main from '../pages/customerPage/Main';
 import Admin from '../pages/adminPage/Admin';
-import AdminProfile from '../pages/adminPage/AdminProfile';
 import AdminChallenge from '../pages/adminPage/AdminChallenge';
 import AdminMailing from '../pages/adminPage/AdminMailing';
 import AdminReservation from '../pages/adminPage/AdminReservation';
@@ -21,6 +20,7 @@ import CustomerFaq from '../pages/customerPage/CustomerFaq';
 import CustomerFanletter from '../pages/customerPage/CustomerFanletter';
 import CustomerChallengeVerify from '../pages/customerPage/CustomerChallengeVerify';
 import AddLink from '../components/adminSide/options/adminBlocks/AddLink';
+import NotFound from '../pages/kwangPage/NotFound';
 
 const Router = () => {
   return (
@@ -31,7 +31,6 @@ const Router = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/admin/:uid" element={<Admin />} />
-          <Route path="/admin/profile" element={<AdminProfile />} />
           <Route path="/admindata" element={<AdminData />} />
           <Route path="/admin/challenge" element={<AdminChallenge />} />
           <Route path="/admin/mailing" element={<AdminMailing />} />
@@ -40,9 +39,7 @@ const Router = () => {
           <Route path="/admin/bannerimage" element={<AdminBannerImage />} />
           <Route path="/admin/fanletter" element={<AdminFanLetter />} />
           <Route path="/admin/addlink" element={<AddLink />} />
-
           <Route path="/:uid" element={<Main />} />
-
           <Route path="/:uid/challenge" element={<CustomerChallenge />} />
           <Route
             path="/:uid/challenge/verify"
@@ -52,14 +49,7 @@ const Router = () => {
           <Route path="/:uid/reservation" element={<CustomerReservation />} />
           <Route path="/:uid/faq" element={<CustomerFaq />} />
           <Route path="/:uid/fanletter" element={<CustomerFanletter />} />
-          <Route
-            path="*"
-            element={
-              <>
-                <h3>Not Found</h3>
-              </>
-            }
-          />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

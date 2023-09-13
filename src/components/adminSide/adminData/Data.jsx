@@ -1,18 +1,22 @@
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { auth, db } from '../../../firebase/firebaseConfig';
+import { db } from '../../../firebase/firebaseConfig';
 import { D } from './Data.styles';
 import moment from 'moment';
 import * as XLSX from 'xlsx';
 import { DownloadOutlined } from '@ant-design/icons';
 import { LeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useAtomValue } from 'jotai';
+import { userAtom } from '../../../atoms/Atom';
 
 const Data = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const userUid = auth.currentUser?.uid;
+
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   const downloadButtonHandler = (value) => {
     const tab = Tabs.find((tab) => tab.name === value);
@@ -42,8 +46,8 @@ const Data = () => {
 
           setData(data);
         } catch (error) {
-          alert('데이터 가져오기 오류가 발생했습니다.');
           console.error('데이터 가져오기 오류:', error);
+          message.error('데이터 가져오기 오류가 발생했습니다.');
         }
       };
 
@@ -76,7 +80,9 @@ const Data = () => {
   return (
     <>
       <D.HeaderStyle>
-        <Button icon={<LeftOutlined onClick={() => navigate('/admin')} />} />
+        <Button
+          icon={<LeftOutlined onClick={() => navigate(`/admin/${userUid}`)} />}
+        />
         <p>고객 정보 페이지</p>
       </D.HeaderStyle>
       <D.Tabs

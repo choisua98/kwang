@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { E } from './EmailLogin.styles';
+import { message } from 'antd';
+import { ERR_CODE } from '../ERR_CODE';
 
 const EmailLogin = () => {
   const [email, setEmail] = useState('');
@@ -14,57 +17,36 @@ const EmailLogin = () => {
     e.preventDefault();
     try {
       if (!email) {
-        alert('이메일을 입력해주세요.');
+        message.error('이메일을 입력해주세요.');
         return;
       }
       if (!password) {
-        alert('비밀번호를 입력해주세요.');
+        message.error('비밀번호를 입력해주세요.');
         return;
       }
-      await signInWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
-          // 로그인 성공시
-          console.log(userCredential);
-          navigate(`/admin/${userCredential.user.uid}`);
-        },
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
       );
+      // 로그인 성공시
+      message.success('로그인 되었습니다.');
+      navigate(`/admin/${userCredential.user.uid}`);
     } catch (error) {
-      console.log(error.code);
-      alert(getErrorMessage(error.code));
+      message.error(ERR_CODE[error.code]);
     }
   };
 
-  // 에러 코드에 따른 유효성 검사
-  const getErrorMessage = (errorCode) => {
-    switch (errorCode) {
-      case 'auth/user-not-found':
-        return '가입되지 않은 이메일입니다.';
-      case 'auth/wrong-password':
-        return '잘못된 비밀번호입니다.';
-      case 'auth/network-request-failed':
-        return '네트워크 연결에 실패 하였습니다.';
-      case 'auth/invalid-email':
-        return '잘못된 이메일 형식입니다.';
-      case 'auth/internal-error':
-        return '잘못된 요청입니다.';
-      default:
-        return '로그인에 실패하셨습니다.';
-    }
-  };
   return (
     <>
-      <h1 style={{ fontSize: '20px', lineHeight: '26px' }}>
-        <b style={{ fontWeight: 'bold' }}>크리에이터를 위한</b>
+      <E.Title style={{ fontSize: '20px', lineHeight: '26px' }}>
+        <b>크리에이터를 위한</b>
         <br />단 하나의 링크, 크왕
-      </h1>
-      <img
-        src="https://picsum.photos/350/100"
-        style={{ margin: '25px auto', width: '100%' }}
-        alt="배너 이미지"
-      />
+      </E.Title>
+      <E.Image src="https://picsum.photos/350/100" alt="배너 이미지" />
       <form>
         <div>
-          <input
+          <E.EmailInput
             type="email"
             value={email}
             name="email"
@@ -73,18 +55,10 @@ const EmailLogin = () => {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
-            style={{
-              padding: '15.5px 15px',
-              width: '100%',
-              boxSizing: 'border-box',
-              fontSize: '14px',
-              border: '2px solid #f5f5f5',
-              borderRadius: '15px',
-            }}
           />
         </div>
         <div>
-          <input
+          <E.EmailInput
             type="password"
             value={password}
             name="password"
@@ -93,51 +67,13 @@ const EmailLogin = () => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-            style={{
-              margin: '15px auto 0',
-              padding: '15.5px 15px',
-              width: '100%',
-              boxSizing: 'border-box',
-              fontSize: '14px',
-              border: '2px solid #f5f5f5',
-              borderRadius: '15px',
-            }}
+            style={{ marginTop: '15px' }}
           />
         </div>
-        <button
-          type="submit"
-          onClick={onLoginButtonClickHandler}
-          style={{
-            margin: '26px auto 0',
-            width: '100%',
-            height: '60px',
-            fontSize: '14px',
-            fontWeight: '700',
-            color: '#fff',
-            background: '#FFBE51',
-            borderRadius: '15px',
-          }}
-        >
+        <E.LoginMoveButton type="submit" onClick={onLoginButtonClickHandler}>
           로그인
-        </button>
-        <div
-          style={{
-            margin: '61px auto 0',
-            fontSize: '14px',
-            textAlign: 'center',
-            color: '#484848',
-          }}
-        >
-          SNS 계정으로 로그인
-        </div>
-        {/* Login.jsx로 회원가입 버튼 이동 */}
-        {/* <button
-          onClick={() => {
-            navigate('/signup');
-          }}
-        >
-          회원가입
-        </button> */}
+        </E.LoginMoveButton>
+        <E.GridBox>SNS 계정으로 로그인</E.GridBox>
       </form>
     </>
   );

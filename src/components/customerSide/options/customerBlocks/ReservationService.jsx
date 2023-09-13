@@ -8,17 +8,22 @@ import {
 } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { db } from '../../../../firebase/firebaseConfig';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { modalVisibleAtom } from '../../../../atoms/Atom';
 import { Pagination, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { C } from '../CustomerBlocks.style';
-import { useNavigate, useParams } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
+import { message } from 'antd';
 
 const ReservationService = () => {
   const navigate = useNavigate();
   const [reservationData, setReservationData] = useState([]);
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
 
   const { uid } = useParams();
   const userUid = uid;
@@ -47,7 +52,7 @@ const ReservationService = () => {
       // 가공된 데이터를 상태에 업데이트
       setReservationData(initialDocuments);
     } catch (error) {
-      console.error('데이터 가져오기 오류:', error);
+      message.error('데이터 가져오기 오류:', error);
     }
   };
 
@@ -70,39 +75,38 @@ const ReservationService = () => {
         userId: userUid,
       });
 
-      alert('신청 완료!');
-      navigate(-1);
+      setModalVisible(true);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
   return (
     <>
-      <C.HeaderStyle>
-        <button onClick={() => navigate(`/${userUid}`)}>
-          <LeftOutlined />
-        </button>
-        <p>예약 서비스</p>
-      </C.HeaderStyle>
+      {reservationData.map((data) => (
+        <div key={data.id}>
+          <C.HeaderStyle>
+            <button onClick={() => navigate(`/${userUid}`)}>
+              <LeftOutlined />
+            </button>
+            <p>{data.title}</p>
+          </C.HeaderStyle>
 
-      <C.Container>
-        {reservationData.map((data) => (
-          <div key={data.id}>
-            <h3>{data.title}</h3>
-            <br />
+          <C.Container>
             {data.blockKind === 'reservation' && (
-              <Swiper
-                modules={[Pagination, A11y]}
-                pagination={{ clickable: true }}
-                a11y
-              >
-                {data.images.map((image, index) => (
-                  <SwiperSlide key={index}>
-                    <img src={image} alt={`reservationimage ${index + 1}`} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              <div>
+                <Swiper
+                  modules={[Pagination, A11y]}
+                  pagination={{ clickable: true }}
+                  a11y
+                >
+                  {data.images.map((image, index) => (
+                    <SwiperSlide key={index}>
+                      <img src={image} alt={`reservationimage ${index + 1}`} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
             )}
             <br />
             <p>일시 : {data.pickDate} </p>
@@ -112,14 +116,13 @@ const ReservationService = () => {
             <p>모집인원 : {data.numberOfPeople} 명</p>
             <br />
             <p>{data.description}</p>
-          </div>
-        ))}
-        <h3>신청 방법</h3>
-        <h4>하단의 신청 폼을 작성해 주세요.</h4>
+          </C.Container>
+        </div>
+      ))}
+
+      <C.Container>
         <label htmlFor="name">
-          <p>
-            이름<span>*</span>
-          </p>
+          <p>이름</p>
         </label>
         <input
           id="name"
@@ -127,11 +130,11 @@ const ReservationService = () => {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          placeholder="이름을 입력해주세요."
+          autoFocus
         />
         <label htmlFor="phoneNumber">
-          <p>
-            연락처<span>*</span>
-          </p>
+          <p>연락처</p>
         </label>
         <input
           id="phoneNumber"
@@ -139,18 +142,47 @@ const ReservationService = () => {
           type="tel"
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
+          placeholder="010-1234-5678"
         />
-
-        <C.ButtonArea>
-          <C.SubmitButton
-            type="submit"
-            disabled={!name || !phoneNumber}
-            onClick={submitButtonClick}
-          >
-            신청하기
-          </C.SubmitButton>
-        </C.ButtonArea>
       </C.Container>
+
+      <C.ButtonArea>
+        <C.SubmitButton
+          type="submit"
+          disabled={!name || !phoneNumber}
+          onClick={submitButtonClick}
+        >
+          신청하기
+        </C.SubmitButton>
+      </C.ButtonArea>
+
+      <C.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>신청완료!</h1>
+          <p>예약서비스 신청이 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </C.Modal>
     </>
   );
 };

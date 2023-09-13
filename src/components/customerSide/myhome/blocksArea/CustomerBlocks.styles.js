@@ -1,8 +1,9 @@
 import { styled } from 'styled-components';
-import { Swiper, SwiperSlide } from 'swiper/react';
 
 export const C = {
   Container: styled.div`
+    margin-bottom: 11px;
+
     button {
       margin-bottom: 15px;
       padding: 21.5px 0;
@@ -12,13 +13,7 @@ export const C = {
       border-radius: 15px;
       background: #ff7c38;
     }
-  `,
 
-  Swiper: styled(Swiper)`
-    margin-bottom: 11px;
-  `,
-
-  SwiperSlide: styled(SwiperSlide)`
     img {
       cursor: pointer;
       width: 100%;
@@ -27,5 +22,8 @@ export const C = {
       background-color: #d6d6d6;
       border-radius: 15px;
     }
+  `,
+  SwiperWrap: styled.div`
+    margin: 10px 0 23px;
   `,
 };

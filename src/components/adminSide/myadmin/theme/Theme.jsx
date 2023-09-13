@@ -1,64 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { Col, Modal, Progress, Row } from 'antd';
-import { useAtom } from 'jotai';
+import React, { useEffect, useRef, useState } from 'react';
+import { Col, Modal, Row, message } from 'antd';
+import { useAtom, useAtomValue } from 'jotai';
 import { nanoid } from 'nanoid';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
 import {
   backgroundImageAtom,
   modalVisibleAtom,
   themeAtom,
+  userAtom,
 } from '../../../../atoms/Atom';
-import { auth, db, storage } from '../../../../firebase/firebaseConfig';
+import { db, storage } from '../../../../firebase/firebaseConfig';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { T } from './Theme.styles';
 
-// Color Img
-import BlueColor from '../../../../assets/images/admin/colorImg/3a4ca8.png';
-import GreenColor from '../../../../assets/images/admin/colorImg/568a35.png';
-import GrayColor from '../../../../assets/images/admin/colorImg/595959.png';
-import PurpleColor from '../../../../assets/images/admin/colorImg/b98bc6.png';
-import RedColor from '../../../../assets/images/admin/colorImg/d94925.png';
-import OrangeColor from '../../../../assets/images/admin/colorImg/fd9f28.png';
-import KwangColor from '../../../../assets/images/admin/colorImg/ff7c38.png';
-import YellowColor from '../../../../assets/images/admin/colorImg/ffcd4a.png';
-
-const imageUploadTime = 3000;
+const IMAGE_UPLOAD_TIME = 3000;
 const Theme = () => {
-  // 파라미터
-  // 사용자 UID 가져오기
-  const userUid = auth.currentUser?.uid;
-  const [, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
+
+  const [theme, setTheme] = useAtom(themeAtom); // Jotai의 useAtom 함수 사용
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
-  const [theme] = useAtom(themeAtom);
   const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
   const [tempTheme, setTempTheme] = useState(null); // 임시로 테마와 배경 이미지 URL을 저장
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null); // 배경 이미지 URL을 저장
   const [loading, setLoading] = useState(false); // 이미지 업로드 진행상태 저장
   const [progress, setProgress] = useState(0); // 프로그래스바 0 ~ 100% 진행률 업데이트
-
-  // 색상 선택 기능
-  const [selectedColor, setSelectedColor] = useState('');
-  const [selectedColorName, setSelectedColorName] = useState('');
-
-  const colorPickerHandler = async (e) => {
-    const pickedColor = e.target;
-    const pickedColorName = pickedColor.getAttribute('name');
-
-    if (selectedColor) {
-      selectedColor.style.border = 'none';
-    }
-    pickedColor.style.border = '2px solid var(--color-accent)';
-    setSelectedColor(pickedColor);
-    setSelectedColorName(pickedColorName);
-  };
+  const imageInputRef = useRef(null); // 배경 이미지 업로드시 input
 
   useEffect(() => {
     let intervalId;
-
     if (loading) {
-      const increment = Math.ceil(50 / (imageUploadTime / 1000));
+      const increment = Math.ceil(50 / (IMAGE_UPLOAD_TIME / 1000));
       let currentProgress = progress;
 
       intervalId = setInterval(() => {
@@ -66,25 +40,25 @@ const Theme = () => {
         setProgress((prevProgress) =>
           prevProgress < 100 ? prevProgress + increment : prevProgress,
         );
-      }, imageUploadTime / 7);
+      }, IMAGE_UPLOAD_TIME / 7);
     }
-
     return () => clearInterval(intervalId);
   }, [loading]);
 
+  // 업로드 할 배경 이미지 압축 옵션 설정
+  const options = {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1000,
+    useWebWorker: true,
+  };
+
   // 이미지 압축 함수
   const compressImage = async (imageFile) => {
-    // 업로드 할 배경 이미지 압축 옵션 설정
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1000,
-      useWebWorker: true,
-    };
     try {
       const compressedFile = await imageCompression(imageFile, options);
       return compressedFile;
     } catch (error) {
-      console.error('이미지 압축 실패', error);
+      message.error('이미지 압축 실패', error);
       return null;
     }
   };
@@ -103,9 +77,12 @@ const Theme = () => {
 
   // 테마(배경 이미지 업로드)시 input
   const handleCustomBackgroundClick = () => {
-    const imageInput = document.getElementById('image-upload'); // useRef로 변경
-    imageInput.click();
-    imageInput.value = null;
+    const imageInput = imageInputRef.current;
+    if (imageInput) {
+      imageInput.click();
+      imageInput.value = null;
+    }
+    setTempTheme('light');
   };
 
   // 이미지 저장 및 변경
@@ -114,7 +91,7 @@ const Theme = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, imageUploadTime);
+    }, IMAGE_UPLOAD_TIME);
 
     const file = e.target.files[0];
 
@@ -140,6 +117,7 @@ const Theme = () => {
 
   // 테마(샘플 이미지) 클릭 시
   const handleSampleBackgroundClick = () => {
+    setTempTheme('default');
     setTempBackgroundImage(sampleImg);
   };
 
@@ -149,7 +127,6 @@ const Theme = () => {
     setProgress(0); // 진행률 초기화
     // Firestore에 사용자의 테마 및 배경 이미지 정보 저장
     if (userUid) {
-      const buttonColor = selectedColorName ? selectedColorName : 'Ff7c38';
       const userDocRef = doc(db, 'users', userUid);
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists()) {
@@ -157,14 +134,12 @@ const Theme = () => {
         await updateDoc(userDocRef, {
           theme: tempTheme,
           backgroundImage: tempBackgroundImage,
-          buttonColor: buttonColor,
         });
       } else {
         // 문서가 없는 경우 문서 생성 후 업데이트
         await setDoc(userDocRef, {
           theme: tempTheme,
           backgroundImage: tempBackgroundImage,
-          buttonColor: buttonColor,
         });
       }
     }
@@ -176,7 +151,6 @@ const Theme = () => {
     }
     if (tempBackgroundImage !== null) {
       setBackgroundImage(tempBackgroundImage);
-
       if (tempBackgroundImage) {
         document.body.style.backgroundImage = `url("${tempBackgroundImage}")`;
       } else {
@@ -188,11 +162,11 @@ const Theme = () => {
 
   useEffect(() => {
     if (modalVisible) {
-      // 모달이 열릴 때 현재 설정된 테마와 배경 이미지를 임시 변수에 저장합니다.
+      // 모달이 열릴 때 현재 설정된 테마와 배경 이미지를 임시 변수에 저장한다.
       setTempTheme(theme);
       setTempBackgroundImage(backgroundImage);
     } else {
-      // 모달이 닫힐 때 임시 변수에 저장된 값을 원래 상태로 되돌립니다.
+      // 모달이 닫힐 때 임시 변수에 저장된 값을 원래 상태로 되돌린다.
       setTempTheme(null);
       setTempBackgroundImage(null);
     }
@@ -213,63 +187,63 @@ const Theme = () => {
         footer={null}
         width={350}
       >
+        <T.Description>
+          테마를 선택하신 후 적용하기 버튼을 눌러주세요.
+        </T.Description>
         <Row justify="center">
           <Col span={24}>
-            <Row gutter={[6, 0]}>
-              <T.DarkModeButton onClick={handleDarkModeClick}>
-                다크 모드
-              </T.DarkModeButton>
-              <T.BasicModeButton onClick={handleLightModeClick}>
-                라이트 모드
-              </T.BasicModeButton>
-              <T.SelectImageButton onClick={handleCustomBackgroundClick}>
-                배경 이미지 선택
-              </T.SelectImageButton>
-              {/* 파일 업로드 */}
-              <input
-                id="image-upload"
-                type="file"
-                accept=".jpg,.jpeg,.png"
-                style={{ display: 'none' }}
-                onChange={onImageChange}
-              />
-              <T.SampleImageButton onClick={handleSampleBackgroundClick}>
-                샘플 이미지
-              </T.SampleImageButton>
-            </Row>
+            <T.ButtonRow>
+              <T.ButtonColumn>
+                {/* 다크 모드 */}
+                <div>
+                  <T.DarkModeButton
+                    onClick={handleDarkModeClick}
+                  ></T.DarkModeButton>
+                  <p>다크 모드</p>
+                </div>
+                {/* 이미지 업로드 */}
+                <div>
+                  <T.SelectImageButton
+                    onClick={handleCustomBackgroundClick}
+                  ></T.SelectImageButton>
+                  <p>이미지 업로드</p>
+                  {/* 파일 업로드 */}
+                  <T.HiddenInput
+                    ref={imageInputRef}
+                    type="file"
+                    accept=".jpg,.jpeg,.png"
+                    style={{ display: 'none' }}
+                    onChange={onImageChange}
+                  />
+                </div>
+              </T.ButtonColumn>
+              <T.ButtonColumn>
+                {/* 라이트 모드 */}
+                <div>
+                  <T.BasicModeButton
+                    onClick={handleLightModeClick}
+                  ></T.BasicModeButton>
+                  <p>라이트 모드</p>
+                </div>
+                {/* 기본 설정 */}
+                <div>
+                  <T.SampleImageButton
+                    onClick={handleSampleBackgroundClick}
+                  ></T.SampleImageButton>
+                  <p>기본 설정</p>
+                </div>
+              </T.ButtonColumn>
+            </T.ButtonRow>
           </Col>
         </Row>
-        <T.ButtonContainer>
-          <p>버튼 컬러 선택</p>
-          <button onClick={colorPickerHandler}>
-            <img name="3a4ca8" src={BlueColor} alt="bluecolor" />
-          </button>
-          <button onClick={colorPickerHandler}>
-            <img name="568a35" src={GreenColor} alt="greencolor" />
-          </button>
-          <button onClick={colorPickerHandler}>
-            <img name="b98bc6" src={PurpleColor} alt="purplecolor" />
-          </button>
-          <button onClick={colorPickerHandler}>
-            <img name="ffcd4a" src={YellowColor} alt="yellowcolor" />
-          </button>
-          <button onClick={colorPickerHandler}>
-            <img name="595959" src={GrayColor} alt="graycolor" />
-          </button>
-          <button onClick={colorPickerHandler}>
-            <img name="fd9f28" src={KwangColor} alt="kwangcolor" />
-          </button>
-          <button onClick={colorPickerHandler}>
-            <img name="d94925" src={RedColor} alt="redcolor" />
-          </button>
-          <button onClick={colorPickerHandler}>
-            <img name="4d9f28" src={OrangeColor} alt="orangecolor" />
-          </button>
-        </T.ButtonContainer>
         <Row>
           <Col span={24}>
             {loading ? (
-              <Progress percent={Math.round(progress)} status="active" />
+              <T.Progress
+                percent={Math.round(progress)}
+                status="active"
+                strokeColor={{ from: '#108ee9', to: '#87d068' }}
+              />
             ) : (
               <T.ActivButton disabled={loading} onClick={handleApplyClick}>
                 적용하기

@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Reset } from 'styled-reset';
-import './index.css';
+// import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { GlobalStyle } from './styles/GlobalStyle';
 import { Provider as JotaiProvider } from 'jotai';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -12,7 +11,6 @@ root.render(
   // <React.StrictMode>
   <JotaiProvider>
     <Reset />
-    <GlobalStyle />
     <App />
   </JotaiProvider>,
   // </React.StrictMode>,

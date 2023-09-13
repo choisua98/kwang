@@ -31,7 +31,6 @@ export const P = {
   ProfileContainer: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 13px;
   `,
 
   ProfileImage: styled.img`
@@ -50,8 +49,17 @@ export const P = {
     border-radius: 100%;
   `,
 
+  UploadButton: styled.button`
+    padding: 21.5px 0;
+    margin: 15px 0px 20px 0px;
+    width: 100%;
+    border-radius: 15px;
+    border: 1px solid #ff7c38;
+    color: #ff7c38;
+    background-color: white;
+  `,
+
   ActivButton: styled.button`
-    margin: 20px auto 0;
     padding: 21.5px 0;
     width: 100%;
     border-radius: 15px;
@@ -80,10 +88,14 @@ export const P = {
     background: #fafafa;
   `,
 
-  label: styled.div`
-    font-size: 14px;
-    margin-bottom: -8px;
-    margin-top: 5px;
+  InfoContainer: styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0px 5px 0px;
+  `,
+
+  GuidText: styled.p`
+    color: lightgray;
   `,
 
   FileUploadButton: styled.input`
@@ -91,7 +103,9 @@ export const P = {
     color: #312f2e;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
 
     &:focus {
       outline: none;

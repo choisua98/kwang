@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { auth, db, storage } from '../../../../firebase/firebaseConfig';
+import { db, storage } from '../../../../firebase/firebaseConfig';
 import {
   deleteObject,
   getDownloadURL,
@@ -19,21 +19,26 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { blocksAtom } from '../../../../atoms/Atom';
-import { useAtom } from 'jotai';
-import { Modal } from 'antd';
-import { CameraOutlined } from '@ant-design/icons';
-import imageCompression from 'browser-image-compression';
+import { useAtom, useAtomValue } from 'jotai';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+  userAtom,
+} from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
-import { LeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
+import { Modal, message, Button } from 'antd';
+import { CameraOutlined, LeftOutlined } from '@ant-design/icons';
+import imageCompression from 'browser-image-compression';
 
 const BannerImage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 사용자 UID 가져오기
-  const userUid = auth.currentUser?.uid;
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   // 현재 블록 ID 가져오기
   const blockId = location.state ? location.state.blocksId : null;
@@ -43,6 +48,11 @@ const BannerImage = () => {
 
   // blocks 배열에서 선택된 블록 찾기
   const selectedBlock = blocks.find((block) => block.id === blockId);
+
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
 
   // 실제로 업로드한 이미지 정보를 저장하는 배열
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -80,7 +90,9 @@ const BannerImage = () => {
     e.preventDefault();
 
     if (!userUid) {
-      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      message.error(
+        '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+      );
       navigate('/login');
       return;
     }
@@ -99,7 +111,7 @@ const BannerImage = () => {
           const compressedFile = await imageCompression(imageFile, options);
           return compressedFile;
         } catch (error) {
-          console.error('이미지 압축 실패', error);
+          message.error('이미지 압축 실패', error);
           return null;
         }
       };
@@ -151,11 +163,9 @@ const BannerImage = () => {
         images: imageUrls,
       });
 
-      // 저장 완료 알림 후 어드민 페이지로 이동
-      alert('저장 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
@@ -188,11 +198,9 @@ const BannerImage = () => {
         images: imageUrls,
       });
 
-      // 수정 완료 알림 후 어드민 페이지로 이동
-      alert('수정 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
-      console.error('수정 중 오류 발생:', error.message);
+      message.error('수정 중 오류 발생:', error.message);
     }
   };
 
@@ -216,11 +224,10 @@ const BannerImage = () => {
         // 사용자 확인 후 Firestore 문서 삭제
         await deleteDoc(doc(db, 'template', id));
 
-        alert('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+        setDeleteModalVisible(true);
       }
     } catch (error) {
-      console.error('삭제 중 오류 발생:', error.message);
+      message.error('삭제 중 오류 발생:', error.message);
     }
   };
 
@@ -240,13 +247,17 @@ const BannerImage = () => {
         <p>설정</p>
       </O.HeaderStyle>
 
+      <O.FormGuideStyle>
+        <h2>
+          배너 이미지 추가 <img src={IconFormCheck} alt="폼체크아이콘" />
+        </h2>
+        <p>이미지를 추가해 나만의 커스텀 배너를 꾸며보세요!</p>
+      </O.FormGuideStyle>
+
       <O.Container
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
-        <label>
-          배너 이미지를 추가해주세요
-          <span>*</span>
-        </label>
+        <p>배너 이미지를 추가해주세요.</p>
 
         <O.ImageContainer>
           {uploadedImages.length >= maxUploads ? (
@@ -282,7 +293,7 @@ const BannerImage = () => {
 
           {uploadedImages.map((image, index) => {
             return (
-              <div key={index}>
+              <O.Preview key={index}>
                 <div
                   className="square-preview"
                   style={{
@@ -293,13 +304,15 @@ const BannerImage = () => {
                     })`,
                   }}
                 />
-                <button type="button" onClick={() => handleRemoveImage(index)}>
-                  -
-                </button>
-              </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                />
+              </O.Preview>
             );
           })}
         </O.ImageContainer>
+
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={uploadedImages.length === 0}>
             {blockId ? '수정하기' : '저장하기'}
@@ -313,6 +326,62 @@ const BannerImage = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };

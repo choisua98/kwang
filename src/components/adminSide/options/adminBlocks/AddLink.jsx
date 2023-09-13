@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   addDoc,
   collection,
@@ -10,51 +10,59 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { auth, db } from '../../../../firebase/firebaseConfig';
+import { db } from '../../../../firebase/firebaseConfig';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAtom } from 'jotai';
-
+import { useAtom, useAtomValue } from 'jotai';
 import {
-  backgroundImageAtom,
   blocksAtom,
-  themeAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+  userAtom,
 } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { LeftOutlined } from '@ant-design/icons';
+import { useTheme, useThemeReset } from '../../../../hooks/useTheme';
+import { message } from 'antd';
 
 const AddLink = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 유저의 UID 가져오기
-  const userUid = auth.currentUser?.uid;
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   const blockId = location.state ? location.state.blocksId : null;
   const [blocks] = useAtom(blocksAtom);
   const selectedBlock = blocks.find((block) => block.id === blockId) || '';
 
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
+
   const [title, setTitle] = useState(selectedBlock?.title || '');
   const [addLink, setAddLink] = useState(selectedBlock?.description || '');
-  const [theme, setTheme] = useAtom(themeAtom);
-  // 배경 이미지
-  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isAddLinkValid, setIsAddLinkValid] = useState(false);
+  const [titleCount, setTitleCount] = useState(0);
 
-  useEffect(() => {
-    setTheme('light');
-    setBackgroundImage(null);
-  }, []);
+  // URL 유효성 검사 정규 표현식
+  const urlRegex =
+    /^(ftp|http|https):\/\/[A-Za-z0-9.-]+(:[0-9]+)?(\/[A-Za-z0-9-._~:/?#[\]@!$&'()*+,;=]+)*$/;
 
-  useEffect(() => {
-    setTheme('light');
-    setBackgroundImage(null);
-  }, []);
+  // 테마
+  const [theme, backgroundImage] = useThemeReset();
+  useTheme(theme, backgroundImage);
 
   const addButtonClick = async (e) => {
     e.preventDefault();
 
     if (!userUid) {
-      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      message.error(
+        '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+      );
       navigate('/login');
       return;
     }
@@ -84,11 +92,9 @@ const AddLink = () => {
         userId: userUid,
       });
 
-      alert('저장 완료!');
-      navigate(`/admin/${userUid}`);
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
@@ -103,11 +109,9 @@ const AddLink = () => {
         addLink,
       });
 
-      alert('수정 완료!');
-      navigate(`/admin/${userUid}`);
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
-      console.error('수정 중 오류 발생:', error.message);
+      message.error('수정 중 오류 발생:', error.message);
     }
   };
 
@@ -118,11 +122,10 @@ const AddLink = () => {
       try {
         // 사용자 확인 후 삭제 작업 진행
         await deleteDoc(doc(db, 'template', id));
-        alert('삭제 완료!');
-        navigate(`/admin/${userUid}`);
-        navigate(`/admin/${userUid}`);
+
+        setDeleteModalVisible(true);
       } catch (error) {
-        console.error('삭제 중 오류 발생:', error.message);
+        message.error('삭제 중 오류 발생:', error.message);
       }
     }
   };
@@ -130,9 +133,6 @@ const AddLink = () => {
   return (
     <>
       <O.HeaderStyle>
-        <button onClick={() => navigate(`/admin/${userUid}`)}>
-          <LeftOutlined />
-        </button>
         <button onClick={() => navigate(`/admin/${userUid}`)}>
           <LeftOutlined />
         </button>
@@ -148,41 +148,44 @@ const AddLink = () => {
 
       <O.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
         <label htmlFor="title">
-          <p>
-            링크 제목<span>*</span>
-          </p>
-          <p>
-            링크 제목<span>*</span>
-          </p>
+          링크 제목<p>{titleCount}/20자</p>
         </label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          placeholder="링크 추가하기 ✔️"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-          autoFocus
-        />
-        <label htmlFor="description">
-          <p>
-            링크를 추가해 주세요<span>*</span>
-          </p>
-          <p>
-            링크를 추가해 주세요<span>*</span>
-          </p>
-        </label>
-        <input
-          id="description"
-          name="description"
-          type="text"
-          value={addLink || 'https://'}
-          onChange={(e) => {
-            setAddLink(e.target.value);
-          }}
-        />
+        <div className="input-container">
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="링크 추가하기 ✔️"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setIsTitleValid(e.target.value === '');
+              setTitleCount(e.target.value.length);
+            }}
+            autoFocus
+          />
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
+        </div>
+
+        <label htmlFor="description">링크를 추가해 주세요</label>
+        <div className="input-container">
+          <input
+            id="description"
+            name="description"
+            type="text"
+            value={addLink || 'https://'}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              setAddLink(inputValue);
+              if (inputValue === '' || !urlRegex.test(inputValue)) {
+                setIsAddLinkValid(true);
+              } else {
+                setIsAddLinkValid(false);
+              }
+            }}
+          />
+          {isAddLinkValid && <span>유효하지 않은 주소입니다.</span>}
+        </div>
 
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={!title || !addLink}>
@@ -197,6 +200,62 @@ const AddLink = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };

@@ -1,5 +1,4 @@
 import { styled } from 'styled-components';
-import { Swiper, SwiperSlide } from 'swiper/react';
 
 export const B = {
   Container: styled.div`
@@ -32,12 +31,10 @@ export const B = {
     }
   `,
 
-  Swiper: styled(Swiper)`
+  ImageContainer: styled.div`
     margin: 7.5px 0;
     display: flex;
-  `,
 
-  SwiperSlide: styled(SwiperSlide)`
     img {
       cursor: pointer;
       width: 100%;

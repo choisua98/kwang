@@ -3,9 +3,15 @@ import React, { useEffect } from 'react';
 import { blocksAtom } from '../../../../atoms/Atom';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
-import { C } from './CustomerBlocks.styles';
 import { Pagination, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { C } from './CustomerBlocks.styles';
+
 import { useNavigate, useParams } from 'react-router-dom';
+import { message } from 'antd';
 
 const CustomerBlocks = () => {
   const navigate = useNavigate();
@@ -38,7 +44,7 @@ const CustomerBlocks = () => {
       // 가공된 데이터를 상태에 업데이트
       setBlocks(initialDocuments);
     } catch (error) {
-      console.error('데이터 가져오기 오류:', error);
+      message.error('데이터 가져오기 오류:', error);
     }
   };
 
@@ -65,17 +71,19 @@ const CustomerBlocks = () => {
             </button>
           )}
           {block.blockKind === 'bannerimage' && (
-            <C.Swiper
-              modules={[Pagination, A11y]}
-              pagination={{ clickable: true }}
-              a11y
-            >
-              {block.images.map((image, index) => (
-                <C.SwiperSlide key={index}>
-                  <img src={image} alt={`bannerimage ${index + 1}`} />
-                </C.SwiperSlide>
-              ))}
-            </C.Swiper>
+            <C.SwiperWrap>
+              <Swiper
+                modules={[Pagination, A11y]}
+                pagination={{ clickable: true }}
+                a11y
+              >
+                {block.images.map((image, index) => (
+                  <SwiperSlide key={index}>
+                    <img src={image} alt={`bannerimage ${index + 1}`} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </C.SwiperWrap>
           )}
         </div>
       ))}

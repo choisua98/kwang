@@ -7,13 +7,18 @@ import {
 import KakaoIcon from '../../../../assets/images/kakao.png';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { message } from 'antd';
+import { useAtomValue } from 'jotai';
+import { userAtom } from '../../../../atoms/Atom';
 
 const KakaoLogin = () => {
   const navigate = useNavigate();
   const auth = getAuth();
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   const kakaoLogin = async () => {
-    const jsKey = '16378892d0b6ab1d19429225f98cc97a';
+    const jsKey = process.env.REACT_APP_KAKAO_JSKEY;
     const Kakao = window.Kakao;
     if (Kakao && !Kakao.isInitialized()) {
       Kakao.init(jsKey);
@@ -43,7 +48,6 @@ const KakaoLogin = () => {
                       kakaoAccount.email,
                       kakaoAccount.email, //비번으로 쓸값이 없음
                     );
-                    // console.log(userCredential);
                     console.log('이메일로 로그인성공.');
                   } catch (error) {
                     console.error(error);
@@ -58,6 +62,8 @@ const KakaoLogin = () => {
                     .then((userCredential) => {
                       console.log(`회원가입유저${userCredential}`);
                       console.log('회원가입성공. 이메일로 로그인완료.');
+                      navigate(`/admin/${userUid}`);
+                      message.success('로그인 되었습니다.');
                     })
                     .catch((error) => {
                       console.error(error);
@@ -68,7 +74,8 @@ const KakaoLogin = () => {
               }
             };
             checkEmailExists().then((res) => {
-              navigate(`/admin/${auth.currentUser.uid}`);
+              navigate(`/admin/${userUid}`);
+              message.success('로그인 되었습니다.');
             });
           },
           fail(error) {
@@ -77,7 +84,7 @@ const KakaoLogin = () => {
         });
       },
       fail(error) {
-        console.log(error);
+        message.error('로그인 중 에러 발생:', error.code);
       },
     });
   };

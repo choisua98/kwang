@@ -1,17 +1,20 @@
 import { styled } from 'styled-components';
+import { Modal } from 'antd';
+import IconDelete from '../../../assets/images/common/icon/icon-delete.png';
 
 // adminSide options 공통 css
 export const O = {
   HeaderStyle: styled.div`
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px 0px 40px 0px;
-    position: relative;
+    margin: 20px 20px 40px;
 
     button {
       position: absolute;
-      left: 3%;
+      left: 0px;
+      padding: 0;
       font-size: 20px;
       background-color: transparent;
     }
@@ -25,7 +28,7 @@ export const O = {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin: 0px 20px;
+    margin: 20px;
 
     h2 {
       font-size: 16px;
@@ -35,6 +38,7 @@ export const O = {
     p {
       font-size: 14px;
       font-weight: 500;
+      line-height: 18px;
       color: #858585;
       letter-spacing: 0.5px;
     }
@@ -51,7 +55,6 @@ export const O = {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-top: 20px;
     padding: 20px;
 
     ::placeholder {
@@ -59,9 +62,13 @@ export const O = {
       padding: 5px 7px;
     }
 
+    .input-container {
+      margin-bottom: 20px;
+    }
+
     input {
-      margin-top: 12px;
       padding: 16.5px 16px;
+      margin-bottom: 8px;
       box-sizing: border-box;
       border: none;
       border-radius: 15px;
@@ -69,23 +76,29 @@ export const O = {
     }
 
     textarea {
+      width: 100%;
       height: 120px;
-      margin-top: 12px;
       padding: 16.5px 16px;
+      margin-bottom: 8px;
       box-sizing: border-box;
       border: none;
       border-radius: 15px;
       background: #fafafa;
     }
 
-    label {
+    p {
       font-size: 14px;
-      display: flex;
-      justify-content: space-between;
     }
 
-    label span {
+    label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    span {
       color: red;
+      font-size: 12px;
     }
   `,
 
@@ -142,8 +155,8 @@ export const O = {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 60px;
-      height: 60px;
+      width: 65px;
+      height: 65px;
       border-radius: 5px;
       background: #fafafa;
       cursor: pointer;
@@ -167,11 +180,21 @@ export const O = {
     }
 
     .square-preview {
-      width: 60px;
-      height: 60px;
+      width: 65px;
+      height: 65px;
       border-radius: 5px;
       background-size: cover;
       background-position: center;
+    }
+
+    button {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: url(${IconDelete}) no-repeat 50% 50% / cover;
+      backdrop-filter: blur(50px);
+      opacity: 0.7;
     }
   `,
 
@@ -184,6 +207,7 @@ export const O = {
     color: var(--color-text);
 
     div > p:nth-child(1) {
+      position: relative;
       height: 50px;
       border-radius: 15px 15px 0px 0px;
       background-color: var(--color-secondary);
@@ -205,9 +229,57 @@ export const O = {
 
     button {
       position: absolute;
-      right: 70px;
+      right: 15px;
+      color: var(--color-accent);
       background-color: transparent;
       border: none;
+    }
+
+    p {
+      padding: 0px 20px;
+    }
+  `,
+
+  Preview: styled.div`
+    position: relative;
+  `,
+
+  Modal: styled(Modal)`
+    &.ant-modal .ant-modal-content {
+      border-radius: 15px;
+      padding: 40px 44px 0px 44px;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-weight: 500;
+    }
+
+    img {
+      padding-bottom: 15px;
+    }
+
+    h1 {
+      font-size: 22px;
+      padding-bottom: 15px;
+    }
+
+    P {
+      font-size: 14px;
+      color: #787878;
+      padding-bottom: 60px;
+    }
+
+    button {
+      width: 330px;
+      height: 60px;
+      font-size: 18px;
+      color: var(--color-white);
+      background-color: var(--color-text);
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
     }
   `,
 };

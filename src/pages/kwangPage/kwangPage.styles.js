@@ -52,6 +52,21 @@ export const L = {
       }
     }
   `,
+
+  AlignBox: styled.div`
+    margin: 37.5px auto 10px;
+    font-size: 16px;
+    text-align: center;
+  `,
+
+  SignupMoveButton: styled.button`
+    margin: 0 auto;
+    display: block;
+    font-size: 14px;
+    text-decoration: underline;
+    color: #a1a1a1;
+    background: none;
+  `,
 };
 
 export const S = {

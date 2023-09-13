@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Col, Input, Row } from 'antd';
+import { Col, Input, Row, message } from 'antd';
 import { L } from './Links.styles';
 import { ReactComponent as Link } from '../../../../assets/images/admin/link.svg';
-import { auth, db, storage } from '../../../../firebase/firebaseConfig';
+import { db, storage } from '../../../../firebase/firebaseConfig';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import {
   collection,
@@ -26,9 +26,12 @@ import TiktokIcon from '../../../../assets/images/admin/linkIcon/icon-tiktok.png
 import TwitterIcon from '../../../../assets/images/admin/linkIcon/icon-twitter.png';
 import YoutubeIcon from '../../../../assets/images/admin/linkIcon/icon-youtube.png';
 import FacebookIcon from '../../../../assets/images/admin/linkIcon/icon-facebook.png';
+import { useAtomValue } from 'jotai';
+import { userAtom } from '../../../../atoms/Atom';
 
 const Links = () => {
-  const userUid = auth.currentUser?.uid;
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
   const [modalVisible, setModalVisible] = useState(false);
   const [urlText, setUrlText] = useState('');
   const [imageFile, setImageFile] = useState(null);
@@ -41,7 +44,6 @@ const Links = () => {
 
   // Icon Image
   const [selectedIcon, setSelectedIcon] = useState('');
-  const [iconImageUrl, setIconImageUrl] = useState('');
 
   const iconImages = [
     {
@@ -98,7 +100,7 @@ const Links = () => {
 
     const iconStorageRef = ref(storage, `linkIcon/${clickedIconName}.png`);
     const iconDownloadURL = await getDownloadURL(iconStorageRef);
-    setIconImageUrl(iconDownloadURL);
+    setImageUrl(iconDownloadURL);
   };
 
   const handleUrlChange = (e) => {
@@ -150,13 +152,13 @@ const Links = () => {
       try {
         taskSnapshot = await uploadBytesResumable(storageRef, fileToUpload);
       } catch (error) {
-        console.error(error);
+        message.error(error);
       }
       let downloadURL = await getDownloadURL(taskSnapshot.ref);
       setUploadingImage(false);
       return downloadURL;
     } else {
-      console.error('이미지 압축 실패');
+      message.error('이미지 압축 실패');
       setUploadingImage(false);
       return;
     }
@@ -165,7 +167,7 @@ const Links = () => {
   // 저장 버튼(링크 데이터를 Firestore에 저장 및 업데이트)
   const handleSaveClick = async () => {
     // 이미지 URL 빈 값일때 알림창 띄우기
-    if (!imageFile && !iconImageUrl) {
+    if (!imageUrl) {
       alert('이미지를 입력해 주세요.');
       return;
     }
@@ -177,18 +179,21 @@ const Links = () => {
     const urlRegExp =
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
     if (!urlRegExp.test(urlText)) {
-      alert('잘못된 URL 형식입니다.(https://kwang.com) 형식으로 입력해주세요');
+      message.error(
+        '잘못된 URL 형식입니다.(https://kwang.com) 형식으로 입력해주세요',
+      );
       return;
     }
 
     // 기존 이미지 URL을 기본값으로 사용
-    let imageUrlToSave = imageUrl ? imageUrl : iconImageUrl;
+    // let imageUrlToSave = imageUrl ? imageUrl : iconImageUrl;
+    let imageUrlToSave = imageUrl;
     // 새 이미지 파일이 선택되면 업로드하고 새 URL을 가져오기
     if (imageFile) {
       try {
         imageUrlToSave = await uploadImage();
       } catch (error) {
-        console.error('업로드 중인 이미지 오류: ', error);
+        message.error('업로드 중인 이미지 오류: ', error);
         return;
       }
     }
@@ -218,7 +223,6 @@ const Links = () => {
       fileInputRef.current.value = ''; // 파일 입력 필드 초기화
       fetchLinks(); // 링크 저장 후 최신 데이터 가져오기
       setEditingLinkId(null); // 수정 중인 링크 ID 초기화
-      setIconImageUrl('');
     } catch (error) {
       console.error('업데이트 중 오류:', error);
       return;
@@ -231,7 +235,7 @@ const Links = () => {
       await deleteDoc(doc(db, 'links', id));
       fetchLinks();
     } catch (error) {
-      console.error('링크 삭제 중 오류:', error);
+      message.error('링크 삭제 중 오류:', error);
     }
     setModalVisible(false);
   };

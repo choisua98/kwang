@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Row, Col, Button, Drawer, Space } from 'antd';
+import { Row, Col, Button, Drawer, Space, message } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import Logo from '../../../assets/images/logo.png';
+import WhiteLogo from '../../../assets/images/logo-white.png';
 import { H } from './Header.styles';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../../firebase/firebaseConfig';
@@ -11,11 +12,19 @@ import defaultProfileImage from '../../../assets/images/profile-default-image.pn
 import HomeIcon from '../../../assets/images/common/icon/Icon-home.png';
 import LinkIcon from '../../../assets/images/common/icon/icon-link.png';
 import EditIcon from '../../../assets/images/common/icon/icon-edit.png';
-import { useAtom } from 'jotai';
-import { userNickname, userProfileImage } from '../../../atoms/Atom';
+import { useAtom, useAtomValue } from 'jotai';
+import {
+  themeAtom,
+  userAtom,
+  userNickname,
+  userProfileImage,
+} from '../../../atoms/Atom';
 
 const Header = () => {
-  const userUid = auth.currentUser?.uid;
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
+
+  const [theme] = useAtom(themeAtom);
 
   // userUid로 저장된 문서가 있을 경우 프로필 정보 가져오기
   useEffect(() => {
@@ -35,7 +44,7 @@ const Header = () => {
 
   const navigate = useNavigate();
   const location = useLocation(); // 현재 페이지의 URL 추출
-  const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
+  // const isMyPage = location.pathname === `/${userUid}`; // 현재 페이지가 마이페이지인지 여부 확인
   const isLoginPage = location.pathname === '/login';
   const isHomePage = location.pathname === '/';
   const [viewNickname, setViewNickname] = useAtom(userNickname);
@@ -49,21 +58,25 @@ const Header = () => {
     setMenuOpen(false);
   };
 
-  // 로그아웃 버튼클릭 핸들러 -> 로그아웃 시 홈페이지로 이동시켜 놓음
+  // 로그아웃 버튼클릭 핸들러
   const onLogoutButtonClickHandler = async () => {
     await signOut(auth); //파이어베이스 로그아웃
     // setUser('');
-    alert('로그아웃 되었습니다.'); //로그아웃누르면 signOut이 다 되지 않았는데 navigate 됨.
     navigate('/');
-    window.location.reload();
+    //로그아웃누르면 signOut이 다 되지 않았는데 navigate 됨
+    //자동으로 네이버 로그인이 되어버리는 현상 때문에 새로고침.
+    message.success('로그아웃 되었습니다.');
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   const handleCopyClipBoard = async (url) => {
     try {
       await navigator.clipboard.writeText(url);
-      alert('링크가 복사 되었습니다.');
+      message.success('링크가 복사 되었습니다.');
     } catch (err) {
-      alert('링크 복사가 실패하였습니다.');
+      message.error('링크 복사가 실패하였습니다.');
     }
   };
 
@@ -76,7 +89,7 @@ const Header = () => {
             <Col span={21}>
               {/* 로고 영역 */}
               <Link to="/">
-                <H.Logo src={Logo} alt="크왕" />
+                <H.Logo src={theme === 'dark' ? WhiteLogo : Logo} alt="크왕" />
               </Link>
             </Col>
             {!isLoginPage && isHomePage && (
@@ -93,7 +106,7 @@ const Header = () => {
             <Col span={22}>
               {/* 로고 영역 */}
               <Link to="/">
-                <H.Logo src={Logo} alt="크왕" />
+                <H.Logo src={theme === 'dark' ? WhiteLogo : Logo} alt="크왕" />
               </Link>
             </Col>
             <Col span={1}>
@@ -113,21 +126,21 @@ const Header = () => {
                     <H.NickName>{viewNickname}</H.NickName>
                   </H.ProfileContainer>
                   <H.Container>
-                    {!isMyPage ? (
-                      <H.MenuButton onClick={closeMenu}>
-                        <Link to={`/${userUid}`}>
-                          <H.IconImage src={HomeIcon} alt="homeIcon" />
-                          <p>마이홈</p>
-                        </Link>
-                      </H.MenuButton>
-                    ) : (
-                      <H.MenuButton onClick={closeMenu}>
-                        <Link to={`/admin/${userUid}`}>
-                          <H.IconImage src={EditIcon} alt="editIcon" />
-                          <p>편집하기</p>
-                        </Link>
-                      </H.MenuButton>
-                    )}
+                    {/* {!isMyPage ? ( */}
+                    <H.MenuButton onClick={closeMenu}>
+                      <Link to={`/${userUid}`}>
+                        <H.IconImage src={HomeIcon} alt="homeIcon" />
+                        <p>마이홈</p>
+                      </Link>
+                    </H.MenuButton>
+                    {/* ) : ( */}
+                    <H.MenuButton onClick={closeMenu}>
+                      <Link to={`/admin/${userUid}`}>
+                        <H.IconImage src={EditIcon} alt="editIcon" />
+                        <p>편집하기</p>
+                      </Link>
+                    </H.MenuButton>
+                    {/* )} */}
                     <H.MenuButton
                       onClick={() =>
                         handleCopyClipBoard(

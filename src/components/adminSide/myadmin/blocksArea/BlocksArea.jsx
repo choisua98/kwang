@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { B } from './BlocksArea.styles';
 import { useNavigate } from 'react-router-dom';
-import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
+import { useAtom, useAtomValue } from 'jotai';
+import { blocksAtom, userAtom } from '../../../../atoms/Atom';
 import {
   query,
   collection,
@@ -12,23 +12,25 @@ import {
   doc,
   updateDoc,
 } from 'firebase/firestore';
-import { auth, db } from '../../../../firebase/firebaseConfig';
+import { db } from '../../../../firebase/firebaseConfig';
 import { PauseOutlined } from '@ant-design/icons';
 
 // swiper
 import { Pagination, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
 // Drag & Drop
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { message } from 'antd';
 
 const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
-  const [userButtonColor, setUserButtonColor] = useState('');
-  const user = auth.currentUser;
-  const userUid = auth.currentUser?.uid;
+
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   // firebase에서 데이터 불러오기
   const fetchData = async () => {
@@ -54,28 +56,8 @@ const BlocksArea = () => {
 
       // 가공된 데이터를 상태에 업데이트
       setBlocks(initialDocuments);
-
-      // 'users' 컬렉션에서 데이터 가져오기
-      const userQuery = query(
-        collection(db, 'users'),
-        where('uid', '==', userUid),
-      );
-      const userQuerySnapshot = await getDocs(userQuery);
-
-      // 가져온 데이터를 가공하여 배열에 저장
-      const initialUserDocuments = [];
-      userQuerySnapshot.forEach((doc) => {
-        const data = {
-          id: doc.id,
-          ...doc.data(),
-        };
-        initialUserDocuments.push(data);
-      });
-
-      // 가공된 데이터를 상태에 업데이트
-      setUserButtonColor(initialUserDocuments[0].buttonColor);
     } catch (error) {
-      console.error('데이터 가져오기 오류:', error);
+      message.error('데이터 가져오기 오류:', error);
     }
   };
 
@@ -134,45 +116,54 @@ const BlocksArea = () => {
             <div ref={provided.innerRef} {...provided.droppableProps}>
               {blocks.map((block, index) => (
                 <Draggable key={block.id} draggableId={block.id} index={index}>
-                  {(provided) => (
+                  {(provided, magic, snapshot) => (
                     <B.Container
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
+                      isDragging={snapshot.isDragging}
                     >
                       {block.title && (
-                        <div>
+                        <div
+                          isDragging={snapshot.isDragging}
+                          ref={magic.innerRef}
+                          {...magic.draggableProps}
+                        >
                           <button onClick={() => moveToEditButton(block)}>
                             {block.title}
                           </button>
-                          <span>
+                          <span {...magic.dragHandleProps}>
                             <PauseOutlined />
                           </span>
                         </div>
                       )}
                       {block.blockKind === 'bannerimage' && (
-                        <div>
-                          <B.Swiper
+                        <B.ImageContainer>
+                          <Swiper
                             modules={[Pagination, A11y]}
                             pagination={{ clickable: true }}
                             a11y
                           >
                             {block.images.map((image, index) => (
-                              <B.SwiperSlide key={index}>
+                              <SwiperSlide key={index}>
                                 <img
                                   src={image}
                                   alt={`bannerimage ${index + 1}`}
                                   onClick={() => moveToEditButton(block)}
                                 />
-                              </B.SwiperSlide>
+                              </SwiperSlide>
                             ))}
-                          </B.Swiper>
-                          <div>
-                            <span>
+                          </Swiper>
+                          <div
+                            isDragging={snapshot.isDragging}
+                            ref={magic.innerRef}
+                            {...magic.draggableProps}
+                          >
+                            <span {...magic.dragHandleProps}>
                               <PauseOutlined />
                             </span>
                           </div>
-                        </div>
+                        </B.ImageContainer>
                       )}
                     </B.Container>
                   )}

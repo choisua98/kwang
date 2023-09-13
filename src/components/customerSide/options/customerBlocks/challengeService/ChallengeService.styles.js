@@ -1,46 +1,54 @@
+import { Modal } from 'antd';
 import { styled } from 'styled-components';
 
 export const CS = {
+  GridContainer: styled.div`
+    padding: 0px 20px 20px 20px;
+  `,
+
   Container: styled.form`
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px 0px;
 
-    h3 {
-      font-size: 20px;
-      text-align: center;
-      margin: 30px 10px 10px 10px;
-    }
-    h4 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover; // 이미지가 잘리지 않도록 설정
-      background-color: #d6d6d6;
-      margin: 5px 0px;
+    div {
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 0;
     }
 
     p {
-      margin: 5px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 12px;
+      padding: 16.5px 16px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 15px;
+      background: #fafafa;
     }
+  `,
 
-    button {
+  Layout: styled.div`
+    padding: 0 20px;
+  `,
+
+  ImageContainer: styled.div`
+    margin-top: 20px;
+    width: 100%;
+
+    img {
       width: 100%;
-      padding: 15px 0px;
-      margin-top: 30px;
+      height: 230px;
+      object-fit: cover;
       border-radius: 10px;
-    }
-
-    input {
-      height: 30px;
-      margin: 10px 0px;
     }
   `,
 
   CalendarContainer: styled.div`
     .react-calendar {
+      overflow: hidden;
       max-width: 100%;
       width: 100%;
       background-color: #fff;
@@ -88,10 +96,10 @@ export const CS = {
       border-radius: 6px;
     }
     .react-calendar__tile--now {
-      background: none;
-      border-radius: 6px;
+      background: #f8f8fa;
+      color: #ff7c38;
+      border-radius: none;
       font-weight: none;
-      color: none;
     }
 
     .react-calendar__tile--hasActive:enabled:hover,
@@ -127,5 +135,155 @@ export const CS = {
       background: #6f48eb;
       color: white;
     }
+  `,
+};
+
+export const CC = {
+  CountStyle: styled.div`
+    position: relative;
+    width: 100%;
+    height: 105px;
+    background: var(--color-secondary);
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: 500;
+    margin: 40px 0px;
+    box-sizing: border-box;
+
+    img {
+      position: absolute;
+      left: 20px;
+    }
+    p {
+      position: absolute;
+      top: 31px;
+      left: 101px;
+      font-size: 14px;
+    }
+    span {
+      position: absolute;
+      top: 56px;
+      left: 101px;
+      font-size: 17px;
+    }
+  `,
+
+  Container: styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 30px;
+
+    ::placeholder {
+      color: #7a7a7a;
+      padding: 5px 7px;
+    }
+
+    input {
+      padding: 16.5px 16px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 15px;
+      background: #fafafa;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      height: 120px;
+      padding: 16.5px 16px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 15px;
+      background: #fafafa;
+    }
+
+    label {
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    label span {
+      color: red;
+    }
+  `,
+
+  CustomModal: styled(Modal)`
+    border-radius: 15px;
+
+    .ant-modal-header {
+      margin: 0;
+      text-align: center;
+    }
+
+    .ant-modal-title {
+      font-size: 14px;
+      line-height: 14px;
+      color: var(--color-text);
+
+      button {
+        position: absolute;
+        left: 5%;
+        font-size: 15px;
+        color: #7a7a7a;
+        background-color: transparent;
+      }
+    }
+  `,
+
+  CommentsContainer: styled.div`
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 30px;
+
+    p {
+      padding: 16.5px 16px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 15px;
+      background: #fafafa;
+    }
+
+    input {
+      padding: 16.5px 16px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 15px;
+      background: #fafafa;
+    }
+
+    button {
+      background: transparent;
+    }
+  `,
+
+  CommentButton: styled.button`
+    display: flex;
+    margin: -20px 0px 30px 0px;
+    padding: 20px 0px;
+    justify-content: center;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 15px;
+    background-color: ${(props) => props.color || '#FF7C38;'};
+
+    &:disabled {
+      border: 1px solid gray;
+      color: gray;
+      cursor: default;
+      background-color: rgb(255, 250, 240, 0.8);
+      border: none;
+    }
+  `,
+
+  GridBox: styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 10px;
   `,
 };

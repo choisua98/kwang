@@ -1,17 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Faq from '../../components/adminSide/options/adminBlocks/Faq';
-import { backgroundImageAtom, themeAtom } from '../../atoms/Atom';
-import { useAtom } from 'jotai';
+import { useTheme, useThemeReset } from '../../hooks/useTheme';
 
 const AdminFaq = () => {
-  const [theme, setTheme] = useAtom(themeAtom);
-  // 배경 이미지
-  const [backgroundImage, setBackgroundImage] = useAtom(backgroundImageAtom);
-
-  useEffect(() => {
-    setTheme('light');
-    setBackgroundImage(null);
-  }, []);
+  const [theme, backgroundImage] = useThemeReset();
+  useTheme(theme, backgroundImage);
 
   return <Faq />;
 };

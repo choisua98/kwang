@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useInput from '../../../../hooks/useInput';
-import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
-import { auth, db, storage } from '../../../../firebase/firebaseConfig';
+import { useAtom, useAtomValue } from 'jotai';
+import {
+  blocksAtom,
+  deleteModalVisibleAtom,
+  modalVisibleAtom,
+  userAtom,
+} from '../../../../atoms/Atom';
+import { db, storage } from '../../../../firebase/firebaseConfig';
 import {
   addDoc,
   collection,
@@ -24,13 +29,14 @@ import {
 } from 'firebase/storage';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { LeftOutlined } from '@ant-design/icons';
 
 // ant Design
 import { CameraOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { DatePicker, Modal, Space } from 'antd';
+import { DatePicker, Modal, Space, message } from 'antd';
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
 
@@ -43,8 +49,8 @@ const Challenge = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 사용자 UID 가져오기
-  const userUid = auth.currentUser?.uid;
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   // 현재 블록 ID 가져오기
   const blockId = location.state ? location.state.blocksId : null;
@@ -55,6 +61,11 @@ const Challenge = () => {
   // blocks 배열에서 선택된 블록 찾기
   const selectedBlock = blocks.find((block) => block.id === blockId);
 
+  const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
+  const [deleteModalVisible, setDeleteModalVisible] = useAtom(
+    deleteModalVisibleAtom,
+  );
+
   const [title, handleTitleChange] = useInput(selectedBlock?.title);
   const [description, handleDescriptionChange] = useInput(
     selectedBlock?.description,
@@ -63,6 +74,9 @@ const Challenge = () => {
   // 제목과 설명의 글자 수를 추적하는 상태
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
+
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isDescriptionValid, setIsDescriptionValid] = useState(false);
 
   // 선택한 날짜 정보를 저장할 상태 변수들
   const [startDate, setStartDate] = useState(
@@ -108,7 +122,9 @@ const Challenge = () => {
     e.preventDefault();
 
     if (!userUid) {
-      alert('작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      message.error(
+        '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+      );
       navigate('/login');
       return;
     }
@@ -160,11 +176,9 @@ const Challenge = () => {
         images: imageUrls,
       });
 
-      // 저장 완료 알림 후 어드민 페이지로 이동
-      alert('저장 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
-      console.error('저장 중 오류 발생:', error.message);
+      message.error('저장 중 오류 발생:', error.message);
     }
   };
 
@@ -203,11 +217,9 @@ const Challenge = () => {
         images: imageUrls,
       });
 
-      // 수정 완료 알림 후 어드민 페이지로 이동
-      alert('수정 완료!');
-      navigate(`/admin/${userUid}`);
+      setModalVisible(true);
     } catch (error) {
-      console.error('수정 중 오류 발생:', error.message);
+      message.error('수정 중 오류 발생:', error.message);
     }
   };
 
@@ -231,11 +243,10 @@ const Challenge = () => {
         // 사용자 확인 후 Firestore 문서 삭제
         await deleteDoc(doc(db, 'template', id));
 
-        alert('삭제 완료!');
-        navigate(`/admin/${userUid}`);
+        setDeleteModalVisible(true);
       }
     } catch (error) {
-      console.error('삭제 중 오류 발생:', error.message);
+      message.error('삭제 중 오류 발생:', error.message);
     }
   };
 
@@ -276,25 +287,26 @@ const Challenge = () => {
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          <p>
-            함께해요 챌린지 이름<span>*</span>
-          </p>
-          {titleCount}/20자
+          함께해요 챌린지 이름
+          <p>{titleCount}/20자</p>
         </label>
-
-        <input
-          id="title"
-          name="title"
-          type="text"
-          placeholder="함께해요 챌린지 🔥"
-          value={title}
-          onChange={(e) => {
-            handleTitleChange(e);
-            setTitleCount(e.target.value.length);
-          }}
-          maxLength={20}
-          autoFocus
-        />
+        <div className="input-container">
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="함께해요 챌린지 🔥"
+            value={title}
+            onChange={(e) => {
+              handleTitleChange(e);
+              setIsTitleValid(e.target.value === '');
+              setTitleCount(e.target.value.length);
+            }}
+            maxLength={20}
+            autoFocus
+          />
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
         <O.ImageContainer>
           {uploadedImages.length >= maxUploads ? (
@@ -330,7 +342,7 @@ const Challenge = () => {
 
           {uploadedImages.map((image, index) => {
             return (
-              <div key={index}>
+              <O.Preview key={index}>
                 <div
                   className="square-preview"
                   style={{
@@ -341,39 +353,37 @@ const Challenge = () => {
                     })`,
                   }}
                 />
-                <button type="button" onClick={() => handleRemoveImage(index)}>
-                  -
-                </button>
-              </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                />
+              </O.Preview>
             );
           })}
         </O.ImageContainer>
 
         <label htmlFor="description">
-          <p>
-            챌린지 상세설명<span>*</span>
-          </p>
-          {descriptionCount}/80자
+          챌린지 상세설명
+          <p>{descriptionCount}/80자</p>
         </label>
+        <div className="input-container">
+          <textarea
+            id="description"
+            name="description"
+            type="text"
+            placeholder="상세 설명을 입력해주세요."
+            value={description}
+            onChange={(e) => {
+              handleDescriptionChange(e);
+              setIsDescriptionValid(e.target.value === '');
+              setDescriptionCount(e.target.value.length);
+            }}
+            maxLength={80}
+          />
+          {isDescriptionValid && <span>필수입력 항목입니다.</span>}
+        </div>
 
-        <textarea
-          id="description"
-          name="description"
-          type="text"
-          placeholder="상세 설명을 입력해주세요."
-          value={description}
-          onChange={(e) => {
-            handleDescriptionChange(e);
-            setDescriptionCount(e.target.value.length);
-          }}
-          maxLength={80}
-        />
-
-        <label htmlFor="rangePicker">
-          <p>
-            챌린지 기간<span>*</span>
-          </p>
-        </label>
+        <label htmlFor="rangePicker">챌린지 기간</label>
         <Space direction="vertical" size={12}>
           <RangePicker
             id="rangePicker"
@@ -386,6 +396,7 @@ const Challenge = () => {
             ]}
             onChange={periodPickInput}
           />
+          {!startDate || !endDate ? <span>필수 입력 항목입니다.</span> : null}
         </Space>
 
         <O.ButtonArea>
@@ -404,6 +415,62 @@ const Challenge = () => {
           </O.SubmitButton>
         </O.ButtonArea>
       </O.Container>
+
+      <O.Modal
+        title=""
+        centered
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>{blockId ? '수정완료!' : '저장완료!'}</h1>
+          <p>{blockId ? '수정이 완료되었습니다.' : '저장이 완료되었습니다.'}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
+
+      <O.Modal
+        title=""
+        centered
+        open={deleteModalVisible}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+          navigate(-1);
+        }}
+        footer={null}
+        closable={false}
+        width={330}
+      >
+        <div>
+          <img src={IconModalConfirm} alt="완료아이콘" />
+          <h1>삭제완료!</h1>
+          <p>삭제가 완료되었습니다.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteModalVisible(false);
+            navigate(-1);
+          }}
+        >
+          닫기
+        </button>
+      </O.Modal>
     </>
   );
 };
