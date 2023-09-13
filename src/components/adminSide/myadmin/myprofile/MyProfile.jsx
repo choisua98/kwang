@@ -1,12 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Modal, message } from 'antd';
-import { auth, db, storage } from '../../../../firebase/firebaseConfig';
+import { db, storage } from '../../../../firebase/firebaseConfig';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
-import { userNickname, userProfileImage } from '../../../../atoms/Atom';
+import {
+  userAtom,
+  userNickname,
+  userProfileImage,
+} from '../../../../atoms/Atom';
 import imageCompression from 'browser-image-compression';
 import { P } from './MyProfile.styles';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { nanoid } from 'nanoid';
 import {
   ref,
@@ -17,7 +21,7 @@ import {
 } from 'firebase/storage';
 
 const MyProfile = () => {
-  const user = auth.currentUser;
+  const user = useAtomValue(userAtom);
   const userUid = user?.uid;
 
   const [, setAtomNickname] = useAtom(userNickname); // Header에 넘겨줄 변경된 닉네임

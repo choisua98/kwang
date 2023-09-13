@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Col, Input, Row, message } from 'antd';
 import { L } from './Links.styles';
 import { ReactComponent as Link } from '../../../../assets/images/admin/link.svg';
-import { auth, db, storage } from '../../../../firebase/firebaseConfig';
+import { db, storage } from '../../../../firebase/firebaseConfig';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import {
   collection,
@@ -17,9 +17,13 @@ import {
   deleteDoc,
 } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
+import { useAtomValue } from 'jotai';
+import { userAtom } from '../../../../atoms/Atom';
 
 const Links = () => {
-  const userUid = auth.currentUser?.uid; // 현재 로그인한 사용자 UID 가져오기
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
+
   const [modalVisible, setModalVisible] = useState(false); // 모달 열림, 닫힘
   const [urlText, setUrlText] = useState(''); // URL 텍스트 입력 필드 변경
   const [imageFile, setImageFile] = useState(null); // 선택된 이미지 파일 변경(파일 업로드에 사용)

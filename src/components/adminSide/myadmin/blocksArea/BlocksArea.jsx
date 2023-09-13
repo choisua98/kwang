@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { B } from './BlocksArea.styles';
 import { useNavigate } from 'react-router-dom';
-import { useAtom } from 'jotai';
-import { blocksAtom } from '../../../../atoms/Atom';
+import { useAtom, useAtomValue } from 'jotai';
+import { blocksAtom, userAtom } from '../../../../atoms/Atom';
 import {
   query,
   collection,
@@ -12,7 +12,7 @@ import {
   doc,
   updateDoc,
 } from 'firebase/firestore';
-import { auth, db } from '../../../../firebase/firebaseConfig';
+import { db } from '../../../../firebase/firebaseConfig';
 import { PauseOutlined } from '@ant-design/icons';
 
 // swiper
@@ -28,8 +28,9 @@ import { message } from 'antd';
 const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
-  const user = auth.currentUser;
-  const userUid = auth.currentUser?.uid;
+
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   // firebase에서 데이터 불러오기
   const fetchData = async () => {

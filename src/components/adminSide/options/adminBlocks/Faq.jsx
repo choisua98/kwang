@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useInput from '../../../../hooks/useInput';
 import { nanoid } from 'nanoid';
-import { auth, db } from '../../../../firebase/firebaseConfig';
+import { db } from '../../../../firebase/firebaseConfig';
 import {
   addDoc,
   collection,
@@ -15,11 +15,12 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import {
   blocksAtom,
   deleteModalVisibleAtom,
   modalVisibleAtom,
+  userAtom,
 } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
@@ -31,8 +32,8 @@ const Faq = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 사용자 UID 가져오기
-  const userUid = auth.currentUser?.uid;
+  const user = useAtomValue(userAtom);
+  const userUid = user?.uid;
 
   // FAQ 리스트를 관리하는 상태 설정
   const [faqList, setFaqList] = useState([]);
