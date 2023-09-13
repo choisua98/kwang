@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { B } from './BlocksArea.styles';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
@@ -26,6 +26,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
+  const [userButtonColor, setUserButtonColor] = useState('');
   const user = auth.currentUser;
   const userUid = auth.currentUser?.uid;
 
@@ -53,6 +54,26 @@ const BlocksArea = () => {
 
       // 가공된 데이터를 상태에 업데이트
       setBlocks(initialDocuments);
+
+      // 'users' 컬렉션에서 데이터 가져오기
+      const userQuery = query(
+        collection(db, 'users'),
+        where('uid', '==', userUid),
+      );
+      const userQuerySnapshot = await getDocs(userQuery);
+
+      // 가져온 데이터를 가공하여 배열에 저장
+      const initialUserDocuments = [];
+      userQuerySnapshot.forEach((doc) => {
+        const data = {
+          id: doc.id,
+          ...doc.data(),
+        };
+        initialUserDocuments.push(data);
+      });
+
+      // 가공된 데이터를 상태에 업데이트
+      setUserButtonColor(initialUserDocuments[0].buttonColor);
     } catch (error) {
       console.error('데이터 가져오기 오류:', error);
     }
@@ -113,23 +134,18 @@ const BlocksArea = () => {
             <div ref={provided.innerRef} {...provided.droppableProps}>
               {blocks.map((block, index) => (
                 <Draggable key={block.id} draggableId={block.id} index={index}>
-                  {(provided, magic, snapshot) => (
+                  {(provided) => (
                     <B.Container
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      isDragging={snapshot.isDragging}
                     >
                       {block.title && (
-                        <div
-                          isDragging={snapshot.isDragging}
-                          ref={magic.innerRef}
-                          {...magic.draggableProps}
-                        >
+                        <div>
                           <button onClick={() => moveToEditButton(block)}>
                             {block.title}
                           </button>
-                          <span {...magic.dragHandleProps}>
+                          <span>
                             <PauseOutlined />
                           </span>
                         </div>
@@ -151,12 +167,8 @@ const BlocksArea = () => {
                               </B.SwiperSlide>
                             ))}
                           </B.Swiper>
-                          <div
-                            isDragging={snapshot.isDragging}
-                            ref={magic.innerRef}
-                            {...magic.draggableProps}
-                          >
-                            <span {...magic.dragHandleProps}>
+                          <div>
+                            <span>
                               <PauseOutlined />
                             </span>
                           </div>

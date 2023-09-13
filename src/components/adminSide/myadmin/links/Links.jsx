@@ -18,43 +18,109 @@ import {
 } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
 
-const Links = () => {
-  const userUid = auth.currentUser?.uid; // 현재 로그인한 사용자 UID 가져오기
-  const [modalVisible, setModalVisible] = useState(false); // 모달 열림, 닫힘
-  const [urlText, setUrlText] = useState(''); // URL 텍스트 입력 필드 변경
-  const [imageFile, setImageFile] = useState(null); // 선택된 이미지 파일 변경(파일 업로드에 사용)
-  const [uploadingImage, setUploadingImage] = useState(false); // 이미지 업로드 중인지 확인
-  const [linksData, setLinksData] = useState([]); // Firestore에서 가져온 링크 데이터를 저장
-  const [defaultLinks, setDefaultLinks] = useState([0, 1, 2]); // 기본으로 보여줄 링크 버튼 3개. 새 링크가 추가되면 하나씩 감소
-  const [editingLinkId, setEditingLinkId] = useState(null); // 현재 편집 중인 링크의 ID. null이면 새 링크를 생성하고 아니면 해당 ID 링크를 수정
-  const [imageUrl, setImageUrl] = useState(null); // 선택된 이미지 파일 대신에 사용할 이미지 URL 저장
-  const fileInputRef = useRef(); // 이미지 업로드 파일 입력 필드
+import GithubIcon from '../../../../assets/images/admin/linkIcon/icon-github.png';
+import InstagramIcon from '../../../../assets/images/admin/linkIcon/icon-instagram.png';
+import KakaoIcon from '../../../../assets/images/admin/linkIcon/icon-kakao.png';
+import NaverIcon from '../../../../assets/images/admin/linkIcon/icon-naver.png';
+import TiktokIcon from '../../../../assets/images/admin/linkIcon/icon-tiktok.png';
+import TwitterIcon from '../../../../assets/images/admin/linkIcon/icon-twitter.png';
+import YoutubeIcon from '../../../../assets/images/admin/linkIcon/icon-youtube.png';
+import FacebookIcon from '../../../../assets/images/admin/linkIcon/icon-facebook.png';
 
-  // URL 입력 필드 변경
+const Links = () => {
+  const userUid = auth.currentUser?.uid;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [urlText, setUrlText] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [linksData, setLinksData] = useState([]);
+  const [defaultLinks, setDefaultLinks] = useState([0, 1, 2]);
+  const [editingLinkId, setEditingLinkId] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const fileInputRef = useRef();
+
+  // Icon Image
+  const [selectedIcon, setSelectedIcon] = useState('');
+  const [iconImageUrl, setIconImageUrl] = useState('');
+
+  const iconImages = [
+    {
+      id: 1,
+      name: 'icon-kakao',
+      src: KakaoIcon,
+    },
+    {
+      id: 2,
+      name: 'icon-youtube',
+      src: YoutubeIcon,
+    },
+    {
+      id: 3,
+      name: 'icon-instagram',
+      src: InstagramIcon,
+    },
+    {
+      id: 4,
+      name: 'icon-facebook',
+      src: FacebookIcon,
+    },
+    {
+      id: 5,
+      name: 'icon-naver',
+      src: NaverIcon,
+    },
+    {
+      id: 6,
+      name: 'icon-twitter',
+      src: TwitterIcon,
+    },
+    {
+      id: 7,
+      name: 'icon-github',
+      src: GithubIcon,
+    },
+    {
+      id: 8,
+      name: 'icon-tiktok',
+      src: TiktokIcon,
+    },
+  ];
+
+  const iconClickHandler = async (e) => {
+    const clickedIcon = e.target;
+    const clickedIconName = clickedIcon.getAttribute('name');
+
+    if (selectedIcon) {
+      selectedIcon.style.border = 'none';
+    }
+    clickedIcon.style.border = '2px solid var(--color-accent)';
+    setSelectedIcon(clickedIcon);
+
+    const iconStorageRef = ref(storage, `linkIcon/${clickedIconName}.png`);
+    const iconDownloadURL = await getDownloadURL(iconStorageRef);
+    setIconImageUrl(iconDownloadURL);
+  };
+
   const handleUrlChange = (e) => {
     setUrlText(e.target.value);
   };
 
-  // 이미지 선택 변경
   const handleImageChange = (e) => {
     setImageFile(e.target.files[0]);
     setImageUrl(URL.createObjectURL(e.target.files[0]));
   };
 
-  // 모달 닫기 핸들러
   const handleModalClose = () => {
     setModalVisible(false);
-    setImageUrl(null); // 모달이 닫힐 때 imageUrl를 null로 설정
-  };
-
-  // 이미지 압축 옵션
-  const options = {
-    maxSizeMB: 0.5,
-    maxWidthOrHeight: 300,
-    useWebWorker: true,
+    setImageUrl(null);
   };
 
   const compressImage = async (imageFile) => {
+    const options = {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 300,
+      useWebWorker: true,
+    };
     try {
       const compressedFile = await imageCompression(imageFile, options);
       return compressedFile;
@@ -64,32 +130,29 @@ const Links = () => {
     }
   };
 
-  // 새 링크 버튼 클릭 시
   const handleNewLinkClick = () => {
-    setModalVisible(true); // 모달 창
-    setEditingLinkId(null); // 편집 중인 링크 ID를 null로 설정(새 링크 생성)
-    setUrlText(''); // URL 입력 필드 제거
-    setImageUrl(null); // 기존 선택된 이미지 초기화
+    setModalVisible(true);
+    setEditingLinkId(null);
+    setUrlText('');
+    setImageUrl(null);
   };
 
-  // 선택된 이미지 파일을 Firebase Storage에 업로드하고 다운로드 URL을 가져옴
   const uploadImage = async () => {
     if (!imageFile) return;
     setUploadingImage(true);
 
-    // 새 이미지 파일이 선택되면 압축하고 그 결과를 사용
     let fileToUpload = imageFile;
     const compressedFile = await compressImage(imageFile);
     if (compressedFile) {
       fileToUpload = compressedFile;
-      let storageRef = ref(storage, 'linkImages/' + fileToUpload.name); // 업로드 할 파일 생성
-      let taskSnapshot; // 파일 업로드 스냅샷 가져오기
+      let storageRef = ref(storage, 'linkImages/' + fileToUpload.name);
+      let taskSnapshot;
       try {
         taskSnapshot = await uploadBytesResumable(storageRef, fileToUpload);
       } catch (error) {
         console.error(error);
       }
-      let downloadURL = await getDownloadURL(taskSnapshot.ref); // 다운로드 URL 가져오기
+      let downloadURL = await getDownloadURL(taskSnapshot.ref);
       setUploadingImage(false);
       return downloadURL;
     } else {
@@ -101,15 +164,15 @@ const Links = () => {
 
   // 저장 버튼(링크 데이터를 Firestore에 저장 및 업데이트)
   const handleSaveClick = async () => {
-    // urlText가 비어있거나 이미지가 업로드 중이면 종료
-    if (!urlText || uploadingImage) return;
-
-    // 이미지 파일과 URL 둘 다 비어있는 경우, 경고 메시지 표시 후 종료
-    if (!imageFile && !imageUrl) {
-      alert('이미지와 URL 모두 입력해주세요.');
+    // 이미지 URL 빈 값일때 알림창 띄우기
+    if (!imageFile && !iconImageUrl) {
+      alert('이미지를 입력해 주세요.');
       return;
     }
-
+    if (!urlText) {
+      alert('URL을 입력해 주세요.');
+      return;
+    }
     // URL 유효성 검사
     const urlRegExp =
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
@@ -117,8 +180,9 @@ const Links = () => {
       alert('잘못된 URL 형식입니다.(https://kwang.com) 형식으로 입력해주세요');
       return;
     }
+
     // 기존 이미지 URL을 기본값으로 사용
-    let imageUrlToSave = imageUrl;
+    let imageUrlToSave = imageUrl ? imageUrl : iconImageUrl;
     // 새 이미지 파일이 선택되면 업로드하고 새 URL을 가져오기
     if (imageFile) {
       try {
@@ -151,28 +215,27 @@ const Links = () => {
       setUrlText(''); // 입력 필드 초기화
       setImageFile(null);
       setImageUrl(null); // URL 초기화
-      fileInputRef.current.value = ''; // 파일 입력 필드 초기화ㄴ
+      fileInputRef.current.value = ''; // 파일 입력 필드 초기화
       fetchLinks(); // 링크 저장 후 최신 데이터 가져오기
       setEditingLinkId(null); // 수정 중인 링크 ID 초기화
+      setIconImageUrl('');
     } catch (error) {
       console.error('업데이트 중 오류:', error);
       return;
     }
   };
 
-  // 선택한 링크를 삭제
   const handleDeleteClick = async (id) => {
     if (!window.confirm('정말로 이 링크를 삭제하시겠습니까?')) return;
     try {
       await deleteDoc(doc(db, 'links', id));
-      fetchLinks(); // 링크가 삭제된 후에 최신 데이터 가져오기
+      fetchLinks();
     } catch (error) {
       console.error('링크 삭제 중 오류:', error);
     }
     setModalVisible(false);
   };
 
-  // Firestore에서 사용자의 링크 데이터를 가져오기
   const fetchLinks = async () => {
     if (!userUid) return;
     const linksQuery = query(
@@ -186,8 +249,7 @@ const Links = () => {
       ...doc.data(),
       timestamp: doc.data().createdAt?.seconds,
     }));
-    let sortedLinksData = [...newLinksData]; // timestamp를 기준으로 오름차순 정렬
-    // 비교하는 값들을 출력
+    let sortedLinksData = [...newLinksData];
     sortedLinksData.sort((a, b) => {
       return a.timestamp - b.timestamp;
     });
@@ -196,15 +258,12 @@ const Links = () => {
         .fill()
         .map((_, i) => i),
     );
-    setLinksData(sortedLinksData); // 정렬된 데이터를 setLinksData 저장
+    setLinksData(sortedLinksData);
   };
 
-  // 컴포넌트가 마운트되거나 userUid가 변경되면 fetchLink 링크 데이터를 가져옴
   useEffect(() => {
     fetchLinks();
   }, [userUid]);
-
-  useEffect(() => {}, [linksData]);
 
   return (
     <>
@@ -218,18 +277,13 @@ const Links = () => {
                   <button
                     onClick={() => {
                       setModalVisible(true);
-                      setEditingLinkId(link.id); // 수정 중인 링크의 ID
-                      setUrlText(link.url); // 기존 URL 값
-                      setImageUrl(link.imageUrl); // 기존 이미지 URL 값
+                      setEditingLinkId(link.id);
+                      setUrlText(link.url);
+                      setImageUrl(link.imageUrl);
                     }}
                   >
                     <img src={link.imageUrl} alt="Link Icon" />
                   </button>
-                  {/* <L.ButtonDelete>
-                    <button onClick={() => handleDeleteClick(link.id)}>
-                      X
-                    </button>
-                  </L.ButtonDelete> */}
                 </div>
               ))}
               {defaultLinks.map((_, index) => (
@@ -249,9 +303,20 @@ const Links = () => {
           footer={null}
           width={300}
         >
+          <L.IconContainer>
+            {iconImages.map((icon) => {
+              return (
+                <div key={icon.id}>
+                  <button type="button" onClick={iconClickHandler}>
+                    <img name={icon.name} src={icon.src} alt="icon" />
+                  </button>
+                </div>
+              );
+            })}
+          </L.IconContainer>
+
           <Row>
             <Col span={24}>
-              <div>로고 이미지 / 아이콘 추가</div>
               {imageUrl && <img src={imageUrl} alt="Preview" />}
             </Col>
             <Col span={24}>
@@ -267,8 +332,8 @@ const Links = () => {
             <Col span={24}>
               <p>URL</p>
               <Input.TextArea
-                placeholder="텍스트를 입력하세요"
-                value={urlText}
+                placeholder="링크를 입력하세요"
+                value={urlText || 'https://'}
                 onChange={handleUrlChange}
                 autoSize={{ minRows: 3, maxRows: 6 }}
               />

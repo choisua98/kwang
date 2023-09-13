@@ -8,7 +8,7 @@ export const B = {
       align-items: center;
     }
 
-    // icon
+    // icon 스타일
     span {
       display: flex;
       justify-content: center;

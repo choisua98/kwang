@@ -28,15 +28,10 @@ const ChallengeService = () => {
       );
       const querySnapshot = await getDocs(q);
 
-      // 가져온 데이터를 가공하여 배열에 저장
-      const initialDocuments = [];
-      querySnapshot.forEach((doc) => {
-        const data = {
-          id: doc.id,
-          ...doc.data(),
-        };
-        initialDocuments.push(data);
-      });
+      const initialDocuments = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
       // 가공된 데이터를 상태에 업데이트
       setChallengeData(initialDocuments);

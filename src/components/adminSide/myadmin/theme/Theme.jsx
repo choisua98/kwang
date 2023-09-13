@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Modal, Progress, Row } from 'antd';
+import { Col, Modal, Progress, Row } from 'antd';
 import { useAtom } from 'jotai';
 import { nanoid } from 'nanoid';
 import sampleImg from '../../../../assets/images/admin/sample.jpg';
@@ -14,6 +14,16 @@ import imageCompression from 'browser-image-compression';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { T } from './Theme.styles';
 
+// Color Img
+import BlueColor from '../../../../assets/images/admin/colorImg/3a4ca8.png';
+import GreenColor from '../../../../assets/images/admin/colorImg/568a35.png';
+import GrayColor from '../../../../assets/images/admin/colorImg/595959.png';
+import PurpleColor from '../../../../assets/images/admin/colorImg/b98bc6.png';
+import RedColor from '../../../../assets/images/admin/colorImg/d94925.png';
+import OrangeColor from '../../../../assets/images/admin/colorImg/fd9f28.png';
+import KwangColor from '../../../../assets/images/admin/colorImg/ff7c38.png';
+import YellowColor from '../../../../assets/images/admin/colorImg/ffcd4a.png';
+
 const imageUploadTime = 3000;
 const Theme = () => {
   // 파라미터
@@ -27,6 +37,22 @@ const Theme = () => {
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null); // 배경 이미지 URL을 저장
   const [loading, setLoading] = useState(false); // 이미지 업로드 진행상태 저장
   const [progress, setProgress] = useState(0); // 프로그래스바 0 ~ 100% 진행률 업데이트
+
+  // 색상 선택 기능
+  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedColorName, setSelectedColorName] = useState('');
+
+  const colorPickerHandler = async (e) => {
+    const pickedColor = e.target;
+    const pickedColorName = pickedColor.getAttribute('name');
+
+    if (selectedColor) {
+      selectedColor.style.border = 'none';
+    }
+    pickedColor.style.border = '2px solid var(--color-accent)';
+    setSelectedColor(pickedColor);
+    setSelectedColorName(pickedColorName);
+  };
 
   useEffect(() => {
     let intervalId;
@@ -46,15 +72,14 @@ const Theme = () => {
     return () => clearInterval(intervalId);
   }, [loading]);
 
-  // 업로드 할 배경 이미지 압축 옵션 설정
-  const options = {
-    maxSizeMB: 1,
-    maxWidthOrHeight: 1000,
-    useWebWorker: true,
-  };
-
   // 이미지 압축 함수
   const compressImage = async (imageFile) => {
+    // 업로드 할 배경 이미지 압축 옵션 설정
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1000,
+      useWebWorker: true,
+    };
     try {
       const compressedFile = await imageCompression(imageFile, options);
       return compressedFile;
@@ -124,6 +149,7 @@ const Theme = () => {
     setProgress(0); // 진행률 초기화
     // Firestore에 사용자의 테마 및 배경 이미지 정보 저장
     if (userUid) {
+      const buttonColor = selectedColorName ? selectedColorName : 'Ff7c38';
       const userDocRef = doc(db, 'users', userUid);
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists()) {
@@ -131,12 +157,14 @@ const Theme = () => {
         await updateDoc(userDocRef, {
           theme: tempTheme,
           backgroundImage: tempBackgroundImage,
+          buttonColor: buttonColor,
         });
       } else {
         // 문서가 없는 경우 문서 생성 후 업데이트
         await setDoc(userDocRef, {
           theme: tempTheme,
           backgroundImage: tempBackgroundImage,
+          buttonColor: buttonColor,
         });
       }
     }
@@ -211,6 +239,33 @@ const Theme = () => {
             </Row>
           </Col>
         </Row>
+        <T.ButtonContainer>
+          <p>버튼 컬러 선택</p>
+          <button onClick={colorPickerHandler}>
+            <img name="3a4ca8" src={BlueColor} alt="bluecolor" />
+          </button>
+          <button onClick={colorPickerHandler}>
+            <img name="568a35" src={GreenColor} alt="greencolor" />
+          </button>
+          <button onClick={colorPickerHandler}>
+            <img name="b98bc6" src={PurpleColor} alt="purplecolor" />
+          </button>
+          <button onClick={colorPickerHandler}>
+            <img name="ffcd4a" src={YellowColor} alt="yellowcolor" />
+          </button>
+          <button onClick={colorPickerHandler}>
+            <img name="595959" src={GrayColor} alt="graycolor" />
+          </button>
+          <button onClick={colorPickerHandler}>
+            <img name="fd9f28" src={KwangColor} alt="kwangcolor" />
+          </button>
+          <button onClick={colorPickerHandler}>
+            <img name="d94925" src={RedColor} alt="redcolor" />
+          </button>
+          <button onClick={colorPickerHandler}>
+            <img name="4d9f28" src={OrangeColor} alt="orangecolor" />
+          </button>
+        </T.ButtonContainer>
         <Row>
           <Col span={24}>
             {loading ? (
