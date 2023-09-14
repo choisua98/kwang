@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { E } from './EmailLogin.styles';
@@ -29,9 +28,10 @@ const EmailLogin = () => {
         email,
         password,
       );
-      // 로그인 성공시
-      message.success('로그인 되었습니다.');
-      navigate(`/admin/${userCredential.user.uid}`);
+
+      navigate('/loading', {
+        state: { userUid: `${userCredential.user.uid}` },
+      });
     } catch (error) {
       message.error(ERR_CODE[error.code]);
     }
@@ -44,7 +44,7 @@ const EmailLogin = () => {
         <br />단 하나의 링크, 크왕
       </E.Title>
       <E.Image src="https://picsum.photos/350/100" alt="배너 이미지" />
-      <form>
+      <form onSubmit={onLoginButtonClickHandler}>
         <div>
           <E.EmailInput
             type="email"
@@ -70,9 +70,7 @@ const EmailLogin = () => {
             style={{ marginTop: '15px' }}
           />
         </div>
-        <E.LoginMoveButton type="submit" onClick={onLoginButtonClickHandler}>
-          로그인
-        </E.LoginMoveButton>
+        <E.LoginMoveButton type="submit">로그인</E.LoginMoveButton>
         <E.GridBox>SNS 계정으로 로그인</E.GridBox>
       </form>
     </>

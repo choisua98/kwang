@@ -7,8 +7,6 @@ import {
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
-import { useAtomValue } from 'jotai';
-import { userAtom } from '../../../../atoms/Atom';
 
 const { naver } = window;
 
@@ -25,8 +23,6 @@ export const naverLogin = new naver.LoginWithNaverId({
 
 const NaverLogin = () => {
   const auth = getAuth();
-  const user = useAtomValue(userAtom);
-  const userUid = user?.uid;
 
   const navigate = useNavigate();
 
@@ -36,7 +32,6 @@ const NaverLogin = () => {
 
     naverLogin.getLoginStatus(async (status) => {
       if (status) {
-        console.log(`로그인?: ${status}`);
         // 네이버 로그인 유저 정보를 이용해서 Firebase 이메일+패스워드로 가입시켜주기.
         // Firebase에 등록된 기존 회원이면 로그인 -> 안되면 비회원이니까 회원가입시켜주기.
         const checkEmailExists = async () => {
@@ -57,12 +52,11 @@ const NaverLogin = () => {
               }
             } else {
               try {
-                const userCredential = await createUserWithEmailAndPassword(
+                await createUserWithEmailAndPassword(
                   auth,
                   naverLogin.user.email,
                   naverLogin.user.email,
                 );
-                console.log(`네이버 회원가입 유저 ${userCredential}`);
               } catch (error) {
                 console.error(error);
               }
@@ -74,8 +68,7 @@ const NaverLogin = () => {
 
         try {
           await checkEmailExists();
-          message.success('로그인 되었습니다.');
-          navigate(`/admin/${userUid}`);
+          navigate('/loading');
         } catch (error) {
           message.error('로그인 중 에러 발생:', error.code);
         }

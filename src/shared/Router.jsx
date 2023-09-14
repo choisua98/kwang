@@ -21,6 +21,7 @@ import CustomerFanletter from '../pages/customerPage/CustomerFanletter';
 import CustomerChallengeVerify from '../pages/customerPage/CustomerChallengeVerify';
 import AddLink from '../components/adminSide/options/adminBlocks/AddLink';
 import NotFound from '../pages/kwangPage/NotFound';
+import LoadingPage from '../pages/kwangPage/LoadingPage';
 
 const Router = () => {
   return (
@@ -51,6 +52,7 @@ const Router = () => {
           <Route path="/:uid/fanletter" element={<CustomerFanletter />} />
           <Route path="*" element={<NotFound />} />
         </Route>
+        <Route path="/loading" element={<LoadingPage />} />
       </Routes>
     </BrowserRouter>
   );
