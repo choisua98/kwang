@@ -14,9 +14,8 @@ const GoogleLogin = () => {
   const onGoogleLoginButtonClickHandler = async (e) => {
     e.preventDefault();
     try {
-      const result = await signInWithPopup(auth, provider1);
-      message.success('로그인 되었습니다.');
-      navigate(`/admin/${result.user.uid}`);
+      await signInWithPopup(auth, provider1);
+      navigate('/loading');
     } catch (error) {
       message.error('로그인 중 에러 발생:', error.code);
     }

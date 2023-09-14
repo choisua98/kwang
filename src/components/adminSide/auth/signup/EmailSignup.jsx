@@ -52,13 +52,9 @@ const EmailSignup = () => {
 
     try {
       if (password === confirmPassword) {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password,
-        );
+        await createUserWithEmailAndPassword(auth, email, password);
         message.success('회원가입에 성공하셨습니다.');
-        navigate(`/admin/${userCredential.user.uid}`);
+        navigate('/loading');
       } else {
         message.error(ERR_CODE['auth/wrong-password']);
       }

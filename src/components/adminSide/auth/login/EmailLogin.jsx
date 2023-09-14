@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { L } from './Login.styles';
@@ -29,9 +28,10 @@ const EmailLogin = () => {
         email,
         password,
       );
-      // 로그인 성공시
-      message.success('로그인 되었습니다.');
-      navigate(`/admin/${userCredential.user.uid}`);
+
+      navigate('/loading', {
+        state: { userUid: `${userCredential.user.uid}` },
+      });
     } catch (error) {
       message.error(ERR_CODE[error.code]);
     }
