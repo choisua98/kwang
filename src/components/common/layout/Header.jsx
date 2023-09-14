@@ -88,9 +88,14 @@ const Header = () => {
           <>
             <Col span={21}>
               {/* 로고 영역 */}
-              <Link to="/">
-                <H.Logo src={theme === 'dark' ? WhiteLogo : Logo} alt="크왕" />
-              </Link>
+              {isHomePage && (
+                <Link to="/">
+                  <H.Logo
+                    src={theme === 'dark' ? WhiteLogo : Logo}
+                    alt="크왕"
+                  />
+                </Link>
+              )}
             </Col>
             {!isLoginPage && isHomePage && (
               <Col span={3}>
@@ -105,9 +110,14 @@ const Header = () => {
           <>
             <Col span={22}>
               {/* 로고 영역 */}
-              <Link to="/">
-                <H.Logo src={theme === 'dark' ? WhiteLogo : Logo} alt="크왕" />
-              </Link>
+              {isHomePage && (
+                <Link to="/">
+                  <H.Logo
+                    src={theme === 'dark' ? WhiteLogo : Logo}
+                    alt="크왕"
+                  />
+                </Link>
+              )}
             </Col>
             <Col span={1}>
               {/* 우측 영역 */}
