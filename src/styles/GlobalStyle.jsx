@@ -233,41 +233,6 @@ const GlobalStyle = createGlobalStyle`
   background: #c8dfff !important;
 }
 
-  // 테마
-  .eicwgS {
-    ${({ theme }) =>
-      theme === 'dark' && {
-        background: '#333',
-      }}
-  ${({ theme }) =>
-    theme === 'light' && {
-      background: 'none',
-    }}
-  ${({ theme }) =>
-    theme !== 'dark' &&
-    theme !== 'light' && {
-      background: '#FFFAF0',
-    }}
-  }
-
-  // 상단 토글 메뉴
-  :where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only,
-  :where(.css-17a39f8).ant-btn.ant-btn-icon-only {
-    ${({ theme }) =>
-      theme === 'dark' && {
-        color: '#fff',
-      }}
-    ${({ theme }) =>
-      theme === 'light' && {
-        color: '#404040',
-      }}
-    ${({ theme }) =>
-      theme !== 'dark' &&
-      theme !== 'light' && {
-        color: '#404040',
-      }}
-  }
-
 `;
 
 export { GlobalStyle };
