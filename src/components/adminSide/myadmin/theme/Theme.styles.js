@@ -45,6 +45,23 @@ export const T = {
     color: #fff;
     border-radius: 15px;
     background: #ffbe51;
+    ${({ theme }) =>
+      theme === 'dark' &&
+      `
+      color:#fff; 
+      background:#2E2E2E;`}
+
+    ${({ theme }) =>
+      theme === 'light' &&
+      `
+      color:#000; 
+      background:#DFDDE5;`}
+    
+    ${({ theme }) =>
+      !(theme === 'dark' || theme === 'light') &&
+      `
+      color:#fff; 
+      background:#ffbe51`}
   `,
   // 다크 모드
   DarkModeButton: styled.button`

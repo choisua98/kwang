@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { Modal } from 'antd';
 
 export const B = {
@@ -15,9 +15,33 @@ export const B = {
     button {
       font-size: 14px;
       font-weight: 600;
-      color: var(--color-accent);
-      background-color: transparent;
+      background: none;s
     }
+    ${({ theme }) =>
+      theme === 'dark' &&
+      `
+    border: 1.5px solid #2E2E2E;
+    button {
+      color: #fff;
+    }
+  `}
+    ${({ theme }) =>
+      theme === 'light' &&
+      `
+    border: 1.5px solid #DFDDE5;
+    button {
+      color: #2E2E2E;
+    }
+  `}
+  ${({ theme }) =>
+    theme !== 'dark' &&
+    theme !== 'light' &&
+    `
+    border: 1.5px solid #FF7A16;
+    button {
+       color: #FF7A16;
+     }
+   `}
   `,
 
   CustomModal: styled(Modal)`
@@ -67,6 +91,37 @@ export const B = {
         background-color: rgb(255, 250, 240, 0.8);
         border: none;
       }
+
+      ${({ theme }) =>
+        theme === 'dark' &&
+        `
+          color:#fff; 
+          background:#2E2E2E;
+
+           &:disabled{
+              color:#000; 
+              background:#fff; 
+           }
+       `}
+
+      ${({ theme }) =>
+        theme === 'light' &&
+        `
+           color:#2E2E2E; 
+           background:#DFDDE5;
+
+            &:disabled{
+               color:#000; 
+               background:#FFFF; 
+            }
+       `}
+       
+       ${({ theme }) =>
+        theme !== 'dark' &&
+        theme !== 'light' &&
+        `    
+            color:#FF7A16;  
+         `}
     }
   `,
 };

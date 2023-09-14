@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { db } from '../../../../firebase/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { B } from './Blocks.styles';
-import { userAtom } from '../../../../atoms/Atom';
-import { useAtomValue } from 'jotai';
+import { themeAtom, userAtom } from '../../../../atoms/Atom';
+import { useAtom, useAtomValue } from 'jotai';
 
 const Blocks = () => {
   const navigate = useNavigate();
   const [modalVisible, setModalVisible] = useState(false);
   const [disableBlocks, setDisableBlocks] = useState([]);
+  const [theme] = useAtom(themeAtom);
 
   const user = useAtomValue(userAtom);
   const userUid = user?.uid;
@@ -44,7 +45,7 @@ const Blocks = () => {
 
   return (
     <>
-      <B.MenuFormButton>
+      <B.MenuFormButton theme={theme}>
         <button type="button" onClick={() => setModalVisible(true)}>
           메뉴(폼) 추가하기
         </button>
@@ -59,7 +60,7 @@ const Blocks = () => {
         width={350}
       >
         <>
-          <B.ButtonsContainer>
+          <B.ButtonsContainer theme={theme}>
             <button onClick={() => navigate('/admin/addlink')}>
               링크 추가하기 ✔️
             </button>

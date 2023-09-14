@@ -4,6 +4,7 @@ import { db, storage } from '../../../../firebase/firebaseConfig';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import {
+  themeAtom,
   userAtom,
   userNickname,
   userProfileImage,
@@ -36,6 +37,7 @@ const MyProfile = () => {
   const [updatedImage, setUpdatedImage] = useState(defaultProfileImage);
   const [countNickname, setCountNickname] = useState('');
   const [countIntro, setCountIntro] = useState('');
+  const [theme] = useAtom(themeAtom);
 
   const fileInputRef = useRef(); // 이미지 업로드 파일 입력 필드
 
@@ -194,11 +196,12 @@ const MyProfile = () => {
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
         <P.ProfilBox span={24}>
-          <P.ProfileImage src={updatedImage} />
+          <P.ProfileImage src={updatedImage} theme={theme} />
           <P.ModalOpenButton
             onClick={() => {
               setModalVisible(true);
             }}
+            theme={theme}
           ></P.ModalOpenButton>
         </P.ProfilBox>
       </Row>

@@ -26,8 +26,8 @@ import TiktokIcon from '../../../../assets/images/admin/linkIcon/icon-tiktok.png
 import TwitterIcon from '../../../../assets/images/admin/linkIcon/icon-twitter.png';
 import YoutubeIcon from '../../../../assets/images/admin/linkIcon/icon-youtube.png';
 import FacebookIcon from '../../../../assets/images/admin/linkIcon/icon-facebook.png';
-import { useAtomValue } from 'jotai';
-import { userAtom } from '../../../../atoms/Atom';
+import { useAtom, useAtomValue } from 'jotai';
+import { themeAtom, userAtom } from '../../../../atoms/Atom';
 
 const Links = () => {
   const user = useAtomValue(userAtom);
@@ -41,7 +41,7 @@ const Links = () => {
   const [editingLinkId, setEditingLinkId] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const fileInputRef = useRef();
-
+  const [theme] = useAtom(themeAtom);
   // Icon Image
   const [selectedIcon, setSelectedIcon] = useState('');
 
@@ -271,7 +271,7 @@ const Links = () => {
 
   return (
     <>
-      <L.Container>
+      <L.Container theme={theme}>
         <Row justify="center" align="middle">
           <L.Col span={24}>
             <h2>링크 추가하기</h2>
