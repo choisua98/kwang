@@ -1,7 +1,4 @@
 import { createGlobalStyle } from 'styled-components';
-import btnEditImageLight from '../assets/images/common/btn/btn-edit-light.png';
-import btnEditImageDark from '../assets/images/common/btn/btn-edit-dark.png';
-import btnEditImageDefault from '../assets/images/common/btn/btn-edit.png';
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -71,8 +68,33 @@ const GlobalStyle = createGlobalStyle`
     background: #ffbe51;
   }
   /* 달력(RangePicker) */
+  .ant-picker-input input  {
+    margin-bottom: 0;
+  }
+  .ant-picker-dropdown {
+    overflow: hidden;
+    max-width: 288px;
+    .ant-picker-year-panel
+    .ant-picker-cell-disabled::before,
+    .ant-picker-month-panel
+    .ant-picker-cell-disabled::before {
+      background: none;
+    }
+  }
   .periodPickerPopup {
-    width: 100vw;
+    .ant-picker-panel-container {
+      margin-left: 0 !important;
+      max-width: 288px;
+      transition: none;
+      .ant-picker-panel  {
+        min-width: 288px;
+        max-width: 288px;
+        .ant-picker-header-next-btn,
+        .ant-picker-header-super-next-btn {
+          visibility:initial !important;
+        }
+      }
+    }
   }
 `;
 
