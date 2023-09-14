@@ -34,7 +34,7 @@ export const H = {
   Container: styled.div`
     display: flex;
     height: 80px;
-    padding: 20px;
+    padding: 20px 0;
     justify-content: space-between;
   `,
 
@@ -53,8 +53,7 @@ export const H = {
   MenuContainer: styled.div`
     display: grid;
     justify-content: left;
-    /* background-color: orange; */
-    margin: 20px;
+    margin: 0 0 20px;
   `,
 
   MenuStyle: styled.p`
@@ -72,9 +71,8 @@ export const H = {
 
   ProfileContainer: styled.div`
     display: flex;
-    padding: 30px 20px 20px;
+    padding: 30px 0 20px;
     align-items: center;
-    margin-left: 15px;
   `,
 
   ProfileImage: styled.img`
