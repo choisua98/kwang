@@ -7,10 +7,11 @@ import { L } from '../../../adminSide/myadmin/links/Links.styles';
 
 const LinkService = () => {
   const { uid } = useParams();
-
   const [linkDataArray, setLinkDataArray] = useState([]); // 여러 문서 데이터를 저장할 배열
 
   useEffect(() => {
+    setLinkDataArray([]); // 남아있는 링크 데이터를 초기화
+
     const fetchData = async () => {
       try {
         const q = query(
@@ -20,14 +21,10 @@ const LinkService = () => {
         );
         const querySnapshot = await getDocs(q);
 
-        const newDataArray = []; // 3개의 문서 데이터를 임시로 담을 배열
+        // uid가 일치하는 문서 데이터를 돌아가며 데이터 추출
+        const newDataArray = querySnapshot.docs.map((doc) => doc.data());
 
-        // forEach로 uid가 일치하는 문서 데이터 3개를 돌아가며 데이터 추출
-        querySnapshot.forEach((doc) => {
-          const linkData = doc.data();
-          newDataArray.push(linkData);
-          setLinkDataArray(newDataArray); // 추출된 문서 데이터를 한 번에 업데이트
-        });
+        setLinkDataArray(newDataArray);
       } catch (error) {
         message.error('에러 발생:', error);
       }
