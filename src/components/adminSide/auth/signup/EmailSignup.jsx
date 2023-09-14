@@ -69,7 +69,7 @@ const EmailSignup = () => {
 
   return (
     <>
-      <E.FormContainer style={{ position: 'relative', height: '100%' }}>
+      <E.FormContainer>
         <label>아이디(이메일)</label>
         <E.EmailDiv>
           <input

@@ -285,5 +285,12 @@ export const CC = {
     display: flex;
     justify-content: space-between;
     margin: 10px 10px;
+    > div {
+      > label:nth-child(2) {
+        padding-left: 10px;
+        font-size: 13px;
+        color: lightgray;
+      }
+    }
   `,
 };

@@ -4,6 +4,7 @@ import { db, storage } from '../../../../firebase/firebaseConfig';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import {
+  themeAtom,
   userAtom,
   userNickname,
   userProfileImage,
@@ -36,6 +37,7 @@ const MyProfile = () => {
   const [updatedImage, setUpdatedImage] = useState(defaultProfileImage);
   const [countNickname, setCountNickname] = useState('');
   const [countIntro, setCountIntro] = useState('');
+  const [theme] = useAtom(themeAtom);
 
   const fileInputRef = useRef(); // 이미지 업로드 파일 입력 필드
 
@@ -191,18 +193,19 @@ const MyProfile = () => {
     setCountIntro(e.target.value.length);
   };
   return (
-    <div>
-      <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
+    <P.Container>
+      <Row justify="center" align="middle">
         <P.ProfilBox span={24}>
-          <P.ProfileImage src={updatedImage} />
+          <P.ProfileImage src={updatedImage} theme={theme} />
           <P.ModalOpenButton
             onClick={() => {
               setModalVisible(true);
             }}
+            theme={theme}
           ></P.ModalOpenButton>
         </P.ProfilBox>
       </Row>
-      <Row justify="center" align="middle" style={{ padding: '0' }}>
+      <Row justify="center" align="middle">
         <Col>
           <P.InfoBox>{updateNick}</P.InfoBox>
           <P.InfoBox>{updateIntro}</P.InfoBox>
@@ -237,7 +240,6 @@ const MyProfile = () => {
             accept=" image/*"
             onChange={onChangeImageFile}
             ref={fileInputRef}
-            style={{ display: 'none' }}
           />
           <P.UploadButton onClick={() => fileInputRef.current.click()}>
             프로필 이미지 업로드
@@ -261,12 +263,12 @@ const MyProfile = () => {
             placeholder="소개를 작성해 주세요."
             value={introduction}
             onChange={handleIntroductionChange}
-            style={{ marginBottom: '20px' }}
+            s
             maxLength={25}
           />
         </P.ProfileContainer>
       </Modal>
-    </div>
+    </P.Container>
   );
 };
 

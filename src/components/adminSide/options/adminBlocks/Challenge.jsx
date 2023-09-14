@@ -318,7 +318,7 @@ const Challenge = () => {
                     uploadedImages.length >= maxUploads ? 'disabled' : ''
                   }
                 >
-                  <CameraOutlined style={{ fontSize: '30px' }} />
+                  <CameraOutlined />
                   <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
                 </label>
               </div>
@@ -327,7 +327,7 @@ const Challenge = () => {
             <>
               <label htmlFor="imageInput">
                 <div>
-                  <CameraOutlined style={{ fontSize: '30px' }} />
+                  <CameraOutlined />
                 </div>
                 <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
               </label>
@@ -388,7 +388,6 @@ const Challenge = () => {
           <RangePicker
             id="rangePicker"
             disabledDate={disabledDate}
-            style={{ width: '100%' }}
             popupClassName="customRangePickerPopup"
             value={[
               startDate ? dayjs(startDate) : null,

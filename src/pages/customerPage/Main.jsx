@@ -4,6 +4,7 @@ import LinkService from '../../components/customerSide/myhome/linkService/LinkSe
 import { useParams } from 'react-router-dom';
 import CustomerBlocks from '../../components/customerSide/myhome/blocksArea/CustomerBlocks';
 import { db } from '../../firebase/firebaseConfig';
+import { C } from './Customer.styles';
 import { useAtom } from 'jotai';
 import { backgroundImageAtom, themeAtom } from '../../atoms/Atom';
 import { useFetchTheme } from '../../hooks/useTheme';
@@ -17,13 +18,11 @@ const Main = () => {
   useFetchTheme(db, userUid, setTheme, setBackgroundImage);
 
   return (
-    <>
-      <div style={{ padding: '20px' }}>
-        <Profile />
-        <LinkService />
-        <CustomerBlocks />
-      </div>
-    </>
+    <C.Container>
+      <Profile />
+      <LinkService />
+      <CustomerBlocks />
+    </C.Container>
   );
 };
 

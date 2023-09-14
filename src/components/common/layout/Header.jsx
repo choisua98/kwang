@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Row, Col, Button, Drawer, Space, message } from 'antd';
+import { Row, Col, Drawer, Space, message } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import Logo from '../../../assets/images/logo.png';
 import WhiteLogo from '../../../assets/images/logo-white.png';
@@ -88,9 +88,14 @@ const Header = () => {
           <>
             <Col span={21}>
               {/* 로고 영역 */}
-              <Link to="/">
-                <H.Logo src={theme === 'dark' ? WhiteLogo : Logo} alt="크왕" />
-              </Link>
+              {isHomePage && (
+                <Link to="/">
+                  <H.Logo
+                    src={theme === 'dark' ? WhiteLogo : Logo}
+                    alt="크왕"
+                  />
+                </Link>
+              )}
             </Col>
             {!isLoginPage && isHomePage && (
               <Col span={3}>
@@ -105,15 +110,24 @@ const Header = () => {
           <>
             <Col span={22}>
               {/* 로고 영역 */}
-              <Link to="/">
-                <H.Logo src={theme === 'dark' ? WhiteLogo : Logo} alt="크왕" />
-              </Link>
+              {isHomePage && (
+                <Link to="/">
+                  <H.Logo
+                    src={theme === 'dark' ? WhiteLogo : Logo}
+                    alt="크왕"
+                  />
+                </Link>
+              )}
             </Col>
             <Col span={1}>
               {/* 우측 영역 */}
-              <div className="right-area">
+              <>
                 <Space>
-                  <Button icon={<MenuOutlined />} onClick={openMenu} />
+                  <H.ButtonToggle
+                    colorTheme={theme}
+                    icon={<MenuOutlined />}
+                    onClick={openMenu}
+                  />
                 </Space>
                 <Drawer
                   placement="right"
@@ -161,7 +175,7 @@ const Header = () => {
                     </H.MenuStyle>
                   </H.MenuContainer>
                 </Drawer>
-              </div>
+              </>
             </Col>
           </>
         )}

@@ -17,8 +17,36 @@ export const L = {
     p {
       margin-top: 31px;
       font-size: 14px;
-      color: #7a7a7a;
     }
+
+    ${({ theme }) =>
+      theme === 'dark' &&
+      `
+    color: #fff;
+    background: #2E2E2E;
+    p {
+      color: #fff;
+    }
+  `}
+    ${({ theme }) =>
+      theme === 'light' &&
+      `
+    color: #000;
+    background: #fff;
+    border: 1px solid #ddd;
+    p {
+      color: #000;
+    }
+  `}
+  ${({ theme }) =>
+      theme !== 'dark' &&
+      theme !== 'light' &&
+      `
+     color: '#fff';
+     p {
+       color: '#000';
+     }
+   `}
   `,
 
   Col: styled(Col)`
@@ -114,5 +142,27 @@ export const L = {
 
   CustomerSideContainer: styled.div`
     margin-bottom: 20px;
+    > div {
+      > div {
+        text-align: center;
+      }
+    }
+  `,
+
+  IconContainer: styled.div`
+    display: flex;
+    flex-wrap: wrap;
+
+    button {
+      background-color: white;
+    }
+
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 100%;
+      background-size: cover;
+      cursor: pointer;
+    }
   `,
 };

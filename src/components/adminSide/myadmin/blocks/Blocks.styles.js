@@ -1,10 +1,9 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { Modal } from 'antd';
 
 export const B = {
   MenuFormButton: styled.div`
-    padding: 18px 0;
-    width: 100%;
+    width: calc(100% - 32px);
     height: auto;
     border-radius: 15px;
     border: 1.5px solid var(--color-accent);
@@ -13,11 +12,37 @@ export const B = {
     margin-top: 20px;
 
     button {
+      width: 100%;
+      line-height: 58px;
       font-size: 14px;
       font-weight: 600;
-      color: var(--color-accent);
-      background-color: transparent;
+      background: none;
     }
+    ${({ theme }) =>
+      theme === 'dark' &&
+      `
+    border: 1.5px solid #2E2E2E;
+    button {
+      color: #fff;
+    }
+  `}
+    ${({ theme }) =>
+      theme === 'light' &&
+      `
+    border: 1.5px solid #DFDDE5;
+    button {
+      color: #2E2E2E;
+    }
+  `}
+  ${({ theme }) =>
+      theme !== 'dark' &&
+      theme !== 'light' &&
+      `
+    border: 1.5px solid #FF7A16;
+    button {
+       color: #FF7A16;
+     }
+   `}
   `,
 
   CustomModal: styled(Modal)`
@@ -67,6 +92,35 @@ export const B = {
         background-color: rgb(255, 250, 240, 0.8);
         border: none;
       }
+
+      ${({ theme }) =>
+        theme === 'dark' &&
+        `
+        color:#fff; 
+        background:#2E2E2E;
+        
+        &:disabled{
+          color:#000; 
+          background:#fff; 
+        }
+      `}
+      ${({ theme }) =>
+        theme === 'light' &&
+        `
+          color:#2E2E2E; 
+          background:#DFDDE5;
+
+          &:disabled{
+            color:#000; 
+            background:#FFFF; 
+          }
+       `}
+       ${({ theme }) =>
+        theme !== 'dark' &&
+        theme !== 'light' &&
+        `    
+        color:#FF7A16;  
+      `}
     }
   `,
 };

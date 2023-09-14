@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { E } from './EmailLogin.styles';
+import { L } from './Login.styles';
 import { message } from 'antd';
 import { ERR_CODE } from '../ERR_CODE';
 
@@ -39,14 +39,14 @@ const EmailLogin = () => {
 
   return (
     <>
-      <E.Title style={{ fontSize: '20px', lineHeight: '26px' }}>
+      <L.Title>
         <b>크리에이터를 위한</b>
         <br />단 하나의 링크, 크왕
-      </E.Title>
-      <E.Image src="https://picsum.photos/350/100" alt="배너 이미지" />
-      <form onSubmit={onLoginButtonClickHandler}>
+      </L.Title>
+      <L.Image src="https://picsum.photos/350/100" alt="배너 이미지" />
+      <form>
         <div>
-          <E.EmailInput
+          <L.EmailInput
             type="email"
             value={email}
             name="email"
@@ -58,7 +58,7 @@ const EmailLogin = () => {
           />
         </div>
         <div>
-          <E.EmailInput
+          <L.EmailInput
             type="password"
             value={password}
             name="password"
@@ -67,11 +67,12 @@ const EmailLogin = () => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-            style={{ marginTop: '15px' }}
           />
         </div>
-        <E.LoginMoveButton type="submit">로그인</E.LoginMoveButton>
-        <E.GridBox>SNS 계정으로 로그인</E.GridBox>
+        <L.LoginMoveButton type="submit" onClick={onLoginButtonClickHandler}>
+          로그인
+        </L.LoginMoveButton>
+        <L.GridBox>SNS 계정으로 로그인</L.GridBox>
       </form>
     </>
   );

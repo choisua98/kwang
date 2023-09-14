@@ -2,8 +2,19 @@ import { styled } from 'styled-components';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import { Button, Col } from 'antd';
 import btnEditImage from '../../../../assets/images/common/btn/btn-edit.png';
+import btnEditImageLight from '../../../../assets/images/common/btn/btn-edit-light.png';
+import btnEditImageDark from '../../../../assets/images/common/btn/btn-edit-dark.png';
+import btnEditImageDefault from '../../../../assets/images/common/btn/btn-edit.png';
 
 export const P = {
+  Container: styled.div`
+    > div {
+      padding: 20px 0;
+    }
+    > div:nth-child(2) {
+      padding: 0;
+    }
+  `,
   InfoBox: styled.div`
     margin-bottom: 10px;
     font-size: 16px;
@@ -26,11 +37,26 @@ export const P = {
     border-radius: 50%;
     width: 35px;
     height: 35px;
+    ${({ theme }) =>
+      theme === 'dark'
+        ? `
+        background-image: url(${btnEditImageDark}) !important;
+        background-size: cover;`
+        : theme === 'light'
+        ? `
+        background-image: url(${btnEditImageLight}) !important;
+        background-size: cover;`
+        : `
+        background-image: url(${btnEditImageDefault}) !important;
+        background-size: cover;`}
   `,
 
   ProfileContainer: styled.div`
     display: flex;
     flex-direction: column;
+    input[type='file'] {
+      display: none;
+    }
   `,
 
   ProfileImage: styled.img`
@@ -39,6 +65,16 @@ export const P = {
     object-fit: cover;
     background-image: url(${defaultProfileImage});
     border-radius: 100%;
+    ${({ theme }) =>
+      theme === 'dark'
+        ? `
+      border:none;`
+        : theme === 'light'
+        ? `
+      border:1px solid #ddd; 
+      border-radius:50%;`
+        : `
+      border:none;`}
   `,
 
   PreviewImage: styled.img`
@@ -81,6 +117,7 @@ export const P = {
   `,
 
   ModalInput: styled.input`
+    margin-bottom: 20px;
     padding: 16.5px 16px;
     box-sizing: border-box;
     border: none;

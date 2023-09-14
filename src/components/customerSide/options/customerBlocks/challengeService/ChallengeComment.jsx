@@ -325,13 +325,7 @@ const ChallengeComment = () => {
               <CC.GridBox>
                 <div>
                   <label>{commentData.nickname}</label>
-                  <label
-                    style={{
-                      color: 'lightgray',
-                      fontSize: '13px',
-                      paddingLeft: '10px',
-                    }}
-                  >
+                  <label>
                     {moment(
                       commentData.date,
                       'YYYY년 MM월 DD일 hh:mm:ss A',

@@ -14,11 +14,7 @@ const NewCreator = () => {
   const [usersData, setUsersData] = useState([]);
 
   useEffect(() => {
-    const q = query(
-      collection(db, 'users'),
-      //   orderBy('popularity', 'desc'), // 인기순 필드 추가시
-      limit(30),
-    );
+    const q = query(collection(db, 'users'), limit(30));
     getDocs(q)
       .then((querySnapshot) => {
         let usersArray = [];

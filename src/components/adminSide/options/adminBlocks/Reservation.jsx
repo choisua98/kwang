@@ -62,11 +62,11 @@ const Reservation = () => {
   const [description, setDescription] = useState(
     selectedBlock?.description || '',
   );
-  const [titleCount, setTitleCount] = useState(0);
-  const [descriptionCount, setDescriptionCount] = useState(0);
+  const [titleTextCount, setTitleTextCount] = useState(0);
+  const [descriptionTextCount, setDescriptionTextCount] = useState(0);
 
   const [numberOfPeople, setNumberOfPeople] = useState(
-    selectedBlock?.numberOfPeople || '',
+    selectedBlock?.numberOfPeople || 0,
   );
   const [pickDate, setPickDate] = useState(
     selectedBlock ? selectedBlock?.pickDate : '',
@@ -283,7 +283,7 @@ const Reservation = () => {
       >
         <label htmlFor="title">
           예약 서비스 이름
-          <p>{titleCount}/20자</p>
+          <p>{titleTextCount}/20자</p>
         </label>
         <div className="input-container">
           <input
@@ -292,7 +292,7 @@ const Reservation = () => {
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
-              setTitleCount(e.target.value.length);
+              setTitleTextCount(e.target.value.length);
             }}
             maxLength={20}
             autoFocus
@@ -310,7 +310,7 @@ const Reservation = () => {
                     uploadedImages.length >= maxUploads ? 'disabled' : ''
                   }
                 >
-                  <CameraOutlined style={{ fontSize: '30px' }} />
+                  <CameraOutlined />
                   <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
                 </label>
               </div>
@@ -319,7 +319,7 @@ const Reservation = () => {
             <>
               <label htmlFor="imageInput">
                 <div>
-                  <CameraOutlined style={{ fontSize: '30px' }} />
+                  <CameraOutlined />
                 </div>
                 <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
               </label>
@@ -356,7 +356,7 @@ const Reservation = () => {
 
         <label htmlFor="description">
           예약 상세설명
-          <p>{descriptionCount}/80자</p>
+          <p>{descriptionTextCount}/80자</p>
         </label>
         <div className="input-container">
           <textarea
@@ -365,7 +365,7 @@ const Reservation = () => {
             value={description}
             onChange={(e) => {
               setDescription(e.target.value);
-              setDescriptionCount(e.target.value.length);
+              setDescriptionTextCount(e.target.value.length);
             }}
             maxLength={80}
           />
@@ -394,7 +394,6 @@ const Reservation = () => {
             value={pickDate ? dayjs(pickDate) : undefined}
             disabledDate={disabledDate}
             onChange={datePickInput}
-            style={{ width: '100%' }}
             popupClassName="datePickerPopup"
           />
           {!pickDate ? <span>필수 입력 항목입니다.</span> : null}
@@ -410,7 +409,6 @@ const Reservation = () => {
             ]}
             onChange={periodPickInput}
             disabledDate={disabledDate}
-            style={{ width: '100%' }}
             popupClassName="periodPickerPopup"
           />
           {!startDate || !endDate ? <span>필수 입력 항목입니다.</span> : null}

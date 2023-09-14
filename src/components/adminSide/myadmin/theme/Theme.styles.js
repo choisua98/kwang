@@ -45,6 +45,23 @@ export const T = {
     color: #fff;
     border-radius: 15px;
     background: #ffbe51;
+    ${({ theme }) =>
+      theme === 'dark' &&
+      `
+      color:#fff; 
+      background:#2E2E2E;`}
+
+    ${({ theme }) =>
+      theme === 'light' &&
+      `
+      color:#000; 
+      background:#DFDDE5;`}
+    
+    ${({ theme }) =>
+      !(theme === 'dark' || theme === 'light') &&
+      `
+      color:#fff; 
+      background:#ffbe51`}
   `,
   // 다크 모드
   DarkModeButton: styled.button`
@@ -122,5 +139,19 @@ export const T = {
   `,
   Progress: styled(AntProgress)`
     margin: 10px 0;
+  `,
+
+  ButtonContainer: styled.div`
+    p {
+      margin: 30px 0 10px 0;
+    }
+    button {
+      background-color: white;
+    }
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
   `,
 };
