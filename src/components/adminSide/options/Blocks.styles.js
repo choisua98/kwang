@@ -9,7 +9,6 @@ export const O = {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* margin: 20px 20px 40px; */
     padding: 30px 20px 40px 20px;
 
     button {
@@ -161,6 +160,11 @@ export const O = {
       border-radius: 5px;
       background: #fafafa;
       cursor: pointer;
+      > div {
+        > span {
+          font-size: 30px;
+        }
+      }
 
       span {
         color: #d3d3d3;

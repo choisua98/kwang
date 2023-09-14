@@ -36,7 +36,7 @@ export const B = {
           color: '#2E2E2E',
           background: '#DFDDE5',
         }}
-     ${({ theme }) =>
+      ${({ theme }) =>
         theme !== 'dark' &&
         theme !== 'light' && {
           color: 'var(--color-white)',

@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-export const E = {
+export const L = {
   Title: styled.h1`
     font-size: 20px;
     line-height: 26px;
@@ -11,6 +11,7 @@ export const E = {
   `,
 
   EmailInput: styled.input`
+    margin-top: 15px;
     padding: 15.5px 15px;
     width: 100%;
     box-sizing: border-box;
@@ -33,5 +34,9 @@ export const E = {
     font-size: 14px;
     text-align: center;
     color: #484848;
+  `,
+  // 카카오 버튼
+  ButtonKakao: styled.button`
+    padding: 0;
   `,
 };

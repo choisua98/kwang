@@ -96,33 +96,31 @@ export const B = {
       ${({ theme }) =>
         theme === 'dark' &&
         `
-          color:#fff; 
-          background:#2E2E2E;
-
-           &:disabled{
-              color:#000; 
-              background:#fff; 
-           }
-       `}
-
+        color:#fff; 
+        background:#2E2E2E;
+        
+        &:disabled{
+          color:#000; 
+          background:#fff; 
+        }
+      `}
       ${({ theme }) =>
         theme === 'light' &&
         `
-           color:#2E2E2E; 
-           background:#DFDDE5;
+          color:#2E2E2E; 
+          background:#DFDDE5;
 
-            &:disabled{
-               color:#000; 
-               background:#FFFF; 
-            }
+          &:disabled{
+            color:#000; 
+            background:#FFFF; 
+          }
        `}
-       
        ${({ theme }) =>
         theme !== 'dark' &&
         theme !== 'light' &&
         `    
-            color:#FF7A16;  
-         `}
+        color:#FF7A16;  
+      `}
     }
   `,
 };

@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Row, Col, Button, Drawer, Space, message } from 'antd';
+import { Row, Col, Drawer, Space, message } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import Logo from '../../../assets/images/logo.png';
 import WhiteLogo from '../../../assets/images/logo-white.png';
