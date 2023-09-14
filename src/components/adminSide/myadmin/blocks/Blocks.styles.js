@@ -3,7 +3,6 @@ import { Modal } from 'antd';
 
 export const B = {
   MenuFormButton: styled.div`
-    padding: 18px 0;
     width: calc(100% - 32px);
     height: auto;
     border-radius: 15px;
@@ -13,6 +12,8 @@ export const B = {
     margin-top: 20px;
 
     button {
+      width: 100%;
+      line-height: 58px;
       font-size: 14px;
       font-weight: 600;
       background: none;
