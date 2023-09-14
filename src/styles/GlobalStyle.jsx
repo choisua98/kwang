@@ -269,23 +269,6 @@ const GlobalStyle = createGlobalStyle`
       }}
   }
 
-  // 테마 바꾸기 버튼
-  .ant-btn.csujge {
-    ${({ theme }) =>
-      theme === 'dark' && {
-        background: '#2E2E2E',
-      }}
-    ${({ theme }) =>
-      theme === 'light' && {
-        color: '#000',
-        background: '#DFDDE5',
-      }}
-    ${({ theme }) =>
-      theme !== 'dark' &&
-      theme !== 'light' && {
-        color: '#fff',
-      }}
-  }
 
   // 프로필
   :where(.css-17a39f8).ant-col-24.eGWLkn > img,
@@ -305,6 +288,9 @@ const GlobalStyle = createGlobalStyle`
     `border: none;
   `}
   }
+
+  .ant-btn.css-17a39f8.ant-btn-default.sc-iOmpNS.dhVfyv,
+  .ant-btn.css-dev-only-do-not-override-17a39f8.ant-btn-default.sc-iOmpNS,
   :where(.css-17a39f8).ant-btn-default.cqSNy,
   .eVBSlO {
     ${({ theme }) =>
