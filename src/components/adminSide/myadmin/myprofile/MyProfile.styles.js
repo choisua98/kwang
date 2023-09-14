@@ -32,14 +32,14 @@ export const P = {
     ${({ theme }) =>
       theme === 'dark'
         ? `
-        background-image: url(${btnEditImageDark});
+        background-image: url(${btnEditImageDark}) !important;
         background-size: cover;`
         : theme === 'light'
         ? `
-        background-image: url(${btnEditImageLight});
+        background-image: url(${btnEditImageLight}) !important;
         background-size: cover;`
         : `
-        background-image: url(${btnEditImageDefault});
+        background-image: url(${btnEditImageDefault}) !important;
         background-size: cover;`}
   `,
 
@@ -54,6 +54,16 @@ export const P = {
     object-fit: cover;
     background-image: url(${defaultProfileImage});
     border-radius: 100%;
+    ${({ theme }) =>
+      theme === 'dark'
+        ? `
+      border:none;`
+        : theme === 'light'
+        ? `
+      border:1px solid #ddd; 
+      border-radius:50%;`
+        : `
+      border:none;`}
   `,
 
   PreviewImage: styled.img`

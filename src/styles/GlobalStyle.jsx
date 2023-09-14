@@ -71,8 +71,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   /* 상단 메뉴 토글 */
-  :where(.css-dev-only-do-not-override-17a39f8).ant-btn-default,
-  :where(.css-17a39f8).ant-btn-default {
+  .ant-btn-default {
     background: none;
     border: none;
     box-shadow: none;
@@ -267,45 +266,6 @@ const GlobalStyle = createGlobalStyle`
       theme !== 'light' && {
         color: '#404040',
       }}
-  }
-
-
-  // 프로필
-  :where(.css-17a39f8).ant-col-24.eGWLkn > img,
-  .gWHfwT {
-  ${({ theme }) =>
-    theme === 'dark' &&
-    `border: none;
-  `}
-  ${({ theme }) =>
-    theme === 'light' &&
-    `border: 1px solid #ddd;
-     border-radius: 50%;   
-  `}
-  ${({ theme }) =>
-    theme !== 'dark' &&
-    theme !== 'light' &&
-    `border: none;
-  `}
-  }
-
-  .ant-btn.css-17a39f8.ant-btn-default.sc-iOmpNS.dhVfyv,
-  .ant-btn.css-dev-only-do-not-override-17a39f8.ant-btn-default.sc-iOmpNS,
-  :where(.css-17a39f8).ant-btn-default.cqSNy,
-  .eVBSlO {
-    ${({ theme }) =>
-      theme === 'dark' &&
-      `background-image: url(${btnEditImageDark});
-    `}
-    ${({ theme }) =>
-      theme === 'light' &&
-      `background-image: url(${btnEditImageLight});
-    `}
-    ${({ theme }) =>
-      theme !== 'dark' &&
-      theme !== 'light' &&
-      `background-image: url(${btnEditImageDefault});
-    `}
   }
 
   // 링크
