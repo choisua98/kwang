@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import React, { useEffect } from 'react';
-import { blocksAtom } from '../../../../atoms/Atom';
+import { blocksAtom, themeAtom } from '../../../../atoms/Atom';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
 import { Pagination, A11y } from 'swiper/modules';
@@ -16,6 +16,8 @@ import { message } from 'antd';
 const CustomerBlocks = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
+  const [theme] = useAtom(themeAtom);
+  console.log(theme);
 
   const { uid } = useParams();
   const userUid = uid;
@@ -66,9 +68,9 @@ const CustomerBlocks = () => {
       {blocks.map((block) => (
         <div key={block.id}>
           {block.title && (
-            <button onClick={() => moveToPageButton(block)}>
+            <C.Button onClick={() => moveToPageButton(block)} theme={theme}>
               {block.title}
-            </button>
+            </C.Button>
           )}
           {block.blockKind === 'bannerimage' && (
             <C.SwiperWrap>
