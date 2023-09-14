@@ -21,13 +21,8 @@ const LinkService = () => {
         );
         const querySnapshot = await getDocs(q);
 
-        const newDataArray = []; // 3개의 문서 데이터를 임시로 담을 배열
-
-        // forEach로 uid가 일치하는 문서 데이터 3개를 돌아가며 데이터 추출
-        querySnapshot.forEach((doc) => {
-          const linkData = doc.data();
-          newDataArray.push(linkData);
-        });
+        // uid가 일치하는 문서 데이터를 돌아가며 데이터 추출
+        const newDataArray = querySnapshot.docs.map((doc) => doc.data());
 
         setLinkDataArray(newDataArray);
       } catch (error) {
