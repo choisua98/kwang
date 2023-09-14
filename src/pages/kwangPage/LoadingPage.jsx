@@ -15,14 +15,20 @@ const LoadingPage = () => {
     const timer = setTimeout(() => {
       navigate(`/admin/${userUid}`);
       message.success('로그인 되었습니다.');
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [navigate, userUid]);
 
   return (
     <>
-      <Player autoplay loop src={Loading} style={{ width: '100%' }} />
+      <Player
+        autoplay
+        speed={0.9}
+        loop
+        src={Loading}
+        style={{ width: '100%' }}
+      />
     </>
   );
 };

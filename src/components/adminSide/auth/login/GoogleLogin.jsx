@@ -18,8 +18,6 @@ const GoogleLogin = () => {
       navigate('/loading', {
         state: { userUid: `${result.user.uid}` },
       });
-
-      navigate(`/admin/${result.user.uid}`);
     } catch (error) {
       message.error('로그인 중 에러 발생:', error.code);
     }
