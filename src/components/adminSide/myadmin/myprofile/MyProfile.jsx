@@ -37,9 +37,9 @@ const MyProfile = () => {
   const [updatedImage, setUpdatedImage] = useState(defaultProfileImage);
   const [countNickname, setCountNickname] = useState('');
   const [countIntro, setCountIntro] = useState('');
+  const [theme] = useAtom(themeAtom);
 
   const fileInputRef = useRef(); // 이미지 업로드 파일 입력 필드
-  const [theme] = useAtom(themeAtom);
 
   // 이메일에서 "@" 앞에 있는 부분을 닉네임으로 사용
   const CREATE_NICKNAME = (email) => {

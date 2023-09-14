@@ -1,9 +1,10 @@
+import { Button } from 'antd';
 import { styled } from 'styled-components';
 
 export const H = {
   HeaderWrapper: styled.header`
     position: relative;
-    padding: 50px 20px 11px;
+    padding: 30px 20px 11px;
     height: initial;
     line-height: initial;
   `,
@@ -11,6 +12,26 @@ export const H = {
     // padding-top: ${(props) => props.topPadding || '0'}px;
     height: 17px;
   `,
+  ButtonToggle: styled(Button)`
+    ${({ colorTheme }) =>
+      colorTheme === 'dark' &&
+      `
+      background: #333;
+      color: #fff;
+    `}
+    ${({ colorTheme }) =>
+      colorTheme === 'light' &&
+      `
+      background: none;
+    `}
+    ${({ colorTheme }) =>
+      colorTheme !== 'dark' &&
+      colorTheme !== 'light' &&
+      `
+      background: #FFFAF0;
+    `}
+  `,
+
   Container: styled.div`
     display: flex;
     height: 80px;
