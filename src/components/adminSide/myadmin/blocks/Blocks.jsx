@@ -60,7 +60,7 @@ const Blocks = () => {
         width={350}
       >
         <>
-          <B.ButtonsContainer>
+          <B.ButtonsContainer theme={theme}>
             <button onClick={() => navigate('/admin/addlink')}>
               링크 추가하기 ✔️
             </button>

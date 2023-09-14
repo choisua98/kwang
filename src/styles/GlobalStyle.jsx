@@ -268,38 +268,6 @@ const GlobalStyle = createGlobalStyle`
       }}
   }
 
-
-  // 모달 내 블록
-  .iQLRop button {
-    ${({ theme }) =>
-      theme === 'dark' &&
-      `
-      color: #fff;
-      background: #2E2E2E;
-      &:disabled {
-        color: #000;
-        background: #fff;
-      }
-    `}
-    ${({ theme }) =>
-      theme === 'light' &&
-      `
-      color: #2E2E2E;
-      background: #DFDDE5;
-      &:disabled {
-        color: #000;
-        background: #FFFF;
-      }
-    `}
-    ${({ theme }) =>
-      theme !== 'dark' &&
-      theme !== 'light' &&
-      `    
-      button {
-         color: #FF7A16;
-       }
-     `}
-  }
 `;
 
 export { GlobalStyle };

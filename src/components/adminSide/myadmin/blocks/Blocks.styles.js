@@ -91,6 +91,37 @@ export const B = {
         background-color: rgb(255, 250, 240, 0.8);
         border: none;
       }
+
+      ${({ theme }) =>
+        theme === 'dark' &&
+        `
+          color:#fff; 
+          background:#2E2E2E;
+
+           &:disabled{
+              color:#000; 
+              background:#fff; 
+           }
+       `}
+
+      ${({ theme }) =>
+        theme === 'light' &&
+        `
+           color:#2E2E2E; 
+           background:#DFDDE5;
+
+            &:disabled{
+               color:#000; 
+               background:#FFFF; 
+            }
+       `}
+       
+       ${({ theme }) =>
+        theme !== 'dark' &&
+        theme !== 'light' &&
+        `    
+            color:#FF7A16;  
+         `}
     }
   `,
 };
