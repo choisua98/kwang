@@ -11,8 +11,10 @@ const LinkService = () => {
   const [linkDataArray, setLinkDataArray] = useState([]); // 여러 문서 데이터를 저장할 배열
 
   useEffect(() => {
+    setLinkDataArray([]); // uid가 변경될 때 담고있는 데이터 초기화
     const fetchData = async () => {
       try {
+        console.log(uid); // uid값 확인
         const q = query(
           collection(db, 'links'),
           where('uid', '==', uid),
@@ -25,6 +27,7 @@ const LinkService = () => {
         // forEach로 uid가 일치하는 문서 데이터 3개를 돌아가며 데이터 추출
         querySnapshot.forEach((doc) => {
           const linkData = doc.data();
+          console.log('Link data', linkData); // 링크 데이터 확인
           newDataArray.push(linkData);
           setLinkDataArray(newDataArray); // 추출된 문서 데이터를 한 번에 업데이트
         });
