@@ -111,9 +111,13 @@ const Header = () => {
             </Col>
             <Col span={1}>
               {/* 우측 영역 */}
-              <div className="right-area">
+              <>
                 <Space>
-                  <Button icon={<MenuOutlined />} onClick={openMenu} />
+                  <H.ButtonToggle
+                    colorTheme={theme}
+                    icon={<MenuOutlined />}
+                    onClick={openMenu}
+                  />
                 </Space>
                 <Drawer
                   placement="right"
@@ -161,7 +165,7 @@ const Header = () => {
                     </H.MenuStyle>
                   </H.MenuContainer>
                 </Drawer>
-              </div>
+              </>
             </Col>
           </>
         )}
