@@ -55,7 +55,7 @@ export const D = {
 
     button {
       cursor: pointer;
-      margin: 5px 0px 10px auto;
+      margin: 4px 0px 20px auto;
       padding: 20px 0 19px;
       width: 100%;
       font-size: 18px;
