@@ -118,7 +118,7 @@ export const C = {
   `,
 
   ButtonArea: styled.div`
-    display: gird;
+    display: grid;
     margin: 50px 0px 40px 0px;
     position: relative;
   `,

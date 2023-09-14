@@ -8,6 +8,7 @@ import KakaoIcon from '../../../../assets/images/kakao.png';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
+import { L } from './Login.styles';
 import { useAtomValue } from 'jotai';
 import { userAtom } from '../../../../atoms/Atom';
 
@@ -86,9 +87,9 @@ const KakaoLogin = () => {
 
   return (
     <Link to="#">
-      <button onClick={kakaoLogin} style={{ padding: 0 }}>
+      <L.ButtonKakao onClick={kakaoLogin}>
         <img src={KakaoIcon} alt="kakao-login-medium" border="0" />
-      </button>
+      </L.ButtonKakao>
     </Link>
   );
 };

@@ -346,14 +346,11 @@ const Links = () => {
                 <L.SubmitButton onClick={handleSaveClick}>
                   저장하기
                 </L.SubmitButton>
-                <L.SubmitButton
-                  style={{
-                    background: '#313733',
-                  }}
+                <L.DeleteButton
                   onClick={() => handleDeleteClick(editingLinkId)}
                 >
                   삭제하기
-                </L.SubmitButton>
+                </L.DeleteButton>
               </L.ButtonArea>
             </Col>
           </Row>

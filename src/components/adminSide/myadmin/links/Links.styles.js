@@ -139,6 +139,16 @@ export const L = {
     background: #ff7c38;
     border-radius: 5px;
   `,
+  DeleteButton: styled.button`
+    width: 100%;
+    padding: 10px 0;
+    display: block;
+    font-size: 14px;
+    line-height: 30px;
+    color: #fff;
+    background: #313733;
+    border-radius: 5px;
+  `,
 
   CustomerSideContainer: styled.div`
     margin-bottom: 20px;
