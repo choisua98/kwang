@@ -76,25 +76,6 @@ const GlobalStyle = createGlobalStyle`
     border: none;
     box-shadow: none;
   }
-  :where(.css-17a39f8).ant-btn-default:not(:disabled):not(
-      .ant-btn-disabled
-    ):hover {
-    color: rgba(0, 0, 0, 0.88);
-    border-color: none;
-  }
-  :where(.css-dev-only-do-not-override-17a39f8).ant-btn.ant-btn-icon-only
-    .anticon {
-    font-size: 18px;
-  }
-  :where(.css-dev-only-do-not-override-17a39f8).ant-btn:not(
-      :disabled
-    ):focus-visible {
-    outline: none;
-  }
-  :where(.css-17a39f8).ant-drawer .ant-drawer-body,
-  :where(.css-dev-only-do-not-override-17a39f8).ant-drawer .ant-drawer-body {
-    padding: 0;
-  }
   
   /* 스와이퍼 */
   .swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
@@ -109,129 +90,125 @@ const GlobalStyle = createGlobalStyle`
   ).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft
   .ant-picker-range-arrow,
   :where(.css-17a39f8).ant-picker-dropdown.ant-picker-dropdown-placement-topLeft .ant-picker-range-arrow {
-  display: none;
-}
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-  .ant-picker-header
-  > button,
-  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-header >button {
-  visibility: initial !important;
-}
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-  .ant-picker-panel-container {
-  width: 374px !important;
-}
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-  .ant-picker-panel-container
-  .ant-picker-panels {
-  display: inline-flex;
-  flex-wrap: nowrap;
-  direction: ltr;
-  /* max-width: 350px !important; */
-  width: 350px !important;
-}
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-  .ant-picker-panel-container
-  .ant-picker-panels:last-child
-  .ant-picker-panel {
-  border-width: 0;
-  width: 100% !important;
-  max-width: 350px !important;
-  min-width: 350px !important;
-}
-.ant-picker-date-panel {
-  max-width: 350px !important;
-}
+    display: none;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-header
+    > button,
+    :where(.css-17a39f8).ant-picker-dropdown .ant-picker-header >button {
+    visibility: initial !important;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-panel-container {
+    width: 374px !important;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-panel-container
+    .ant-picker-panels {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    direction: ltr;
+    /* max-width: 350px !important; */
+    width: 350px !important;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-panel-container
+    .ant-picker-panels:last-child
+    .ant-picker-panel {
+    border-width: 0;
+    width: 100% !important;
+    max-width: 350px !important;
+    min-width: 350px !important;
+  }
+  .ant-picker-date-panel {
+    max-width: 350px !important;
+  }
 
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
-  .ant-picker-date-panel
-  .ant-picker-content {
-  width: 310px !important;
-}
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown-range {
-  padding: 40px 0 0 !important;
-}
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown
+    .ant-picker-date-panel
+    .ant-picker-content {
+    width: 310px !important;
+  }
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown-range {
+    padding: 40px 0 0 !important;
+  }
 
+  :where(.css-17a39f8).ant-picker .ant-picker-input >input,
+  .cHPDDZ input {
+    margin-bottom: 0;
+  }
 
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container {
+    max-width: 374px;
+    width: 100%;
+  }
 
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels:last-child .ant-picker-panel,
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels,
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels:last-child .ant-picker-panel {
+    max-width: 374px !important;
+    min-width: 200% !important;
+    width: 100% !important;
+  }
 
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    max-width: 200px !important;
+    width: 100% !important;
+    direction: ltr;
+  }
 
-:where(.css-17a39f8).ant-picker .ant-picker-input >input,
-.cHPDDZ input {
-  margin-bottom: 0;
-}
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-date-panel {
+    width: 100% !important;
+  }
 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container {
-  max-width: 374px;
-  width: 100%;
-}
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-decade-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-year-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-quarter-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-month-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-week-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-date-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-time-panel,
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
+    // max-width: 374px !important;
+    width: 100% !important;
+  }
 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels:last-child .ant-picker-panel,
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels,
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels:last-child .ant-picker-panel {
-  max-width: 374px !important;
-  min-width: 200% !important;
-  width: 100% !important;
-}
+  .ant-picker-date-panel,
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-date-panels {
+    width: 100% !important;
+  }
 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
-  display: inline-flex;
-  flex-wrap: nowrap;
-  max-width: 200px !important;
-  width: 100% !important;
-  direction: ltr;
-}
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panel .ant-picker-content, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panel table {
+    width: 100% !important;
+  }
 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-date-panel {
-  width: 100% !important;
-}
+  :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-date-panel .ant-picker-content th {
+    width: 48px;
+  }
 
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-decade-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-year-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-quarter-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-month-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-week-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-date-panel, :where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-time-panel,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
-  // max-width: 374px !important;
-  width: 100% !important;
-}
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-decade-panel,:where(.css-17a39f8).ant-picker-dropdown .ant-picker-quarter-panel, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-week-panel, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-date-panel, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-time-panel {
+    width: 87%;
+  }
 
-.ant-picker-date-panel,
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-date-panels {
-  width: 100% !important;
-}
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-month-panel {
+    width: 94%;
+  }
 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panel .ant-picker-content, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panel table {
-  width: 100% !important;
-}
+  .ant-picker-year-panel .ant-picker-content td {
+    top: 13px;
+  }
 
-:where(.css-dev-only-do-not-override-17a39f8).ant-picker-dropdown .ant-picker-date-panel .ant-picker-content th {
-  width: 48px;
-}
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel .ant-picker-cell::before, {
+    top: 50%;
+  }
 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-decade-panel,:where(.css-17a39f8).ant-picker-dropdown .ant-picker-quarter-panel, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-week-panel, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-date-panel, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-time-panel {
-  width: 87%;
-}
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner, 
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end) .ant-picker-cell-inner,
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-in-range::before,
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-disabled::before,
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before {
+    background: none !important;
+  }
 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-month-panel {
-  width: 94%;
-}
-
-.ant-picker-year-panel .ant-picker-content td {
-  top: 13px;
-}
-
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-year-panel .ant-picker-cell::before, {
-  top: 50%;
-}
-
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner, 
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end) .ant-picker-cell-inner,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-in-range::before,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-disabled::before,
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before, :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before {
-  background: none !important;
-}
-
-:where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover::before {
-  background: #c8dfff !important;
-}
+  :where(.css-17a39f8).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover::before {
+    background: #c8dfff !important;
+  }
 
 `;
 
