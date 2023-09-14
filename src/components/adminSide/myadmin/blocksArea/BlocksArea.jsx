@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { B } from './BlocksArea.styles';
 import { useNavigate } from 'react-router-dom';
 import { useAtom, useAtomValue } from 'jotai';
-import { blocksAtom, userAtom } from '../../../../atoms/Atom';
+import { blocksAtom, themeAtom, userAtom } from '../../../../atoms/Atom';
 import {
   query,
   collection,
@@ -28,6 +28,7 @@ import { message } from 'antd';
 const BlocksArea = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
+  const [theme] = useAtom(themeAtom);
 
   const user = useAtomValue(userAtom);
   const userUid = user?.uid;
@@ -122,6 +123,7 @@ const BlocksArea = () => {
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                       isDragging={snapshot.isDragging}
+                      theme={theme}
                     >
                       {block.title && (
                         <div

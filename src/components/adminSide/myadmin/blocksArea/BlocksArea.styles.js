@@ -25,9 +25,23 @@ export const B = {
       padding: 21.5px 0;
       width: 100%;
       font-size: 14px;
-      color: var(--color-white);
       border-radius: 15px;
-      background: var(--color-accent);
+      ${({ theme }) =>
+        theme === 'dark' && {
+          color: '#fff',
+          background: '#2E2E2E',
+        }}
+      ${({ theme }) =>
+        theme === 'light' && {
+          color: '#2E2E2E',
+          background: '#DFDDE5',
+        }}
+     ${({ theme }) =>
+        theme !== 'dark' &&
+        theme !== 'light' && {
+          color: 'var(--color-white)',
+          background: 'var(--color-accent)',
+        }}
     }
   `,
 
