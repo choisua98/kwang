@@ -4,7 +4,7 @@ import { Modal } from 'antd';
 export const B = {
   MenuFormButton: styled.div`
     padding: 18px 0;
-    width: 100%;
+    width: calc(100% - 32px);
     height: auto;
     border-radius: 15px;
     border: 1.5px solid var(--color-accent);
@@ -15,7 +15,7 @@ export const B = {
     button {
       font-size: 14px;
       font-weight: 600;
-      background: none;s
+      background: none;
     }
     ${({ theme }) =>
       theme === 'dark' &&
@@ -34,9 +34,9 @@ export const B = {
     }
   `}
   ${({ theme }) =>
-    theme !== 'dark' &&
-    theme !== 'light' &&
-    `
+      theme !== 'dark' &&
+      theme !== 'light' &&
+      `
     border: 1.5px solid #FF7A16;
     button {
        color: #FF7A16;
