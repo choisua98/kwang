@@ -4,6 +4,7 @@ import { db, storage } from '../../../../firebase/firebaseConfig';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
 import {
+  themeAtom,
   userAtom,
   userNickname,
   userProfileImage,
@@ -38,6 +39,7 @@ const MyProfile = () => {
   const [countIntro, setCountIntro] = useState('');
 
   const fileInputRef = useRef(); // 이미지 업로드 파일 입력 필드
+  const [theme] = useAtom(themeAtom);
 
   // 이메일에서 "@" 앞에 있는 부분을 닉네임으로 사용
   const CREATE_NICKNAME = (email) => {
@@ -199,6 +201,7 @@ const MyProfile = () => {
             onClick={() => {
               setModalVisible(true);
             }}
+            theme={theme}
           ></P.ModalOpenButton>
         </P.ProfilBox>
       </Row>

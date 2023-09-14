@@ -175,7 +175,11 @@ const Theme = () => {
   return (
     <>
       <Row justify="center">
-        <T.ThemeMenuButton type="basic" onClick={() => setModalVisible(true)}>
+        <T.ThemeMenuButton
+          type="basic"
+          onClick={() => setModalVisible(true)}
+          theme={theme}
+        >
           테마 바꾸기
         </T.ThemeMenuButton>
       </Row>
