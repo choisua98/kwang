@@ -196,7 +196,7 @@ const MyProfile = () => {
     <div>
       <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
         <P.ProfilBox span={24}>
-          <P.ProfileImage src={updatedImage} />
+          <P.ProfileImage src={updatedImage} theme={theme} />
           <P.ModalOpenButton
             onClick={() => {
               setModalVisible(true);
