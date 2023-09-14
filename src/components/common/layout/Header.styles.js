@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 export const H = {
   HeaderWrapper: styled.header`
     position: relative;
-    padding: 50px 20px 11px;
+    padding: 30px 20px 11px;
     height: initial;
     line-height: initial;
   `,

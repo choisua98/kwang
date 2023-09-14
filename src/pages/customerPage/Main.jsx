@@ -18,7 +18,7 @@ const Main = () => {
 
   return (
     <>
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: '0 20px 20px 20px' }}>
         <Profile />
         <LinkService />
         <CustomerBlocks />
