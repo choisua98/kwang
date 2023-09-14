@@ -10,7 +10,8 @@ const LinkService = () => {
   const [linkDataArray, setLinkDataArray] = useState([]); // 여러 문서 데이터를 저장할 배열
 
   useEffect(() => {
-    setLinkDataArray([]); // uid가 변경될 때 담고있는 데이터 초기화
+    setLinkDataArray([]); // 남아있는 링크 데이터를 초기화
+
     const fetchData = async () => {
       try {
         const q = query(
@@ -18,7 +19,6 @@ const LinkService = () => {
           where('uid', '==', uid),
           orderBy('createdAt'),
         );
-
         const querySnapshot = await getDocs(q);
 
         const newDataArray = []; // 3개의 문서 데이터를 임시로 담을 배열
@@ -29,9 +29,7 @@ const LinkService = () => {
           newDataArray.push(linkData);
         });
 
-        if (newDataArray.length > 0) {
-          setLinkDataArray(newDataArray); // 추출된 문서 데이터를 한 번에 업데이트
-        }
+        setLinkDataArray(newDataArray);
       } catch (error) {
         message.error('에러 발생:', error);
       }
