@@ -269,7 +269,7 @@ const BannerImage = () => {
                     uploadedImages.length >= maxUploads ? 'disabled' : ''
                   }
                 >
-                  <CameraOutlined style={{ fontSize: '30px' }} />
+                  <CameraOutlined />
                   <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
                 </label>
               </div>
@@ -278,7 +278,7 @@ const BannerImage = () => {
             <>
               <label htmlFor="imageInput">
                 <div>
-                  <CameraOutlined style={{ fontSize: '30px' }} />
+                  <CameraOutlined />
                 </div>
                 <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
               </label>

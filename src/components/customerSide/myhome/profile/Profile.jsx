@@ -32,15 +32,15 @@ const Profile = () => {
   }, [userUid]);
 
   return (
-    <div>
-      <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
-        <Col span={24} style={{ textAlign: 'center' }}>
+    <S.Container>
+      <Row justify="center" align="middle" s>
+        <Col span={24}>
           <S.ProfileImage src={viewProfileImage} />
-          <div style={{ margin: '20px 0 10px' }}>{viewNickname}</div>
-          <div style={{ margin: '20px 0' }}>{viewIntroduction}</div>
+          <div>{viewNickname}</div>
+          <div>{viewIntroduction}</div>
         </Col>
       </Row>
-    </div>
+    </S.Container>
   );
 };
 

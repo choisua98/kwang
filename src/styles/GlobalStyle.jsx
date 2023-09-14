@@ -69,7 +69,7 @@ const GlobalStyle = createGlobalStyle`
   }
   /* 달력(RangePicker) */
   .ant-picker-input input  {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
   }
   .ant-picker-dropdown {
     overflow: hidden;
@@ -80,6 +80,10 @@ const GlobalStyle = createGlobalStyle`
     .ant-picker-cell-disabled::before {
       background: none;
     }
+  }
+  .ant-picker,
+  .ant-picker-range {
+    width: 100%;
   }
   .periodPickerPopup {
     .ant-picker-panel-container {

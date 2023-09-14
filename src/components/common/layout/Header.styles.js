@@ -9,7 +9,6 @@ export const H = {
     line-height: initial;
   `,
   Logo: styled.img`
-    // padding-top: ${(props) => props.topPadding || '0'}px;
     height: 17px;
   `,
   ButtonToggle: styled(Button)`

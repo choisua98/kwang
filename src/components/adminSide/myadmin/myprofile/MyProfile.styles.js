@@ -7,6 +7,14 @@ import btnEditImageDark from '../../../../assets/images/common/btn/btn-edit-dark
 import btnEditImageDefault from '../../../../assets/images/common/btn/btn-edit.png';
 
 export const P = {
+  Container: styled.div`
+    > div {
+      padding: 20px 0;
+    }
+    > div:nth-child(2) {
+      padding: 0;
+    }
+  `,
   InfoBox: styled.div`
     margin-bottom: 10px;
     font-size: 16px;
@@ -46,6 +54,9 @@ export const P = {
   ProfileContainer: styled.div`
     display: flex;
     flex-direction: column;
+    input[type='file'] {
+      display: none;
+    }
   `,
 
   ProfileImage: styled.img`
@@ -106,6 +117,7 @@ export const P = {
   `,
 
   ModalInput: styled.input`
+    margin-bottom: 20px;
     padding: 16.5px 16px;
     box-sizing: border-box;
     border: none;
@@ -128,7 +140,9 @@ export const P = {
     color: #312f2e;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
 
     &:focus {
       outline: none;

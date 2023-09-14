@@ -17,7 +17,6 @@ import {
   deleteDoc,
 } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
-
 import GithubIcon from '../../../../assets/images/admin/linkIcon/icon-github.png';
 import InstagramIcon from '../../../../assets/images/admin/linkIcon/icon-instagram.png';
 import KakaoIcon from '../../../../assets/images/admin/linkIcon/icon-kakao.png';

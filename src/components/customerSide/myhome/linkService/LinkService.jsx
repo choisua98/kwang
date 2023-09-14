@@ -37,7 +37,7 @@ const LinkService = () => {
     <>
       <L.CustomerSideContainer>
         <Row justify="center" align="middle">
-          <Col span={24} style={{ textAlign: 'center' }}>
+          <Col span={24}>
             <L.ButtonContainer>
               {linkDataArray.map((linkData, index) => (
                 <button

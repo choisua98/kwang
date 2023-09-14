@@ -216,7 +216,6 @@ const Theme = () => {
                     ref={imageInputRef}
                     type="file"
                     accept=".jpg,.jpeg,.png"
-                    style={{ display: 'none' }}
                     onChange={onImageChange}
                   />
                 </div>

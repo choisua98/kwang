@@ -193,8 +193,8 @@ const MyProfile = () => {
     setCountIntro(e.target.value.length);
   };
   return (
-    <div>
-      <Row justify="center" align="middle" style={{ padding: '20px 0' }}>
+    <P.Container>
+      <Row justify="center" align="middle">
         <P.ProfilBox span={24}>
           <P.ProfileImage src={updatedImage} theme={theme} />
           <P.ModalOpenButton
@@ -205,7 +205,7 @@ const MyProfile = () => {
           ></P.ModalOpenButton>
         </P.ProfilBox>
       </Row>
-      <Row justify="center" align="middle" style={{ padding: '0' }}>
+      <Row justify="center" align="middle">
         <Col>
           <P.InfoBox>{updateNick}</P.InfoBox>
           <P.InfoBox>{updateIntro}</P.InfoBox>
@@ -240,7 +240,6 @@ const MyProfile = () => {
             accept=" image/*"
             onChange={onChangeImageFile}
             ref={fileInputRef}
-            style={{ display: 'none' }}
           />
           <P.UploadButton onClick={() => fileInputRef.current.click()}>
             프로필 이미지 업로드
@@ -264,12 +263,12 @@ const MyProfile = () => {
             placeholder="소개를 작성해 주세요."
             value={introduction}
             onChange={handleIntroductionChange}
-            style={{ marginBottom: '20px' }}
+            s
             maxLength={25}
           />
         </P.ProfileContainer>
       </Modal>
-    </div>
+    </P.Container>
   );
 };
 

@@ -310,7 +310,7 @@ const Reservation = () => {
                     uploadedImages.length >= maxUploads ? 'disabled' : ''
                   }
                 >
-                  <CameraOutlined style={{ fontSize: '30px' }} />
+                  <CameraOutlined />
                   <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
                 </label>
               </div>
@@ -319,7 +319,7 @@ const Reservation = () => {
             <>
               <label htmlFor="imageInput">
                 <div>
-                  <CameraOutlined style={{ fontSize: '30px' }} />
+                  <CameraOutlined />
                 </div>
                 <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
               </label>
@@ -394,7 +394,6 @@ const Reservation = () => {
             value={pickDate ? dayjs(pickDate) : undefined}
             disabledDate={disabledDate}
             onChange={datePickInput}
-            style={{ width: '100%' }}
             popupClassName="datePickerPopup"
           />
           {!pickDate ? <span>필수 입력 항목입니다.</span> : null}
@@ -410,7 +409,6 @@ const Reservation = () => {
             ]}
             onChange={periodPickInput}
             disabledDate={disabledDate}
-            style={{ width: '100%' }}
             popupClassName="periodPickerPopup"
           />
           {!startDate || !endDate ? <span>필수 입력 항목입니다.</span> : null}
