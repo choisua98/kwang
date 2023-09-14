@@ -220,7 +220,7 @@ const Faq = () => {
         onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
       >
         <label htmlFor="title">
-          자주묻는 질문 이름
+          자주 묻는 질문 이름
           <p>{titleCount}/20자</p>
         </label>
         <div className="input-container">

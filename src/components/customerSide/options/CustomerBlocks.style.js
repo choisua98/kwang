@@ -102,11 +102,20 @@ export const C = {
     text-align: center;
     background-color: var(--color-secondary);
     margin: 40px 20px;
+    border: none;
+
     .ant-collapse-content-box {
       padding: 30px 45px !important;
     }
     .ant-collapse-content {
       background: var(--color-bg);
+      border: none;
+    }
+    .ant-collapse-item {
+      border-bottom: 1px solid #ddd;
+      &:last-child {
+        border: none;
+      }
     }
   `,
 
