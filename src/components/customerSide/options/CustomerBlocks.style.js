@@ -96,6 +96,12 @@ export const C = {
       font-size: 14px;
       margin-top: 30px;
     }
+
+    span {
+      color: red;
+      font-size: 12px;
+      padding-left: 5px;
+    }
   `,
 
   Collapse: styled(Collapse)`

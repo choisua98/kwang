@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useInput from '../../../../hooks/useInput';
+import useInputs from '../../../../hooks/useInputs';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   blocksAtom,
@@ -30,10 +30,9 @@ import {
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
-import { LeftOutlined } from '@ant-design/icons';
 
 // ant Design
-import { CameraOutlined } from '@ant-design/icons';
+import { CameraOutlined, LeftOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Modal, Space, message } from 'antd';
@@ -66,10 +65,10 @@ const Challenge = () => {
     deleteModalVisibleAtom,
   );
 
-  const [title, handleTitleChange] = useInput(selectedBlock?.title);
-  const [description, handleDescriptionChange] = useInput(
-    selectedBlock?.description,
-  );
+  const [{ title, description }, onChange] = useInputs({
+    title: selectedBlock?.title,
+    description: selectedBlock?.description,
+  });
 
   // 제목과 설명의 글자 수를 추적하는 상태
   const [titleCount, setTitleCount] = useState(0);
@@ -298,7 +297,7 @@ const Challenge = () => {
             placeholder="함께해요 챌린지 🔥"
             value={title}
             onChange={(e) => {
-              handleTitleChange(e);
+              onChange(e);
               setIsTitleValid(e.target.value === '');
               setTitleCount(e.target.value.length);
             }}
@@ -374,7 +373,7 @@ const Challenge = () => {
             placeholder="상세 설명을 입력해주세요."
             value={description}
             onChange={(e) => {
-              handleDescriptionChange(e);
+              onChange(e);
               setIsDescriptionValid(e.target.value === '');
               setDescriptionCount(e.target.value.length);
             }}

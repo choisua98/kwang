@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import useInputs from '../../../../../hooks/useInputs';
 import {
   collection,
   deleteDoc,
@@ -9,14 +10,14 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { db } from '../../../../../firebase/firebaseConfig';
+import { useAtom } from 'jotai';
+import { modalVisibleAtom } from '../../../../../atoms/Atom';
 import { C } from '../../CustomerBlocks.style';
 import { CC, CS } from './ChallengeService.styles';
 import IconAwesome from '../../../../../assets/images/customer/icon-awesome.webp';
-import { useAtom } from 'jotai';
-import { modalVisibleAtom } from '../../../../../atoms/Atom';
+import { message } from 'antd';
 import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { message } from 'antd';
 
 const ChallengeComment = () => {
   const navigate = useNavigate();
@@ -28,9 +29,12 @@ const ChallengeComment = () => {
   const { uid } = useParams();
   const userUid = uid;
 
-  const [nickname, setNickname] = useState('');
-  const [password, setPassword] = useState('');
-  const [comment, setComment] = useState('');
+  const [{ nickname, password, comment }, onChange, reset] = useInputs({
+    nickname: '',
+    password: '',
+    comment: '',
+  });
+
   const [comments, setComments] = useState([]); // 댓글 데이터 저장
   const [nicknameCount, setNicknameCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
@@ -58,9 +62,7 @@ const ChallengeComment = () => {
     // 선택된 날짜와 현재 날짜 비교
     if (!moment(selectedDate).isSame(moment(), 'day')) {
       message.error('댓글은 현재 날짜에만 작성할 수 있습니다.');
-      setNickname('');
-      setPassword('');
-      setComment('');
+      reset();
       return;
     }
 
@@ -94,14 +96,10 @@ const ChallengeComment = () => {
         setCount(updatedCount);
       }
 
-      setNickname('');
-      setPassword('');
-      setComment('');
       fetchComments();
 
       message.success('댓글이 작성되었습니다.');
       setModalVisibleA(false);
-      // navigate(0);
     } catch (error) {
       message.error(error.message);
     }
@@ -271,7 +269,7 @@ const ChallengeComment = () => {
               placeholder="닉네임을 입력해주세요."
               value={nickname}
               onChange={(e) => {
-                setNickname(e.target.value);
+                onChange(e);
                 setNicknameCount(e.target.value.length);
               }}
               maxLength={10}
@@ -288,9 +286,7 @@ const ChallengeComment = () => {
               type="password"
               placeholder="비밀번호를 입력해주세요."
               value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              onChange={onChange}
             />
             <label htmlFor="password">
               <p>
@@ -305,7 +301,7 @@ const ChallengeComment = () => {
               placeholder="댓글을 입력해주세요."
               value={comment}
               onChange={(e) => {
-                setComment(e.target.value);
+                onChange(e);
                 setCommentCount(e.target.value.length);
               }}
               maxLength={50}
