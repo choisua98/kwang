@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
 import { useNavigate, useParams } from 'react-router-dom';
+import useInputs from '../../../../hooks/useInputs';
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../atoms/Atom';
 import { LeftOutlined } from '@ant-design/icons';
@@ -18,14 +19,23 @@ import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalCo
 import { message } from 'antd';
 
 const MailingService = () => {
-  const [title, setTitle] = useState('');
-  const [desc, setDesc] = useState('');
-  const [name, setName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [email, setEmail] = useState('');
   const navigate = useNavigate();
   const { uid } = useParams();
   const userUid = uid;
+
+  const [{ name, phoneNumber, email }, onChange] = useInputs({
+    name: '',
+    phoneNumber: '',
+    email: '',
+  });
+
+  const [title, setTitle] = useState('');
+  const [desc, setDesc] = useState('');
+
+  const [isNameValid, setIsNameValid] = useState(false);
+  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
 
   useEffect(() => {
@@ -96,10 +106,12 @@ const MailingService = () => {
           value={name}
           placeholder="이름을 입력해주세요."
           onChange={(e) => {
-            setName(e.target.value);
+            onChange(e);
+            setIsNameValid(e.target.value === '');
           }}
           autoFocus
         />
+        {isNameValid && <span>필수입력 항목입니다.</span>}
 
         <label htmlFor="phoneNumber">
           <p>연락처</p>
@@ -111,10 +123,12 @@ const MailingService = () => {
           value={phoneNumber}
           placeholder="010-1234-5678"
           onChange={(e) => {
-            setPhoneNumber(e.target.value);
+            onChange(e);
+            setIsPhoneNumberValid(e.target.value === '');
           }}
-          pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+          pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
         />
+        {isPhoneNumberValid && <span>필수입력 항목입니다.</span>}
 
         <label htmlFor="email">
           <p>이메일 주소</p>
@@ -126,9 +140,12 @@ const MailingService = () => {
           value={email}
           placeholder="이메일 주소"
           onChange={(e) => {
-            setEmail(e.target.value);
+            onChange(e);
+            setIsEmailValid(e.target.value === '');
           }}
         />
+        {isEmailValid && <span>필수입력 항목입니다.</span>}
+
         <C.ButtonArea>
           <C.SubmitButton
             type="button"

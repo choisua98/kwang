@@ -13,7 +13,7 @@ import { ERR_CODE } from '../ERR_CODE';
 const EmailSignup = () => {
   const navigate = useNavigate();
 
-  const [{ email, password, confirmPassword }, onChange, reset] = useInputs({
+  const [{ email, password, confirmPassword }, onChange] = useInputs({
     email: '',
     password: '',
     confirmPassword: '',

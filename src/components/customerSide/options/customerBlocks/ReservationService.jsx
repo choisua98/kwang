@@ -1,3 +1,6 @@
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import useInputs from '../../../../hooks/useInputs';
 import {
   addDoc,
   collection,
@@ -6,9 +9,7 @@ import {
   serverTimestamp,
   where,
 } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
 import { db } from '../../../../firebase/firebaseConfig';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../atoms/Atom';
 import { Pagination, A11y } from 'swiper/modules';
@@ -20,9 +21,16 @@ import { message } from 'antd';
 
 const ReservationService = () => {
   const navigate = useNavigate();
+
+  const [{ name, phoneNumber }, onChange] = useInputs({
+    name: '',
+    phoneNumber: '',
+  });
+
+  const [isNameValid, setIsNameValid] = useState(false);
+  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(false);
   const [reservationData, setReservationData] = useState([]);
-  const [name, setName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+
   const [modalVisible, setModalVisible] = useAtom(modalVisibleAtom);
 
   const { uid } = useParams();
@@ -129,10 +137,15 @@ const ReservationService = () => {
           name="name"
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            onChange(e);
+            setIsNameValid(e.target.value === '');
+          }}
           placeholder="이름을 입력해주세요."
           autoFocus
         />
+        {isNameValid && <span>필수입력 항목입니다.</span>}
+
         <label htmlFor="phoneNumber">
           <p>연락처</p>
         </label>
@@ -141,9 +154,14 @@ const ReservationService = () => {
           name="phoneNumber"
           type="tel"
           value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
+          onChange={(e) => {
+            onChange(e);
+            setIsPhoneNumberValid(e.target.value === '');
+          }}
           placeholder="010-1234-5678"
         />
+        {isPhoneNumberValid && <span>필수입력 항목입니다.</span>}
+
         <C.ButtonArea>
           <C.SubmitButton
             type="submit"
