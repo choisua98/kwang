@@ -76,7 +76,7 @@ export const T = {
     background: #fff url(${darkIcon}) no-repeat center / cover;
     &:focus,
     &:active {
-      border: 1px solid var(--color-accent);
+      border: solid var(--color-accent);
       border-radius: 15px;
     }
   `,
@@ -93,7 +93,7 @@ export const T = {
     background: #fff url(${basicIcon}) no-repeat center / cover;
     &:focus,
     &:active {
-      border: 1px solid var(--color-accent);
+      border: solid var(--color-accent);
       border-radius: 15px;
     }
   `,
@@ -109,7 +109,7 @@ export const T = {
     background: #fff url(${selectIcon}) no-repeat center / cover;
     &:focus,
     &:active {
-      border: 1px solid var(--color-accent);
+      border: solid var(--color-accent);
       border-radius: 15px;
     }
   `,
@@ -124,7 +124,7 @@ export const T = {
     background: #fff url(${defaultIcon}) no-repeat center / cover;
     &:focus,
     &:active {
-      border: 1px solid var(--color-accent);
+      border: solid var(--color-accent);
       border-radius: 15px;
     }
   `,
