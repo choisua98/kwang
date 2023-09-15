@@ -90,10 +90,7 @@ const Header = () => {
               {/* 로고 영역 */}
               {isHomePage && (
                 <Link to="/">
-                  <H.Logo
-                    src={theme === 'dark' ? WhiteLogo : Logo}
-                    alt="크왕"
-                  />
+                  <H.Logo src={Logo} alt="크왕" />
                 </Link>
               )}
             </Col>
@@ -112,10 +109,7 @@ const Header = () => {
               {/* 로고 영역 */}
               {isHomePage && (
                 <Link to="/">
-                  <H.Logo
-                    src={theme === 'dark' ? WhiteLogo : Logo}
-                    alt="크왕"
-                  />
+                  <H.Logo src={Logo} alt="크왕" />
                 </Link>
               )}
             </Col>

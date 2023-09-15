@@ -7,12 +7,12 @@ export const C = {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px 20px;
+    padding: 30px 20px 40px 20px;
     position: relative;
 
     button {
       position: absolute;
-      left: 0;
+      left: 20px;
       padding: 0;
       font-size: 20px;
       background-color: transparent;
