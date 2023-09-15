@@ -1,28 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import useInputs from '../../../../hooks/useInputs';
 import { L } from './Login.styles';
 import { message } from 'antd';
 import { ERR_CODE } from '../ERR_CODE';
 
 const EmailLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [{ email, password }, onChange] = useInputs({
+    email: '',
+    password: '',
+  });
+
+  const [emailError, setEmailError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+
   const auth = getAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // password 상태가 변경될 때마다 passwordError를 null로 설정
+    setPasswordError(null);
+  }, [password]);
 
   // --이메일 로그인 버튼클릭 핸들러--
   const onLoginButtonClickHandler = async (e) => {
     e.preventDefault();
     try {
       if (!email) {
-        message.error('이메일을 입력해주세요.');
+        setEmailError('이메일을 입력해주세요.');
         return;
       }
       if (!password) {
-        message.error('비밀번호를 입력해주세요.');
+        setPasswordError('비밀번호를 입력해주세요.');
         return;
       }
+
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
@@ -52,11 +65,11 @@ const EmailLogin = () => {
             name="email"
             placeholder="이메일"
             required
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={onChange}
           />
+          {emailError && <L.Error>{emailError}</L.Error>}
         </div>
+
         <div>
           <L.EmailInput
             type="password"
@@ -64,10 +77,9 @@ const EmailLogin = () => {
             name="password"
             placeholder="비밀번호"
             required
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            onChange={onChange}
           />
+          {passwordError && <L.Error>{passwordError}</L.Error>}
         </div>
         <L.LoginMoveButton type="submit" onClick={onLoginButtonClickHandler}>
           로그인

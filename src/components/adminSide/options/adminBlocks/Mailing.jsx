@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import useInput from '../../../../hooks/useInput';
+import useInputs from '../../../../hooks/useInputs';
 import {
   addDoc,
   collection,
@@ -45,11 +45,10 @@ const Mailing = () => {
     deleteModalVisibleAtom,
   );
 
-  // 제목과 설명에 대한 상태 및 상태 변경 함수 설정
-  const [title, handleTitleChange] = useInput(selectedBlock?.title);
-  const [description, handleDescriptionChange] = useInput(
-    selectedBlock?.description,
-  );
+  const [{ title, description }, onChange] = useInputs({
+    title: selectedBlock?.title,
+    description: selectedBlock?.description,
+  });
 
   // 제목과 설명의 글자 수를 추적하는 상태
   const [titleCount, setTitleCount] = useState(0);
@@ -167,7 +166,7 @@ const Mailing = () => {
             placeholder="메일링 서비스 📩"
             value={title}
             onChange={(e) => {
-              handleTitleChange(e);
+              onChange(e);
               setIsTitleValid(e.target.value === '');
               setTitleCount(e.target.value.length);
             }}
@@ -189,7 +188,7 @@ const Mailing = () => {
             placeholder="상세 설명을 입력해 주세요."
             value={description}
             onChange={(e) => {
-              handleDescriptionChange(e);
+              onChange(e);
               setIsDescriptionValid(e.target.value === '');
               setDescriptionCount(e.target.value.length);
             }}

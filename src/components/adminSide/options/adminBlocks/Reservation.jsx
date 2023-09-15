@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import useInputs from '../../../../hooks/useInputs';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import {
   addDoc,
@@ -58,16 +59,15 @@ const Reservation = () => {
     deleteModalVisibleAtom,
   );
 
-  const [title, setTitle] = useState(selectedBlock?.title || '');
-  const [description, setDescription] = useState(
-    selectedBlock?.description || '',
-  );
+  const [{ title, description, numberOfPeople }, onChange] = useInputs({
+    title: selectedBlock?.title,
+    description: selectedBlock?.description,
+    numberOfPeople: selectedBlock?.numberOfPeople,
+  });
+
   const [titleTextCount, setTitleTextCount] = useState(0);
   const [descriptionTextCount, setDescriptionTextCount] = useState(0);
 
-  const [numberOfPeople, setNumberOfPeople] = useState(
-    selectedBlock?.numberOfPeople || 0,
-  );
   const [pickDate, setPickDate] = useState(
     selectedBlock ? selectedBlock?.pickDate : '',
   );
@@ -288,10 +288,11 @@ const Reservation = () => {
         <div className="input-container">
           <input
             id="title"
+            name="title"
             placeholder="예약 서비스 🗓️"
             value={title}
             onChange={(e) => {
-              setTitle(e.target.value);
+              onChange(e);
               setTitleTextCount(e.target.value.length);
             }}
             maxLength={20}
@@ -361,10 +362,11 @@ const Reservation = () => {
         <div className="input-container">
           <textarea
             id="description"
+            name="description"
             placeholder="상세 설명을 입력해 주세요."
             value={description}
             onChange={(e) => {
-              setDescription(e.target.value);
+              onChange(e);
               setDescriptionTextCount(e.target.value.length);
             }}
             maxLength={80}
@@ -376,12 +378,11 @@ const Reservation = () => {
         <div className="input-container">
           <input
             id="number"
+            name="numberOfPeople"
             type="number"
             placeholder={'모집 인원을 선택해주세요'}
             value={numberOfPeople}
-            onChange={(e) => {
-              setNumberOfPeople(e.target.value);
-            }}
+            onChange={onChange}
             min={0}
           />
           {!numberOfPeople ? <span>필수 입력 항목입니다.</span> : null}

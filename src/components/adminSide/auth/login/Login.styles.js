@@ -5,6 +5,7 @@ export const L = {
     font-size: 20px;
     line-height: 26px;
   `,
+
   Image: styled.img`
     margin: 25px auto;
     width: 100%;
@@ -19,6 +20,13 @@ export const L = {
     border: 2px solid #f5f5f5;
     border-radius: 15px;
   `,
+
+  Error: styled.p`
+    color: red;
+    margin-top: 10px;
+    font-size: 12px;
+  `,
+
   LoginMoveButton: styled.button`
     margin: 26px auto 0;
     width: 100%;
@@ -29,12 +37,14 @@ export const L = {
     background: #ffbe51;
     border-radius: 15px;
   `,
+
   GridBox: styled.div`
     margin: 61px auto 0;
     font-size: 14px;
     text-align: center;
     color: #484848;
   `,
+
   // 카카오 버튼
   ButtonKakao: styled.button`
     padding: 0;

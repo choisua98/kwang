@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import useInputs from '../../../../hooks/useInputs';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   addDoc,
   collection,
@@ -11,7 +13,6 @@ import {
   where,
 } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   blocksAtom,
@@ -41,10 +42,10 @@ const FanLetter = () => {
     deleteModalVisibleAtom,
   );
 
-  const [title, setTitle] = useState(selectedBlock?.title || '');
-  const [description, setDescription] = useState(
-    selectedBlock?.description || '',
-  );
+  const [{ title, description }, onChange] = useInputs({
+    title: selectedBlock?.title || '',
+    description: selectedBlock?.description || '',
+  });
 
   const [titleCount, setTitleCount] = useState(0);
   const [descriptionCount, setDescriptionCount] = useState(0);
@@ -158,7 +159,7 @@ const FanLetter = () => {
             placeholder="팬레터 보내기 💘"
             value={title}
             onChange={(e) => {
-              setTitle(e.target.value);
+              onChange(e);
               setIsTitleValid(e.target.value === '');
               setTitleCount(e.target.value.length);
             }}
@@ -180,7 +181,7 @@ const FanLetter = () => {
             placeholder="안녕하세요 크리에이터 크왕이에요! 저에게 전하고 싶은 메시지를 남겨주세용 ㅎㅎ"
             value={description}
             onChange={(e) => {
-              setDescription(e.target.value);
+              onChange(e);
               setIsDescriptionValid(e.target.value === '');
               setDescriptionCount(e.target.value.length);
             }}
