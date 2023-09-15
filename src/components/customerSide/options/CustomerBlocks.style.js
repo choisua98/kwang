@@ -140,7 +140,7 @@ export const C = {
     width: 100%;
     font-size: 14px;
     font-weight: 700;
-    color: #fff;
+    color: var(--color-white);
     border-radius: 15px;
     background-color: ${(props) => props.color || '#FF7C38;'};
 

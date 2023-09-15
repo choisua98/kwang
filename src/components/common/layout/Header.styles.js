@@ -16,7 +16,7 @@ export const H = {
       colorTheme === 'dark' &&
       `
       background: #333;
-      color: #fff;
+      color: var(--color-white);
     `}
     ${({ colorTheme }) =>
       colorTheme === 'light' &&
@@ -27,7 +27,7 @@ export const H = {
       colorTheme !== 'dark' &&
       colorTheme !== 'light' &&
       `
-      background: #FFFAF0;
+      background: var(--color-bg);
     `}
   `,
 
@@ -43,7 +43,7 @@ export const H = {
     align-items: center;
     width: 100px;
     padding: 10px;
-    background-color: #fffaf0;
+    background: var(--color-bg);
 
     p {
       padding-top: 10px;
