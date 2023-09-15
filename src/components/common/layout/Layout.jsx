@@ -6,20 +6,12 @@ import Footer from './Footer';
 
 const Layout = () => {
   const location = useLocation();
-  const hideHeaderPage = [
-    '/admin/challenge',
-    '/admin/mailing',
-    '/admin/reservation',
-    '/admin/faq',
-    '/admin/bannerimage',
-    '/admin/fanletter',
-    '/admin/addlink',
-  ];
-  const hideHeader = hideHeaderPage.includes(location.pathname);
+  // const showHeaderPage = ['/', '/login', '/signup'];
+  // const showHeader = showHeaderPage.includes(location.pathname);
   const hideFooter = location.pathname === '/';
   return (
     <L.StyledAppContainer>
-      {!hideHeader && <Header />}
+      <Header />
       <Outlet />
       {!hideFooter && <Footer />}
     </L.StyledAppContainer>
