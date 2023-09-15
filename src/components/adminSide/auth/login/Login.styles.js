@@ -25,8 +25,8 @@ export const L = {
     height: 60px;
     font-size: 14px;
     font-weight: 700;
-    color: #fff;
-    background: #ffbe51;
+    color: var(--color-white);
+    background: var(--color-primary);
     border-radius: 15px;
   `,
   GridBox: styled.div`

@@ -23,7 +23,7 @@ export const B = {
       `
     border: 1.5px solid #2E2E2E;
     button {
-      color: #fff;
+      color: var(--color-white);
     }
   `}
     ${({ theme }) =>
@@ -81,7 +81,7 @@ export const B = {
       background: var(--color-secondary);
 
       &:hover {
-        color: #fff;
+        color: var(--color-white);
         background: var(--color-accent);
       }
 
@@ -96,12 +96,12 @@ export const B = {
       ${({ theme }) =>
         theme === 'dark' &&
         `
-        color:#fff; 
+        color: var(--color-white);
         background:#2E2E2E;
         
         &:disabled{
           color:#000; 
-          background:#fff; 
+          background:var(--color-white);
         }
       `}
       ${({ theme }) =>
@@ -112,7 +112,7 @@ export const B = {
 
           &:disabled{
             color:#000; 
-            background:#FFFF; 
+            background:var(--color-white);
           }
        `}
        ${({ theme }) =>

@@ -59,15 +59,15 @@ export const D = {
       padding: 20px 0 19px;
       width: 100%;
       font-size: 18px;
-      color: #fff;
+      color: var(--color-white);
       border-radius: 15px;
-      background-color: #ff7a16;
+      background-color: var(--color-white);
       .anticon-download {
         margin-left: 10px;
       }
     }
     div {
-      background-color: #fffaf0;
+      background: var(--color-bg);
       padding: 20px;
       margin-top: 5px;
       border-radius: 10px;

@@ -28,7 +28,7 @@ export const B = {
       border-radius: 15px;
       ${({ theme }) =>
         theme === 'dark' && {
-          color: '#fff',
+          color: 'var(--color-white)',
           background: '#2E2E2E',
         }}
       ${({ theme }) =>

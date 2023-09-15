@@ -19,7 +19,7 @@ export const T = {
     width: 100%;
     border-radius: 15px;
     color: white;
-    background: #ff7c38;
+    background: var(--color-accent);
   `,
   ButtonRow: styled.div`
     display: flex;
@@ -42,13 +42,13 @@ export const T = {
     width: 100%;
     height: auto;
     font-size: 14px;
-    color: #fff;
+    color: var(--color-white);
     border-radius: 15px;
-    background: #ffbe51;
+    background: var(--color-primary);
     ${({ theme }) =>
       theme === 'dark' &&
       `
-      color:#fff; 
+      color:var(--color-white); 
       background:#2E2E2E;`}
 
     ${({ theme }) =>
@@ -60,8 +60,8 @@ export const T = {
     ${({ theme }) =>
       !(theme === 'dark' || theme === 'light') &&
       `
-      color:#fff; 
-      background:#ffbe51`}
+      color:var(--color-white); 
+      background:var(--color-primary)`}
   `,
   // 다크 모드
   DarkModeButton: styled.button`
@@ -71,12 +71,12 @@ export const T = {
     font-size: 14px;
     text-align: left;
     line-height: 60px;
-    color: #fff;
+    color: var(--color-white);
     border: solid transparent;
     background: #fff url(${darkIcon}) no-repeat center / cover;
     &:focus,
     &:active {
-      border: solid #ff7c38;
+      border: 1px solid var(--color-accent);
       border-radius: 15px;
     }
   `,
@@ -93,7 +93,7 @@ export const T = {
     background: #fff url(${basicIcon}) no-repeat center / cover;
     &:focus,
     &:active {
-      border: solid #ff7c38;
+      border: 1px solid var(--color-accent);
       border-radius: 15px;
     }
   `,
@@ -109,7 +109,7 @@ export const T = {
     background: #fff url(${selectIcon}) no-repeat center / cover;
     &:focus,
     &:active {
-      border: solid #ff7c38;
+      border: 1px solid var(--color-accent);
       border-radius: 15px;
     }
   `,
@@ -124,7 +124,7 @@ export const T = {
     background: #fff url(${defaultIcon}) no-repeat center / cover;
     &:focus,
     &:active {
-      border: solid #ff7c38;
+      border: 1px solid var(--color-accent);
       border-radius: 15px;
     }
   `,

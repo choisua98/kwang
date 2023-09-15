@@ -65,7 +65,7 @@ const GlobalStyle = createGlobalStyle`
   .swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
   .swiper-pagination-horizontal.swiper-pagination-bullets
     .swiper-pagination-bullet {
-    background: #ffbe51;
+    background: var(--color-primary);
   }
   /* 달력(RangePicker) */
   .ant-picker-input input  {
