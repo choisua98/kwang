@@ -5,7 +5,7 @@ export const L = {
   Container: styled.div`
     margin: 40px auto;
     padding: 40px 35px;
-    background: #fff;
+    background: var(--color-white);
     border-radius: 15px;
 
     h2 {
@@ -22,17 +22,17 @@ export const L = {
     ${({ theme }) =>
       theme === 'dark' &&
       `
-    color: #fff;
+    color: var(--color-white);
     background: #2E2E2E;
     p {
-      color: #fff;
+      color: var(--color-white);
     }
   `}
     ${({ theme }) =>
       theme === 'light' &&
       `
     color: #000;
-    background: #fff;
+    background: var(--color-white);
     border: 1px solid #ddd;
     p {
       color: #000;
@@ -42,7 +42,7 @@ export const L = {
       theme !== 'dark' &&
       theme !== 'light' &&
       `
-     color: '#fff';
+     color: 'var(--color-white)';
      p {
        color: '#000';
      }
@@ -117,9 +117,9 @@ export const L = {
     width: 100%;
     font-size: 14px;
     line-height: 14px;
-    color: #ff7c38;
-    background: #fff;
-    border: 1px solid #ff7c38;
+    color: var(--color-accent);
+    background: var(--color-white);
+    border: 1px solid var(--color-accent);
     border-radius: 5px;
   `,
 
@@ -135,8 +135,18 @@ export const L = {
     display: block;
     font-size: 14px;
     line-height: 30px;
-    color: #fff;
-    background: #ff7c38;
+    color: var(--color-white);
+    background: var(--color-accent);
+    border-radius: 5px;
+  `,
+  DeleteButton: styled.button`
+    width: 100%;
+    padding: 10px 0;
+    display: block;
+    font-size: 14px;
+    line-height: 30px;
+    color: var(--color-white);
+    background: var(--color-text);
     border-radius: 5px;
   `,
 

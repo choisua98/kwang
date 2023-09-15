@@ -88,7 +88,6 @@ const Data = () => {
       <D.Tabs
         defaultActiveKey="1"
         size="large"
-        tabBarGutter={30}
         items={Tabs.map((tab) => ({
           key: tab.key,
           label: tab.label,
@@ -104,13 +103,38 @@ const Data = () => {
                 {tab.state?.map((data) => (
                   <div key={data.id}>
                     <p>
-                      작성일자 :
+                      <span>작성일자</span>
+                      <span>:</span>
                       {moment(data.createdAt.toDate()).format('YYYY년 M월 D일')}
                     </p>
-                    {data.name && <p>이름 : {data.name}</p>}
-                    {data.email && <p>이메일 : {data.email}</p>}
-                    {data.phoneNumber && <p>연락처 : {data.phoneNumber}</p>}
-                    {data.description && <p>내용 : {data.description}</p>}
+                    {data.name && (
+                      <p>
+                        <span>이름</span>
+                        <span>:</span>
+                        {data.name}
+                      </p>
+                    )}
+                    {data.email && (
+                      <p>
+                        <span>이메일</span>
+                        <span>:</span>
+                        {data.email}
+                      </p>
+                    )}
+                    {data.phoneNumber && (
+                      <p>
+                        <span>연락처</span>
+                        <span>:</span>
+                        {data.phoneNumber}
+                      </p>
+                    )}
+                    {data.description && (
+                      <p>
+                        <span>내용</span>
+                        <span>:</span>
+                        {data.description}
+                      </p>
+                    )}
                   </div>
                 ))}
               </D.Container>

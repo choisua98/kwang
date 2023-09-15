@@ -7,12 +7,12 @@ export const C = {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px 20px;
+    padding: 30px 20px 40px 20px;
     position: relative;
 
     button {
       position: absolute;
-      left: 0;
+      left: 20px;
       padding: 0;
       font-size: 20px;
       background-color: transparent;
@@ -102,11 +102,20 @@ export const C = {
     text-align: center;
     background-color: var(--color-secondary);
     margin: 40px 20px;
+    border: none;
+
     .ant-collapse-content-box {
       padding: 30px 45px !important;
     }
     .ant-collapse-content {
       background: var(--color-bg);
+      border: none;
+    }
+    .ant-collapse-item {
+      border-bottom: 1px solid #ddd;
+      &:last-child {
+        border: none;
+      }
     }
   `,
 
@@ -118,7 +127,7 @@ export const C = {
   `,
 
   ButtonArea: styled.div`
-    display: gird;
+    display: grid;
     margin: 50px 0px 40px 0px;
     position: relative;
   `,
@@ -131,7 +140,7 @@ export const C = {
     width: 100%;
     font-size: 14px;
     font-weight: 700;
-    color: #fff;
+    color: var(--color-white);
     border-radius: 15px;
     background-color: ${(props) => props.color || '#FF7C38;'};
 

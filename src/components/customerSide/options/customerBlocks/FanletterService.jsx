@@ -106,20 +106,19 @@ const FanletterService = () => {
                 placeholder="TO. 크왕이에게"
                 autoFocus
               />
+              <C.ButtonArea>
+                <C.SubmitButton
+                  type="button"
+                  disabled={!description}
+                  onClick={() => {
+                    submitButtonClick();
+                    setModalVisible(true);
+                  }}
+                >
+                  발송하기
+                </C.SubmitButton>
+              </C.ButtonArea>
             </C.Container>
-
-            <C.ButtonArea>
-              <C.SubmitButton
-                type="button"
-                disabled={!description}
-                onClick={() => {
-                  submitButtonClick();
-                  setModalVisible(true);
-                }}
-              >
-                발송하기
-              </C.SubmitButton>
-            </C.ButtonArea>
 
             <C.Modal
               title=""

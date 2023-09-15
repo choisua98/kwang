@@ -144,17 +144,16 @@ const ReservationService = () => {
           onChange={(e) => setPhoneNumber(e.target.value)}
           placeholder="010-1234-5678"
         />
+        <C.ButtonArea>
+          <C.SubmitButton
+            type="submit"
+            disabled={!name || !phoneNumber}
+            onClick={submitButtonClick}
+          >
+            신청하기
+          </C.SubmitButton>
+        </C.ButtonArea>
       </C.Container>
-
-      <C.ButtonArea>
-        <C.SubmitButton
-          type="submit"
-          disabled={!name || !phoneNumber}
-          onClick={submitButtonClick}
-        >
-          신청하기
-        </C.SubmitButton>
-      </C.ButtonArea>
 
       <C.Modal
         title=""

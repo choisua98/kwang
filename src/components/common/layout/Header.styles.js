@@ -16,7 +16,7 @@ export const H = {
       colorTheme === 'dark' &&
       `
       background: #333;
-      color: #fff;
+      color: var(--color-white);
     `}
     ${({ colorTheme }) =>
       colorTheme === 'light' &&
@@ -27,14 +27,14 @@ export const H = {
       colorTheme !== 'dark' &&
       colorTheme !== 'light' &&
       `
-      background: #FFFAF0;
+      background: var(--color-bg);
     `}
   `,
 
   Container: styled.div`
     display: flex;
     height: 80px;
-    padding: 20px;
+    padding: 20px 0;
     justify-content: space-between;
   `,
 
@@ -43,7 +43,7 @@ export const H = {
     align-items: center;
     width: 100px;
     padding: 10px;
-    background-color: #fffaf0;
+    background: var(--color-bg);
 
     p {
       padding-top: 10px;
@@ -53,8 +53,7 @@ export const H = {
   MenuContainer: styled.div`
     display: grid;
     justify-content: left;
-    /* background-color: orange; */
-    margin: 20px;
+    margin: 0 0 20px;
   `,
 
   MenuStyle: styled.p`
@@ -72,9 +71,8 @@ export const H = {
 
   ProfileContainer: styled.div`
     display: flex;
-    padding: 30px 20px 20px;
+    padding: 30px 0 20px;
     align-items: center;
-    margin-left: 15px;
   `,
 
   ProfileImage: styled.img`

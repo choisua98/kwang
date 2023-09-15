@@ -129,20 +129,19 @@ const MailingService = () => {
             setEmail(e.target.value);
           }}
         />
+        <C.ButtonArea>
+          <C.SubmitButton
+            type="button"
+            disabled={!name || !phoneNumber || !email}
+            onClick={() => {
+              submitButtonClick();
+              setModalVisible(true);
+            }}
+          >
+            신청하기
+          </C.SubmitButton>
+        </C.ButtonArea>
       </C.Container>
-
-      <C.ButtonArea>
-        <C.SubmitButton
-          type="button"
-          disabled={!name || !phoneNumber || !email}
-          onClick={() => {
-            submitButtonClick();
-            setModalVisible(true);
-          }}
-        >
-          신청하기
-        </C.SubmitButton>
-      </C.ButtonArea>
 
       <C.Modal
         title=""

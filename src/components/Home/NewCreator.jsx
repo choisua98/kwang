@@ -35,6 +35,7 @@ const NewCreator = () => {
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         spaceBetween={20}
         slidesPerView={2.2}
+        lazy={{ loadPrevNext: true }}
       >
         {usersData.map((user, index) => (
           <SwiperSlide

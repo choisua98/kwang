@@ -68,7 +68,7 @@ export const I = {
     > p {
       font-size: 14px;
       font-weight: 600;
-      color: #fff;
+      color: var(--color-white);
     }
     > button {
       margin-top: 20px;
@@ -78,7 +78,7 @@ export const I = {
       font-size: 14px;
       font-weight: 600;
       color: #ff7a16;
-      background: #fff;
+      background: var(--color-white);
       border-radius: 15px;
       box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.25);
     }

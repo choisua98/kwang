@@ -51,14 +51,14 @@ export const CS = {
       overflow: hidden;
       max-width: 100%;
       width: 100%;
-      background-color: #fff;
+      background-color: var(--color-white);
       color: #222;
       border-radius: 8px;
       font-family: Arial, Helvetica, sans-serif;
       line-height: 1.125em;
     }
     .react-calendar__navigation button {
-      color: #ff7c38;
+      color: var(--color-accent);
       min-width: 44px;
       background: none;
       font-size: 16px;
@@ -79,7 +79,7 @@ export const CS = {
       margin-top: 0;
       margin-bottom: 0;
       background: #f8f8fa;
-      color: #ff7c38;
+      color: var(--color-accent);
       border-radius: 0;
     }
 
@@ -91,13 +91,13 @@ export const CS = {
 
     .react-calendar__tile:enabled:hover,
     .react-calendar__tile:enabled:focus {
-      background: #ff7c38;
+      background: var(--color-accent);
       color: white;
       border-radius: 6px;
     }
     .react-calendar__tile--now {
       background: #f8f8fa;
-      color: #ff7c38;
+      color: var(--color-accent);
       border-radius: none;
       font-weight: none;
     }
@@ -268,7 +268,7 @@ export const CC = {
     width: 100%;
     font-size: 14px;
     font-weight: 700;
-    color: #fff;
+    color: var(--color-white);
     border-radius: 15px;
     background-color: ${(props) => props.color || '#FF7C38;'};
 

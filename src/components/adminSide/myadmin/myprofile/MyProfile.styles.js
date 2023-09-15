@@ -90,8 +90,8 @@ export const P = {
     margin: 15px 0px 20px 0px;
     width: 100%;
     border-radius: 15px;
-    border: 1px solid #ff7c38;
-    color: #ff7c38;
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
     background-color: white;
   `,
 
@@ -100,7 +100,7 @@ export const P = {
     width: 100%;
     border-radius: 15px;
     color: white;
-    background: #ff7c38;
+    background: var(--color-accent);
   `,
 
   ProfileImageBox: styled.div`

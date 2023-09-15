@@ -70,8 +70,8 @@ export const E = {
     font-size: 14px;
     font-weight: 700;
     text-decoration: underline;
-    color: #fff;
+    color: var(--color-white);
     border-radius: 15px;
-    background: #ffbe51;
+    background: var(--color-primary);
   `,
 };
