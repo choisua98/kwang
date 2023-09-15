@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useInputs from '../../../../hooks/useInputs';
 import {
   addDoc,
   collection,
@@ -11,7 +13,6 @@ import {
   where,
 } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   blocksAtom,
@@ -42,8 +43,11 @@ const AddLink = () => {
     deleteModalVisibleAtom,
   );
 
-  const [title, setTitle] = useState(selectedBlock?.title || '');
-  const [addLink, setAddLink] = useState(selectedBlock?.description || '');
+  const [{ title, addLink }, onChange] = useInputs({
+    title: selectedBlock?.title || '',
+    addLink: selectedBlock?.addLink || 'https://',
+  });
+
   const [isTitleValid, setIsTitleValid] = useState(false);
   const [isAddLinkValid, setIsAddLinkValid] = useState(false);
   const [titleCount, setTitleCount] = useState(0);
@@ -158,7 +162,7 @@ const AddLink = () => {
             placeholder="링크 추가하기 ✔️"
             value={title}
             onChange={(e) => {
-              setTitle(e.target.value);
+              onChange(e);
               setIsTitleValid(e.target.value === '');
               setTitleCount(e.target.value.length);
             }}
@@ -167,16 +171,16 @@ const AddLink = () => {
           {isTitleValid && <span>필수입력 항목입니다.</span>}
         </div>
 
-        <label htmlFor="description">링크를 추가해 주세요</label>
+        <label htmlFor="addLink">링크를 추가해 주세요</label>
         <div className="input-container">
           <input
-            id="description"
-            name="description"
+            id="addLink"
+            name="addLink"
             type="text"
-            value={addLink || 'https://'}
+            value={addLink}
             onChange={(e) => {
               const inputValue = e.target.value;
-              setAddLink(inputValue);
+              onChange(e);
               if (inputValue === '' || !urlRegex.test(inputValue)) {
                 setIsAddLinkValid(true);
               } else {

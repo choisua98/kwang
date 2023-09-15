@@ -102,6 +102,13 @@ export const O = {
     }
   `,
 
+  Loading: styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  `,
+
   ButtonArea: styled.div`
     display: grid;
     margin: 50px 0px 40px 0px;

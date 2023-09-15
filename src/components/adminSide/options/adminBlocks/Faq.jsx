@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useInput from '../../../../hooks/useInput';
+import useInputs from '../../../../hooks/useInputs';
 import { nanoid } from 'nanoid';
 import { db } from '../../../../firebase/firebaseConfig';
 import {
@@ -52,10 +52,11 @@ const Faq = () => {
     deleteModalVisibleAtom,
   );
 
-  // 질문과 답변에 대한 상태 및 상태 변경 함수 설정
-  const [title, handleTitleChange] = useInput(selectedBlock?.title);
-  const [question, handleQuestionChange, resetQuestion] = useInput();
-  const [answer, handleAnswerChange, resetAuswer] = useInput();
+  const [{ title, question, answer }, onChange, reset] = useInputs({
+    title: selectedBlock?.title,
+    question: '',
+    answer: '',
+  });
 
   const [titleCount, setTitleCount] = useState(0);
 
@@ -81,8 +82,8 @@ const Faq = () => {
     setFaqList((prev) => [...prev, newFaq]);
 
     // 입력 필드 초기화
-    resetQuestion();
-    resetAuswer();
+    onChange({ target: { name: 'question', value: '' } });
+    onChange({ target: { name: 'answer', value: '' } });
   };
 
   // "저장하기" 버튼 클릭 시 실행되는 함수
@@ -231,7 +232,7 @@ const Faq = () => {
             placeholder="자주 묻는 질문 😊"
             value={title}
             onChange={(e) => {
-              handleTitleChange(e);
+              onChange(e);
               setIsTitleValid(e.target.value === '');
               setTitleCount(e.target.value.length);
             }}
@@ -274,7 +275,7 @@ const Faq = () => {
             placeholder="질문을 입력해 주세요."
             value={question}
             onChange={(e) => {
-              handleQuestionChange(e);
+              onChange(e);
               setIsQuestionValid(e.target.value === '');
             }}
           />
@@ -290,7 +291,7 @@ const Faq = () => {
             placeholder="답변을 입력해 주세요."
             value={answer}
             onChange={(e) => {
-              handleAnswerChange(e);
+              onChange(e);
               setIsAnswerValid(e.target.value === '');
             }}
           />

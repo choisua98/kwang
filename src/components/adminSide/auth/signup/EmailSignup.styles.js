@@ -54,6 +54,12 @@ export const E = {
     }
   `,
 
+  Error: styled.p`
+    color: red;
+    margin-top: 10px;
+    font-size: 12px;
+  `,
+
   SignupButton: styled(Button)`
     position: absolute;
     bottom: 38px;
