@@ -31,9 +31,9 @@ export const E = {
       width: 116px;
       height: 48.5px;
       box-sizing: border-box;
-      color: #b0b0b0;
+      color: var(--color-white);
       border-radius: 10px;
-      background: #e7e7e7;
+      background: var(--color-primary);
     }
   `,
 
@@ -72,6 +72,14 @@ export const E = {
     text-decoration: underline;
     color: var(--color-white);
     border-radius: 15px;
-    background: var(--color-primary);
+    background: var(--color-accent);
+
+    &:disabled {
+      border: 1px solid gray;
+      color: var(--color-white);
+      cursor: default;
+      background-color: #d3d3d3;
+      border: none;
+    }
   `,
 };

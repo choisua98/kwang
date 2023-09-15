@@ -127,7 +127,11 @@ const EmailSignup = () => {
         </E.PasswordDiv>
         {passwordError && <E.Error>{passwordError}</E.Error>}
 
-        <E.SignupButton type="submit" onClick={onSignupButtonClickHandler}>
+        <E.SignupButton
+          type="submit"
+          disabled={!email || !password || !confirmPassword}
+          onClick={onSignupButtonClickHandler}
+        >
           회원가입하기
         </E.SignupButton>
       </E.FormContainer>
