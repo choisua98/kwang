@@ -61,7 +61,7 @@ export const D = {
       font-size: 18px;
       color: var(--color-white);
       border-radius: 15px;
-      background-color: var(--color-white);
+      background-color: var(--color-accent);
       .anticon-download {
         margin-left: 10px;
       }
