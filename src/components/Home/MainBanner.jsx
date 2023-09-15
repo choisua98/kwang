@@ -9,8 +9,8 @@ import {
 } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { M } from './Home.styles';
-import PromoBanner1 from '../../assets/images/customer/home/banner/promo/promo-banner-1.png';
-import PromoBanner2 from '../../assets/images/customer/home/banner/promo/promo-banner-2.png';
+import PromoBanner1 from '../../assets/images/customer/home/banner/promo/promo-banner-1.webp';
+import PromoBanner2 from '../../assets/images/customer/home/banner/promo/promo-banner-2.webp';
 
 const MainBanner = () => {
   return (

@@ -20,8 +20,8 @@ import {
   userAtom,
 } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
-import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
-import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
 import { LeftOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 

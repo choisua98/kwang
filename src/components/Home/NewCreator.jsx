@@ -5,8 +5,8 @@ import { db } from '../../firebase/firebaseConfig';
 import { collection, query, limit, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { N } from './Home.styles';
-import kwangProfileImage from '../../assets/images/Kwang-background-white.png';
-import defaultProfileImage from '../../assets/images/profile-default-image.png';
+import kwangProfileImage from '../../assets/images/Kwang-background-white.webp';
+import defaultProfileImage from '../../assets/images/profile-default-image.webp';
 import { message } from 'antd';
 
 const NewCreator = () => {

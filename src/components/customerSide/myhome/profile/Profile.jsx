@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'antd';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../../firebase/firebaseConfig';
-import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
+import defaultProfileImage from '../../../../assets/images/profile-default-image.webp';
 
 import { S } from './Profile.styles';
 import { useParams } from 'react-router-dom';

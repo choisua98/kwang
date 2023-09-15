@@ -11,7 +11,7 @@ import {
 import { db } from '../../../../../firebase/firebaseConfig';
 import { C } from '../../CustomerBlocks.style';
 import { CC, CS } from './ChallengeService.styles';
-import IconAwesome from '../../../../../assets/images/customer/icon-awesome.png';
+import IconAwesome from '../../../../../assets/images/customer/icon-awesome.webp';
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../../atoms/Atom';
 import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';

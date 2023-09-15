@@ -14,7 +14,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../atoms/Atom';
 import { LeftOutlined } from '@ant-design/icons';
-import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
 import { message } from 'antd';
 
 const MailingService = () => {

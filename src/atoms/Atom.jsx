@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import defaultProfileImage from '../assets/images/profile-default-image.png';
+import defaultProfileImage from '../assets/images/profile-default-image.webp';
 
 // user 데이터를 담는 atom
 export const userAtom = atom(null);

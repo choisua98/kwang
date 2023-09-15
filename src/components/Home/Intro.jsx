@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { I } from './Home.styles';
-import IntroBanner from '../../assets/images/customer/home/banner/intro/intro-banner.png';
+import IntroBanner from '../../assets/images/customer/home/banner/intro/intro-banner.webp';
 import { useAtomValue } from 'jotai';
 import { userAtom } from '../../atoms/Atom';
 const Intro = () => {

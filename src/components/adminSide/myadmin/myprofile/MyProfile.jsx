@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Modal, message } from 'antd';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
+import defaultProfileImage from '../../../../assets/images/profile-default-image.webp';
 import {
   themeAtom,
   userAtom,
