@@ -1,5 +1,5 @@
 import React from 'react';
-import GoogleIcon from '../../../../assets/images/google.png';
+import GoogleIcon from '../../../../assets/images/google.webp';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import 'firebase/firestore';
 import { Link, useNavigate } from 'react-router-dom';

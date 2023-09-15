@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Col, Modal, Row, message } from 'antd';
 import { useAtom, useAtomValue } from 'jotai';
 import { nanoid } from 'nanoid';
-import sampleImg from '../../../../assets/images/admin/sample.jpg';
+import sampleImg from '../../../../assets/images/admin/sample.webp';
 import {
   backgroundImageAtom,
   modalVisibleAtom,

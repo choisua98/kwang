@@ -1,10 +1,10 @@
 import { styled } from 'styled-components';
-import defaultProfileImage from '../../../../assets/images/profile-default-image.png';
+import defaultProfileImage from '../../../../assets/images/profile-default-image.webp';
 import { Button, Col } from 'antd';
-import btnEditImage from '../../../../assets/images/common/btn/btn-edit.png';
-import btnEditImageLight from '../../../../assets/images/common/btn/btn-edit-light.png';
-import btnEditImageDark from '../../../../assets/images/common/btn/btn-edit-dark.png';
-import btnEditImageDefault from '../../../../assets/images/common/btn/btn-edit.png';
+import btnEditImage from '../../../../assets/images/common/btn/btn-edit.webp';
+import btnEditImageLight from '../../../../assets/images/common/btn/btn-edit-light.webp';
+import btnEditImageDark from '../../../../assets/images/common/btn/btn-edit-dark.webp';
+import btnEditImageDefault from '../../../../assets/images/common/btn/btn-edit.webp';
 
 export const P = {
   Container: styled.div`

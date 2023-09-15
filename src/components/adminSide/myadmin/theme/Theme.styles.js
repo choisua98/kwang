@@ -1,10 +1,10 @@
 import { Button } from 'antd';
 import { styled } from 'styled-components';
 import { Progress as AntProgress } from 'antd';
-import darkIcon from '../../../../assets/images/common/icon/icon-dark.png';
-import basicIcon from '../../../../assets/images/common/icon/icon-light.png';
-import selectIcon from '../../../../assets/images/common/icon/icon-photo.png';
-import defaultIcon from '../../../../assets/images/common/icon/icon-default.png';
+import darkIcon from '../../../../assets/images/common/icon/icon-dark.webp';
+import basicIcon from '../../../../assets/images/common/icon/icon-light.webp';
+import selectIcon from '../../../../assets/images/common/icon/icon-photo.webp';
+import defaultIcon from '../../../../assets/images/common/icon/icon-default.webp';
 
 export const T = {
   ModalTitle: styled.div`

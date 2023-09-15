@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import { Modal } from 'antd';
-import IconDelete from '../../../assets/images/common/icon/icon-delete.png';
+import IconDelete from '../../../assets/images/common/icon/icon-delete.webp';
 
 // adminSide options 공통 css
 export const O = {

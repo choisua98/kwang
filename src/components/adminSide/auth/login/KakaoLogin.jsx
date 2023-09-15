@@ -4,7 +4,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import KakaoIcon from '../../../../assets/images/kakao.png';
+import KakaoIcon from '../../../../assets/images/kakao.webp';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { message } from 'antd';

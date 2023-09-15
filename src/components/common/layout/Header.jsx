@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Row, Col, Drawer, Space, message } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
-import Logo from '../../../assets/images/logo.png';
-import WhiteLogo from '../../../assets/images/logo-white.png';
+import Logo from '../../../assets/images/logo.webp';
+import WhiteLogo from '../../../assets/images/logo-white.webp';
 import { H } from './Header.styles';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../../firebase/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
-import defaultProfileImage from '../../../assets/images/profile-default-image.png';
-import HomeIcon from '../../../assets/images/common/icon/Icon-home.png';
-import LinkIcon from '../../../assets/images/common/icon/icon-link.png';
-import EditIcon from '../../../assets/images/common/icon/icon-edit.png';
+import defaultProfileImage from '../../../assets/images/profile-default-image.webp';
+import HomeIcon from '../../../assets/images/common/icon/Icon-home.webp';
+import LinkIcon from '../../../assets/images/common/icon/icon-link.webp';
+import EditIcon from '../../../assets/images/common/icon/icon-edit.webp';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   themeAtom,
