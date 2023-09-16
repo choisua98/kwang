@@ -78,34 +78,6 @@
 
 <br />
 
-## 💻 기술 스택
-<div align="center">
-  
-### Front-end
-<div>
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/JavaScript.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/React.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/TypeScript.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/ReactQuery.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Redux.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/StyledComponents.png?raw=true" width="80">
-</div>
-
-### Back-end & Infra
-<div>
-<img src="https://github.com/kimhwanhoon/zombie-bucket-list/assets/120562771/e3192a2d-cf71-44a9-b0fe-c2ddb9db4101" width="80">
-<img src="https://github.com/kimhwanhoon/zombie-bucket-list/assets/120562771/179b6b27-9a09-4fdb-bf5c-fdab2c484e9d" width="80">
-</div>
-
-### Tools
-<div>
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Github.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Notion.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Figma.png?raw=true" width="80">
-</div>
-</div>
-<br />
-
 ## 💻 서비스 아키텍처
 ![제목 없음-2023-09-03-0309](https://github.com/choisua98/kwang/assets/120562771/3bb4b4fa-a8f7-4887-b988-5fac76a1417d)
 
