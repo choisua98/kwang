@@ -20,6 +20,10 @@ import {
   modalVisibleAtom,
   userAtom,
 } from '../../../../atoms/Atom';
+import {
+  handleCloseDeleteModal,
+  handleCloseModal,
+} from '../../../../utils/\butils';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
@@ -208,10 +212,7 @@ const FanLetter = () => {
         title=""
         centered
         open={modalVisible}
-        onCancel={() => {
-          setModalVisible(false);
-          navigate(-1);
-        }}
+        onCancel={() => handleCloseModal(setModalVisible, navigate)}
         footer={null}
         closable={false}
         width={330}
@@ -223,10 +224,7 @@ const FanLetter = () => {
         </div>
         <button
           type="button"
-          onClick={() => {
-            setModalVisible(false);
-            navigate(-1);
-          }}
+          onClick={() => handleCloseModal(setModalVisible, navigate)}
         >
           닫기
         </button>
@@ -236,10 +234,7 @@ const FanLetter = () => {
         title=""
         centered
         open={deleteModalVisible}
-        onCancel={() => {
-          setDeleteModalVisible(false);
-          navigate(-1);
-        }}
+        onCancel={() => handleCloseDeleteModal(setDeleteModalVisible, navigate)}
         footer={null}
         closable={false}
         width={330}
@@ -251,10 +246,9 @@ const FanLetter = () => {
         </div>
         <button
           type="button"
-          onClick={() => {
-            setDeleteModalVisible(false);
-            navigate(-1);
-          }}
+          onClick={() =>
+            handleCloseDeleteModal(setDeleteModalVisible, navigate)
+          }
         >
           닫기
         </button>

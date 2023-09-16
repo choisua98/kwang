@@ -22,6 +22,10 @@ import {
   where,
 } from 'firebase/firestore';
 import { deleteObject, listAll, ref } from 'firebase/storage';
+import {
+  handleCloseDeleteModal,
+  handleCloseModal,
+} from '../../../../utils/\butils';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
@@ -31,6 +35,7 @@ import { CameraOutlined, LeftOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Modal, Space, message } from 'antd';
+
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
 
@@ -86,16 +91,16 @@ const Challenge = () => {
   );
 
   // 최대 업로드 가능한 이미지 개수
-  const maxUploads = 4;
+  const MAX_UPLOADS = 4;
 
   // 이미지 업로드 시 실행되는 함수
   const handleImageChange = async (e) => {
     const selectedFiles = e.target.files;
 
-    if (uploadedImages.length >= maxUploads) {
+    if (uploadedImages.length >= MAX_UPLOADS) {
       // 이미지 개수가 최대 개수에 도달한 경우 모달 창을 띄워 알림 표시
       Modal.info({
-        content: `이미지는 최대 ${maxUploads}장까지 첨부할 수 있어요.`,
+        content: `이미지는 최대 ${MAX_UPLOADS}장까지 첨부할 수 있어요.`,
       });
       return;
     }
@@ -275,12 +280,12 @@ const Challenge = () => {
         </div>
 
         <O.ImageContainer>
-          {uploadedImages.length >= maxUploads ? (
+          {uploadedImages.length >= MAX_UPLOADS ? (
             <>
               <div onClick={handleImageChange}>
                 <label>
                   <CameraOutlined />
-                  <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+                  <span>{`${uploadedImages.length} / ${MAX_UPLOADS}`}</span>
                 </label>
               </div>
             </>
@@ -288,7 +293,7 @@ const Challenge = () => {
             <>
               <label htmlFor="file">
                 <CameraOutlined />
-                <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+                <span>{`${uploadedImages.length} / ${MAX_UPLOADS}`}</span>
               </label>
               <input
                 id="file"
@@ -379,10 +384,7 @@ const Challenge = () => {
         title=""
         centered
         open={modalVisible}
-        onCancel={() => {
-          setModalVisible(false);
-          navigate(-1);
-        }}
+        onCancel={() => handleCloseModal(setModalVisible, navigate)}
         footer={null}
         closable={false}
         width={330}
@@ -394,10 +396,7 @@ const Challenge = () => {
         </div>
         <button
           type="button"
-          onClick={() => {
-            setModalVisible(false);
-            navigate(-1);
-          }}
+          onClick={() => handleCloseModal(setModalVisible, navigate)}
         >
           닫기
         </button>
@@ -407,10 +406,7 @@ const Challenge = () => {
         title=""
         centered
         open={deleteModalVisible}
-        onCancel={() => {
-          setDeleteModalVisible(false);
-          navigate(-1);
-        }}
+        onCancel={() => handleCloseDeleteModal(setDeleteModalVisible, navigate)}
         footer={null}
         closable={false}
         width={330}
@@ -422,10 +418,9 @@ const Challenge = () => {
         </div>
         <button
           type="button"
-          onClick={() => {
-            setDeleteModalVisible(false);
-            navigate(-1);
-          }}
+          onClick={() =>
+            handleCloseDeleteModal(setDeleteModalVisible, navigate)
+          }
         >
           닫기
         </button>
