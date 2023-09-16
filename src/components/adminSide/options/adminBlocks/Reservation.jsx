@@ -23,8 +23,8 @@ import {
   userAtom,
 } from '../../../../atoms/Atom';
 import { O } from '../Blocks.styles';
-import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
-import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Modal, Space, message } from 'antd';

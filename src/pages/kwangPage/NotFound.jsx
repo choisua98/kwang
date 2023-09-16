@@ -1,6 +1,6 @@
 import React from 'react';
-import NotFoundMessageImage from '../../assets/images/404- error-message.png';
-import NotFoundImage from '../../assets/images/404-page-image.png';
+import NotFoundMessageImage from '../../assets/images/404- error-message.webp';
+import NotFoundImage from '../../assets/images/404-page-image.webp';
 import { N } from './NotFound.styles';
 import { useNavigate } from 'react-router-dom';
 

@@ -14,7 +14,7 @@ import { useAtom } from 'jotai';
 import { modalVisibleAtom } from '../../../../../atoms/Atom';
 import { C } from '../../CustomerBlocks.style';
 import { CC, CS } from './ChallengeService.styles';
-import IconAwesome from '../../../../../assets/images/customer/icon-awesome.png';
+import IconAwesome from '../../../../../assets/images/customer/icon-awesome.webp';
 import { message } from 'antd';
 import { DeleteOutlined, LeftOutlined } from '@ant-design/icons';
 import moment from 'moment';

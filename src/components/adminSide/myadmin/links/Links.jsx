@@ -17,14 +17,14 @@ import {
   deleteDoc,
 } from 'firebase/firestore';
 import imageCompression from 'browser-image-compression';
-import GithubIcon from '../../../../assets/images/admin/linkIcon/icon-github.png';
-import InstagramIcon from '../../../../assets/images/admin/linkIcon/icon-instagram.png';
-import KakaoIcon from '../../../../assets/images/admin/linkIcon/icon-kakao.png';
-import NaverIcon from '../../../../assets/images/admin/linkIcon/icon-naver.png';
-import TiktokIcon from '../../../../assets/images/admin/linkIcon/icon-tiktok.png';
-import TwitterIcon from '../../../../assets/images/admin/linkIcon/icon-twitter.png';
-import YoutubeIcon from '../../../../assets/images/admin/linkIcon/icon-youtube.png';
-import FacebookIcon from '../../../../assets/images/admin/linkIcon/icon-facebook.png';
+import GithubIcon from '../../../../assets/images/admin/linkIcon/icon-github.webp';
+import InstagramIcon from '../../../../assets/images/admin/linkIcon/icon-instagram.webp';
+import KakaoIcon from '../../../../assets/images/admin/linkIcon/icon-kakao.webp';
+import NaverIcon from '../../../../assets/images/admin/linkIcon/icon-naver.webp';
+import TiktokIcon from '../../../../assets/images/admin/linkIcon/icon-tiktok.webp';
+import TwitterIcon from '../../../../assets/images/admin/linkIcon/icon-twitter.webp';
+import YoutubeIcon from '../../../../assets/images/admin/linkIcon/icon-youtube.webp';
+import FacebookIcon from '../../../../assets/images/admin/linkIcon/icon-facebook.webp';
 import { useAtom, useAtomValue } from 'jotai';
 import { themeAtom, userAtom } from '../../../../atoms/Atom';
 

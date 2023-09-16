@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../../../assets/images/logo.png';
-import WhiteLogo from '../../../assets/images/logo-white.png';
+import Logo from '../../../assets/images/logo.webp';
+import WhiteLogo from '../../../assets/images/logo-white.webp';
 import styled from 'styled-components';
 import { useAtom } from 'jotai';
 import { themeAtom } from '../../../atoms/Atom';

@@ -23,8 +23,8 @@ import {
 } from 'firebase/firestore';
 import { deleteObject, listAll, ref } from 'firebase/storage';
 import { O } from '../Blocks.styles';
-import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
-import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
+import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
 
 // ant Design
 import { CameraOutlined, LeftOutlined } from '@ant-design/icons';

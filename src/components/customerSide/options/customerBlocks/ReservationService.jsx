@@ -16,7 +16,7 @@ import { Pagination, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { C } from '../CustomerBlocks.style';
 import { LeftOutlined } from '@ant-design/icons';
-import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
+import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
 import { message } from 'antd';
 
 const ReservationService = () => {
