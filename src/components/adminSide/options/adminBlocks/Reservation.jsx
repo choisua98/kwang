@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useInputs from '../../../../hooks/useInputs';
 import { db, storage } from '../../../../firebase/firebaseConfig';
+import { uploadImagesAndUpdateFirestore } from '../../../../utils/uploadUtils';
 import {
   addDoc,
   collection,
@@ -13,13 +14,7 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import {
-  deleteObject,
-  getDownloadURL,
-  listAll,
-  ref,
-  uploadBytes,
-} from 'firebase/storage';
+import { deleteObject, listAll, ref } from 'firebase/storage';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   blocksAtom,
@@ -60,9 +55,9 @@ const Reservation = () => {
   );
 
   const [{ title, description, numberOfPeople }, onChange] = useInputs({
-    title: selectedBlock?.title,
-    description: selectedBlock?.description,
-    numberOfPeople: selectedBlock?.numberOfPeople,
+    title: selectedBlock?.title || '',
+    description: selectedBlock?.description || '',
+    numberOfPeople: selectedBlock?.numberOfPeople || 0,
   });
 
   const [titleTextCount, setTitleTextCount] = useState(0);
@@ -79,21 +74,17 @@ const Reservation = () => {
   );
 
   // 실제로 업로드한 이미지 정보를 저장하는 배열
-  const [uploadedImages, setUploadedImages] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState(
+    selectedBlock?.images || [],
+  );
 
   // 최대 업로드 가능한 이미지 개수
   const maxUploads = 4;
 
-  useEffect(() => {
-    if (blockId) {
-      // 이미지 데이터를 가져와서 업로드된 이미지 배열을 초기화
-      const initialImages = selectedBlock?.images || [];
-      setUploadedImages(initialImages);
-    }
-  }, [blockId, selectedBlock]);
-
   // 이미지 업로드 시 실행되는 함수
   const handleImageChange = async (e) => {
+    const selectedFiles = e.target.files;
+
     if (uploadedImages.length >= maxUploads) {
       // 이미지 개수가 최대 개수에 도달한 경우 모달 창을 띄워 알림 표시
       Modal.info({
@@ -102,11 +93,10 @@ const Reservation = () => {
       return;
     }
 
-    const file = e.target.files[0];
+    // 선택한 이미지들을 새로운 배열로 만들어 업로드 이미지 배열에 합침
+    const newImages = [...uploadedImages, ...Array.from(selectedFiles)];
 
-    if (file) {
-      setUploadedImages([...uploadedImages, file]);
-    }
+    setUploadedImages(newImages);
   };
 
   // 저장 버튼
@@ -150,25 +140,14 @@ const Reservation = () => {
         userId: userUid,
       });
 
-      // 저장된 문서의 ID 가져오기
-      const docId = docRef.id;
-
       // 이미지 업로드 및 URL 저장
-      const imageUrls = [];
-      for (const imageFile of uploadedImages) {
-        const imageRef = ref(
-          storage,
-          `reservationImages/${docId}/${imageFile.name}`,
-        );
-        await uploadBytes(imageRef, imageFile);
-        const imageUrl = await getDownloadURL(imageRef);
-        imageUrls.push(imageUrl);
-      }
-
-      // 이미지 URL들을 Firestore 문서에 업데이트
-      await updateDoc(docRef, {
-        images: imageUrls,
-      });
+      await uploadImagesAndUpdateFirestore(
+        uploadedImages,
+        blockId,
+        docRef,
+        storage,
+        'reservationImages',
+      );
 
       setModalVisible(true);
     } catch (error) {
@@ -190,25 +169,14 @@ const Reservation = () => {
         startDate,
         endDate,
       });
-      // 이미지 업로드 및 URL 저장
-      const imageUrls = [];
-      for (const imageFile of uploadedImages) {
-        if (typeof imageFile === 'string') {
-          imageUrls.push(imageFile);
-        } else {
-          const imageRef = ref(
-            storage,
-            `reservationImages/${blockId}/${imageFile.name}`,
-          );
-          await uploadBytes(imageRef, imageFile);
-          const imageUrl = await getDownloadURL(imageRef);
-          imageUrls.push(imageUrl);
-        }
-      }
-      // 이미지 URL들을 Firestore 문서에 업데이트
-      await updateDoc(docRef, {
-        images: imageUrls,
-      });
+
+      await uploadImagesAndUpdateFirestore(
+        uploadedImages,
+        blockId,
+        docRef,
+        storage,
+        'reservationImages',
+      );
 
       setModalVisible(true);
     } catch (error) {
@@ -305,12 +273,7 @@ const Reservation = () => {
           {uploadedImages.length >= maxUploads ? (
             <>
               <div onClick={handleImageChange}>
-                <label
-                  htmlFor="imageInput"
-                  className={
-                    uploadedImages.length >= maxUploads ? 'disabled' : ''
-                  }
-                >
+                <label>
                   <CameraOutlined />
                   <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
                 </label>
@@ -318,16 +281,15 @@ const Reservation = () => {
             </>
           ) : (
             <>
-              <label htmlFor="imageInput">
-                <div>
-                  <CameraOutlined />
-                </div>
+              <label htmlFor="file">
+                <CameraOutlined />
                 <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
               </label>
               <input
-                id="imageInput"
+                id="file"
                 type="file"
                 accept="image/*"
+                multiple // 다중 선택
                 onChange={handleImageChange}
               />
             </>

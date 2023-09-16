@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useInputs from '../../../../hooks/useInputs';
 import { useAtom, useAtomValue } from 'jotai';
@@ -9,6 +9,7 @@ import {
   userAtom,
 } from '../../../../atoms/Atom';
 import { db, storage } from '../../../../firebase/firebaseConfig';
+import { uploadImagesAndUpdateFirestore } from '../../../../utils/uploadUtils';
 import {
   addDoc,
   collection,
@@ -20,13 +21,7 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import {
-  deleteObject,
-  getDownloadURL,
-  listAll,
-  ref,
-  uploadBytes,
-} from 'firebase/storage';
+import { deleteObject, listAll, ref } from 'firebase/storage';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.png';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
@@ -66,13 +61,13 @@ const Challenge = () => {
   );
 
   const [{ title, description }, onChange] = useInputs({
-    title: selectedBlock?.title,
-    description: selectedBlock?.description,
+    title: selectedBlock?.title || '',
+    description: selectedBlock?.description || '',
   });
 
   // 제목과 설명의 글자 수를 추적하는 상태
-  const [titleCount, setTitleCount] = useState(0);
-  const [descriptionCount, setDescriptionCount] = useState(0);
+  const [titleTextCount, setTitleTextCount] = useState(0);
+  const [descriptionTextCount, setDescriptionTextCount] = useState(0);
 
   const [isTitleValid, setIsTitleValid] = useState(false);
   const [isDescriptionValid, setIsDescriptionValid] = useState(false);
@@ -86,21 +81,17 @@ const Challenge = () => {
   );
 
   // 실제로 업로드한 이미지 정보를 저장하는 배열
-  const [uploadedImages, setUploadedImages] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState(
+    selectedBlock?.images || [],
+  );
 
   // 최대 업로드 가능한 이미지 개수
   const maxUploads = 4;
 
-  useEffect(() => {
-    if (blockId) {
-      // 이미지 데이터를 가져와서 업로드된 이미지 배열을 초기화
-      const initialImages = selectedBlock?.images || [];
-      setUploadedImages(initialImages);
-    }
-  }, [blockId, selectedBlock]);
-
   // 이미지 업로드 시 실행되는 함수
   const handleImageChange = async (e) => {
+    const selectedFiles = e.target.files;
+
     if (uploadedImages.length >= maxUploads) {
       // 이미지 개수가 최대 개수에 도달한 경우 모달 창을 띄워 알림 표시
       Modal.info({
@@ -109,11 +100,10 @@ const Challenge = () => {
       return;
     }
 
-    const file = e.target.files[0];
+    // 선택한 이미지들을 새로운 배열로 만들어 업로드 이미지 배열에 합침
+    const newImages = [...uploadedImages, ...Array.from(selectedFiles)];
 
-    if (file) {
-      setUploadedImages([...uploadedImages, file]);
-    }
+    setUploadedImages(newImages);
   };
 
   // "저장하기" 버튼 클릭 시 실행되는 함수
@@ -155,25 +145,14 @@ const Challenge = () => {
         blockId: blockId,
       });
 
-      // 저장된 문서의 ID 가져오기
-      const docId = docRef.id;
-
       // 이미지 업로드 및 URL 저장
-      const imageUrls = [];
-      for (const imageFile of uploadedImages) {
-        const imageRef = ref(
-          storage,
-          `callengeImages/${docId}/${imageFile.name}`,
-        );
-        await uploadBytes(imageRef, imageFile);
-        const imageUrl = await getDownloadURL(imageRef);
-        imageUrls.push(imageUrl);
-      }
-
-      // 이미지 URL들을 Firestore 문서에 업데이트
-      await updateDoc(docRef, {
-        images: imageUrls,
-      });
+      await uploadImagesAndUpdateFirestore(
+        uploadedImages,
+        blockId,
+        docRef,
+        storage,
+        'callengeImages',
+      );
 
       setModalVisible(true);
     } catch (error) {
@@ -196,25 +175,13 @@ const Challenge = () => {
       });
 
       // 이미지 업로드 및 URL 저장
-      const imageUrls = [];
-      for (const imageFile of uploadedImages) {
-        if (typeof imageFile === 'string') {
-          imageUrls.push(imageFile);
-        } else {
-          const imageRef = ref(
-            storage,
-            `callengeImages/${blockId}/${imageFile.name}`,
-          );
-          await uploadBytes(imageRef, imageFile);
-          const imageUrl = await getDownloadURL(imageRef);
-          imageUrls.push(imageUrl);
-        }
-      }
-
-      // 이미지 URL들을 Firestore 문서에 업데이트
-      await updateDoc(docRef, {
-        images: imageUrls,
-      });
+      await uploadImagesAndUpdateFirestore(
+        uploadedImages,
+        blockId,
+        docRef,
+        storage,
+        'callengeImages',
+      );
 
       setModalVisible(true);
     } catch (error) {
@@ -287,7 +254,7 @@ const Challenge = () => {
       >
         <label htmlFor="title">
           함께해요 챌린지 이름
-          <p>{titleCount}/20자</p>
+          <p>{titleTextCount}/20자</p>
         </label>
         <div className="input-container">
           <input
@@ -299,7 +266,7 @@ const Challenge = () => {
             onChange={(e) => {
               onChange(e);
               setIsTitleValid(e.target.value === '');
-              setTitleCount(e.target.value.length);
+              setTitleTextCount(e.target.value.length);
             }}
             maxLength={20}
             autoFocus
@@ -311,12 +278,7 @@ const Challenge = () => {
           {uploadedImages.length >= maxUploads ? (
             <>
               <div onClick={handleImageChange}>
-                <label
-                  htmlFor="imageInput"
-                  className={
-                    uploadedImages.length >= maxUploads ? 'disabled' : ''
-                  }
-                >
+                <label>
                   <CameraOutlined />
                   <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
                 </label>
@@ -324,16 +286,15 @@ const Challenge = () => {
             </>
           ) : (
             <>
-              <label htmlFor="imageInput">
-                <div>
-                  <CameraOutlined />
-                </div>
+              <label htmlFor="file">
+                <CameraOutlined />
                 <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
               </label>
               <input
-                id="imageInput"
+                id="file"
                 type="file"
                 accept="image/*"
+                multiple // 다중 선택
                 onChange={handleImageChange}
               />
             </>
@@ -363,7 +324,7 @@ const Challenge = () => {
 
         <label htmlFor="description">
           챌린지 상세설명
-          <p>{descriptionCount}/80자</p>
+          <p>{descriptionTextCount}/80자</p>
         </label>
         <div className="input-container">
           <textarea
@@ -375,7 +336,7 @@ const Challenge = () => {
             onChange={(e) => {
               onChange(e);
               setIsDescriptionValid(e.target.value === '');
-              setDescriptionCount(e.target.value.length);
+              setDescriptionTextCount(e.target.value.length);
             }}
             maxLength={80}
           />

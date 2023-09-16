@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { db, storage } from '../../../../firebase/firebaseConfig';
-import {
-  deleteObject,
-  getDownloadURL,
-  listAll,
-  ref,
-  uploadBytes,
-} from 'firebase/storage';
+import { uploadImagesAndUpdateFirestore } from '../../../../utils/uploadUtils';
+import { deleteObject, listAll, ref } from 'firebase/storage';
 import {
   addDoc,
   collection,
@@ -16,7 +11,6 @@ import {
   getDocs,
   query,
   serverTimestamp,
-  updateDoc,
   where,
 } from 'firebase/firestore';
 import { useAtom, useAtomValue } from 'jotai';
@@ -31,7 +25,6 @@ import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.png';
 import { Modal, message, Button } from 'antd';
 import { CameraOutlined, LeftOutlined } from '@ant-design/icons';
-import imageCompression from 'browser-image-compression';
 
 const BannerImage = () => {
   const navigate = useNavigate();
@@ -70,6 +63,8 @@ const BannerImage = () => {
 
   // 이미지 업로드 시 실행되는 함수
   const handleImageChange = async (e) => {
+    const selectedFiles = e.target.files;
+
     if (uploadedImages.length >= maxUploads) {
       // 이미지 개수가 최대 개수에 도달한 경우 모달 창을 띄워 알림 표시
       Modal.info({
@@ -78,11 +73,10 @@ const BannerImage = () => {
       return;
     }
 
-    const file = e.target.files[0];
+    // 선택한 이미지들을 새로운 배열로 만들어 업로드 이미지 배열에 합침
+    const newImages = [...uploadedImages, ...Array.from(selectedFiles)];
 
-    if (file) {
-      setUploadedImages([...uploadedImages, file]);
-    }
+    setUploadedImages(newImages);
   };
 
   // "저장하기" 버튼 클릭 시 실행되는 함수
@@ -98,23 +92,6 @@ const BannerImage = () => {
     }
 
     try {
-      // 이미지 압축 설정 옵션
-      const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 300,
-        useWebWorker: true,
-      };
-
-      // 이미지 압축 함수
-      const compressedImage = async (imageFile) => {
-        try {
-          const compressedFile = await imageCompression(imageFile, options);
-          return compressedFile;
-        } catch (error) {
-          message.error('이미지 압축 실패', error);
-          return null;
-        }
-      };
       // Block 정렬을 위해 숫자로 blockId 값 지정
       const querySnapshot = await getDocs(
         query(collection(db, 'template'), where('userId', '==', userUid)),
@@ -137,31 +114,14 @@ const BannerImage = () => {
         createdAt: serverTimestamp(),
       });
 
-      // 저장된 문서의 ID 가져오기
-      const docId = docRef.id;
-
       // 이미지 업로드 및 URL 저장
-      const imageUrls = [];
-
-      for (const imageFile of uploadedImages) {
-        // 이미지 압축
-        const compressedFile = await compressedImage(imageFile);
-
-        if (compressedFile) {
-          const imageRef = ref(
-            storage,
-            `bannerImages/${docId}/${imageFile.name}`,
-          );
-          await uploadBytes(imageRef, compressedFile);
-          const imageUrl = await getDownloadURL(imageRef);
-          imageUrls.push(imageUrl);
-        }
-      }
-
-      // 이미지 URL들을 Firestore 문서에 업데이트
-      await updateDoc(docRef, {
-        images: imageUrls,
-      });
+      await uploadImagesAndUpdateFirestore(
+        uploadedImages,
+        blockId,
+        docRef,
+        storage,
+        'bannerImages',
+      );
 
       setModalVisible(true);
     } catch (error) {
@@ -178,25 +138,13 @@ const BannerImage = () => {
       const docRef = doc(db, 'template', blockId);
 
       // 이미지 업로드 및 URL 저장
-      const imageUrls = [];
-      for (const imageFile of uploadedImages) {
-        if (typeof imageFile === 'string') {
-          imageUrls.push(imageFile);
-        } else {
-          const imageRef = ref(
-            storage,
-            `bannerImages/${blockId}/${imageFile.name}`,
-          );
-          await uploadBytes(imageRef, imageFile);
-          const imageUrl = await getDownloadURL(imageRef);
-          imageUrls.push(imageUrl);
-        }
-      }
-
-      // 이미지 URL들을 Firestore 문서에 업데이트
-      await updateDoc(docRef, {
-        images: imageUrls,
-      });
+      await uploadImagesAndUpdateFirestore(
+        uploadedImages,
+        blockId,
+        docRef,
+        storage,
+        'bannerImages',
+      );
 
       setModalVisible(true);
     } catch (error) {
@@ -263,12 +211,7 @@ const BannerImage = () => {
           {uploadedImages.length >= maxUploads ? (
             <>
               <div onClick={handleImageChange}>
-                <label
-                  htmlFor="imageInput"
-                  className={
-                    uploadedImages.length >= maxUploads ? 'disabled' : ''
-                  }
-                >
+                <label>
                   <CameraOutlined />
                   <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
                 </label>
@@ -276,16 +219,15 @@ const BannerImage = () => {
             </>
           ) : (
             <>
-              <label htmlFor="imageInput">
-                <div>
-                  <CameraOutlined />
-                </div>
+              <label htmlFor="file">
+                <CameraOutlined />
                 <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
               </label>
               <input
-                id="imageInput"
+                id="file"
                 type="file"
                 accept="image/*"
+                multiple // 다중 선택
                 onChange={handleImageChange}
               />
             </>

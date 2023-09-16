@@ -20,7 +20,6 @@ const Intro = () => {
       // 사용자가 로그아웃한 경우
       setIsAuthenticated(false);
     }
-    console.log(userUid);
   }, []);
 
   // 버튼 텍스트 설정 함수

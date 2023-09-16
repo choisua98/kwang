@@ -50,7 +50,7 @@ const AddLink = () => {
 
   const [isTitleValid, setIsTitleValid] = useState(false);
   const [isAddLinkValid, setIsAddLinkValid] = useState(false);
-  const [titleCount, setTitleCount] = useState(0);
+  const [titleTextCount, setTitleTextCount] = useState(0);
 
   // URL 유효성 검사 정규 표현식
   const urlRegex =
@@ -152,7 +152,7 @@ const AddLink = () => {
 
       <O.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
         <label htmlFor="title">
-          링크 제목<p>{titleCount}/20자</p>
+          링크 제목<p>{titleTextCount}/20자</p>
         </label>
         <div className="input-container">
           <input
@@ -164,7 +164,7 @@ const AddLink = () => {
             onChange={(e) => {
               onChange(e);
               setIsTitleValid(e.target.value === '');
-              setTitleCount(e.target.value.length);
+              setTitleTextCount(e.target.value.length);
             }}
             autoFocus
           />

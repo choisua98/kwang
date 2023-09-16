@@ -46,13 +46,13 @@ const Mailing = () => {
   );
 
   const [{ title, description }, onChange] = useInputs({
-    title: selectedBlock?.title,
-    description: selectedBlock?.description,
+    title: selectedBlock?.title || '',
+    description: selectedBlock?.description || '',
   });
 
   // 제목과 설명의 글자 수를 추적하는 상태
-  const [titleCount, setTitleCount] = useState(0);
-  const [descriptionCount, setDescriptionCount] = useState(0);
+  const [titleTextCount, setTitleTextCount] = useState(0);
+  const [descriptionTextCount, setDescriptionTextCount] = useState(0);
 
   const [isTitleValid, setIsTitleValid] = useState(false);
   const [isDescriptionValid, setIsDescriptionValid] = useState(false);
@@ -156,7 +156,7 @@ const Mailing = () => {
       >
         <label htmlFor="title">
           메일링 서비스 이름
-          <p>{titleCount}/20자</p>
+          <p>{titleTextCount}/20자</p>
         </label>
         <div className="input-container">
           <input
@@ -168,7 +168,7 @@ const Mailing = () => {
             onChange={(e) => {
               onChange(e);
               setIsTitleValid(e.target.value === '');
-              setTitleCount(e.target.value.length);
+              setTitleTextCount(e.target.value.length);
             }}
             maxLength={20}
             autoFocus
@@ -178,7 +178,7 @@ const Mailing = () => {
 
         <label htmlFor="description">
           메일링 서비스 상세설명
-          <p>{descriptionCount}/80자</p>
+          <p>{descriptionTextCount}/80자</p>
         </label>
         <div className="input-container">
           <textarea
@@ -190,7 +190,7 @@ const Mailing = () => {
             onChange={(e) => {
               onChange(e);
               setIsDescriptionValid(e.target.value === '');
-              setDescriptionCount(e.target.value.length);
+              setDescriptionTextCount(e.target.value.length);
             }}
             maxLength={80}
           />

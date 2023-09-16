@@ -52,13 +52,13 @@ const Faq = () => {
     deleteModalVisibleAtom,
   );
 
-  const [{ title, question, answer }, onChange, reset] = useInputs({
-    title: selectedBlock?.title,
+  const [{ title, question, answer }, onChange] = useInputs({
+    title: selectedBlock?.title || '',
     question: '',
     answer: '',
   });
 
-  const [titleCount, setTitleCount] = useState(0);
+  const [titleTextCount, setTitleTextCount] = useState(0);
 
   const [isTitleValid, setIsTitleValid] = useState(false);
   const [isQuestionValid, setIsQuestionValid] = useState(false);
@@ -222,7 +222,7 @@ const Faq = () => {
       >
         <label htmlFor="title">
           자주 묻는 질문 이름
-          <p>{titleCount}/20자</p>
+          <p>{titleTextCount}/20자</p>
         </label>
         <div className="input-container">
           <input
@@ -234,7 +234,7 @@ const Faq = () => {
             onChange={(e) => {
               onChange(e);
               setIsTitleValid(e.target.value === '');
-              setTitleCount(e.target.value.length);
+              setTitleTextCount(e.target.value.length);
             }}
             maxLength={20}
             autoFocus
