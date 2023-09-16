@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useInputs from '../../../../hooks/useInputs';
 import {
@@ -20,6 +20,11 @@ import {
   modalVisibleAtom,
   userAtom,
 } from '../../../../atoms/Atom';
+import {
+  handleCloseDeleteModal,
+  handleCloseModal,
+} from '../../../../utils/\butils';
+import _ from 'lodash';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
@@ -46,21 +51,19 @@ const Mailing = () => {
   );
 
   const [{ title, description }, onChange] = useInputs({
-    title: selectedBlock?.title,
-    description: selectedBlock?.description,
+    title: selectedBlock?.title || '',
+    description: selectedBlock?.description || '',
   });
 
   // 제목과 설명의 글자 수를 추적하는 상태
-  const [titleCount, setTitleCount] = useState(0);
-  const [descriptionCount, setDescriptionCount] = useState(0);
+  const [titleTextCount, setTitleTextCount] = useState(0);
+  const [descriptionTextCount, setDescriptionTextCount] = useState(0);
 
   const [isTitleValid, setIsTitleValid] = useState(false);
   const [isDescriptionValid, setIsDescriptionValid] = useState(false);
 
   // "저장하기" 버튼 클릭 시 실행되는 함수
-  const handleAddButtonClick = async (e) => {
-    e.preventDefault();
-
+  const handleAddButtonClick = useCallback(async () => {
     if (!userUid) {
       message.error(
         '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
@@ -97,11 +100,10 @@ const Mailing = () => {
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
-  };
+  }, [userUid, navigate, title, description, setModalVisible]);
 
   // "수정하기" 버튼 클릭 시 실행되는 함수
-  const handleEditButtonClick = async (e) => {
-    e.preventDefault();
+  const handleEditButtonClick = useCallback(async () => {
     try {
       // Firestore에 데이터 업로드
       const docRef = doc(db, 'template', blockId);
@@ -114,22 +116,31 @@ const Mailing = () => {
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
-  };
+  }, [blockId, title, description, setModalVisible]);
+
+  // 디바운싱된 함수 생성
+  const debouncedSubmit = _.debounce(
+    blockId ? handleEditButtonClick : handleAddButtonClick,
+    300,
+  );
 
   // "삭제하기" 버튼 클릭 시 실행되는 함수
-  const handleRemoveButtonClick = async (id) => {
-    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-    if (shouldDelete) {
-      try {
-        // 사용자 확인 후 삭제 작업 진행
-        await deleteDoc(doc(db, 'template', id));
+  const handleRemoveButtonClick = useCallback(
+    async (id) => {
+      const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+      if (shouldDelete) {
+        try {
+          // 사용자 확인 후 삭제 작업 진행
+          await deleteDoc(doc(db, 'template', id));
 
-        setDeleteModalVisible(true);
-      } catch (error) {
-        message.error('삭제 중 오류 발생:', error.message);
+          setDeleteModalVisible(true);
+        } catch (error) {
+          message.error('삭제 중 오류 발생:', error.message);
+        }
       }
-    }
-  };
+    },
+    [setDeleteModalVisible],
+  );
 
   return (
     <>
@@ -152,11 +163,14 @@ const Mailing = () => {
       </O.FormGuideStyle>
 
       <O.Container
-        onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+        onSubmit={(e) => {
+          e.preventDefault();
+          debouncedSubmit();
+        }}
       >
         <label htmlFor="title">
           메일링 서비스 이름
-          <p>{titleCount}/20자</p>
+          <p>{titleTextCount}/20자</p>
         </label>
         <div className="input-container">
           <input
@@ -168,7 +182,7 @@ const Mailing = () => {
             onChange={(e) => {
               onChange(e);
               setIsTitleValid(e.target.value === '');
-              setTitleCount(e.target.value.length);
+              setTitleTextCount(e.target.value.length);
             }}
             maxLength={20}
             autoFocus
@@ -178,7 +192,7 @@ const Mailing = () => {
 
         <label htmlFor="description">
           메일링 서비스 상세설명
-          <p>{descriptionCount}/80자</p>
+          <p>{descriptionTextCount}/80자</p>
         </label>
         <div className="input-container">
           <textarea
@@ -190,7 +204,7 @@ const Mailing = () => {
             onChange={(e) => {
               onChange(e);
               setIsDescriptionValid(e.target.value === '');
-              setDescriptionCount(e.target.value.length);
+              setDescriptionTextCount(e.target.value.length);
             }}
             maxLength={80}
           />
@@ -215,10 +229,7 @@ const Mailing = () => {
         title=""
         centered
         open={modalVisible}
-        onCancel={() => {
-          setModalVisible(false);
-          navigate(-1);
-        }}
+        onCancel={() => handleCloseModal(setModalVisible, navigate)}
         footer={null}
         closable={false}
         width={330}
@@ -230,10 +241,7 @@ const Mailing = () => {
         </div>
         <button
           type="button"
-          onClick={() => {
-            setModalVisible(false);
-            navigate(-1);
-          }}
+          onClick={() => handleCloseModal(setModalVisible, navigate)}
         >
           닫기
         </button>
@@ -243,10 +251,7 @@ const Mailing = () => {
         title=""
         centered
         open={deleteModalVisible}
-        onCancel={() => {
-          setDeleteModalVisible(false);
-          navigate(-1);
-        }}
+        onCancel={() => handleCloseDeleteModal(setDeleteModalVisible, navigate)}
         footer={null}
         closable={false}
         width={330}
@@ -258,10 +263,9 @@ const Mailing = () => {
         </div>
         <button
           type="button"
-          onClick={() => {
-            setDeleteModalVisible(false);
-            navigate(-1);
-          }}
+          onClick={() =>
+            handleCloseDeleteModal(setDeleteModalVisible, navigate)
+          }
         >
           닫기
         </button>

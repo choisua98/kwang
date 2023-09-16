@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import useInputs from '../../../../hooks/useInputs';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -20,6 +20,11 @@ import {
   modalVisibleAtom,
   userAtom,
 } from '../../../../atoms/Atom';
+import {
+  handleCloseDeleteModal,
+  handleCloseModal,
+} from '../../../../utils/\butils';
+import _ from 'lodash';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
@@ -47,15 +52,13 @@ const FanLetter = () => {
     description: selectedBlock?.description || '',
   });
 
-  const [titleCount, setTitleCount] = useState(0);
-  const [descriptionCount, setDescriptionCount] = useState(0);
+  const [titleTextCount, setTitleTextCount] = useState(0);
+  const [descriptionTextCount, setDescriptionTextCount] = useState(0);
 
   const [isTitleValid, setIsTitleValid] = useState(false);
   const [isDescriptionValid, setIsDescriptionValid] = useState(false);
 
-  const addButtonClick = async (e) => {
-    e.preventDefault();
-
+  const handleAddButtonClick = useCallback(async () => {
     if (!userUid) {
       message.error(
         '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
@@ -78,6 +81,7 @@ const FanLetter = () => {
         }
       });
       const blockId = maxNum + 1;
+
       // Firestore에 데이터 추가
       await addDoc(collection(db, 'template'), {
         title,
@@ -92,11 +96,9 @@ const FanLetter = () => {
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
-  };
+  }, [userUid, navigate, title, description, setModalVisible]);
 
-  const editButtonClick = async (e) => {
-    e.preventDefault();
-
+  const handleEditButtonClick = useCallback(async () => {
     try {
       // Firestore에 데이터 업로드
       const docRef = doc(db, 'template', blockId);
@@ -109,22 +111,31 @@ const FanLetter = () => {
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
-  };
+  }, [blockId, title, description, setModalVisible]);
+
+  // 디바운싱된 함수 생성
+  const debouncedSubmit = _.debounce(
+    blockId ? handleEditButtonClick : handleAddButtonClick,
+    300,
+  );
 
   // "삭제하기" 버튼 클릭 시 실행되는 함수
-  const handleRemoveButtonClick = async (id) => {
-    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-    if (shouldDelete) {
-      try {
-        // 사용자 확인 후 삭제 작업 진행
-        await deleteDoc(doc(db, 'template', id));
+  const handleRemoveButtonClick = useCallback(
+    async (id) => {
+      const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+      if (shouldDelete) {
+        try {
+          // 사용자 확인 후 삭제 작업 진행
+          await deleteDoc(doc(db, 'template', id));
 
-        setDeleteModalVisible(true);
-      } catch (error) {
-        message.error('삭제 중 오류 발생:', error.message);
+          setDeleteModalVisible(true);
+        } catch (error) {
+          message.error('삭제 중 오류 발생:', error.message);
+        }
       }
-    }
-  };
+    },
+    [setDeleteModalVisible],
+  );
 
   return (
     <>
@@ -146,10 +157,15 @@ const FanLetter = () => {
         </p>
       </O.FormGuideStyle>
 
-      <O.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
+      <O.Container
+        onSubmit={(e) => {
+          e.preventDefault();
+          debouncedSubmit();
+        }}
+      >
         <label htmlFor="title">
           팬레터 서비스 이름
-          <p>{titleCount}/20자</p>
+          <p>{titleTextCount}/20자</p>
         </label>
         <div className="input-container">
           <input
@@ -161,7 +177,7 @@ const FanLetter = () => {
             onChange={(e) => {
               onChange(e);
               setIsTitleValid(e.target.value === '');
-              setTitleCount(e.target.value.length);
+              setTitleTextCount(e.target.value.length);
             }}
             maxLength={20}
             autoFocus
@@ -171,7 +187,7 @@ const FanLetter = () => {
 
         <label htmlFor="description">
           팬레터 설명을 작성해 주세요
-          <p>{descriptionCount}/80자</p>
+          <p>{descriptionTextCount}/80자</p>
         </label>
         <div className="input-container">
           <textarea
@@ -183,7 +199,7 @@ const FanLetter = () => {
             onChange={(e) => {
               onChange(e);
               setIsDescriptionValid(e.target.value === '');
-              setDescriptionCount(e.target.value.length);
+              setDescriptionTextCount(e.target.value.length);
             }}
             maxLength={80}
           />
@@ -208,10 +224,7 @@ const FanLetter = () => {
         title=""
         centered
         open={modalVisible}
-        onCancel={() => {
-          setModalVisible(false);
-          navigate(-1);
-        }}
+        onCancel={() => handleCloseModal(setModalVisible, navigate)}
         footer={null}
         closable={false}
         width={330}
@@ -223,10 +236,7 @@ const FanLetter = () => {
         </div>
         <button
           type="button"
-          onClick={() => {
-            setModalVisible(false);
-            navigate(-1);
-          }}
+          onClick={() => handleCloseModal(setModalVisible, navigate)}
         >
           닫기
         </button>
@@ -236,10 +246,7 @@ const FanLetter = () => {
         title=""
         centered
         open={deleteModalVisible}
-        onCancel={() => {
-          setDeleteModalVisible(false);
-          navigate(-1);
-        }}
+        onCancel={() => handleCloseDeleteModal(setDeleteModalVisible, navigate)}
         footer={null}
         closable={false}
         width={330}
@@ -251,10 +258,9 @@ const FanLetter = () => {
         </div>
         <button
           type="button"
-          onClick={() => {
-            setDeleteModalVisible(false);
-            navigate(-1);
-          }}
+          onClick={() =>
+            handleCloseDeleteModal(setDeleteModalVisible, navigate)
+          }
         >
           닫기
         </button>

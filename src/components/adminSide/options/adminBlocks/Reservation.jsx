@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useInputs from '../../../../hooks/useInputs';
 import { db, storage } from '../../../../firebase/firebaseConfig';
+import { uploadImagesAndUpdateFirestore } from '../../../../utils/uploadUtils';
 import {
   addDoc,
   collection,
@@ -13,13 +14,7 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import {
-  deleteObject,
-  getDownloadURL,
-  listAll,
-  ref,
-  uploadBytes,
-} from 'firebase/storage';
+import { deleteObject, listAll, ref } from 'firebase/storage';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   blocksAtom,
@@ -27,6 +22,11 @@ import {
   modalVisibleAtom,
   userAtom,
 } from '../../../../atoms/Atom';
+import {
+  handleCloseDeleteModal,
+  handleCloseModal,
+} from '../../../../utils/\butils';
+import _ from 'lodash';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
@@ -60,13 +60,21 @@ const Reservation = () => {
   );
 
   const [{ title, description, numberOfPeople }, onChange] = useInputs({
-    title: selectedBlock?.title,
-    description: selectedBlock?.description,
-    numberOfPeople: selectedBlock?.numberOfPeople,
+    title: selectedBlock?.title || '',
+    description: selectedBlock?.description || '',
+    numberOfPeople: selectedBlock?.numberOfPeople || 0,
   });
 
   const [titleTextCount, setTitleTextCount] = useState(0);
   const [descriptionTextCount, setDescriptionTextCount] = useState(0);
+
+  // 데이터 저장 작업 중인지 여부를 나타내는 상태 변수
+  const [isSaving, setIsSaving] = useState(false);
+
+  // 제목, 설명 필드의 유효성을 나타내는 상태 변수
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isDescriptionValid, setIsDescriptionValid] = useState(false);
+  const [isNumberOfPeopleValid, setIsNumberOfPeopleValid] = useState(false);
 
   const [pickDate, setPickDate] = useState(
     selectedBlock ? selectedBlock?.pickDate : '',
@@ -79,40 +87,33 @@ const Reservation = () => {
   );
 
   // 실제로 업로드한 이미지 정보를 저장하는 배열
-  const [uploadedImages, setUploadedImages] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState(
+    selectedBlock?.images || [],
+  );
 
   // 최대 업로드 가능한 이미지 개수
-  const maxUploads = 4;
-
-  useEffect(() => {
-    if (blockId) {
-      // 이미지 데이터를 가져와서 업로드된 이미지 배열을 초기화
-      const initialImages = selectedBlock?.images || [];
-      setUploadedImages(initialImages);
-    }
-  }, [blockId, selectedBlock]);
+  const MAX_UPLOADS = 4;
 
   // 이미지 업로드 시 실행되는 함수
   const handleImageChange = async (e) => {
-    if (uploadedImages.length >= maxUploads) {
+    const selectedFiles = e.target.files;
+
+    if (uploadedImages.length >= MAX_UPLOADS) {
       // 이미지 개수가 최대 개수에 도달한 경우 모달 창을 띄워 알림 표시
       Modal.info({
-        content: `이미지는 최대 ${maxUploads}장까지 첨부할 수 있어요.`,
+        content: `이미지는 최대 ${MAX_UPLOADS}장까지 첨부할 수 있어요.`,
       });
       return;
     }
 
-    const file = e.target.files[0];
+    // 선택한 이미지들을 새로운 배열로 만들어 업로드 이미지 배열에 합침
+    const newImages = [...uploadedImages, ...Array.from(selectedFiles)];
 
-    if (file) {
-      setUploadedImages([...uploadedImages, file]);
-    }
+    setUploadedImages(newImages);
   };
 
   // 저장 버튼
-  const handleAddButtonClick = async (e) => {
-    e.preventDefault();
-
+  const handleAddButtonClick = useCallback(async () => {
     if (!userUid) {
       message.error(
         '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
@@ -120,6 +121,8 @@ const Reservation = () => {
       navigate('/login');
       return;
     }
+
+    setIsSaving(true);
 
     // Block 정렬을 위해 숫자로 blockId 값 지정
     const querySnapshot = await getDocs(
@@ -150,35 +153,34 @@ const Reservation = () => {
         userId: userUid,
       });
 
-      // 저장된 문서의 ID 가져오기
-      const docId = docRef.id;
-
       // 이미지 업로드 및 URL 저장
-      const imageUrls = [];
-      for (const imageFile of uploadedImages) {
-        const imageRef = ref(
-          storage,
-          `reservationImages/${docId}/${imageFile.name}`,
-        );
-        await uploadBytes(imageRef, imageFile);
-        const imageUrl = await getDownloadURL(imageRef);
-        imageUrls.push(imageUrl);
-      }
-
-      // 이미지 URL들을 Firestore 문서에 업데이트
-      await updateDoc(docRef, {
-        images: imageUrls,
-      });
+      await uploadImagesAndUpdateFirestore(
+        uploadedImages,
+        blockId,
+        docRef,
+        storage,
+        'reservationImages',
+      );
 
       setModalVisible(true);
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
-  };
+  }, [
+    userUid,
+    navigate,
+    title,
+    description,
+    numberOfPeople,
+    pickDate,
+    startDate,
+    endDate,
+    uploadedImages,
+    setModalVisible,
+  ]);
 
   // "수정하기" 버튼 클릭 시 실행되는 함수
-  const handleEditButtonClick = async (e) => {
-    e.preventDefault();
+  const handleEditButtonClick = useCallback(async () => {
     try {
       // Firestore에 데이터 업로드
       const docRef = doc(db, 'template', blockId);
@@ -190,31 +192,36 @@ const Reservation = () => {
         startDate,
         endDate,
       });
-      // 이미지 업로드 및 URL 저장
-      const imageUrls = [];
-      for (const imageFile of uploadedImages) {
-        if (typeof imageFile === 'string') {
-          imageUrls.push(imageFile);
-        } else {
-          const imageRef = ref(
-            storage,
-            `reservationImages/${blockId}/${imageFile.name}`,
-          );
-          await uploadBytes(imageRef, imageFile);
-          const imageUrl = await getDownloadURL(imageRef);
-          imageUrls.push(imageUrl);
-        }
-      }
-      // 이미지 URL들을 Firestore 문서에 업데이트
-      await updateDoc(docRef, {
-        images: imageUrls,
-      });
+
+      await uploadImagesAndUpdateFirestore(
+        uploadedImages,
+        blockId,
+        docRef,
+        storage,
+        'reservationImages',
+      );
 
       setModalVisible(true);
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
-  };
+  }, [
+    blockId,
+    title,
+    description,
+    numberOfPeople,
+    pickDate,
+    startDate,
+    endDate,
+    uploadedImages,
+    setModalVisible,
+  ]);
+
+  // 디바운싱된 함수 생성
+  const debouncedSubmit = _.debounce(
+    blockId ? handleEditButtonClick : handleAddButtonClick,
+    300,
+  );
 
   const datePickInput = (_, dateString) => {
     setPickDate(dateString);
@@ -225,38 +232,44 @@ const Reservation = () => {
     setEndDate(dateString[1]);
   };
   // "삭제하기" 버튼 클릭 시 실행되는 함수
-  const handleRemoveButtonClick = async (id) => {
-    const folderRef = ref(storage, `reservationImages/${id}`);
+  const handleRemoveButtonClick = useCallback(
+    async (id) => {
+      const folderRef = ref(storage, `reservationImages/${id}`);
 
-    try {
-      const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-      if (shouldDelete) {
-        // 폴더 내의 모든 파일 가져오기
-        const fileList = await listAll(folderRef);
+      try {
+        const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+        if (shouldDelete) {
+          // 폴더 내의 모든 파일 가져오기
+          const fileList = await listAll(folderRef);
 
-        // 폴더 내의 각 파일을 순회하며 삭제
-        await Promise.all(
-          fileList.items.map(async (file) => {
-            await deleteObject(file);
-          }),
-        );
+          // 폴더 내의 각 파일을 순회하며 삭제
+          await Promise.all(
+            fileList.items.map(async (file) => {
+              await deleteObject(file);
+            }),
+          );
 
-        // 사용자 확인 후 Firestore 문서 삭제
-        await deleteDoc(doc(db, 'template', id));
+          // 사용자 확인 후 Firestore 문서 삭제
+          await deleteDoc(doc(db, 'template', id));
 
-        setDeleteModalVisible(true);
+          setDeleteModalVisible(true);
+        }
+      } catch (error) {
+        message.error('삭제 중 오류 발생:', error.message);
       }
-    } catch (error) {
-      message.error('삭제 중 오류 발생:', error.message);
-    }
-  };
+    },
+    [setDeleteModalVisible],
+  );
 
   // 이미지 삭제 시 실행되는 함수
-  const handleRemoveImage = (index) => {
-    const updatedImages = [...uploadedImages];
-    updatedImages.splice(index, 1);
-    setUploadedImages(updatedImages);
-  };
+  const handleRemoveImage = useCallback(
+    (index) => {
+      const updatedImages = [...uploadedImages];
+      updatedImages.splice(index, 1);
+      setUploadedImages(updatedImages);
+    },
+    [uploadedImages],
+  );
 
   return (
     <>
@@ -279,7 +292,10 @@ const Reservation = () => {
       </O.FormGuideStyle>
 
       <O.Container
-        onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+        onSubmit={(e) => {
+          e.preventDefault();
+          debouncedSubmit();
+        }}
       >
         <label htmlFor="title">
           예약 서비스 이름
@@ -293,41 +309,36 @@ const Reservation = () => {
             value={title}
             onChange={(e) => {
               onChange(e);
+              setIsTitleValid(e.target.value === '');
               setTitleTextCount(e.target.value.length);
             }}
             maxLength={20}
             autoFocus
           />
-          {!title ? <span>필수 입력 항목입니다.</span> : null}
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
         </div>
 
         <O.ImageContainer>
-          {uploadedImages.length >= maxUploads ? (
+          {uploadedImages.length >= MAX_UPLOADS ? (
             <>
               <div onClick={handleImageChange}>
-                <label
-                  htmlFor="imageInput"
-                  className={
-                    uploadedImages.length >= maxUploads ? 'disabled' : ''
-                  }
-                >
+                <label>
                   <CameraOutlined />
-                  <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+                  <span>{`${uploadedImages.length} / ${MAX_UPLOADS}`}</span>
                 </label>
               </div>
             </>
           ) : (
             <>
-              <label htmlFor="imageInput">
-                <div>
-                  <CameraOutlined />
-                </div>
-                <span>{`${uploadedImages.length} / ${maxUploads}`}</span>
+              <label htmlFor="file">
+                <CameraOutlined />
+                <span>{`${uploadedImages.length} / ${MAX_UPLOADS}`}</span>
               </label>
               <input
-                id="imageInput"
+                id="file"
                 type="file"
                 accept="image/*"
+                multiple // 다중 선택
                 onChange={handleImageChange}
               />
             </>
@@ -367,11 +378,12 @@ const Reservation = () => {
             value={description}
             onChange={(e) => {
               onChange(e);
+              setIsDescriptionValid(e.target.value === '');
               setDescriptionTextCount(e.target.value.length);
             }}
             maxLength={80}
           />
-          {!description ? <span>필수 입력 항목입니다.</span> : null}
+          {isDescriptionValid && <span>필수입력 항목입니다.</span>}
         </div>
 
         <label htmlFor="number">모집 인원</label>
@@ -382,10 +394,13 @@ const Reservation = () => {
             type="number"
             placeholder={'모집 인원을 선택해주세요'}
             value={numberOfPeople}
-            onChange={onChange}
+            onChange={(e) => {
+              onChange(e);
+              setIsNumberOfPeopleValid(e.target.value === '');
+            }}
             min={0}
           />
-          {!numberOfPeople ? <span>필수 입력 항목입니다.</span> : null}
+          {isNumberOfPeopleValid && <span>필수입력 항목입니다.</span>}
         </div>
 
         <label htmlFor="datePicker">행사 날짜</label>
@@ -427,7 +442,7 @@ const Reservation = () => {
               !endDate
             }
           >
-            {blockId ? '수정하기' : '저장하기'}
+            {isSaving ? '저장 중...' : blockId ? '수정하기' : '저장하기'}
           </O.SubmitButton>
           <O.SubmitButton
             type="button"
@@ -443,10 +458,7 @@ const Reservation = () => {
         title=""
         centered
         open={modalVisible}
-        onCancel={() => {
-          setModalVisible(false);
-          navigate(-1);
-        }}
+        onCancel={() => handleCloseModal(setModalVisible, navigate)}
         footer={null}
         closable={false}
         width={330}
@@ -458,10 +470,7 @@ const Reservation = () => {
         </div>
         <button
           type="button"
-          onClick={() => {
-            setModalVisible(false);
-            navigate(-1);
-          }}
+          onClick={() => handleCloseModal(setModalVisible, navigate)}
         >
           닫기
         </button>
@@ -471,10 +480,7 @@ const Reservation = () => {
         title=""
         centered
         open={deleteModalVisible}
-        onCancel={() => {
-          setDeleteModalVisible(false);
-          navigate(-1);
-        }}
+        onCancel={() => handleCloseDeleteModal(setDeleteModalVisible, navigate)}
         footer={null}
         closable={false}
         width={330}
@@ -486,10 +492,9 @@ const Reservation = () => {
         </div>
         <button
           type="button"
-          onClick={() => {
-            setDeleteModalVisible(false);
-            navigate(-1);
-          }}
+          onClick={() =>
+            handleCloseDeleteModal(setDeleteModalVisible, navigate)
+          }
         >
           닫기
         </button>

@@ -17,7 +17,6 @@ const CustomerBlocks = () => {
   const navigate = useNavigate();
   const [blocks, setBlocks] = useAtom(blocksAtom);
   const [theme] = useAtom(themeAtom);
-  console.log(theme);
 
   const { uid } = useParams();
   const userUid = uid;

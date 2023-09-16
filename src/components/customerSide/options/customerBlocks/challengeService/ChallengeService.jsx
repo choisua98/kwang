@@ -128,7 +128,7 @@ const ChallengeService = () => {
                   formatDay={(_, date) =>
                     date.toLocaleString('en', { day: 'numeric' })
                   }
-                  // tileDisabled={tileDisabled}
+                  tileDisabled={tileDisabled}
                   showNeighboringMonth={false}
                 />
               </CS.CalendarContainer>
