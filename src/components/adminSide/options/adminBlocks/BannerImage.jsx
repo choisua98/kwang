@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { db, storage } from '../../../../firebase/firebaseConfig';
 import { uploadImagesAndUpdateFirestore } from '../../../../utils/uploadUtils';
@@ -24,6 +24,7 @@ import {
   handleCloseDeleteModal,
   handleCloseModal,
 } from '../../../../utils/\butils';
+import _ from 'lodash';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
@@ -52,18 +53,15 @@ const BannerImage = () => {
   );
 
   // 실제로 업로드한 이미지 정보를 저장하는 배열
-  const [uploadedImages, setUploadedImages] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState(
+    selectedBlock?.images || [],
+  );
+
+  // 데이터 저장 작업 중인지 여부를 나타내는 상태 변수
+  const [isSaving, setIsSaving] = useState(false);
 
   // 최대 업로드 가능한 이미지 개수
   const MAX_UPLOADS = 4;
-
-  useEffect(() => {
-    if (blockId) {
-      // 이미지 데이터를 가져와서 업로드된 이미지 배열을 초기화
-      const initialImages = selectedBlock?.images || [];
-      setUploadedImages(initialImages);
-    }
-  }, [blockId, selectedBlock]);
 
   // 이미지 업로드 시 실행되는 함수
   const handleImageChange = async (e) => {
@@ -84,9 +82,7 @@ const BannerImage = () => {
   };
 
   // "저장하기" 버튼 클릭 시 실행되는 함수
-  const handleAddButtonClick = async (e) => {
-    e.preventDefault();
-
+  const handleAddButtonClick = useCallback(async () => {
     if (!userUid) {
       message.error(
         '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
@@ -94,6 +90,8 @@ const BannerImage = () => {
       navigate('/login');
       return;
     }
+
+    setIsSaving(true);
 
     try {
       // Block 정렬을 위해 숫자로 blockId 값 지정
@@ -131,12 +129,10 @@ const BannerImage = () => {
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
-  };
+  }, [userUid, navigate, uploadedImages, setModalVisible]);
 
   // "수정하기" 버튼 클릭 시 실행되는 함수
-  const handleEditButtonClick = async (e) => {
-    e.preventDefault();
-
+  const handleEditButtonClick = useCallback(async () => {
     try {
       // Firestore에 데이터 업로드
       const docRef = doc(db, 'template', blockId);
@@ -154,41 +150,53 @@ const BannerImage = () => {
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
-  };
+  }, [blockId, uploadedImages, setModalVisible]);
+
+  // 디바운싱된 함수 생성
+  const debouncedSubmit = _.debounce(
+    blockId ? handleEditButtonClick : handleAddButtonClick,
+    300,
+  );
 
   // "삭제하기" 버튼 클릭 시 실행되는 함수
-  const handleRemoveButtonClick = async (id) => {
-    const folderRef = ref(storage, `bannerImages/${id}`);
+  const handleRemoveButtonClick = useCallback(
+    async (id) => {
+      const folderRef = ref(storage, `bannerImages/${id}`);
 
-    try {
-      const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-      if (shouldDelete) {
-        // 폴더 내의 모든 파일 가져오기
-        const fileList = await listAll(folderRef);
+      try {
+        const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+        if (shouldDelete) {
+          // 폴더 내의 모든 파일 가져오기
+          const fileList = await listAll(folderRef);
 
-        // 폴더 내의 각 파일을 순회하며 삭제
-        await Promise.all(
-          fileList.items.map(async (file) => {
-            await deleteObject(file);
-          }),
-        );
+          // 폴더 내의 각 파일을 순회하며 삭제
+          await Promise.all(
+            fileList.items.map(async (file) => {
+              await deleteObject(file);
+            }),
+          );
 
-        // 사용자 확인 후 Firestore 문서 삭제
-        await deleteDoc(doc(db, 'template', id));
+          // 사용자 확인 후 Firestore 문서 삭제
+          await deleteDoc(doc(db, 'template', id));
 
-        setDeleteModalVisible(true);
+          setDeleteModalVisible(true);
+        }
+      } catch (error) {
+        message.error('삭제 중 오류 발생:', error.message);
       }
-    } catch (error) {
-      message.error('삭제 중 오류 발생:', error.message);
-    }
-  };
+    },
+    [setDeleteModalVisible],
+  );
 
   // 이미지 삭제 시 실행되는 함수
-  const handleRemoveImage = (index) => {
-    const updatedImages = [...uploadedImages];
-    updatedImages.splice(index, 1);
-    setUploadedImages(updatedImages);
-  };
+  const handleRemoveImage = useCallback(
+    (index) => {
+      const updatedImages = [...uploadedImages];
+      updatedImages.splice(index, 1);
+      setUploadedImages(updatedImages);
+    },
+    [uploadedImages],
+  );
 
   return (
     <>
@@ -207,7 +215,10 @@ const BannerImage = () => {
       </O.FormGuideStyle>
 
       <O.Container
-        onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+        onSubmit={(e) => {
+          e.preventDefault();
+          debouncedSubmit();
+        }}
       >
         <p>배너 이미지를 추가해주세요.</p>
 
@@ -261,7 +272,7 @@ const BannerImage = () => {
 
         <O.ButtonArea>
           <O.SubmitButton type="submit" disabled={uploadedImages.length === 0}>
-            {blockId ? '수정하기' : '저장하기'}
+            {isSaving ? '저장 중...' : blockId ? '수정하기' : '저장하기'}
           </O.SubmitButton>
           <O.SubmitButton
             type="button"

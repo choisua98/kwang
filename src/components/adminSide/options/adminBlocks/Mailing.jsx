@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useInputs from '../../../../hooks/useInputs';
 import {
@@ -24,6 +24,7 @@ import {
   handleCloseDeleteModal,
   handleCloseModal,
 } from '../../../../utils/\butils';
+import _ from 'lodash';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
@@ -62,9 +63,7 @@ const Mailing = () => {
   const [isDescriptionValid, setIsDescriptionValid] = useState(false);
 
   // "저장하기" 버튼 클릭 시 실행되는 함수
-  const handleAddButtonClick = async (e) => {
-    e.preventDefault();
-
+  const handleAddButtonClick = useCallback(async () => {
     if (!userUid) {
       message.error(
         '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
@@ -101,11 +100,10 @@ const Mailing = () => {
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
-  };
+  }, [userUid, navigate, title, description, setModalVisible]);
 
   // "수정하기" 버튼 클릭 시 실행되는 함수
-  const handleEditButtonClick = async (e) => {
-    e.preventDefault();
+  const handleEditButtonClick = useCallback(async () => {
     try {
       // Firestore에 데이터 업로드
       const docRef = doc(db, 'template', blockId);
@@ -118,22 +116,31 @@ const Mailing = () => {
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
-  };
+  }, [blockId, title, description, setModalVisible]);
+
+  // 디바운싱된 함수 생성
+  const debouncedSubmit = _.debounce(
+    blockId ? handleEditButtonClick : handleAddButtonClick,
+    300,
+  );
 
   // "삭제하기" 버튼 클릭 시 실행되는 함수
-  const handleRemoveButtonClick = async (id) => {
-    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-    if (shouldDelete) {
-      try {
-        // 사용자 확인 후 삭제 작업 진행
-        await deleteDoc(doc(db, 'template', id));
+  const handleRemoveButtonClick = useCallback(
+    async (id) => {
+      const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+      if (shouldDelete) {
+        try {
+          // 사용자 확인 후 삭제 작업 진행
+          await deleteDoc(doc(db, 'template', id));
 
-        setDeleteModalVisible(true);
-      } catch (error) {
-        message.error('삭제 중 오류 발생:', error.message);
+          setDeleteModalVisible(true);
+        } catch (error) {
+          message.error('삭제 중 오류 발생:', error.message);
+        }
       }
-    }
-  };
+    },
+    [setDeleteModalVisible],
+  );
 
   return (
     <>
@@ -156,7 +163,10 @@ const Mailing = () => {
       </O.FormGuideStyle>
 
       <O.Container
-        onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+        onSubmit={(e) => {
+          e.preventDefault();
+          debouncedSubmit();
+        }}
       >
         <label htmlFor="title">
           메일링 서비스 이름

@@ -48,6 +48,7 @@ export const B = {
   ImageContainer: styled.div`
     margin: 7.5px 0;
     display: flex;
+    justify-content: center;
 
     img {
       cursor: pointer;
@@ -56,6 +57,10 @@ export const B = {
       object-fit: cover; // 이미지가 잘리지 않도록 설정
       background-color: #d6d6d6;
       border-radius: 15px;
+    }
+
+    .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
+      left: 39.5%;
     }
   `,
 

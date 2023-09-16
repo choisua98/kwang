@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useInputs from '../../../../hooks/useInputs';
 import {
@@ -24,6 +24,7 @@ import {
   handleCloseDeleteModal,
   handleCloseModal,
 } from '../../../../utils/\butils';
+import _ from 'lodash';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
@@ -49,7 +50,7 @@ const AddLink = () => {
 
   const [{ title, addLink }, onChange] = useInputs({
     title: selectedBlock?.title || '',
-    addLink: selectedBlock?.addLink || 'https://',
+    addLink: selectedBlock?.addLink || '',
   });
 
   const [isTitleValid, setIsTitleValid] = useState(false);
@@ -64,9 +65,7 @@ const AddLink = () => {
   const [theme, backgroundImage] = useThemeReset();
   useTheme(theme, backgroundImage);
 
-  const addButtonClick = async (e) => {
-    e.preventDefault();
-
+  const handleAddButtonClick = useCallback(async () => {
     if (!userUid) {
       message.error(
         '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
@@ -75,21 +74,21 @@ const AddLink = () => {
       return;
     }
 
-    // Block 정렬을 위해 숫자로 blockId 값 지정
-    const querySnapshot = await getDocs(
-      query(collection(db, 'template'), where('userId', '==', userUid)),
-    );
-    let maxNum = 0;
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      if (data.blockId && typeof data.blockId === 'number') {
-        // "id" 값이 숫자이고 "userId"가 userUid와 일치하는 경우만 처리
-        maxNum = Math.max(maxNum, data.blockId);
-      }
-    });
-    const blockId = maxNum + 1;
-
     try {
+      // Block 정렬을 위해 숫자로 blockId 값 지정
+      const querySnapshot = await getDocs(
+        query(collection(db, 'template'), where('userId', '==', userUid)),
+      );
+      let maxNum = 0;
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.blockId && typeof data.blockId === 'number') {
+          // "id" 값이 숫자이고 "userId"가 userUid와 일치하는 경우만 처리
+          maxNum = Math.max(maxNum, data.blockId);
+        }
+      });
+      const blockId = maxNum + 1;
+
       // Firestore에 데이터 추가
       await addDoc(collection(db, 'template'), {
         title,
@@ -104,11 +103,9 @@ const AddLink = () => {
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
-  };
+  }, [userUid, navigate, title, addLink, setModalVisible]);
 
-  const editButtonClick = async (e) => {
-    e.preventDefault();
-
+  const handleEditButtonClick = useCallback(async () => {
     try {
       // Firestore에 데이터 업로드
       const docRef = doc(db, 'template', blockId);
@@ -121,22 +118,31 @@ const AddLink = () => {
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
-  };
+  }, [blockId, title, addLink, setModalVisible]);
+
+  // 디바운싱된 함수 생성
+  const debouncedSubmit = _.debounce(
+    blockId ? handleEditButtonClick : handleAddButtonClick,
+    300,
+  );
 
   // "삭제하기" 버튼 클릭 시 실행되는 함수
-  const handleRemoveButtonClick = async (id) => {
-    const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-    if (shouldDelete) {
-      try {
-        // 사용자 확인 후 삭제 작업 진행
-        await deleteDoc(doc(db, 'template', id));
+  const handleRemoveButtonClick = useCallback(
+    async (id) => {
+      const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+      if (shouldDelete) {
+        try {
+          // 사용자 확인 후 삭제 작업 진행
+          await deleteDoc(doc(db, 'template', id));
 
-        setDeleteModalVisible(true);
-      } catch (error) {
-        message.error('삭제 중 오류 발생:', error.message);
+          setDeleteModalVisible(true);
+        } catch (error) {
+          message.error('삭제 중 오류 발생:', error.message);
+        }
       }
-    }
-  };
+    },
+    [setDeleteModalVisible],
+  );
 
   return (
     <>
@@ -154,7 +160,12 @@ const AddLink = () => {
         <p>링크를 추가하여 다양한 채널을 공유해보세요.</p>
       </O.FormGuideStyle>
 
-      <O.Container onSubmit={blockId ? editButtonClick : addButtonClick}>
+      <O.Container
+        onSubmit={(e) => {
+          e.preventDefault();
+          debouncedSubmit();
+        }}
+      >
         <label htmlFor="title">
           링크 제목<p>{titleTextCount}/20자</p>
         </label>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useInputs from '../../../../hooks/useInputs';
 import { db, storage } from '../../../../firebase/firebaseConfig';
@@ -26,6 +26,7 @@ import {
   handleCloseDeleteModal,
   handleCloseModal,
 } from '../../../../utils/\butils';
+import _ from 'lodash';
 import { O } from '../Blocks.styles';
 import IconFormCheck from '../../../../assets/images/common/icon/icon-Formcheck.webp';
 import IconModalConfirm from '../../../../assets/images/common/icon/icon-modalConfirm.webp';
@@ -67,6 +68,14 @@ const Reservation = () => {
   const [titleTextCount, setTitleTextCount] = useState(0);
   const [descriptionTextCount, setDescriptionTextCount] = useState(0);
 
+  // 데이터 저장 작업 중인지 여부를 나타내는 상태 변수
+  const [isSaving, setIsSaving] = useState(false);
+
+  // 제목, 설명 필드의 유효성을 나타내는 상태 변수
+  const [isTitleValid, setIsTitleValid] = useState(false);
+  const [isDescriptionValid, setIsDescriptionValid] = useState(false);
+  const [isNumberOfPeopleValid, setIsNumberOfPeopleValid] = useState(false);
+
   const [pickDate, setPickDate] = useState(
     selectedBlock ? selectedBlock?.pickDate : '',
   );
@@ -104,9 +113,7 @@ const Reservation = () => {
   };
 
   // 저장 버튼
-  const handleAddButtonClick = async (e) => {
-    e.preventDefault();
-
+  const handleAddButtonClick = useCallback(async () => {
     if (!userUid) {
       message.error(
         '작업을 위해 로그인이 필요합니다. 로그인 페이지로 이동합니다.',
@@ -114,6 +121,8 @@ const Reservation = () => {
       navigate('/login');
       return;
     }
+
+    setIsSaving(true);
 
     // Block 정렬을 위해 숫자로 blockId 값 지정
     const querySnapshot = await getDocs(
@@ -157,11 +166,21 @@ const Reservation = () => {
     } catch (error) {
       message.error('저장 중 오류 발생:', error.message);
     }
-  };
+  }, [
+    userUid,
+    navigate,
+    title,
+    description,
+    numberOfPeople,
+    pickDate,
+    startDate,
+    endDate,
+    uploadedImages,
+    setModalVisible,
+  ]);
 
   // "수정하기" 버튼 클릭 시 실행되는 함수
-  const handleEditButtonClick = async (e) => {
-    e.preventDefault();
+  const handleEditButtonClick = useCallback(async () => {
     try {
       // Firestore에 데이터 업로드
       const docRef = doc(db, 'template', blockId);
@@ -186,7 +205,23 @@ const Reservation = () => {
     } catch (error) {
       message.error('수정 중 오류 발생:', error.message);
     }
-  };
+  }, [
+    blockId,
+    title,
+    description,
+    numberOfPeople,
+    pickDate,
+    startDate,
+    endDate,
+    uploadedImages,
+    setModalVisible,
+  ]);
+
+  // 디바운싱된 함수 생성
+  const debouncedSubmit = _.debounce(
+    blockId ? handleEditButtonClick : handleAddButtonClick,
+    300,
+  );
 
   const datePickInput = (_, dateString) => {
     setPickDate(dateString);
@@ -197,38 +232,44 @@ const Reservation = () => {
     setEndDate(dateString[1]);
   };
   // "삭제하기" 버튼 클릭 시 실행되는 함수
-  const handleRemoveButtonClick = async (id) => {
-    const folderRef = ref(storage, `reservationImages/${id}`);
+  const handleRemoveButtonClick = useCallback(
+    async (id) => {
+      const folderRef = ref(storage, `reservationImages/${id}`);
 
-    try {
-      const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
-      if (shouldDelete) {
-        // 폴더 내의 모든 파일 가져오기
-        const fileList = await listAll(folderRef);
+      try {
+        const shouldDelete = window.confirm('정말 삭제하시겠습니까?');
+        if (shouldDelete) {
+          // 폴더 내의 모든 파일 가져오기
+          const fileList = await listAll(folderRef);
 
-        // 폴더 내의 각 파일을 순회하며 삭제
-        await Promise.all(
-          fileList.items.map(async (file) => {
-            await deleteObject(file);
-          }),
-        );
+          // 폴더 내의 각 파일을 순회하며 삭제
+          await Promise.all(
+            fileList.items.map(async (file) => {
+              await deleteObject(file);
+            }),
+          );
 
-        // 사용자 확인 후 Firestore 문서 삭제
-        await deleteDoc(doc(db, 'template', id));
+          // 사용자 확인 후 Firestore 문서 삭제
+          await deleteDoc(doc(db, 'template', id));
 
-        setDeleteModalVisible(true);
+          setDeleteModalVisible(true);
+        }
+      } catch (error) {
+        message.error('삭제 중 오류 발생:', error.message);
       }
-    } catch (error) {
-      message.error('삭제 중 오류 발생:', error.message);
-    }
-  };
+    },
+    [setDeleteModalVisible],
+  );
 
   // 이미지 삭제 시 실행되는 함수
-  const handleRemoveImage = (index) => {
-    const updatedImages = [...uploadedImages];
-    updatedImages.splice(index, 1);
-    setUploadedImages(updatedImages);
-  };
+  const handleRemoveImage = useCallback(
+    (index) => {
+      const updatedImages = [...uploadedImages];
+      updatedImages.splice(index, 1);
+      setUploadedImages(updatedImages);
+    },
+    [uploadedImages],
+  );
 
   return (
     <>
@@ -251,7 +292,10 @@ const Reservation = () => {
       </O.FormGuideStyle>
 
       <O.Container
-        onSubmit={blockId ? handleEditButtonClick : handleAddButtonClick}
+        onSubmit={(e) => {
+          e.preventDefault();
+          debouncedSubmit();
+        }}
       >
         <label htmlFor="title">
           예약 서비스 이름
@@ -265,12 +309,13 @@ const Reservation = () => {
             value={title}
             onChange={(e) => {
               onChange(e);
+              setIsTitleValid(e.target.value === '');
               setTitleTextCount(e.target.value.length);
             }}
             maxLength={20}
             autoFocus
           />
-          {!title ? <span>필수 입력 항목입니다.</span> : null}
+          {isTitleValid && <span>필수입력 항목입니다.</span>}
         </div>
 
         <O.ImageContainer>
@@ -333,11 +378,12 @@ const Reservation = () => {
             value={description}
             onChange={(e) => {
               onChange(e);
+              setIsDescriptionValid(e.target.value === '');
               setDescriptionTextCount(e.target.value.length);
             }}
             maxLength={80}
           />
-          {!description ? <span>필수 입력 항목입니다.</span> : null}
+          {isDescriptionValid && <span>필수입력 항목입니다.</span>}
         </div>
 
         <label htmlFor="number">모집 인원</label>
@@ -348,10 +394,13 @@ const Reservation = () => {
             type="number"
             placeholder={'모집 인원을 선택해주세요'}
             value={numberOfPeople}
-            onChange={onChange}
+            onChange={(e) => {
+              onChange(e);
+              setIsNumberOfPeopleValid(e.target.value === '');
+            }}
             min={0}
           />
-          {!numberOfPeople ? <span>필수 입력 항목입니다.</span> : null}
+          {isNumberOfPeopleValid && <span>필수입력 항목입니다.</span>}
         </div>
 
         <label htmlFor="datePicker">행사 날짜</label>
@@ -393,7 +442,7 @@ const Reservation = () => {
               !endDate
             }
           >
-            {blockId ? '수정하기' : '저장하기'}
+            {isSaving ? '저장 중...' : blockId ? '수정하기' : '저장하기'}
           </O.SubmitButton>
           <O.SubmitButton
             type="button"
