@@ -47,27 +47,27 @@
 
 |크왕 홈|
 |:---:|
-|<img src="https://github.com/choisua98/kwang/assets/120562771/f747be33-56b5-4f17-a52e-396c4d4968dd" width="390" />|
+|<img src="https://github.com/choisua98/kwang/assets/120562771/f747be33-56b5-4f17-a52e-396c4d4968dd" width="300" />|
 |(홈 페이지는 새 소식을 전하는 배너 슬라이드, 서비스 소개, 신규 크리에이터를 슬라이드로 보여줍니다.|
 
 |로그인 & 회원가입|
 |:---:|
-|<img src="https://github.com/choisua98/kwang/assets/120562771/a765fe34-247f-45d4-8855-07dfce3f5ba8" width="390" />|
+|<img src="https://github.com/choisua98/kwang/assets/120562771/a765fe34-247f-45d4-8855-07dfce3f5ba8" width="300" />|
 |크리에이터를 위한 로그인 및 회원가입 페이지로, 카카오, 네이버, 구글과 같은 소셜 로그인이 가능합니다.|
 
 |편집하기(크리에이터, 유저) 페이지|
 |:---:|
-|<img src="https://github.com/choisua98/kwang/assets/120562771/e06f522f-6679-48e6-8e28-3ad429be9853" width="390" />|
+|<img src="https://github.com/choisua98/kwang/assets/120562771/e06f522f-6679-48e6-8e28-3ad429be9853" width="300" />|
 |프로필 링크 편집 페이지로, 테마 바꾸기, 마이 프로필, 링크 추가하기, 폼 추가하기 기능이 제공됩니다.|
 
 |폼 기능 페이지|
 |:---:|
-|<img src="https://github.com/choisua98/kwang/assets/120562771/8847e09e-b971-49ef-9b0d-f81e1705cb6f" width="390" />|
+|<img src="https://github.com/choisua98/kwang/assets/120562771/8847e09e-b971-49ef-9b0d-f81e1705cb6f" width="300" />|
 |크리에이터가 뉴스레터와 같은 메일을 보내주고 싶은 경우 구독을 원하는 방문자에게 신청을 받는 메뉴인 **메일링 서비스 폼**<br/>질문과 답변란을 생성하여 방문자가 되는 구독자, 팔로워들에게 보여지는 메뉴인 **자주 묻는 질문 폼**<br/>캘린더, 이미지와 같은 원하는 기능을 선택하여 신청 폼을 설정하는 메뉴인 **예약 신청 폼**<br/>크리에이터와 방문자들이 함께 챌린지를 할 수 있는 메뉴인 **함께해요 챌린지 폼**<br/>방문자들이 크리에이터에게 전하고 싶은 메시지를 발송할 수 있는 폼을 설정하는 메뉴인 **팬레터 폼**<br/>이벤트, 새로운 소식, 홍보 등에 사용할 배너 이미지를 추가하는 메뉴인 **배너 이미지 폼**입니다.|
 
 |마이홈(방문자) 페이지|
 |:---:|
-|<img src="https://github.com/choisua98/kwang/assets/120562771/3716cbce-d81a-4a46-ace5-defdde5cfed5" width="390" />|
+|<img src="https://github.com/choisua98/kwang/assets/120562771/3716cbce-d81a-4a46-ace5-defdde5cfed5" width="300" />|
 |방문자들은 크리에이터의 소셜 미디어 프로필에 설정된 링크를 통해 마이홈에 접속합니다. <br/>크리에이터 프로필, 방문자가 이용할 수 있는 링크, 관리자가 설정한 추가 서비스(기능)를 통해 크리에이터와 소통합니다.|
 
 |고객관리(크리에이터, 유저) 페이지|
