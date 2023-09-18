@@ -21,13 +21,18 @@
 ## 💁‍♂️ 프로젝트 팀원
 |팀장|부팀장|팀원|팀원|팀원|팀원(디자이너)|
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| [<img src="https://file.notion.so/f/f/d671cd3b-6f25-47c6-bd44-bbdc0a382804/e3ee52e8-5481-45dd-b211-3aff7d3a1acc/peep_(3).png?id=02263807-c915-466a-8649-d2e3023d02f4&table=block&spaceId=d671cd3b-6f25-47c6-bd44-bbdc0a382804&expirationTimestamp=1694865600000&signature=YsK0pYZRsET3dt_lbeuB6fSJSGSr_rTle96Mx9l_aI8&downloadName=peep+%283%29.png" width="120" height="120">](https://github.com/choisua98)| [<img src="https://file.notion.so/f/f/d671cd3b-6f25-47c6-bd44-bbdc0a382804/8e0e7fe9-c5cd-461e-9ba5-96a52766d76c/peep_(2).png?id=027843ed-49a2-4280-a455-ed78b8f14f1f&table=block&spaceId=d671cd3b-6f25-47c6-bd44-bbdc0a382804&expirationTimestamp=1694865600000&signature=9pwztpb0J-gKoq1ybb5giDHuR9Qv9jgwbGjLaB6te6U&downloadName=peep+%282%29.png" width="120" height="120">](https://github.com/soyul0312)|[<img src="https://file.notion.so/f/f/d671cd3b-6f25-47c6-bd44-bbdc0a382804/71bcb255-aa3b-4715-9f8b-0b414069aa39/peep_(1).png?id=7a07fcf5-7c08-491d-9de4-4bd3735f6016&table=block&spaceId=d671cd3b-6f25-47c6-bd44-bbdc0a382804&expirationTimestamp=1694865600000&signature=2slD5l8ZrYzNpeMRMf4d3--zJWE2celMYsSV3517HTg&downloadName=peep+%281%29.png" width="120" height="120">](https://github.com/hyungjungson)|[<img src="https://file.notion.so/f/f/d671cd3b-6f25-47c6-bd44-bbdc0a382804/b29637f0-1b08-4ea8-86a4-112bfbfc54e7/peep_(2).png?id=5e63cc51-f46c-4481-9003-0e795c9d1da8&table=block&spaceId=d671cd3b-6f25-47c6-bd44-bbdc0a382804&expirationTimestamp=1694865600000&signature=Y9rH9XhVxpfTwY1qh0TDx3pksK7cmBUlGKnCIl_pTIo&downloadName=peep+%282%29.png" width="120" height="120">](https://github.com/billiweb)| [<img src="https://file.notion.so/f/f/d671cd3b-6f25-47c6-bd44-bbdc0a382804/6bac095b-3bb8-4a55-8675-bfd1d79cfcbb/peep6.png?id=1ba3c672-c998-419d-b819-be6dae0545a2&table=block&spaceId=d671cd3b-6f25-47c6-bd44-bbdc0a382804&expirationTimestamp=1694872800000&signature=hJ8OcosToiImar8nNk8BcYYt6a3BY6zXJLZ0Gb3sXas&downloadName=peep6.png" width="120" height="120">](https://github.com/HiYongA)| [<img src="https://file.notion.so/f/f/d671cd3b-6f25-47c6-bd44-bbdc0a382804/110b30de-97cf-41fa-8130-f335edd1a937/peep_(5).png?id=bed7a583-00e0-4bda-98e2-c1a8f8ce6be9&table=block&spaceId=d671cd3b-6f25-47c6-bd44-bbdc0a382804&expirationTimestamp=1694872800000&signature=Q_ILYLSmgB0AjZQNuE2eOpV_9pLBgqrIvMkQrBi-w0I&downloadName=peep+%285%29.png" width="120" height="120">]()|  
+| [<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fbji4G8%2Fbtst7TFi6DS%2FkhnU1ubJGtSQ2TgW5fXtSK%2Fimg.png" width="120" height="120">](https://github.com/choisua98)| [<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2F0BNwN%2FbtsubKH25Xb%2FBd1Gu6Fy8LhRiro4stWhtk%2Fimg.png" width="120" height="120">](https://github.com/soyul0312)|[<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbAOUJg%2Fbtsud2awV2c%2F2xmsH7hmS452NfwvRlLOaK%2Fimg.png" width="120" height="120">](https://github.com/hyungjungson)|[<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FDnUfZ%2FbtsudYFXgJ7%2Fx6J7nuYvm3Fgus0N6aiBu0%2Fimg.png" width="120" height="120">](https://github.com/billiweb)| [<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcUyv4t%2FbtsubIXMKPA%2FhjZ0F9lYPOvXs6Zkjdk8ZK%2Fimg.png" width="120" height="120">](https://github.com/HiYongA)| [<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fcm35rQ%2FbtsudhZ4Msm%2Fvk50y0O3nTm7K8jyj8GCK0%2Fimg.png" width="120" height="120">]()|  
 |[최수아](https://github.com/choisua98)|[이소율](https://github.com/soyul0312)|[손형정](https://github.com/hyungjungson)|[송희진](https://github.com/billiweb)|[지설희](https://github.com/HiYongA)|[김유진]()|
 
 [👉 역할 분담 & 개발 일정표](https://rebel-fernleaf-914.notion.site/f840b296790d4144a81b21fd466100c1)
 
 <br />
 
+## 📚 기술스택
+<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/javascript-e8620e?style=for-the-badge&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/styled components-DB7093?style=for-the-badge&logo=styled components&logoColor=white"> <img src="https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white"> <img src="https://img.shields.io/badge/antdesign-f5a442?style=for-the-badge&logo=antdesign&logoColor=black"> <img src="https://img.shields.io/badge/swiper-6332F6?style=for-the-badge&logo=swiper&logoColor=white"> <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/github-5dab3c?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white"> <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
+
+<br />
+ 
 ## ⚙️ 개발 환경 설정
 ### 요구 사항
 - Node.js (v14 이상)
@@ -58,7 +63,7 @@
 |편집하기(크리에이터, 유저) 페이지|
 |:---:|
 |<img src="" width="500"/>|
-|프로필 링크 편집 페이지로, 마이 프로필, 링크 추가하기, 폼 추가하기 기능이 제공됩니다.|
+|프로필 링크 편집 페이지로, 테마 바꾸기, 마이 프로필, 링크 추가하기, 폼 추가하기 기능이 제공됩니다.|
 
 |폼 기능 페이지|
 |:---:|
@@ -78,34 +83,6 @@
 
 <br />
 
-## 💻 기술 스택
-<div align="center">
-  
-### Front-end
-<div>
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/JavaScript.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/React.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/TypeScript.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/ReactQuery.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Redux.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/StyledComponents.png?raw=true" width="80">
-</div>
-
-### Back-end & Infra
-<div>
-<img src="https://github.com/kimhwanhoon/zombie-bucket-list/assets/120562771/e3192a2d-cf71-44a9-b0fe-c2ddb9db4101" width="80">
-<img src="https://github.com/kimhwanhoon/zombie-bucket-list/assets/120562771/179b6b27-9a09-4fdb-bf5c-fdab2c484e9d" width="80">
-</div>
-
-### Tools
-<div>
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Github.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Notion.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Figma.png?raw=true" width="80">
-</div>
-</div>
-<br />
-
 ## 💻 서비스 아키텍처
 ![제목 없음-2023-09-03-0309](https://github.com/choisua98/kwang/assets/120562771/3bb4b4fa-a8f7-4887-b988-5fac76a1417d)
 
@@ -122,6 +99,7 @@
 - firebase auth, database, storage를 통해 손 쉬운 프론트앤드 앱 개발 구현
 - jotai를 사용한 전역 상태 관리 저장
 - Swiper를 사용하여 다양한 스타일의 슬라이드 구현
+- xlsx를 사용하여 데이터 엑셀파일로 저장기능 구현
   
 <br />
 
