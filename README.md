@@ -27,11 +27,6 @@
 [👉 역할 분담 & 개발 일정표](https://rebel-fernleaf-914.notion.site/f840b296790d4144a81b21fd466100c1)
 
 <br />
-
-## 📚 기술스택
-<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/javascript-e8620e?style=for-the-badge&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/styled components-DB7093?style=for-the-badge&logo=styled components&logoColor=white"> <img src="https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white"> <img src="https://img.shields.io/badge/antdesign-f5a442?style=for-the-badge&logo=antdesign&logoColor=black"> <img src="https://img.shields.io/badge/swiper-6332F6?style=for-the-badge&logo=swiper&logoColor=white"> <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/github-5dab3c?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white"> <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
-
-<br />
  
 ## ⚙️ 개발 환경 설정
 ### 요구 사항
@@ -52,32 +47,32 @@
 
 |크왕 홈|
 |:---:|
-|<img src="" width="500"/>|
-|홈 페이지는 새 소식을 전하는 배너 슬라이드, 서비스 소개, 신규 크리에이터를 슬라이드로 보여줍니다.|
+|<img src="https://github.com/choisua98/kwang/assets/120562771/f747be33-56b5-4f17-a52e-396c4d4968dd" width="390" />|
+|(홈 페이지는 새 소식을 전하는 배너 슬라이드, 서비스 소개, 신규 크리에이터를 슬라이드로 보여줍니다.|
 
 |로그인 & 회원가입|
 |:---:|
-|<img src="" width="500"/>|
+|<img src="https://github.com/choisua98/kwang/assets/120562771/a765fe34-247f-45d4-8855-07dfce3f5ba8" width="390" />|
 |크리에이터를 위한 로그인 및 회원가입 페이지로, 카카오, 네이버, 구글과 같은 소셜 로그인이 가능합니다.|
 
 |편집하기(크리에이터, 유저) 페이지|
 |:---:|
-|<img src="" width="500"/>|
+|<img src="https://github.com/choisua98/kwang/assets/120562771/e06f522f-6679-48e6-8e28-3ad429be9853" width="390" />|
 |프로필 링크 편집 페이지로, 테마 바꾸기, 마이 프로필, 링크 추가하기, 폼 추가하기 기능이 제공됩니다.|
 
 |폼 기능 페이지|
 |:---:|
-|<img src="" width="500"/>|
+|<img src="https://github.com/choisua98/kwang/assets/120562771/8847e09e-b971-49ef-9b0d-f81e1705cb6f" width="390" />|
 |크리에이터가 뉴스레터와 같은 메일을 보내주고 싶은 경우 구독을 원하는 방문자에게 신청을 받는 메뉴인 **메일링 서비스 폼**<br/>질문과 답변란을 생성하여 방문자가 되는 구독자, 팔로워들에게 보여지는 메뉴인 **자주 묻는 질문 폼**<br/>캘린더, 이미지와 같은 원하는 기능을 선택하여 신청 폼을 설정하는 메뉴인 **예약 신청 폼**<br/>크리에이터와 방문자들이 함께 챌린지를 할 수 있는 메뉴인 **함께해요 챌린지 폼**<br/>방문자들이 크리에이터에게 전하고 싶은 메시지를 발송할 수 있는 폼을 설정하는 메뉴인 **팬레터 폼**<br/>이벤트, 새로운 소식, 홍보 등에 사용할 배너 이미지를 추가하는 메뉴인 **배너 이미지 폼**입니다.|
 
 |마이홈(방문자) 페이지|
 |:---:|
-|<img src="" width="500"/>|
+|<img src="https://github.com/choisua98/kwang/assets/120562771/3716cbce-d81a-4a46-ace5-defdde5cfed5" width="390" />|
 |방문자들은 크리에이터의 소셜 미디어 프로필에 설정된 링크를 통해 마이홈에 접속합니다. <br/>크리에이터 프로필, 방문자가 이용할 수 있는 링크, 관리자가 설정한 추가 서비스(기능)를 통해 크리에이터와 소통합니다.|
 
 |고객관리(크리에이터, 유저) 페이지|
 |:---:|
-|<img src="" width="500"/>|
+|<img src="https://github.com/choisua98/kwang/assets/120562771/27e0b304-cb72-41b7-95c7-d64a7d2ecb68" width="500"/>|
 |팬레터, 메일링, 예약 메뉴에서 신청한 방문자들의 데이터를 엑셀 파일로 다운로드할 수 있는 기능을 제공합니다.|
 </div>
 
@@ -88,18 +83,23 @@
 
 <br />
 
+## 📚 기술스택
+<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/javascript-e8620e?style=for-the-badge&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/styled components-DB7093?style=for-the-badge&logo=styled components&logoColor=white"> <img src="https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white"> <img src="https://img.shields.io/badge/antdesign-f5a442?style=for-the-badge&logo=antdesign&logoColor=black"> <img src="https://img.shields.io/badge/swiper-6332F6?style=for-the-badge&logo=swiper&logoColor=white"> <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/github-5dab3c?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white"> <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
+
+<br />
+
 ## ⚒️ 라이브러리 사용
-- ant design을 이용한 다양한 디자인 컴포넌트 도입 (Button, Space, Modal, Message 등)
-- lottiefiles/react-lottie-player의 .json을 이용한 리디렉팅 페이지 초저용량 애니메이션 구현
-- Lodash의 Deboucing과 useCallback을 함께 사용하여 유저가 작성버튼이나 수정버튼을 마구 눌렀을 때 서버의 부하를 최대 1로 구현
-- Styled-components를 사용하여 손쉬운 css 스타일링
-- Browser-image-compression를 사용하여 
-- react-image-file-resizer를 사용하여 사용자가 사진을 등록할 때, 너무 용량이 큰 사진이면 사진 사이즈를 압축하여 DB에 전송하는 로직 추가 구현
-- moment를 사용하여 더 간편한 시간구현
-- firebase auth, database, storage를 통해 손 쉬운 프론트앤드 앱 개발 구현
-- jotai를 사용한 전역 상태 관리 저장
-- Swiper를 사용하여 다양한 스타일의 슬라이드 구현
-- xlsx를 사용하여 데이터 엑셀파일로 저장기능 구현
+- **Firebase**: 사용자 인증, 데이터베이스, 스토리지 등 백엔드 서비스를 구현
+- **Jotai**: 전역 상태 관리를 위한 상태 관리 라이브러리로 사용
+- **Styled-components**: JavaScript 코드 내 CSS 스타일링을 용이하게 구현
+- **Ant Design**: 다양한 UI 컴포넌트 제공 (Button, Space, Modal, Message 등)으로 사용자 인터페이스 디자인에 활용
+- **lottiefiles/react-lottie-player**: .json 형식 애니메이션 재생용 라이브러리로, 로딩 페이지의 초저용량 애니메이션에 활용
+- **Lodash**: Debouncing 및 useCallback을 활용하여 사용자 버튼 입력에 따른 서버 부하 최소화
+- **Browser-image-compression**: 브라우저에서 이미지 압축 기능 제공, 대용량 이미지 업로드 시 자동 압축하여 서버 전송
+- **moment**: JavaScript에서 간편한 시간 다룸
+- **React-calendar**: 날짜 선택, 표시, 비활성화, 월간 뷰 등 달력 관련 기능을 구현하기 위해 사용
+- **Swiper**: 다양한 스타일의 슬라이드를 구현하기 위한 라이브러리로 활용
+- **xlsx**: 데이터를 엑셀 파일로 저장하는 기능을 구현하기 위해 사용
   
 <br />
 
