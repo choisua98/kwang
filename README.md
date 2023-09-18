@@ -94,6 +94,7 @@
 - firebase auth, database, storage를 통해 손 쉬운 프론트앤드 앱 개발 구현
 - jotai를 사용한 전역 상태 관리 저장
 - Swiper를 사용하여 다양한 스타일의 슬라이드 구현
+- xlsx를 사용하여 데이터 엑셀파일로 저장기능 구현
   
 <br />
 
