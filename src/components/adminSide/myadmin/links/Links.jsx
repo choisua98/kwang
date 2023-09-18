@@ -290,7 +290,10 @@ const Links = () => {
                 </div>
               ))}
               {defaultLinks.map((_, index) => (
-                <button key={index} onClick={handleNewLinkClick}>
+                <button
+                  key={`default-link-${index}`}
+                  ㄴonClick={handleNewLinkClick}
+                >
                   <Link />
                 </button>
               ))}

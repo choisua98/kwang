@@ -37,9 +37,9 @@ const NewCreator = () => {
         slidesPerView={2.2}
         lazy={{ loadPrevNext: true }}
       >
-        {usersData.map((user, index) => (
+        {usersData.map((user) => (
           <SwiperSlide
-            key={index}
+            key={user.uid}
             onClick={() => {
               navigate(`/${user.uid}`);
             }}
@@ -51,7 +51,7 @@ const NewCreator = () => {
                   ? kwangProfileImage
                   : user.profileImageURL
               }
-              alt={`User Profile ${index + 1}`}
+              alt={`User Profile ${user.uid}`}
             />
             <p>{user.nickname}</p>
             <p>{user.introduction}</p>

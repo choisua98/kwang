@@ -1,6 +1,28 @@
 import { Button } from 'antd';
 import { styled } from 'styled-components';
 
+const ButtonToggleBase = styled(Button).withConfig({
+  shouldForwardProp: (prop) => prop !== 'colorTheme',
+})`
+  ${({ colorTheme }) =>
+    colorTheme === 'dark' &&
+    `
+    background: #333;
+    color: var(--color-white);
+  `}
+  ${({ colorTheme }) =>
+    colorTheme === 'light' &&
+    `
+    background: none;
+  `}
+  ${({ colorTheme }) =>
+    colorTheme !== 'dark' &&
+    colorTheme !== 'light' &&
+    `
+    background: var(--color-bg);
+  `}
+`;
+
 export const H = {
   HeaderWrapper: styled.header`
     position: relative;
@@ -11,25 +33,8 @@ export const H = {
   Logo: styled.img`
     height: 17px;
   `,
-  ButtonToggle: styled(Button)`
-    ${({ colorTheme }) =>
-      colorTheme === 'dark' &&
-      `
-      background: #333;
-      color: var(--color-white);
-    `}
-    ${({ colorTheme }) =>
-      colorTheme === 'light' &&
-      `
-      background: none;
-    `}
-    ${({ colorTheme }) =>
-      colorTheme !== 'dark' &&
-      colorTheme !== 'light' &&
-      `
-      background: var(--color-bg);
-    `}
-  `,
+
+  ButtonToggle: ButtonToggleBase,
 
   Container: styled.div`
     display: flex;
