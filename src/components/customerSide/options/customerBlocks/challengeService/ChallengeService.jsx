@@ -16,7 +16,7 @@ import { message } from 'antd';
 const ChallengeService = () => {
   const navigate = useNavigate();
   const [challengeData, setChallengeData] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const { uid } = useParams();
   const userUid = uid;
@@ -122,7 +122,7 @@ const ChallengeService = () => {
               <CS.CalendarContainer>
                 <Calendar
                   onChange={setSelectedDate}
-                  value={null}
+                  value={selectedDate}
                   prev2Label={null}
                   next2Label={null}
                   formatDay={(_, date) =>
@@ -135,6 +135,7 @@ const ChallengeService = () => {
 
               <C.ButtonArea>
                 <C.SubmitButton
+                  disabled={!selectedDate}
                   onClick={() => handleChallengeVerification(data.title)}
                 >
                   오늘 인증 남기기
